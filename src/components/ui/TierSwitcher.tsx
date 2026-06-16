@@ -6,7 +6,9 @@
  */
 
 import { useMapStore } from '@/store/useMapStore';
+import { useProfileStore } from '@/store/useProfileStore';
 import { listTiers } from '@/tiers';
+import { CosmicMotionControls } from '@/components/ui/CosmicMotionControls';
 
 interface TierSwitcherProps {
   className?: string;
@@ -19,6 +21,8 @@ export function TierSwitcher({ className = '' }: TierSwitcherProps) {
   const setHideSensitive = useMapStore((s) => s.setHideSensitive);
   const globe = useMapStore((s) => s.globe);
   const setGlobe = useMapStore((s) => s.setGlobe);
+  const profileActive = useProfileStore((s) => s.active);
+  const setProfileActive = useProfileStore((s) => s.setActive);
   const tiers = listTiers(); // 宇宙 → 地表 → 洋底（上到下）
   // 宇宙层自动球面；其余层显示当前手动开关状态
   const globeActive = globe || activeTier === 'space';
@@ -63,6 +67,23 @@ export function TierSwitcher({ className = '' }: TierSwitcherProps) {
       <div className="mt-0.5 border-t border-dashboard-neutral/15 pt-1">
         <button
           type="button"
+          onClick={() => setProfileActive(!profileActive)}
+          aria-pressed={profileActive}
+          title="天—地—海垂直剖面：开启后点击地图任一点，垂直钻取三层叠加态势"
+          className={[
+            'mb-1 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-[10px] transition-colors',
+            profileActive
+              ? 'bg-amber-400/20 text-amber-200'
+              : 'text-dashboard-neutral/60 hover:bg-dashboard-neutral/15 hover:text-white',
+          ].join(' ')}
+        >
+          <span aria-hidden>📊</span>
+          <span className="truncate">
+            {profileActive ? '垂直剖面：取点中' : '天地海垂直剖面'}
+          </span>
+        </button>
+        <button
+          type="button"
           onClick={() => setGlobe(!globe)}
           aria-pressed={globeActive}
           title="3D 地球（球面投影）· 需 maplibre v5 启用；宇宙层自动球面"
@@ -78,6 +99,7 @@ export function TierSwitcher({ className = '' }: TierSwitcherProps) {
             {globeActive ? '3D 地球：开' : '3D 地球：平面'}
           </span>
         </button>
+        <CosmicMotionControls />
         <button
           type="button"
           onClick={() => setHideSensitive(!hideSensitive)}

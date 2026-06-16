@@ -251,19 +251,26 @@ export function GeodataLayer() {
 
     const setup = () => {
       try {
-        if (map.getSource(POINT_SOURCE)) return;
-
         registerMarkerSprites(map);
 
-        map.addSource(POINT_SOURCE, {
-          type: 'geojson',
-          data: { type: 'FeatureCollection', features: [] },
-        });
+        if (!map.getSource(POINT_SOURCE)) {
+          map.addSource(POINT_SOURCE, {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [] },
+          });
+        }
 
-        map.addSource(LINE_SOURCE, {
-          type: 'geojson',
-          data: { type: 'FeatureCollection', features: [] },
-        });
+        if (!map.getSource(LINE_SOURCE)) {
+          map.addSource(LINE_SOURCE, {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [] },
+          });
+        }
+
+        // 旧版线图层 id 与 source 同名，addLayer 会静默失败导致线要素永不渲染
+        if (map.getLayer('geodata-api-lines')) {
+          map.removeLayer('geodata-api-lines');
+        }
 
         const lineLayout: maplibregl.LineLayerSpecification['layout'] = {
           visibility: 'none',
@@ -271,7 +278,11 @@ export function GeodataLayer() {
           'line-join': 'round',
         };
 
-        map.addLayer({
+        const ensureLayer = (id: string, spec: maplibregl.AddLayerObject) => {
+          if (!map.getLayer(id)) map.addLayer(spec);
+        };
+
+        ensureLayer(LINE_LAYER_SOLID, {
           id: LINE_LAYER_SOLID,
           type: 'line',
           source: LINE_SOURCE,
@@ -288,7 +299,7 @@ export function GeodataLayer() {
           },
         });
 
-        map.addLayer({
+        ensureLayer(LINE_LAYER_DAYNIGHT, {
           id: LINE_LAYER_DAYNIGHT,
           type: 'line',
           source: LINE_SOURCE,
@@ -302,7 +313,7 @@ export function GeodataLayer() {
           },
         });
 
-        map.addLayer({
+        ensureLayer(LINE_LAYER_PLANNED, {
           id: LINE_LAYER_PLANNED,
           type: 'line',
           source: LINE_SOURCE,
@@ -316,7 +327,7 @@ export function GeodataLayer() {
           },
         });
 
-        map.addLayer({
+        ensureLayer(HALO_LAYER, {
           id: HALO_LAYER,
           type: 'circle',
           source: POINT_SOURCE,
@@ -361,7 +372,7 @@ export function GeodataLayer() {
           },
         });
 
-        map.addLayer({
+        ensureLayer(SYMBOL_LAYER, {
           id: SYMBOL_LAYER,
           type: 'symbol',
           source: POINT_SOURCE,
@@ -388,6 +399,11 @@ export function GeodataLayer() {
             'icon-opacity': ['get', 'opacity'],
           },
         });
+
+        type MapWithListeners = maplibregl.Map & { __geodataListeners?: boolean };
+        const mapWithListeners = map as MapWithListeners;
+        if (mapWithListeners.__geodataListeners) return;
+        mapWithListeners.__geodataListeners = true;
 
         for (const layerId of POINT_INTERACTIVE_LAYERS) {
           map.on('click', layerId, onPointClick);
@@ -428,6 +444,7 @@ export function GeodataLayer() {
         }
         if (map.getSource(POINT_SOURCE)) map.removeSource(POINT_SOURCE);
         if (map.getSource(LINE_SOURCE)) map.removeSource(LINE_SOURCE);
+        delete (map as maplibregl.Map & { __geodataListeners?: boolean }).__geodataListeners;
       } catch {
         /* map 已销毁 */
       }

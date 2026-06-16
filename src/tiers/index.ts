@@ -34,8 +34,8 @@ const subsurfaceTier: TierModule = {
   icon: '🌊',
   tagline: '海缆 · 海底管线 · 震源深度 · 海床 · 深海争夺',
   // Phase 1 完整：海缆/海底管线/深海采矿/板块断层/震源深度/断缆事件 + 复用 maritime/natural（海床栅格随本层自动铺开）
-  layers: ['cables', 'pipelines', 'deep_sea_mining', 'tectonics', 'quake_depth', 'cable_incidents', 'maritime', 'natural'],
-  defaultLayers: ['cables', 'deep_sea_mining', 'tectonics', 'cable_incidents'],
+  layers: ['cables', 'pipelines', 'deep_sea_mining', 'tectonics', 'quake_depth', 'cable_incidents', 'maritime', 'natural', 'marine_archaeology', 'ocean_currents', 'fisheries', 'monsoon', 'atmospheric_circulation', 'deep_exploration'],
+  defaultLayers: ['cables', 'deep_sea_mining', 'tectonics', 'cable_incidents', 'ocean_currents'],
   basemap: 'seabed',
   renderMode: 'depth',
   altitudeBand: [-11, 0], // 海平面至马里亚纳海沟约 -11km
@@ -49,8 +49,14 @@ const spaceTier: TierModule = {
   icon: '🛰',
   tagline: '卫星星座 · 在轨 · 测控站 · 发射 · 轨道安全',
   // Phase 2：发射场 + 测控站 + 在轨 GEO 卫星；后续增补 LEO 星座/星下点动效/space_events + 3D 地球
-  layers: ['launch_sites', 'launch_log', 'ground_stations', 'sat_constellations'],
-  defaultLayers: ['launch_sites', 'launch_log', 'ground_stations', 'sat_constellations'],
+  layers: [
+    'launch_sites', 'launch_log', 'ground_stations', 'sat_constellations',
+    'space_stations', 'satellites', 'space_debris', 'space_events',
+  ],
+  defaultLayers: [
+    'launch_sites', 'launch_log', 'ground_stations',
+    'space_stations', 'satellites',
+  ],
   basemap: 'starfield',
   renderMode: 'orbit',
   altitudeBand: [200, 36000], // LEO 至 GEO
@@ -72,11 +78,21 @@ export const LAYER_TIER: Partial<Record<LayerId, SpatialTier>> = {
   tectonics: 'subsurface',
   cable_incidents: 'subsurface',
   quake_depth: 'subsurface',
+  marine_archaeology: 'subsurface',
+  ocean_currents: 'subsurface',
+  fisheries: 'subsurface',
+  monsoon: 'subsurface',
+  atmospheric_circulation: 'subsurface',
+  deep_exploration: 'subsurface',
   // 宇宙
   launch_sites: 'space',
   launch_log: 'space',
   ground_stations: 'space',
   sat_constellations: 'space',
+  space_stations: 'space',
+  satellites: 'space',
+  space_debris: 'space',
+  space_events: 'space',
   // 其余默认地表（见 tierForLayer 兜底）
 };
 

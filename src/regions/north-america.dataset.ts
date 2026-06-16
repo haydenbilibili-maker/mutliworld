@@ -1,6 +1,6 @@
 /**
- * 北美区域数据集 — 聚合 us-focus 七大战略模块 + 原有北美种子数据
- * 美国作为战略研究对象：核力量 / 全球部署 / 印太·北约 / 本土安全 / 供应链
+ * 北美区域数据集 — 聚合 us-focus 七大战略模块 + 地表层 + 原有北美种子数据
+ * 美国作为战略研究对象：核力量 / 全球部署 / 印太·北约 / 本土安全 / 供应链 / 地表态势
  */
 
 import type { EventDetail } from '@/types/geo';
@@ -26,6 +26,11 @@ import {
   US_SUPPLY_CHAIN_FACILITIES,
 } from './us-focus/us.supplyChain';
 import { US_DOMESTIC_EVENTS, US_DOMESTIC_INCIDENTS, US_DOMESTIC_FACILITIES } from './us-focus/us.domestic';
+import {
+  US_SURFACE_EVENTS,
+  US_SURFACE_INCIDENTS,
+  US_SURFACE_FACILITIES,
+} from './us-focus/us.surface';
 import { US_FACTIONS, US_MILITARY, US_DIPLOMACY } from './us-focus/meta';
 
 /** 原有北美区域种子（加拿大/墨西哥/泛北美经济节点，保留 na- 前缀） */
@@ -291,6 +296,7 @@ export const northAmericaDataset: RegionDataset = {
     ...US_NATO_EVENTS,
     ...US_SUPPLY_CHAIN_EVENTS,
     ...US_DOMESTIC_EVENTS,
+    ...US_SURFACE_EVENTS,
     ...NA_LEGACY_EVENTS,
     ...NA_DENSIFY_EVENTS,
   ],
@@ -302,6 +308,7 @@ export const northAmericaDataset: RegionDataset = {
     ...US_NATO_INCIDENTS,
     ...US_SUPPLY_CHAIN_INCIDENTS,
     ...US_DOMESTIC_INCIDENTS,
+    ...US_SURFACE_INCIDENTS,
     ...NA_LEGACY_INCIDENTS,
     ...NA_DENSIFY_INCIDENTS,
   ],
@@ -313,6 +320,7 @@ export const northAmericaDataset: RegionDataset = {
     ...US_NATO_FACILITIES,
     ...US_SUPPLY_CHAIN_FACILITIES,
     ...US_DOMESTIC_FACILITIES,
+    ...US_SURFACE_FACILITIES,
     ...NA_DENSIFY_FACILITIES,
   ] as Facility[],
   factions: US_FACTIONS,

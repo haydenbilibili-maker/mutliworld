@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMapStore } from '@/store/useMapStore';
 import type { LayerId } from '@/types/geo';
@@ -54,6 +54,8 @@ export function useSyncStateToUrl() {
     setActiveLayers,
   } = useMapStore();
 
+  const lastSyncedUrlRef = useRef<string | null>(null);
+
   useEffect(() => {
     const lat = searchParams.get('lat');
     const lon = searchParams.get('lon');
@@ -89,7 +91,7 @@ export function useSyncStateToUrl() {
   }, []);
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams();
     params.set('lat', center[1].toFixed(4));
     params.set('lon', center[0].toFixed(4));
     params.set('zoom', zoom.toFixed(2));
@@ -97,11 +99,13 @@ export function useSyncStateToUrl() {
     params.set('timeRange', timeRange);
     params.set('layers', activeLayers.join(LAYER_SEP));
     params.set('region', activeRegion);
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    const nextUrl = `${pathname}?${params.toString()}`;
+    if (lastSyncedUrlRef.current === nextUrl) return;
+    lastSyncedUrlRef.current = nextUrl;
+    router.replace(nextUrl, { scroll: false });
   }, [
     pathname,
     router,
-    searchParams,
     activeRegion,
     center,
     zoom,
@@ -109,4 +113,10 @@ export function useSyncStateToUrl() {
     timeRange,
     activeLayers,
   ]);
+}
+
+/** 挂载于 Suspense 内，满足 Next.js 对 useSearchParams 的要求 */
+export function UrlStateSync() {
+  useSyncStateToUrl();
+  return null;
 }

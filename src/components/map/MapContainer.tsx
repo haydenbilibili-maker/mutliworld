@@ -1,17 +1,23 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, Suspense } from 'react';
 import maplibregl from 'maplibre-gl';
 import { useMapStore } from '@/store/useMapStore';
-import { useSyncStateToUrl } from '@/hooks/useSyncStateToUrl';
+import { useOrbitalPanelStore } from '@/store/useOrbitalPanelStore';
+import { UrlStateSync } from '@/hooks/useSyncStateToUrl';
 import { useRegionData } from '@/hooks/useRegionData';
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from '@/lib/constants';
+import { centersEqual, isProgrammaticBearingMove, zoomsEqual } from '@/lib/map/viewState';
 import { buildGraticule, buildBoundsRing } from '@/lib/graticule';
 import { MapProvider } from '@/context/MapContext';
 import { GeodataLayer } from '@/components/map/GeodataLayer';
 import { BathymetryLayer } from '@/components/map/BathymetryLayer';
 import { GlobeController } from '@/components/map/GlobeController';
+import { CosmicGlobeAnimator } from '@/components/map/CosmicGlobeAnimator';
 import { OrbitRings } from '@/components/map/OrbitRings';
+import { OrbitalObjectsLayer } from '@/components/map/OrbitalObjectsLayer';
+import { ProfilePicker } from '@/components/map/ProfilePicker';
+import { CrossLayerLinks } from '@/components/map/CrossLayerLinks';
 
 interface MapContainerProps {
   className?: string;
@@ -22,10 +28,17 @@ export function MapContainer({ className = '' }: MapContainerProps) {
   const mapRef = useRef<maplibregl.Map | null>(null);
   const initialSyncDone = useRef(false);
   const [mapInstance, setMapInstance] = useState<maplibregl.Map | null>(null);
-  const { center, zoom, setCenter, setZoom } = useMapStore();
+  const { center, zoom } = useMapStore();
+  const activeTier = useMapStore((s) => s.activeTier);
+  const orbitalOpen = useOrbitalPanelStore((s) => s.open);
   const { bounds } = useRegionData();
 
-  useSyncStateToUrl();
+  // useSearchParams 必须在 Suspense 边界内使用
+  const urlStateSync = (
+    <Suspense fallback={null}>
+      <UrlStateSync />
+    </Suspense>
+  );
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -82,12 +95,27 @@ export function MapContainer({ className = '' }: MapContainerProps) {
       style,
       center: safeCenter,
       zoom: safeZoom,
+      // 球面模式下拖拽更接近拨动实体地球（宇宙层暂停时可手动旋转）
+      aroundCenter: true,
     });
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
     map.on('moveend', () => {
+      const state = useMapStore.getState();
+      // 宇宙层自转仅改 bearing，不回写 center/zoom，避免与 store/flyTo 形成反馈环
+      if (
+        state.activeTier === 'space' &&
+        (state.globeMotionPlaying || isProgrammaticBearingMove())
+      ) {
+        return;
+      }
+
       const c = map.getCenter();
-      setCenter([c.lng, c.lat]);
-      setZoom(map.getZoom());
+      const z = map.getZoom();
+      const nextCenter: [number, number] = [c.lng, c.lat];
+      if (centersEqual(state.center, nextCenter) && zoomsEqual(state.zoom, z)) return;
+
+      state.setCenter(nextCenter);
+      state.setZoom(z);
     });
     map.on('load', () => {
       try {
@@ -142,13 +170,34 @@ export function MapContainer({ className = '' }: MapContainerProps) {
       return;
     }
     const c = map.getCenter();
-    const atTarget =
-      Math.abs(c.lng - center[0]) < 1e-4 &&
-      Math.abs(c.lat - center[1]) < 1e-4 &&
-      Math.abs(map.getZoom() - zoom) < 1e-3;
-    if (atTarget) return;
+    const z = map.getZoom();
+    if (
+      centersEqual([c.lng, c.lat], center) &&
+      zoomsEqual(z, zoom)
+    ) {
+      return;
+    }
     map.flyTo({ center, zoom, duration: 800 });
   }, [center, zoom]);
+
+  // 轨道列表展开时右移可视中心，减轻浮层遮挡
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const padRight =
+      activeTier === 'space' && orbitalOpen
+        ? Math.min(window.innerWidth * 0.35, 288)
+        : 0;
+    const apply = () => {
+      try {
+        map.setPadding({ top: 0, bottom: 0, left: 0, right: padRight });
+      } catch {
+        /* */
+      }
+    };
+    if (map.isStyleLoaded()) apply();
+    else map.once('load', apply);
+  }, [activeTier, orbitalOpen]);
 
   // 区域边界高亮
   useEffect(() => {
@@ -204,15 +253,22 @@ export function MapContainer({ className = '' }: MapContainerProps) {
 
   return (
     <MapProvider map={mapInstance}>
-      <div
-        ref={containerRef}
-        className={className}
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
-      />
-      <BathymetryLayer />
-      <GlobeController />
-      <OrbitRings />
-      <GeodataLayer />
+      {urlStateSync}
+      <div className="relative h-full w-full">
+        <div
+          ref={containerRef}
+          className={className}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+        />
+        <BathymetryLayer />
+        <GlobeController />
+        <CosmicGlobeAnimator />
+        <OrbitRings />
+        <OrbitalObjectsLayer />
+        <ProfilePicker />
+        <CrossLayerLinks />
+        <GeodataLayer />
+      </div>
     </MapProvider>
   );
 }

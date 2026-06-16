@@ -43,6 +43,16 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   quake_depth: '震源深度',
   ground_stations: '测控/地面站',
   sat_constellations: '在轨卫星（GEO）',
+  space_stations: '空间站（实时）',
+  satellites: '在轨卫星（实时）',
+  space_debris: '空间碎片（实时）',
+  space_events: '空天事件',
+  marine_archaeology: '海洋考古',
+  ocean_currents: '洋流',
+  fisheries: '渔场',
+  monsoon: '季风气候带',
+  atmospheric_circulation: '大气环流',
+  deep_exploration: '深海探索',
 };
 
 /** 默认开启的图层（MVP） */

@@ -19,6 +19,15 @@ import { GLOBAL_TECTONICS } from '@/regions/global.tectonics';
 import { GLOBAL_CABLE_INCIDENTS } from '@/regions/global.cableIncidents';
 import { GLOBAL_GROUND_STATIONS } from '@/regions/global.groundStations';
 import { GLOBAL_SATELLITES } from '@/regions/global.satellites';
+import { GLOBAL_SPACE_EVENTS } from '@/regions/global.spaceEvents';
+import {
+  GLOBAL_MARINE_ARCHAEOLOGY,
+  GLOBAL_OCEAN_CURRENTS,
+  GLOBAL_FISHERIES,
+  GLOBAL_MONSOON,
+  GLOBAL_ATMOSPHERIC_CIRCULATION,
+  GLOBAL_DEEP_EXPLORATION,
+} from '@/regions/global.ocean';
 import { LAYER_LABELS } from '@/lib/constants';
 
 export type SearchKind =
@@ -261,6 +270,127 @@ function buildIndex(): SearchEntry[] {
       description: c.note,
       source: c.source,
       category: 'cable_incidents',
+    });
+  }
+
+  // 海洋考古
+  for (const a of GLOBAL_MARINE_ARCHAEOLOGY) {
+    out.push({
+      id: `arch-${a.id}`,
+      label: a.name,
+      sublabel: `全球 · ${LAYER_LABELS.marine_archaeology}`,
+      kind: 'infra',
+      regionId: null,
+      lng: a.lng,
+      lat: a.lat,
+      zoom: 5,
+      impact: a.impact,
+      description: a.note,
+      category: 'marine_archaeology',
+    });
+  }
+
+  // 洋流（取路径中点）
+  for (const c of GLOBAL_OCEAN_CURRENTS) {
+    const mid = c.coordinates[Math.floor(c.coordinates.length / 2)] ?? c.coordinates[0];
+    out.push({
+      id: `cur-${c.id}`,
+      label: c.name,
+      sublabel: `全球 · ${LAYER_LABELS.ocean_currents}`,
+      kind: 'infra',
+      regionId: null,
+      lng: mid[0],
+      lat: mid[1],
+      zoom: 3,
+      impact: c.impact,
+      description: c.note,
+      category: 'ocean_currents',
+    });
+  }
+
+  // 渔场
+  for (const f of GLOBAL_FISHERIES) {
+    out.push({
+      id: `fish-${f.id}`,
+      label: f.name,
+      sublabel: `全球 · ${LAYER_LABELS.fisheries}`,
+      kind: 'infra',
+      regionId: null,
+      lng: f.lng,
+      lat: f.lat,
+      zoom: 4,
+      impact: f.impact,
+      description: f.note,
+      category: 'fisheries',
+    });
+  }
+
+  // 季风气候带
+  for (const m of GLOBAL_MONSOON) {
+    out.push({
+      id: `mon-${m.id}`,
+      label: m.name,
+      sublabel: `全球 · ${LAYER_LABELS.monsoon}`,
+      kind: 'infra',
+      regionId: null,
+      lng: m.lng,
+      lat: m.lat,
+      zoom: 4,
+      impact: m.impact,
+      description: m.note,
+      category: 'monsoon',
+    });
+  }
+
+  // 大气环流
+  for (const a of GLOBAL_ATMOSPHERIC_CIRCULATION) {
+    out.push({
+      id: `atmo-${a.id}`,
+      label: a.name,
+      sublabel: `全球 · ${LAYER_LABELS.atmospheric_circulation}`,
+      kind: 'infra',
+      regionId: null,
+      lng: a.lng,
+      lat: a.lat,
+      zoom: 3,
+      impact: a.impact,
+      description: a.note,
+      category: 'atmospheric_circulation',
+    });
+  }
+
+  // 深海探索
+  for (const d of GLOBAL_DEEP_EXPLORATION) {
+    out.push({
+      id: `deep-${d.id}`,
+      label: d.name,
+      sublabel: `全球 · ${LAYER_LABELS.deep_exploration}`,
+      kind: 'infra',
+      regionId: null,
+      lng: d.lng,
+      lat: d.lat,
+      zoom: 4,
+      impact: d.impact,
+      description: d.note,
+      category: 'deep_exploration',
+    });
+  }
+
+  // 空天事件
+  for (const e of GLOBAL_SPACE_EVENTS) {
+    out.push({
+      id: `spe-${e.id}`,
+      label: e.name,
+      sublabel: `全球 · ${LAYER_LABELS.space_events}`,
+      kind: 'event',
+      regionId: null,
+      lng: e.lng,
+      lat: e.lat,
+      zoom: 4,
+      impact: e.impact,
+      description: e.note,
+      source: e.source,
+      category: 'space_events',
     });
   }
 

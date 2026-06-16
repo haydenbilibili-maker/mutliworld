@@ -20,6 +20,17 @@ import { getGlobalTectonicsForRegion } from '@/lib/geodata/globalTectonics';
 import { getGlobalCableIncidentsForRegion } from '@/lib/geodata/globalCableIncidents';
 import { getGlobalGroundStationsForRegion } from '@/lib/geodata/globalGroundStations';
 import { getGlobalSatellitesForRegion } from '@/lib/geodata/globalSatellites';
+import { getGlobalSpaceEventsForRegion } from '@/lib/geodata/globalSpaceEvents';
+import {
+  getMarineArchaeologyForRegion,
+  getOceanCurrentsForRegion,
+  getFisheriesForRegion,
+  getMonsoonForRegion,
+  getAtmosphericCirculationForRegion,
+  getDeepExplorationForRegion,
+  oceanPointsToFeatures,
+  oceanCurrentsToFeatures,
+} from '@/lib/geodata/globalOcean';
 import {
   cableRouteToFeature,
   getSubmarineCablesForRegion,
@@ -42,6 +53,7 @@ import type { TectonicFeature } from '@/regions/global.tectonics';
 import type { CableIncident } from '@/regions/global.cableIncidents';
 import type { GroundStation } from '@/regions/global.groundStations';
 import type { SatellitePoint } from '@/regions/global.satellites';
+import type { SpaceEvent } from '@/regions/global.spaceEvents';
 import { NUCLEAR_KIND_LABEL } from '@/regions/global.nuclear';
 import {
   TIME_RANGE_MS,
@@ -114,6 +126,13 @@ const CATEGORY_LAYER_MAP: Record<string, LayerId> = {
   quake_depth: 'quake_depth',
   ground_stations: 'ground_stations',
   sat_constellations: 'sat_constellations',
+  space_events: 'space_events',
+  marine_archaeology: 'marine_archaeology',
+  ocean_currents: 'ocean_currents',
+  fisheries: 'fisheries',
+  monsoon: 'monsoon',
+  atmospheric_circulation: 'atmospheric_circulation',
+  deep_exploration: 'deep_exploration',
   // 扩展语义 → 标准图层
   security: 'military',
   defense: 'military',
@@ -794,6 +813,48 @@ function satellitesToFeatures(
   return out;
 }
 
+const SPACE_EVENT_KIND_LABEL: Record<string, string> = {
+  asat: '反卫星',
+  collision: '在轨相撞',
+  breakup: '解体/碎片',
+  reentry: '再入',
+  closeapproach: '抵近/规避',
+};
+
+/** 空天事件 → feature；带真实日期与出处（不做时间窗过滤，保留为参考事件） */
+function spaceEventsToFeatures(
+  events: SpaceEvent[],
+  active: Set<LayerId>,
+  generatedAt: string,
+): GeoJSONFeature[] {
+  if (!active.has('space_events')) return [];
+  const out: GeoJSONFeature[] = [];
+  for (const e of events) {
+    const kindLabel = SPACE_EVENT_KIND_LABEL[e.kind] ?? e.kind;
+    out.push(
+      makePointFeature(
+        {
+          id: e.id,
+          title: e.name,
+          source: e.source,
+          timestamp: generatedAt,
+          impact: e.impact,
+          category: 'space_events',
+          layerId: 'space_events',
+          description: `${e.date.slice(0, 10)} · ${kindLabel} · ${e.note}`,
+          opacity: 0.9,
+          subKind: e.kind,
+          lng: e.lng,
+          lat: e.lat,
+        },
+        e.lng,
+        e.lat,
+      ),
+    );
+  }
+  return out;
+}
+
 const TIMED_THEMATIC_LAYERS = new Set<LayerId>(['protests', 'climate']);
 
 /** 全球主题图层点（经济中心 / 矿产 / 数据中心 / 抗议 / 气候） */
@@ -855,6 +916,22 @@ function cableRoutesToFeatures(
 function daynightToFeatures(active: Set<LayerId>, generatedAt: string): GeoJSONFeature[] {
   if (!active.has('daynight')) return [];
   return buildDaynightFeatures(generatedAt);
+}
+
+/** 全球海洋空间信息图层 → feature；公开地理事实，不做时间窗过滤 */
+function oceanLayersToFeatures(
+  regionId: RegionId,
+  active: Set<LayerId>,
+  generatedAt: string,
+): GeoJSONFeature[] {
+  return [
+    ...oceanPointsToFeatures(getMarineArchaeologyForRegion(regionId), 'marine_archaeology', active, generatedAt),
+    ...oceanCurrentsToFeatures(getOceanCurrentsForRegion(regionId), active, generatedAt),
+    ...oceanPointsToFeatures(getFisheriesForRegion(regionId), 'fisheries', active, generatedAt),
+    ...oceanPointsToFeatures(getMonsoonForRegion(regionId), 'monsoon', active, generatedAt),
+    ...oceanPointsToFeatures(getAtmosphericCirculationForRegion(regionId), 'atmospheric_circulation', active, generatedAt),
+    ...oceanPointsToFeatures(getDeepExplorationForRegion(regionId), 'deep_exploration', active, generatedAt),
+  ];
 }
 
 /**
@@ -956,10 +1033,16 @@ export function buildRegionGeoJSON({
       active,
       generatedAt,
     ),
+    ...spaceEventsToFeatures(
+      getGlobalSpaceEventsForRegion(regionId),
+      active,
+      generatedAt,
+    ),
     ...cableRoutesToFeatures(regionId, active, generatedAt),
     ...thematicToFeatures(regionId, active, windowMs, latestMs, generatedAt),
     ...pipelinesToFeatures(regionId, active, generatedAt),
     ...daynightToFeatures(active, generatedAt),
+    ...oceanLayersToFeatures(regionId, active, generatedAt),
   ];
 
   const featureTimes = features

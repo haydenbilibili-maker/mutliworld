@@ -98,9 +98,43 @@ export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> =
   'gs-deep-space': { emoji: '🛰️', label: '深空网' },
   'gs-tracking': { emoji: '📡', label: '常规测控站' },
   sat_constellations: { emoji: '🛰️', label: '在轨卫星（GEO）' },
+  space_stations: { emoji: '🏠', label: '空间站（实时）' },
+  satellites: { emoji: '🛰️', label: '在轨卫星（实时）' },
+  space_debris: { emoji: '💫', label: '空间碎片（实时）' },
   'sat-weather': { emoji: '🌦️', label: '气象卫星' },
   'sat-comms': { emoji: '📶', label: '通信卫星' },
   'sat-navigation': { emoji: '🧭', label: '导航卫星' },
+  space_events: { emoji: '💫', label: '空天事件' },
+  'space-asat': { emoji: '🎯', label: '反卫星(ASAT)' },
+  'space-collision': { emoji: '💥', label: '在轨相撞' },
+  'space-breakup': { emoji: '🌌', label: '解体/碎片' },
+  'space-reentry': { emoji: '☄️', label: '再入' },
+  'space-closeapproach': { emoji: '⚠️', label: '抵近/规避' },
+  marine_archaeology: { emoji: '🏺', label: '海洋考古' },
+  'arch-ancient': { emoji: '🏛️', label: '古代沉船' },
+  'arch-merchant': { emoji: '🚢', label: '商船沉船' },
+  'arch-galleon': { emoji: '💰', label: '宝船' },
+  'arch-warship': { emoji: '⚓', label: '军舰残骸' },
+  'arch-modern': { emoji: '🛳️', label: '近代沉船' },
+  ocean_currents: { emoji: '🌊', label: '洋流' },
+  'current-route': { emoji: '〰️', label: '洋流路径' },
+  fisheries: { emoji: '🐟', label: '渔场' },
+  'fish-pelagic': { emoji: '🐟', label: '远洋渔业' },
+  'fish-groundfish': { emoji: '🎣', label: '底栖渔业' },
+  'fish-coastal': { emoji: '🦐', label: '近海渔业' },
+  monsoon: { emoji: '🌧️', label: '季风气候带' },
+  'monsoon-summer': { emoji: '🌧️', label: '夏季/湿季' },
+  'monsoon-winter': { emoji: '❄️', label: '冬季/干季' },
+  atmospheric_circulation: { emoji: '💨', label: '大气环流' },
+  'atmo-itcz': { emoji: '☀️', label: '赤道辐合带' },
+  'atmo-jet': { emoji: '💨', label: '急流' },
+  'atmo-trade': { emoji: '🌀', label: '信风带' },
+  deep_exploration: { emoji: '🤿', label: '深海探索' },
+  'deep-trench': { emoji: '🕳️', label: '海沟' },
+  'deep-hydrothermal': { emoji: '♨️', label: '热液喷口' },
+  'deep-manned': { emoji: '🤿', label: '载人深潜' },
+  'deep-rov': { emoji: '🤖', label: '无人深潜器' },
+  'deep-institution': { emoji: '🔬', label: '科考机构' },
 };
 
 /** 图层主色（光晕底色） */
@@ -136,6 +170,16 @@ export const LAYER_HALO_COLORS: Record<string, string> = {
   quake_depth: '#7c3aed',
   ground_stations: '#0ea5e9',
   sat_constellations: '#facc15',
+  space_stations: '#22d3ee',
+  satellites: '#7dd3fc',
+  space_debris: '#a78bfa',
+  space_events: '#e879f9',
+  marine_archaeology: '#b45309',
+  ocean_currents: '#06b6d4',
+  fisheries: '#0284c7',
+  monsoon: '#6366f1',
+  atmospheric_circulation: '#8b5cf6',
+  deep_exploration: '#0e7490',
 };
 
 const IMPACT_HALO: Record<ImpactLevel, string> = {
@@ -233,6 +277,54 @@ const SAT_KIND_IMAGE: Record<string, string> = {
   weather: 'sat-weather',
   comms: 'sat-comms',
   navigation: 'sat-navigation',
+};
+
+const SPACE_EVENT_KIND_IMAGE: Record<string, string> = {
+  asat: 'space-asat',
+  collision: 'space-collision',
+  breakup: 'space-breakup',
+  reentry: 'space-reentry',
+  closeapproach: 'space-closeapproach',
+};
+
+const MARINE_ARCH_KIND_IMAGE: Record<string, string> = {
+  ancient: 'arch-ancient',
+  merchant: 'arch-merchant',
+  galleon: 'arch-galleon',
+  warship: 'arch-warship',
+  modern: 'arch-modern',
+  colonial: 'arch-merchant',
+};
+
+const FISHERY_KIND_IMAGE: Record<string, string> = {
+  pelagic: 'fish-pelagic',
+  groundfish: 'fish-groundfish',
+  coastal: 'fish-coastal',
+};
+
+const MONSOON_KIND_IMAGE: Record<string, string> = {
+  summer: 'monsoon-summer',
+  winter: 'monsoon-winter',
+  year_round: 'monsoon',
+};
+
+const ATMOS_KIND_IMAGE: Record<string, string> = {
+  itcz: 'atmo-itcz',
+  trade_wind: 'atmo-trade',
+  jet_stream: 'atmo-jet',
+  subtropical_high: 'atmospheric_circulation',
+  hadley: 'atmospheric_circulation',
+  polar: 'atmospheric_circulation',
+  walker: 'atmospheric_circulation',
+  semi_permanent: 'atmospheric_circulation',
+};
+
+const DEEP_EXPL_KIND_IMAGE: Record<string, string> = {
+  trench: 'deep-trench',
+  hydrothermal: 'deep-hydrothermal',
+  manned: 'deep-manned',
+  rov: 'deep-rov',
+  institution: 'deep-institution',
 };
 
 const CLIMATE_KIND_IMAGE: Record<string, string> = {
@@ -339,6 +431,40 @@ function resolveImageId(props: MarkerStyleProps): string {
     return SAT_KIND_IMAGE[kind] ?? 'sat_constellations';
   }
 
+  if (layerId === 'space_events') {
+    const kind = String(props.subKind ?? '');
+    return SPACE_EVENT_KIND_IMAGE[kind] ?? 'space_events';
+  }
+
+  if (layerId === 'marine_archaeology') {
+    const kind = String(props.subKind ?? '');
+    return MARINE_ARCH_KIND_IMAGE[kind] ?? 'marine_archaeology';
+  }
+
+  if (layerId === 'fisheries') {
+    const kind = String(props.subKind ?? '');
+    return FISHERY_KIND_IMAGE[kind] ?? 'fisheries';
+  }
+
+  if (layerId === 'monsoon') {
+    const kind = String(props.subKind ?? '');
+    return MONSOON_KIND_IMAGE[kind] ?? 'monsoon';
+  }
+
+  if (layerId === 'atmospheric_circulation') {
+    const kind = String(props.subKind ?? '');
+    return ATMOS_KIND_IMAGE[kind] ?? 'atmospheric_circulation';
+  }
+
+  if (layerId === 'deep_exploration') {
+    const kind = String(props.subKind ?? '');
+    return DEEP_EXPL_KIND_IMAGE[kind] ?? 'deep_exploration';
+  }
+
+  if (layerId === 'ocean_currents' && props.subKind === 'current-route') {
+    return 'current-route';
+  }
+
   if (props.etype) {
     return INCIDENT_TYPE_IMAGE[String(props.etype)] ?? layerId;
   }
@@ -437,6 +563,16 @@ const LAYER_LEGEND_ENTRIES: Partial<Record<LayerId, string[]>> = {
   quake_depth: ['quake-shallow', 'quake-intermediate', 'quake-deep'],
   ground_stations: ['gs-deep-space', 'gs-tracking'],
   sat_constellations: ['sat-weather', 'sat-comms', 'sat-navigation'],
+  space_stations: ['space_stations'],
+  satellites: ['satellites'],
+  space_debris: ['space_debris'],
+  space_events: ['space-asat', 'space-collision', 'space-breakup', 'space-reentry', 'space-closeapproach'],
+  marine_archaeology: ['marine_archaeology', 'arch-ancient', 'arch-merchant', 'arch-galleon', 'arch-warship'],
+  ocean_currents: ['ocean_currents', 'current-route'],
+  fisheries: ['fisheries', 'fish-pelagic', 'fish-groundfish', 'fish-coastal'],
+  monsoon: ['monsoon', 'monsoon-summer', 'monsoon-winter'],
+  atmospheric_circulation: ['atmospheric_circulation', 'atmo-itcz', 'atmo-trade', 'atmo-jet'],
+  deep_exploration: ['deep_exploration', 'deep-trench', 'deep-hydrothermal', 'deep-manned', 'deep-rov', 'deep-institution'],
 };
 
 /** 按当前开启图层生成图例分组 */

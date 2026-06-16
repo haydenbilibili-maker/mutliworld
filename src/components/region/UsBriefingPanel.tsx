@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * 美国战略态势简报面板 — 核力量/全球部署/本土/印太/北约/供应链/国内热点
+ * 美国战略态势简报面板 — 核力量/全球部署/本土/印太/北约/供应链/国内热点/地表层
  */
 
 import { useMemo } from 'react';
@@ -21,6 +21,7 @@ const MODULES = [
   { key: 'nato', label: '大西洋/北约枢纽', prefix: ['us-nato-'] },
   { key: 'supply', label: '战略资源与供应链', prefix: ['us-sup-'] },
   { key: 'domestic', label: '国内政治与安全热点', prefix: ['us-dom-'] },
+  { key: 'surface', label: '地表层信息', prefix: ['us-surf-'] },
 ] as const;
 
 function matchesModule(id: string, prefixes: readonly string[]): boolean {
@@ -124,7 +125,7 @@ export function UsBriefingPanel({ className = '' }: UsBriefingPanelProps) {
         )}
 
         <div className="text-[10px] text-dashboard-neutral/50 pt-1 border-t border-dashboard-neutral/10">
-          种子态势数据 · 核力量/驻军/印太/北约/供应链
+          种子态势数据 · 核力量/驻军/印太/北约/供应链/地表层/地表信息
         </div>
       </div>
     </DockPanel>

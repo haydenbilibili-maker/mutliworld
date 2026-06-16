@@ -9,7 +9,8 @@
     "lint": "next lint",
     "data:fetch": "node scripts/fetch-geodata.js",
     "data:fetch:dry": "node scripts/fetch-geodata.js --dry-run",
-    "data:launches": "node scripts/fetch-launches.js"
+    "data:launches": "node scripts/fetch-launches.js",
+    "data:tle": "node scripts/fetch-tle.js"
   },
   "dependencies": {
     "echarts": "^6.1.0",
@@ -18,6 +19,7 @@
     "next": "14.2.18",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "satellite.js": "^7.0.1",
     "swr": "^2.2.5",
     "zustand": "^5.0.1"
   },
@@ -31,6 +33,5 @@
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "typescript": "^5.6.3"
-  },
-  "type": "module"
+  }
 }

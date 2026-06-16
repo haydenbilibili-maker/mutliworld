@@ -3,8 +3,8 @@
 import { TimelineSlider } from '@/components/ui/TimelineSlider';
 import { LayerToggle } from '@/components/ui/LayerToggle';
 import { SearchBox } from '@/components/ui/SearchBox';
-import { LaunchLogButton } from '@/components/ui/LaunchLogButton';
 import { StrategicResearchMenu } from '@/components/ui/StrategicResearchMenu';
+import { MoreMenu } from '@/components/ui/MoreMenu';
 
 interface MapControlBarProps {
   className?: string;
@@ -38,12 +38,12 @@ export function MapControlBar({ className = '' }: MapControlBarProps) {
         className="mx-1 hidden h-6 w-px shrink-0 bg-dashboard-neutral/20 sm:block"
         aria-hidden
       />
-      <LaunchLogButton embedded />
+      <StrategicResearchMenu embedded />
       <div
         className="mx-1 hidden h-6 w-px shrink-0 bg-dashboard-neutral/20 sm:block"
         aria-hidden
       />
-      <StrategicResearchMenu embedded />
+      <MoreMenu embedded />
     </div>
   );
 }

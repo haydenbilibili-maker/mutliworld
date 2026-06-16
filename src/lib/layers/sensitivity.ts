@@ -15,7 +15,8 @@ export const SENSITIVE_LAYERS: ReadonlySet<LayerId> = new Set<LayerId>([
   'bases',
   'garrisons',
   'nuclear',
-  // 未来：submarine_bases / asat 等空天/海底军事条目登记于此
+  'space_events', // 含反卫星(ASAT)等军事敏感空天事件
+  // 未来：submarine_bases 等海底军事条目登记于此
 ]);
 
 export function isSensitiveLayer(layerId: LayerId): boolean {

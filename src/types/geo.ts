@@ -74,7 +74,17 @@ export type LayerId =
   | 'cable_incidents'
   | 'quake_depth'
   | 'ground_stations'
-  | 'sat_constellations';
+  | 'sat_constellations'
+  | 'space_stations'
+  | 'satellites'
+  | 'space_debris'
+  | 'space_events'
+  | 'marine_archaeology'
+  | 'ocean_currents'
+  | 'fisheries'
+  | 'monsoon'
+  | 'atmospheric_circulation'
+  | 'deep_exploration';
 
 /** 图层配置（显隐、样式、数据源） */
 export interface LayerConfig {

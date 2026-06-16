@@ -180,9 +180,11 @@ TierModule 抽象（`src/types/tier.ts` + `src/tiers/`：registry + 三层模块
 海缆已升级为**连续路由线**（`global.submarineCables.ts` + `cableRoutesToFeatures`，LineString）。
 `SeabedBriefingPanel`（洋底专属简报）✅ 已补齐：进入洋底层自动显示，合成海缆登陆/路由数、深海采矿按资源细分、近期断缆事件（可点击飞行）、实时震源深度浅/中/深统计。**洋底层全部图层优化完成。**
 
-**Phase 2 · 空间层 MVP** 🔄 进行中（2026-06-16）
-✅ launch_sites 归位 · ✅ `ground_stations`（深空网/测控站 14 处）· ✅ `sat_constellations`（GEO 气象/通信/北斗导航卫星，赤道同步轨道带，固定经度精确标注）。
-待办：LEO 星座覆盖/星下点动效 · `space_events`（RSS）· SpaceBriefingPanel · **3D 地球**（maplibre v5，单独分支）。
+**Phase 2 · 空间层 MVP** ✅ 已完成（2026-06-16）
+✅ launch_sites 归位 · ✅ `launch_log`（发射任务记录）· ✅ `ground_stations`（深空网/测控站）· ✅ `sat_constellations`（GEO 气象/通信/北斗导航，赤道同步轨道带）· ✅ `space_events`（ASAT/在轨相撞/解体/再入/抵近，公开历史事件带日期来源；ASAT 等列为敏感、可一键下架）· ✅ `SpaceBriefingPanel`（进入宇宙层自动显示：发射场/测控/GEO/发射记录统计 + GEO 分类 + 近期空天事件，敏感下架时隐藏）。
+✅ **3D 地球**前向兼容就绪（GlobeController + 星空 + 大气 + 轨道环），升级 `npm i maplibre-gl@^5` 即点亮。
+✅ **实时卫星 + 空间站高亮**：`/api/satellites`（wheretheiss.at，免费无 key，缓存 8s）+ `useLiveSatellites`（12s 刷新）+ `LiveSatellitesLayer`（普通卫星圆点 + ISS/天宫 DOM 脉冲标记与标签高亮，点击出实时星下点详情）+ `LiveStationsPanel`（ISS/天宫 实时经纬/高度/速度，进入宇宙层自动显示）。NORAD：ISS 25544 / 天宫天和 48274。
+待办（v5 后）：更多 LEO 真实星历（TLE/satellite.js 客户端传播）· 球面下「天—地—海」垂直剖面联动。
 
 **Phase 3 · 实时与动效**
 CelesTrak TLE 接入 → 卫星当前星下点；时间轴驱动 ground track。

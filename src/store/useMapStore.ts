@@ -8,6 +8,8 @@ import type { SpatialTier } from '@/types/tier';
 import { getRegion, DEFAULT_REGION_ID } from '@/regions';
 import { getTier, DEFAULT_TIER_ID } from '@/tiers';
 import { filterSensitive, SENSITIVE_LAYERS } from '@/lib/layers/sensitivity';
+import type { GlobeMotionSpeed } from '@/lib/globe/motionConstants';
+import { centersEqual, layersEqual, zoomsEqual } from '@/lib/map/viewState';
 
 export interface MapState {
   /** 当前区域模块（LIFEOS-005 平台化） */
@@ -18,6 +20,10 @@ export interface MapState {
   hideSensitive: boolean;
   /** 3D 地球（globe 投影）开关；需 maplibre v5 才实际生效，v4 下为 no-op */
   globe: boolean;
+  /** 宇宙层地球自转动效播放（仅 space tier 生效） */
+  globeMotionPlaying: boolean;
+  /** 宇宙层动效速度倍率 */
+  globeMotionSpeed: GlobeMotionSpeed;
   center: [number, number];
   zoom: number;
   view: ViewPreset;
@@ -36,6 +42,8 @@ export interface MapActions {
   setHideSensitive: (hide: boolean) => void;
   /** 切换 3D 地球（globe）投影 */
   setGlobe: (globe: boolean) => void;
+  setGlobeMotionPlaying: (playing: boolean) => void;
+  setGlobeMotionSpeed: (speed: GlobeMotionSpeed) => void;
   setCenter: (center: [number, number]) => void;
   setZoom: (zoom: number) => void;
   setView: (view: ViewPreset) => void;
@@ -51,6 +59,8 @@ const initialState: MapState = {
   activeTier: DEFAULT_TIER_ID,
   hideSensitive: false,
   globe: false,
+  globeMotionPlaying: true,
+  globeMotionSpeed: 1,
   center: [105, 28],
   zoom: 3.5,
   view: 'global',
@@ -93,11 +103,15 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
       activeLayers: filterSensitive(s.activeLayers, hideSensitive),
     })),
   setGlobe: (globe) => set({ globe }),
-  setCenter: (center) => set({ center }),
-  setZoom: (zoom) => set({ zoom }),
+  setGlobeMotionPlaying: (globeMotionPlaying) => set({ globeMotionPlaying }),
+  setGlobeMotionSpeed: (globeMotionSpeed) => set({ globeMotionSpeed }),
+  setCenter: (center) =>
+    set((s) => (centersEqual(s.center, center) ? {} : { center })),
+  setZoom: (zoom) => set((s) => (zoomsEqual(s.zoom, zoom) ? {} : { zoom })),
   setView: (view) => set({ view }),
   setTimeRange: (timeRange) => set({ timeRange }),
-  setActiveLayers: (activeLayers) => set({ activeLayers }),
+  setActiveLayers: (activeLayers) =>
+    set((s) => (layersEqual(s.activeLayers, activeLayers) ? {} : { activeLayers })),
   toggleLayer: (layerId) =>
     set((s) => {
       // 敏感图层已下架时，禁止开启
@@ -111,6 +125,12 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
       };
     }),
   selectEvent: (selectedEvent) =>
-    set({ selectedEvent, sidePanelOpen: !!selectedEvent }),
+    set((s) => {
+      const same =
+        s.selectedEvent?.id === selectedEvent?.id &&
+        s.sidePanelOpen === !!selectedEvent;
+      if (same) return {};
+      return { selectedEvent, sidePanelOpen: !!selectedEvent };
+    }),
   openSidePanel: (sidePanelOpen) => set({ sidePanelOpen }),
 }));

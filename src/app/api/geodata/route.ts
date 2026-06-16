@@ -44,6 +44,16 @@ const ALL_LAYERS: LayerId[] = [
   'quake_depth',
   'ground_stations',
   'sat_constellations',
+  'space_stations',
+  'satellites',
+  'space_debris',
+  'space_events',
+  'marine_archaeology',
+  'ocean_currents',
+  'fisheries',
+  'monsoon',
+  'atmospheric_circulation',
+  'deep_exploration',
 ];
 
 function parseRegion(value: string | null): RegionId {

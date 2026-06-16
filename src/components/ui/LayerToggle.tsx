@@ -32,12 +32,26 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
     ids: ['protests', 'daynight'],
   },
   {
-    title: '洋底空间',
-    ids: ['deep_sea_mining', 'tectonics', 'cable_incidents', 'quake_depth'],
+    title: '海洋与洋底空间',
+    ids: [
+      'deep_sea_mining',
+      'tectonics',
+      'cable_incidents',
+      'quake_depth',
+      'marine_archaeology',
+      'ocean_currents',
+      'fisheries',
+      'monsoon',
+      'atmospheric_circulation',
+      'deep_exploration',
+    ],
   },
   {
     title: '宇宙空间',
-    ids: ['launch_sites', 'launch_log', 'ground_stations', 'sat_constellations'],
+    ids: [
+      'launch_sites', 'launch_log', 'ground_stations', 'sat_constellations',
+      'space_stations', 'satellites', 'space_debris', 'space_events',
+    ],
   },
 ];
 
@@ -63,8 +77,18 @@ const ALWAYS_ON: LayerId[] = [
   'tectonics',
   'cable_incidents',
   'quake_depth',
+  'marine_archaeology',
+  'ocean_currents',
+  'fisheries',
+  'monsoon',
+  'atmospheric_circulation',
+  'deep_exploration',
   'ground_stations',
   'sat_constellations',
+  'space_stations',
+  'satellites',
+  'space_debris',
+  'space_events',
 ];
 
 export function LayerToggle({ className = '', embedded = false }: LayerToggleProps) {
