@@ -10,6 +10,7 @@ import { useRegionDetailStore } from '@/store/useRegionDetailStore';
 import { useMapStore } from '@/store/useMapStore';
 import { getRegion } from '@/regions';
 import { LAYER_LABELS } from '@/lib/constants';
+import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import type { EventDetail, ImpactLevel } from '@/types/geo';
 
 interface RegionDetailCardProps {
@@ -70,7 +71,7 @@ export function RegionDetailCard({ className = '' }: RegionDetailCardProps) {
 
   return (
     <div
-      className={`w-72 rounded-lg border border-dashboard-neutral/20 bg-dashboard-bg/95 shadow-xl backdrop-blur-md ${className}`}
+      className={`w-[min(18rem,calc(100vw-2rem))] rounded-lg border border-dashboard-neutral/20 bg-dashboard-bg/95 shadow-xl backdrop-blur-md ${className}`}
     >
       <div className="flex items-start gap-2 border-b border-dashboard-neutral/10 px-3 py-2">
         <div className="min-w-0">
@@ -79,14 +80,7 @@ export function RegionDetailCard({ className = '' }: RegionDetailCardProps) {
             {mod.viewpoint}
           </div>
         </div>
-        <button
-          type="button"
-          onClick={close}
-          aria-label="关闭详情"
-          className="ml-auto text-base leading-none text-dashboard-neutral hover:text-white"
-        >
-          ×
-        </button>
+        <PanelCloseButton onClick={close} label="关闭详情" />
       </div>
 
       <div className="space-y-2.5 p-3">

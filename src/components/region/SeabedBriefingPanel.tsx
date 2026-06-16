@@ -9,6 +9,7 @@
 import { useMemo } from 'react';
 import { useMapStore } from '@/store/useMapStore';
 import { useGeodataContext } from '@/context/GeodataContext';
+import { DockPanel } from '@/components/region/DockPanel';
 import { GLOBAL_INFRASTRUCTURE } from '@/regions/global.infrastructure';
 import { GLOBAL_SUBMARINE_CABLES } from '@/regions/global.submarineCables';
 import { GLOBAL_CABLE_INCIDENTS } from '@/regions/global.cableIncidents';
@@ -34,7 +35,7 @@ export function SeabedBriefingPanel({ className = '' }: SeabedBriefingPanelProps
   const setCenter = useMapStore((s) => s.setCenter);
   const setZoom = useMapStore((s) => s.setZoom);
   const selectEvent = useMapStore((s) => s.selectEvent);
-  const { data } = useGeodataContext();
+  const { data, isLoading: geodataLoading, error: geodataError } = useGeodataContext();
 
   const cableLandings = useMemo(
     () => GLOBAL_INFRASTRUCTURE.filter((p) => p.layerId === 'cables').length,
@@ -89,15 +90,13 @@ export function SeabedBriefingPanel({ className = '' }: SeabedBriefingPanelProps
   };
 
   return (
-    <div
-      className={`w-72 rounded-lg border border-cyan-500/25 bg-dashboard-bg/95 shadow-xl backdrop-blur-md ${className}`}
+    <DockPanel
+      id="seabed-briefing"
+      icon="🌊"
+      title="洋底空间 · 态势简报"
+      className={`w-[min(18rem,calc(100vw-2rem))] border-cyan-500/25 bg-dashboard-bg/95 shadow-xl backdrop-blur-md ${className}`}
     >
-      <div className="flex items-center gap-2 border-b border-dashboard-neutral/10 px-3 py-2">
-        <span className="text-base" aria-hidden>🌊</span>
-        <div className="text-sm font-medium text-white">洋底空间 · 态势简报</div>
-      </div>
-
-      <div className="space-y-2.5 p-3">
+      <div className="space-y-2.5">
         <div className="grid grid-cols-4 gap-1.5">
           <Stat label="海缆登陆" value={cableLandings} />
           <Stat label="海缆路由" value={GLOBAL_SUBMARINE_CABLES.length} />
@@ -141,7 +140,11 @@ export function SeabedBriefingPanel({ className = '' }: SeabedBriefingPanelProps
           <div className="mb-1 text-[10px] uppercase tracking-wide text-dashboard-neutral/40">
             实时震源深度（USGS）
           </div>
-          {quakeDepth.total > 0 ? (
+          {geodataLoading && !data ? (
+            <div className="text-[11px] text-dashboard-neutral/45">正在加载震源数据…</div>
+          ) : geodataError ? (
+            <div className="text-[11px] text-dashboard-conflict/80">震源数据暂不可用</div>
+          ) : quakeDepth.total > 0 ? (
             <div className="flex items-center gap-2 text-[11px] text-dashboard-neutral/80">
               <span>🔴 浅 {quakeDepth.shallow}</span>
               <span>🟠 中 {quakeDepth.intermediate}</span>
@@ -158,6 +161,6 @@ export function SeabedBriefingPanel({ className = '' }: SeabedBriefingPanelProps
           结构化合成 · 非编造 · 海缆/采矿/板块为公开资料示意，断缆事件带日期来源
         </div>
       </div>
-    </div>
+    </DockPanel>
   );
 }

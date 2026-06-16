@@ -7,6 +7,8 @@
 
 import { useMapStore } from '@/store/useMapStore';
 import { useProfileStore } from '@/store/useProfileStore';
+import { usePanelStore } from '@/store/usePanelStore';
+import type { PanelId } from '@/store/usePanelStore';
 import { listTiers } from '@/tiers';
 import { CosmicMotionControls } from '@/components/ui/CosmicMotionControls';
 
@@ -23,7 +25,21 @@ export function TierSwitcher({ className = '' }: TierSwitcherProps) {
   const setGlobe = useMapStore((s) => s.setGlobe);
   const profileActive = useProfileStore((s) => s.active);
   const setProfileActive = useProfileStore((s) => s.setActive);
+  const briefingOpen = usePanelStore((s) =>
+    activeTier === 'space'
+      ? s.open['space-briefing']
+      : activeTier === 'subsurface'
+        ? s.open['seabed-briefing']
+        : false,
+  );
+  const toggleBriefing = usePanelStore((s) => s.toggle);
   const tiers = listTiers(); // 宇宙 → 地表 → 洋底（上到下）
+  const tierBriefingId: PanelId | null =
+    activeTier === 'space'
+      ? 'space-briefing'
+      : activeTier === 'subsurface'
+        ? 'seabed-briefing'
+        : null;
   // 宇宙层自动球面；其余层显示当前手动开关状态
   const globeActive = globe || activeTier === 'space';
 
@@ -65,6 +81,25 @@ export function TierSwitcher({ className = '' }: TierSwitcherProps) {
       })}
 
       <div className="mt-0.5 border-t border-dashboard-neutral/15 pt-1">
+        {tierBriefingId && (
+          <button
+            type="button"
+            onClick={() => toggleBriefing(tierBriefingId)}
+            aria-pressed={briefingOpen}
+            title="显示或隐藏当前空间层态势简报"
+            className={[
+              'mb-1 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-[10px] transition-colors',
+              briefingOpen
+                ? 'bg-dashboard-military/25 text-white'
+                : 'text-dashboard-neutral/60 hover:bg-dashboard-neutral/15 hover:text-white',
+            ].join(' ')}
+          >
+            <span aria-hidden>📋</span>
+            <span className="truncate">
+              {briefingOpen ? '态势简报：开' : '态势简报：关'}
+            </span>
+          </button>
+        )}
         <button
           type="button"
           onClick={() => setProfileActive(!profileActive)}

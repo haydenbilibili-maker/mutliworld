@@ -8,6 +8,7 @@
 import { useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
+import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { LAYER_LABELS } from '@/lib/constants';
 import type { StrategicResearchModule } from '@/types/strategic-research';
 import type { LayerId } from '@/types/geo';
@@ -100,14 +101,7 @@ export function StrategicResearchPanel({
                     {subtitle}
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="shrink-0 rounded-md px-2 py-1 text-dashboard-neutral transition-colors hover:bg-white/5 hover:text-white"
-                  aria-label="关闭"
-                >
-                  × 关闭
-                </button>
+                <PanelCloseButton onClick={onClose} label="关闭战略研究面板" />
               </header>
 
               <div className="flex min-h-0 min-w-0 flex-1">

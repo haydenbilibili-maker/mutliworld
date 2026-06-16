@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
+import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { LAYER_LABELS } from '@/lib/constants';
 import { getRegion } from '@/regions';
 import type { LayerId } from '@/types/geo';
@@ -227,14 +228,11 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
                 >
                   清空
                 </button>
-                <button
-                  type="button"
+                <PanelCloseButton
+                  compact
                   onClick={() => setOpen(false)}
-                  aria-label="关闭图层面板"
-                  className="ml-1 rounded px-1.5 py-0.5 text-dashboard-neutral/70 hover:bg-white/5 hover:text-white"
-                >
-                  ×
-                </button>
+                  label="关闭图层面板"
+                />
               </div>
             </div>
 

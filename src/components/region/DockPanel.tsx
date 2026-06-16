@@ -6,12 +6,15 @@
  */
 
 import type { ReactNode } from 'react';
+import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { usePanelStore } from '@/store/usePanelStore';
 import type { PanelId } from '@/store/usePanelStore';
 
 interface DockPanelProps {
   id: PanelId;
   title: string;
+  /** 标题左侧图标（如 🌊 / 🛰） */
+  icon?: ReactNode;
   count?: number;
   /** header 右侧自定义内容（筛选/标签页等） */
   headerRight?: ReactNode;
@@ -22,6 +25,7 @@ interface DockPanelProps {
 export function DockPanel({
   id,
   title,
+  icon,
   count,
   headerRight,
   className = '',
@@ -37,7 +41,12 @@ export function DockPanel({
       className={`rounded-lg bg-dashboard-bg/90 border border-dashboard-neutral/20 overflow-auto ${className}`}
     >
       <div className="flex items-center gap-2 px-3 py-2 border-b border-dashboard-neutral/10 sticky top-0 bg-dashboard-bg/95 backdrop-blur z-10">
-        <div className="text-sm font-medium text-white">
+        {icon && (
+          <span className="text-base leading-none shrink-0" aria-hidden>
+            {icon}
+          </span>
+        )}
+        <div className="min-w-0 flex-1 text-sm font-medium text-white">
           {title}
           {count != null && (
             <span className="text-dashboard-neutral/70 ml-1 text-xs">
@@ -45,16 +54,12 @@ export function DockPanel({
             </span>
           )}
         </div>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           {headerRight}
-          <button
-            type="button"
+          <PanelCloseButton
             onClick={() => setOpen(id, false)}
-            className="text-dashboard-neutral hover:text-white leading-none text-base"
-            aria-label="关闭面板"
-          >
-            ×
-          </button>
+            label="关闭面板"
+          />
         </div>
       </div>
       <div className="p-3">{children}</div>

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
 import { useLaunchLogStore } from '@/store/useLaunchLogStore';
 import { useLaunchLog } from '@/hooks/useLaunchLog';
+import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { GLOBAL_LAUNCH_SITES } from '@/regions/global.launchSites';
 import type { LaunchLogEntry, LaunchStatus } from '@/regions/global.launchLog';
 import type { EventDetail } from '@/types/geo';
@@ -77,7 +78,7 @@ export function LaunchLogPanel({ className = '' }: LaunchLogPanelProps) {
   const toggleLayer = useMapStore((s) => s.toggleLayer);
   const activeLayers = useMapStore((s) => s.activeLayers);
 
-  const { entries, total, isLoading } = useLaunchLog('1y');
+  const { entries, total, isLoading, error, mutate } = useLaunchLog('1y');
 
   const handleClick = (e: LaunchLogEntry) => {
     if (!activeLayers.includes('launch_log')) {
@@ -98,18 +99,12 @@ export function LaunchLogPanel({ className = '' }: LaunchLogPanelProps) {
           transition={{ duration: 0.15 }}
           className={`rounded-lg bg-dashboard-bg/95 border border-dashboard-neutral/25 text-sm shadow-xl backdrop-blur-md overflow-hidden ${className}`}
         >
-          <div className="flex items-center justify-between px-3 py-2 border-b border-dashboard-neutral/15">
-            <span className="font-semibold text-dashboard-neutral tracking-wide">
-              🚀 全球航天发射日志
+          <div className="flex items-center gap-2 border-b border-dashboard-neutral/10 px-3 py-2">
+            <span className="text-base leading-none" aria-hidden>
+              🚀
             </span>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="关闭发射日志"
-              className="rounded px-1.5 py-0.5 text-dashboard-neutral/60 hover:bg-white/5 hover:text-white"
-            >
-              ×
-            </button>
+            <div className="min-w-0 flex-1 text-sm font-medium text-white">发射日志</div>
+            <PanelCloseButton onClick={() => setOpen(false)} label="关闭发射日志" />
           </div>
 
           <div className="px-3 py-1.5 text-[11px] text-dashboard-neutral/50 border-b border-dashboard-neutral/10">
@@ -119,7 +114,18 @@ export function LaunchLogPanel({ className = '' }: LaunchLogPanelProps) {
           </div>
 
           <div className="max-h-[min(50vh,22rem)] overflow-y-auto">
-            {isLoading && entries.length === 0 ? (
+            {error ? (
+              <div className="px-3 py-4 text-dashboard-conflict/80">
+                发射日志加载失败
+                <button
+                  type="button"
+                  onClick={() => mutate()}
+                  className="ml-2 text-dashboard-military hover:underline"
+                >
+                  重试
+                </button>
+              </div>
+            ) : isLoading && entries.length === 0 ? (
               <div className="px-3 py-4 text-dashboard-neutral/50">加载发射记录…</div>
             ) : entries.length === 0 ? (
               <div className="px-3 py-4 text-dashboard-neutral/50">

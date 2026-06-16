@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 import { useMapStore } from '@/store/useMapStore';
 import { useOrbitalObjects } from '@/hooks/useOrbitalObjects';
 import { useOrbitalPanelStore } from '@/store/useOrbitalPanelStore';
+import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import type { EventDetail } from '@/types/geo';
 
 interface OrbitalObjectsPanelProps {
@@ -29,7 +30,7 @@ export function OrbitalObjectsPanel({ className = '' }: OrbitalObjectsPanelProps
   const selectEvent = useMapStore((s) => s.selectEvent);
 
   const stationsOn = activeLayers.includes('space_stations');
-  const { geojson, meta, isLoading } = useOrbitalObjects(inSpace && open);
+  const { geojson, meta, isLoading, error, refresh } = useOrbitalObjects(inSpace && open);
 
   const stations = useMemo(() => {
     const list = geojson.features.filter(
@@ -81,20 +82,13 @@ export function OrbitalObjectsPanel({ className = '' }: OrbitalObjectsPanelProps
         className,
       ].join(' ')}
     >
-      <div className="flex shrink-0 items-center gap-2 border-b border-dashboard-neutral/10 px-3 py-2">
-        <span className="text-base" aria-hidden>
+      <div className="flex shrink-0 items-center gap-2 border-b border-dashboard-neutral/10 bg-dashboard-bg/95 px-3 py-2 backdrop-blur">
+        <span className="text-base leading-none" aria-hidden>
           🛰️
         </span>
-        <div className="text-sm font-medium text-white">轨道列表</div>
-        <span className="ml-auto text-[9px] text-emerald-400/80">● TLE</span>
-        <button
-          type="button"
-          onClick={() => setOpen(false)}
-          aria-label="关闭轨道列表"
-          className="rounded px-1 text-dashboard-neutral/60 hover:text-white"
-        >
-          ×
-        </button>
+        <div className="min-w-0 flex-1 text-sm font-medium text-white">轨道列表</div>
+        <span className="text-[9px] text-emerald-400/80">● TLE</span>
+        <PanelCloseButton onClick={() => setOpen(false)} label="关闭轨道列表" />
       </div>
 
       <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-3">
@@ -113,7 +107,18 @@ export function OrbitalObjectsPanel({ className = '' }: OrbitalObjectsPanelProps
           </div>
         </div>
 
-        {isLoading && stations.length === 0 ? (
+        {error ? (
+          <div className="text-[11px] text-dashboard-conflict/80">
+            轨道数据暂不可用
+            <button
+              type="button"
+              onClick={() => refresh()}
+              className="ml-2 text-dashboard-military hover:underline"
+            >
+              重试
+            </button>
+          </div>
+        ) : isLoading && stations.length === 0 ? (
           <div className="text-[11px] text-dashboard-neutral/50">传播轨道星历…</div>
         ) : !stationsOn ? (
           <div className="text-[11px] text-dashboard-neutral/50">

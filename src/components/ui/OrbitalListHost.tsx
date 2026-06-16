@@ -41,7 +41,7 @@ export function OrbitalListHost({ className = '' }: OrbitalListHostProps) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.18 }}
-              className="max-h-[min(50vh,24rem)] w-[min(18rem,35vw)] overflow-hidden"
+              className="max-h-[min(50vh,24rem)] w-[min(18rem,calc(100vw-2rem))] overflow-hidden"
             >
               <OrbitalObjectsPanel className="max-h-[min(50vh,24rem)]" />
             </motion.div>

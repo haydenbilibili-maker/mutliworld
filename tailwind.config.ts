@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      zIndex: {
+        '25': '25',
+        '35': '35',
+      },
       colors: {
         dashboard: {
           bg: '#0A0E17',

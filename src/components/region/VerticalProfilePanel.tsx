@@ -19,6 +19,7 @@ import {
   type ProfileItem,
 } from '@/lib/profile/computeProfile';
 import { VerticalCrossSection } from '@/components/region/VerticalCrossSection';
+import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import type { EventDetail } from '@/types/geo';
 import type { SpatialTier } from '@/types/tier';
 
@@ -112,18 +113,11 @@ export function VerticalProfilePanel({ className = '' }: VerticalProfilePanelPro
   };
 
   return (
-    <div className={`w-72 rounded-lg border border-amber-400/30 bg-dashboard-bg/95 shadow-xl backdrop-blur-md ${className}`}>
+    <div className={`w-[min(18rem,calc(100vw-2rem))] rounded-lg border border-amber-400/30 bg-dashboard-bg/95 shadow-xl backdrop-blur-md ${className}`}>
       <div className="flex items-center gap-2 border-b border-dashboard-neutral/10 px-3 py-2">
-        <span aria-hidden>📊</span>
-        <div className="text-sm font-medium text-white">天—地—海 垂直剖面</div>
-        <button
-          type="button"
-          onClick={close}
-          aria-label="关闭剖面"
-          className="ml-auto text-base leading-none text-dashboard-neutral hover:text-white"
-        >
-          ×
-        </button>
+        <span className="text-base leading-none" aria-hidden>📊</span>
+        <div className="min-w-0 flex-1 text-sm font-medium text-white">天—地—海 垂直剖面</div>
+        <PanelCloseButton onClick={close} label="关闭剖面" />
       </div>
 
       <div className="px-3 py-2">

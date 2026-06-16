@@ -19,6 +19,8 @@ export type PanelId =
   | 'briefing'
   | 'china-briefing'
   | 'us-briefing'
+  | 'seabed-briefing'
+  | 'space-briefing'
   | 'news'
   | 'markets';
 
@@ -59,6 +61,8 @@ const ALL: Record<PanelId, boolean> = {
   briefing: true,
   'china-briefing': true,
   'us-briefing': true,
+  'seabed-briefing': true,
+  'space-briefing': true,
   news: false,
   markets: false,
 };
@@ -71,10 +75,10 @@ export const usePanelStore = create<PanelState>((set) => ({
     set((s) => ({ open: { ...s.open, [id]: value } })),
   showAll: () =>
     set(() => ({
-      open: { overview: true, military: true, energy: true, targets: true, diplomacy: true, social: true, trend: true, marquee: true, briefing: true, 'china-briefing': true, 'us-briefing': true, news: true, markets: true },
+      open: { overview: true, military: true, energy: true, targets: true, diplomacy: true, social: true, trend: true, marquee: true, briefing: true, 'china-briefing': true, 'us-briefing': true, 'seabed-briefing': true, 'space-briefing': true, news: true, markets: true },
     })),
   hideAll: () =>
     set(() => ({
-      open: { overview: false, military: false, energy: false, targets: false, diplomacy: false, social: false, trend: false, marquee: false, briefing: false, 'china-briefing': false, 'us-briefing': false, news: false, markets: false },
+      open: { overview: false, military: false, energy: false, targets: false, diplomacy: false, social: false, trend: false, marquee: false, briefing: false, 'china-briefing': false, 'us-briefing': false, 'seabed-briefing': false, 'space-briefing': false, news: false, markets: false },
     })),
 }));

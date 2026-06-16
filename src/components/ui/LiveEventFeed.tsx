@@ -74,7 +74,7 @@ interface LiveEventFeedProps {
  * 按时间倒序列出，点击跳转地图 + 打开 SidePanel。
  */
 export function LiveEventFeed({ className = '', maxItems = 12 }: LiveEventFeedProps) {
-  const { data, isLoading, isValidating } = useGeodataContext();
+  const { data, isLoading, isValidating, error } = useGeodataContext();
   const { selectEvent, setCenter, setZoom } = useMapStore();
   const [collapsed, setCollapsed] = useState(true);
 
@@ -111,10 +111,20 @@ export function LiveEventFeed({ className = '', maxItems = 12 }: LiveEventFeedPr
     >
       {/* 标题栏 */}
       <div
-        className="flex items-center justify-between px-3 py-2 cursor-pointer select-none border-b border-dashboard-neutral/10"
+        className="flex cursor-pointer select-none items-center justify-between border-b border-dashboard-neutral/10 px-3 py-2"
         onClick={() => setCollapsed((c) => !c)}
+        role="button"
+        tabIndex={0}
+        aria-expanded={!collapsed}
+        aria-label="实时事件流"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setCollapsed((c) => !c);
+          }
+        }}
       >
-        <span className="font-semibold text-dashboard-neutral tracking-wide">
+        <span className="text-sm font-medium text-white">
           实时事件流
           {isValidating && !isLoading && (
             <span className="ml-2 text-xs text-dashboard-neutral/50">刷新中…</span>
@@ -127,15 +137,18 @@ export function LiveEventFeed({ className = '', maxItems = 12 }: LiveEventFeedPr
 
       {!collapsed && (
         <div className="max-h-72 overflow-y-auto divide-y divide-dashboard-neutral/10">
-          {isLoading && (
+          {error ? (
+            <div className="px-3 py-3 text-dashboard-conflict/80">事件数据暂不可用</div>
+          ) : isLoading ? (
             <div className="px-3 py-3 text-dashboard-neutral/50">加载中…</div>
-          )}
-          {!isLoading && items.length === 0 && (
+          ) : items.length === 0 ? (
             <div className="px-3 py-3 text-dashboard-neutral/50">
               当前时间范围内无事件
             </div>
-          )}
-          {items.map((f) => {
+          ) : null}
+          {!error &&
+            !isLoading &&
+            items.map((f) => {
             const p = f.properties ?? {};
             const impact = toImpact(String(p.impact ?? ''));
             const layerId = String(p.layerId ?? '');

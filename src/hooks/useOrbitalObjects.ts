@@ -12,7 +12,7 @@ const EMPTY_GEOJSON: FeatureCollection = { type: 'FeatureCollection', features: 
 
 const fetcher = (url: string) =>
   fetch(url).then((r) => {
-    if (!r.ok) throw new Error('orbital-objects fetch failed');
+    if (!r.ok) throw new Error('获取轨道数据失败');
     return r.json() as Promise<OrbitalObjectsResponse>;
   });
 

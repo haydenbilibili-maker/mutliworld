@@ -24,7 +24,7 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
   const toggleOrbital = useOrbitalPanelStore((s) => s.toggle);
   const inSpace = useMapStore((s) => s.activeTier === 'space');
   const { total } = useLaunchLog('1y');
-  const { meta: orbitalMeta } = useOrbitalObjects(inSpace);
+  const { meta: orbitalMeta } = useOrbitalObjects(inSpace && (menuOpen || orbitalOpen));
 
   const hasActiveItem = launchLogOpen || orbitalOpen;
   const orbitalTotal = orbitalMeta?.total ?? 0;
@@ -226,6 +226,7 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     role="menuitem"
+                    title="在新标签页打开管理后台"
                     onClick={() => setMenuOpen(false)}
                     className="flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] text-dashboard-neutral transition-colors hover:bg-white/5 hover:text-white"
                   >

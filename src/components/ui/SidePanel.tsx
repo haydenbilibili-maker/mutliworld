@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
 import { LAYER_LABELS } from '@/lib/constants';
+import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import type { LayerId } from '@/types/geo';
 
 interface SidePanelProps {
@@ -52,17 +53,14 @@ export function SidePanel({ className = '' }: SidePanelProps) {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'tween', duration: 0.25 }}
-          className={`absolute top-0 right-0 h-full w-full max-w-md bg-dashboard-bg/95 border-l border-dashboard-neutral/20 shadow-xl z-20 overflow-y-auto ${className}`}
+          className={`absolute top-0 right-0 z-35 h-full w-full max-w-md overflow-y-auto border-l border-dashboard-neutral/20 bg-dashboard-bg/95 shadow-xl ${className}`}
         >
           <div className="p-4">
-            <button
-              type="button"
+            <PanelCloseButton
               onClick={() => openSidePanel(false)}
-              className="text-dashboard-neutral hover:text-white mb-4"
-              aria-label="关闭侧边栏"
-            >
-              × 关闭
-            </button>
+              label="关闭侧边栏"
+              className="mb-4"
+            />
             {selectedEvent ? (
               <div className="space-y-2">
                 <h2 className="text-lg font-semibold text-white">

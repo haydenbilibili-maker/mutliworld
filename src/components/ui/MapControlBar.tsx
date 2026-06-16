@@ -15,7 +15,7 @@ export function MapControlBar({ className = '' }: MapControlBarProps) {
   return (
     <div
       className={[
-        'flex flex-wrap items-center justify-center gap-x-1 gap-y-1 rounded-lg border border-dashboard-neutral/20',
+        'flex flex-wrap items-center justify-center gap-x-1 gap-y-1.5 rounded-lg border border-dashboard-neutral/20',
         'bg-dashboard-bg/90 px-2 py-1.5 shadow-lg backdrop-blur-sm',
         'max-w-[min(calc(100vw-2rem),48rem)]',
         className,

@@ -8,6 +8,7 @@
 
 import { useMemo } from 'react';
 import { useMapStore } from '@/store/useMapStore';
+import { DockPanel } from '@/components/region/DockPanel';
 import { GLOBAL_LAUNCH_SITES } from '@/regions/global.launchSites';
 import { GLOBAL_LAUNCH_LOG } from '@/regions/global.launchLog';
 import { GLOBAL_GROUND_STATIONS } from '@/regions/global.groundStations';
@@ -82,15 +83,13 @@ export function SpaceBriefingPanel({ className = '' }: SpaceBriefingPanelProps) 
   };
 
   return (
-    <div
-      className={`w-72 rounded-lg border border-sky-500/25 bg-dashboard-bg/95 shadow-xl backdrop-blur-md ${className}`}
+    <DockPanel
+      id="space-briefing"
+      icon="🛰"
+      title="宇宙空间 · 态势简报"
+      className={`w-[min(18rem,calc(100vw-2rem))] border-sky-500/25 bg-dashboard-bg/95 shadow-xl backdrop-blur-md ${className}`}
     >
-      <div className="flex items-center gap-2 border-b border-dashboard-neutral/10 px-3 py-2">
-        <span className="text-base" aria-hidden>🛰</span>
-        <div className="text-sm font-medium text-white">宇宙空间 · 态势简报</div>
-      </div>
-
-      <div className="space-y-2.5 p-3">
+      <div className="space-y-2.5">
         <div className="grid grid-cols-4 gap-1.5">
           <Stat label="发射场" value={GLOBAL_LAUNCH_SITES.length} />
           <Stat label="测控站" value={GLOBAL_GROUND_STATIONS.length} />
@@ -147,6 +146,6 @@ export function SpaceBriefingPanel({ className = '' }: SpaceBriefingPanelProps) 
           结构化合成 · 非编造 · 发射场/测控/卫星为公开资料示意，空天事件带日期来源
         </div>
       </div>
-    </div>
+    </DockPanel>
   );
 }

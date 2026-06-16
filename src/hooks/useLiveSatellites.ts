@@ -7,7 +7,7 @@ const EMPTY_ITEMS: LiveSat[] = [];
 
 const fetcher = (url: string) =>
   fetch(url).then((r) => {
-    if (!r.ok) throw new Error('satellites fetch failed');
+    if (!r.ok) throw new Error('获取卫星数据失败');
     return r.json();
   });
 
