@@ -3,9 +3,8 @@
 import { MapContainer } from '@/components/map/MapContainer';
 import { StarfieldBackdrop } from '@/components/map/StarfieldBackdrop';
 import { SidePanel } from '@/components/ui/SidePanel';
-import { MapLegend } from '@/components/ui/MapLegend';
+import { MapHudStack } from '@/components/ui/MapHudStack';
 import { MapControlBar } from '@/components/ui/MapControlBar';
-import { DataFreshnessBar } from '@/components/ui/DataFreshnessBar';
 import { RegionSwitcher } from '@/components/ui/RegionSwitcher';
 import { MideastPanel } from '@/components/region/MideastPanel';
 import { MideastMilitaryPanel } from '@/components/region/MideastMilitaryPanel';
@@ -37,12 +36,13 @@ export function HomeDashboard() {
     <GeodataProvider>
       <main className="relative w-full h-screen overflow-hidden">
         <StarfieldBackdrop />
-        <MapContainer className="absolute inset-0" />
-        <RegionSwitcher className="absolute top-4 left-4 z-20" />
+        <MapContainer className="absolute inset-0 z-0" />
+        <div className="pointer-events-none absolute top-4 left-4 z-30">
+          <RegionSwitcher className="pointer-events-auto" />
+        </div>
         <TierSwitcher className="absolute top-1/2 left-4 z-20 -translate-y-1/2" />
-        <RegionDetailCard className="absolute top-28 left-4 z-30" />
+        <RegionDetailCard className="absolute top-16 left-4 z-30" />
         <PanelDock className="absolute top-4 left-1/2 -translate-x-1/2 z-20" />
-        <DataFreshnessBar className="absolute top-4 right-4 z-10 max-w-[min(28rem,calc(100vw-12rem))]" />
         <LiveEventFeed className="absolute top-[4.25rem] right-4 z-10 w-72 max-h-[min(40vh,18rem)]" />
         <LaunchLogPanel className="absolute top-[4.25rem] right-4 z-30 w-[min(28rem,calc(100vw-2rem))]" />
         <RegionBriefingPanel className="absolute top-20 left-4 z-25" />
@@ -62,7 +62,7 @@ export function HomeDashboard() {
         <MideastEnergyPanel className="absolute bottom-14 right-4 z-25" />
         <MideastTrendPanel className="absolute bottom-14 left-1/2 -translate-x-1/2 z-25" />
         <MapControlBar className="absolute bottom-14 left-1/2 z-20 -translate-x-1/2" />
-        <MapLegend className="absolute bottom-[4.75rem] left-4 z-20" />
+        <MapHudStack className="absolute bottom-[4.75rem] left-4 z-20" />
         <MarqueeTicker className="absolute bottom-0 left-0 right-0 z-20" />
         <SidePanel />
         <StrategicResearchHost />

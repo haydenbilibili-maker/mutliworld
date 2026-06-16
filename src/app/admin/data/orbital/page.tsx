@@ -1,4 +1,5 @@
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminTleRefreshSection } from '@/components/admin/AdminTleRefreshSection';
 import { formatDateTime } from '@/lib/admin/format';
 import { getAdminStats } from '@/lib/admin/stats';
 
@@ -28,18 +29,7 @@ export default function AdminOrbitalPage() {
         />
       </div>
 
-      <section className="mb-8 rounded-xl border border-dashboard-neutral/15 bg-white/[0.02] p-4 sm:p-5">
-        <h2 className="mb-2 text-sm font-medium text-white">刷新数据</h2>
-        <p className="mb-3 text-sm text-dashboard-neutral/70">
-          在项目根目录执行以下命令，从 CelesTrak 拉取 TLE 并写入本地 JSON：
-        </p>
-        <pre className="overflow-x-auto rounded-lg bg-black/40 px-4 py-3 font-mono text-sm text-dashboard-military">
-          npm run data:tle
-        </pre>
-        <p className="mt-3 text-xs text-dashboard-neutral/50">
-          无缓存文件时将使用种子 TLE 兜底（ISS、天宫等）。
-        </p>
-      </section>
+      <AdminTleRefreshSection />
 
       <section>
         <h2 className="mb-3 text-sm font-medium text-white">分类统计</h2>

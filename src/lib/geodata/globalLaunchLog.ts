@@ -1,3 +1,5 @@
+import 'server-only';
+
 import type { RegionId } from '@/types/region';
 import type { TimeRange } from '@/types/geo';
 import { getRegion } from '@/regions';

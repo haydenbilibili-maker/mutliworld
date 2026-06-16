@@ -41,6 +41,25 @@ export interface OrbitalObject {
   operator?: string;
 }
 
+/** /api/orbital/tle/meta 元数据（不含 SGP4 传播） */
+export interface TleMeta {
+  fetchedAt: string | null;
+  source: string;
+  counts: Record<OrbitalCategory, number>;
+  total: number;
+}
+
+/** POST /api/orbital/tle/refresh 响应 */
+export interface TleRefreshResponse {
+  ok: boolean;
+  count: number;
+  fetchedAt: string;
+  counts: Record<OrbitalCategory, number>;
+  source: string;
+  summary: string;
+  error?: string;
+}
+
 /** /api/orbital-objects 元数据 */
 export interface OrbitalObjectsMeta {
   generatedAt: string;

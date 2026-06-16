@@ -10,6 +10,7 @@ import { useMapStore } from '@/store/useMapStore';
 import { useOrbitalObjects } from '@/hooks/useOrbitalObjects';
 import { useOrbitalPanelStore } from '@/store/useOrbitalPanelStore';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
+import { TleStatusBar } from '@/components/ui/TleStatusBar';
 import type { EventDetail } from '@/types/geo';
 
 interface OrbitalObjectsPanelProps {
@@ -92,6 +93,8 @@ export function OrbitalObjectsPanel({ className = '' }: OrbitalObjectsPanelProps
       </div>
 
       <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-3">
+        <TleStatusBar enabled={inSpace && open} onRefreshSuccess={() => void refresh()} />
+
         <div className="grid grid-cols-3 gap-1.5 text-center text-[10px]">
           <div className="rounded border border-cyan-500/20 bg-cyan-500/5 px-1 py-1.5">
             <div className="font-medium text-cyan-300">🏠 空间站</div>

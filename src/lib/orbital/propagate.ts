@@ -3,6 +3,8 @@
  * 从 TLE 计算指定时刻的星下点经纬、高度、速度
  */
 
+import 'server-only';
+
 import {
   twoline2satrec,
   propagate,

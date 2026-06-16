@@ -27,8 +27,10 @@ export function MapContainer({ className = '' }: MapContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const initialSyncDone = useRef(false);
+  const lastGlobeResetNonce = useRef(0);
   const [mapInstance, setMapInstance] = useState<maplibregl.Map | null>(null);
   const { center, zoom } = useMapStore();
+  const globeViewResetNonce = useMapStore((s) => s.globeViewResetNonce);
   const activeTier = useMapStore((s) => s.activeTier);
   const orbitalOpen = useOrbitalPanelStore((s) => s.open);
   const { bounds } = useRegionData();
@@ -169,6 +171,11 @@ export function MapContainer({ className = '' }: MapContainerProps) {
       initialSyncDone.current = true;
       return;
     }
+    // 宇宙层回正由 CosmicGlobeAnimator 执行完整 flyTo（含 bearing/pitch）
+    if (globeViewResetNonce !== lastGlobeResetNonce.current) {
+      lastGlobeResetNonce.current = globeViewResetNonce;
+      return;
+    }
     const c = map.getCenter();
     const z = map.getZoom();
     if (
@@ -178,7 +185,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
       return;
     }
     map.flyTo({ center, zoom, duration: 800 });
-  }, [center, zoom]);
+  }, [center, zoom, globeViewResetNonce]);
 
   // 轨道列表展开时右移可视中心，减轻浮层遮挡
   useEffect(() => {

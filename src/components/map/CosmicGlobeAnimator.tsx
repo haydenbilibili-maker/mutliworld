@@ -13,7 +13,7 @@ import type maplibregl from 'maplibre-gl';
 import { useMapContext } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import { isGlobeSupported } from '@/components/map/GlobeController';
-import { ROTATION_PERIOD_S } from '@/lib/globe/motionConstants';
+import { ROTATION_PERIOD_S, CHINA_GLOBE_VIEW, CHINA_GLOBE_FLY_DURATION_MS } from '@/lib/globe/motionConstants';
 import { runProgrammaticBearing } from '@/lib/map/viewState';
 
 const GLOBE_TOUCH_OPTS = { around: 'center' as const };
@@ -53,10 +53,13 @@ export function CosmicGlobeAnimator() {
   const activeTier = useMapStore((s) => s.activeTier);
   const playing = useMapStore((s) => s.globeMotionPlaying);
   const speed = useMapStore((s) => s.globeMotionSpeed);
+  const globeViewResetNonce = useMapStore((s) => s.globeViewResetNonce);
 
   const bearingRef = useRef(0);
   const rafRef = useRef<number | null>(null);
   const playingRef = useRef(playing);
+  const isResettingRef = useRef(false);
+  const prevResetNonceRef = useRef(globeViewResetNonce);
 
   const isCosmicActive = activeTier === 'space';
 
@@ -97,6 +100,40 @@ export function CosmicGlobeAnimator() {
     };
   }, [map, isCosmicActive, playing]);
 
+  // 一键回正中国：flyTo 正视图，bearing 归零后自转从此继续
+  useEffect(() => {
+    if (!map || !isCosmicActive || !isGlobeSupported(map)) return;
+    if (globeViewResetNonce === prevResetNonceRef.current) return;
+    prevResetNonceRef.current = globeViewResetNonce;
+
+    bearingRef.current = CHINA_GLOBE_VIEW.bearing;
+    isResettingRef.current = true;
+
+    try {
+      map.flyTo({
+        center: CHINA_GLOBE_VIEW.center,
+        zoom: CHINA_GLOBE_VIEW.zoom,
+        bearing: CHINA_GLOBE_VIEW.bearing,
+        pitch: CHINA_GLOBE_VIEW.pitch,
+        duration: CHINA_GLOBE_FLY_DURATION_MS,
+      });
+    } catch {
+      isResettingRef.current = false;
+      return;
+    }
+
+    const onMoveEnd = () => {
+      isResettingRef.current = false;
+      bearingRef.current = CHINA_GLOBE_VIEW.bearing;
+    };
+    map.once('moveend', onMoveEnd);
+
+    return () => {
+      map.off('moveend', onMoveEnd);
+      isResettingRef.current = false;
+    };
+  }, [map, isCosmicActive, globeViewResetNonce]);
+
   useEffect(() => {
     if (!map || !isCosmicActive || !playing) return;
     if (!isGlobeSupported(map)) return;
@@ -110,18 +147,22 @@ export function CosmicGlobeAnimator() {
         return;
       }
 
-      const dt = Math.min((ts - lastTs) / 1000, 0.1);
-      lastTs = ts;
+      if (!isResettingRef.current) {
+        const dt = Math.min((ts - lastTs) / 1000, 0.1);
+        lastTs = ts;
 
-      const rotRate = (360 / ROTATION_PERIOD_S) * speed;
-      bearingRef.current = (bearingRef.current + rotRate * dt) % 360;
+        const rotRate = (360 / ROTATION_PERIOD_S) * speed;
+        bearingRef.current = (bearingRef.current + rotRate * dt) % 360;
 
-      try {
-        runProgrammaticBearing(() => {
-          map.setBearing(bearingRef.current);
-        });
-      } catch {
-        /* 样式未就绪 */
+        try {
+          runProgrammaticBearing(() => {
+            map.setBearing(bearingRef.current);
+          });
+        } catch {
+          /* 样式未就绪 */
+        }
+      } else {
+        lastTs = ts;
       }
 
       rafRef.current = requestAnimationFrame(tick);

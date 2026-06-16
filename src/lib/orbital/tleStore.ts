@@ -2,6 +2,8 @@
  * 读取本地 TLE 数据库（data/orbital/tle.json），无文件时返回种子数据
  */
 
+import 'server-only';
+
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import type { TleDatabase, TleRecord } from '@/types/orbital';

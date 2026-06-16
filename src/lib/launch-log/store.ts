@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import type { LaunchLogDatabase, LaunchRecord } from '../../../data/launch-log/schema';

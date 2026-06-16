@@ -8,7 +8,10 @@ import type { SpatialTier } from '@/types/tier';
 import { getRegion, DEFAULT_REGION_ID } from '@/regions';
 import { getTier, DEFAULT_TIER_ID } from '@/tiers';
 import { filterSensitive, SENSITIVE_LAYERS } from '@/lib/layers/sensitivity';
-import type { GlobeMotionSpeed } from '@/lib/globe/motionConstants';
+import {
+  CHINA_GLOBE_VIEW,
+  type GlobeMotionSpeed,
+} from '@/lib/globe/motionConstants';
 import { centersEqual, layersEqual, zoomsEqual } from '@/lib/map/viewState';
 
 export interface MapState {
@@ -24,6 +27,8 @@ export interface MapState {
   globeMotionPlaying: boolean;
   /** 宇宙层动效速度倍率 */
   globeMotionSpeed: GlobeMotionSpeed;
+  /** 递增以触发 CosmicGlobeAnimator 回正中国视角 */
+  globeViewResetNonce: number;
   center: [number, number];
   zoom: number;
   view: ViewPreset;
@@ -44,6 +49,8 @@ export interface MapActions {
   setGlobe: (globe: boolean) => void;
   setGlobeMotionPlaying: (playing: boolean) => void;
   setGlobeMotionSpeed: (speed: GlobeMotionSpeed) => void;
+  /** 一键回正：正视图居中中国，bearing/pitch 归零 */
+  resetGlobeToChinaView: () => void;
   setCenter: (center: [number, number]) => void;
   setZoom: (zoom: number) => void;
   setView: (view: ViewPreset) => void;
@@ -61,6 +68,7 @@ const initialState: MapState = {
   globe: false,
   globeMotionPlaying: true,
   globeMotionSpeed: 1,
+  globeViewResetNonce: 0,
   center: [105, 28],
   zoom: 3.5,
   view: 'global',
@@ -105,6 +113,12 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setGlobe: (globe) => set({ globe }),
   setGlobeMotionPlaying: (globeMotionPlaying) => set({ globeMotionPlaying }),
   setGlobeMotionSpeed: (globeMotionSpeed) => set({ globeMotionSpeed }),
+  resetGlobeToChinaView: () =>
+    set((s) => ({
+      center: CHINA_GLOBE_VIEW.center,
+      zoom: CHINA_GLOBE_VIEW.zoom,
+      globeViewResetNonce: s.globeViewResetNonce + 1,
+    })),
   setCenter: (center) =>
     set((s) => (centersEqual(s.center, center) ? {} : { center })),
   setZoom: (zoom) => set((s) => (zoomsEqual(s.zoom, zoom) ? {} : { zoom })),

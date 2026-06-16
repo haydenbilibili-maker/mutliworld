@@ -18,6 +18,7 @@ export function CosmicMotionControls({ className = '' }: CosmicMotionControlsPro
   const speed = useMapStore((s) => s.globeMotionSpeed);
   const setPlaying = useMapStore((s) => s.setGlobeMotionPlaying);
   const setSpeed = useMapStore((s) => s.setGlobeMotionSpeed);
+  const resetGlobeToChinaView = useMapStore((s) => s.resetGlobeToChinaView);
 
   if (activeTier !== 'space') return null;
 
@@ -42,6 +43,15 @@ export function CosmicMotionControls({ className = '' }: CosmicMotionControlsPro
         >
           <span aria-hidden>{playing ? '⏸' : '▶'}</span>
           <span>{playing ? '动效：播放' : '动效：暂停'}</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => resetGlobeToChinaView()}
+          title="回正中国正视图（bearing/pitch 归零）"
+          className="flex items-center justify-center gap-0.5 rounded-md bg-dashboard-neutral/15 px-2 py-1 text-[10px] text-dashboard-neutral transition-colors hover:bg-sky-500/20 hover:text-sky-100"
+        >
+          <span aria-hidden>🎯</span>
+          <span>回正中国</span>
         </button>
       </div>
       <div className="flex gap-0.5" role="group" aria-label="速度倍率">
