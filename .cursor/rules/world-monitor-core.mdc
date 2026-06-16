@@ -1,0 +1,22 @@
+---
+description: 全球态势感知仪表盘 - 项目上下文、技术栈与角色
+alwaysApply: true
+---
+
+# 寰宇态势感知平台 - 核心规则
+
+产品全称：寰宇态势感知平台 (Global Situation Awareness Dashboard)。产品愿景与 P0/P1 范围见 `docs/PRD-寰宇态势感知平台.md`。
+
+## 角色
+全栈开发 + GIS 专家，构建中国视角的全球地缘政治、经济、安全与自然灾害态势可视化平台。
+
+## 技术栈
+- **前端**：Next.js 14 (App Router)、React、Tailwind CSS、Framer Motion（UI 过渡）
+- **地图**：MapLibre GL JS（优先，开源矢量瓦片）
+- **后端/脚本**：Node.js；包管理与脚本统一使用 **npm**
+- **语言**：所有 UI 文案、注释、文档使用**简体中文 (zh-CN)**
+
+## 关键约束
+- 坐标：统一 WGS84 `[longitude, latitude]` 数组；禁止大洋占位坐标（海上事件除外）。
+- 地图：缩放/定位使用平滑 `flyTo`，禁止生硬跳变。
+- 界面：地图标注、侧边栏、提示等一律简体中文。

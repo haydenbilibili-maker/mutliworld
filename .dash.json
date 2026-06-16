@@ -1,0 +1,8 @@
+{
+  "name": "全球态势感知大屏 · China",
+  "desc": "Next.js 14 + MapLibre + Zustand 实现的全球地缘态势感知仪表盘",
+  "tags": ["Next.js", "React", "MapLibre"],
+  "startCmd": "npm run dev",
+  "port": "3000",
+  "status": "开发中"
+}

@@ -1,0 +1,20 @@
+---
+description: 代码架构 - 目录拆分、状态管理与数据请求
+globs: **/components/**/*,**/store/**/*,**/hooks/**/*
+alwaysApply: false
+---
+
+# 代码架构与组件设计
+
+## 模块与目录
+- **地图与渲染**：`components/map/` — `MapContainer`、`LayerManager`、`MarkerNode`。
+- **界面逻辑**：`components/ui/` — `SidePanel`、`TimelineSlider`、`LayerToggle`。
+- 严格分离地图渲染逻辑与 UI 逻辑，不混在同一组件。
+
+## 状态管理
+- 使用 **Zustand** 管理全局状态（如当前图层、时间范围、选中的地图要素）。
+- 避免 prop drilling，通过 store 与 hook 消费状态。
+
+## 数据请求
+- 使用 **SWR** 或 **React Query** 请求 GeoJSON，并配置合理的缓存与 revalidation。
+- 数据获取逻辑集中在 hooks 或 data layer，不在组件内散落 fetch。

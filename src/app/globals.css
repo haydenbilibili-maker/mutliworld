@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --dashboard-bg: #0A0E17;
+  --color-conflict: #FF4D4F;
+  --color-economic: #52C41A;
+  --color-military: #1890FF;
+  --color-neutral: #BFBFBF;
+}
+
+body {
+  background: var(--dashboard-bg);
+  color: var(--color-neutral);
+}
+
+/* MapLibre 容器占满且不遮挡 UI */
+.maplibregl-map {
+  font-family: inherit;
+}
+
+.maplibregl-ctrl-attrib a {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Geodata 地图弹窗 — 深色主题（须在 maplibre-gl.css 之后加载，见 layout.tsx） */
+.maplibregl-popup.geodata-popup .maplibregl-popup-content {
+  background: #0a0e17 !important;
+  background: var(--dashboard-bg) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 8px !important;
+  padding: 10px 28px 10px 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55) !important;
+  color: #e6edf3 !important;
+}
+
+.maplibregl-popup.geodata-popup .maplibregl-popup-close-button {
+  color: #e6edf3 !important;
+  font-size: 18px;
+  padding: 4px 8px;
+  opacity: 0.85;
+}
+
+.maplibregl-popup.geodata-popup .maplibregl-popup-close-button:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 4px;
+}
+
+.maplibregl-popup.geodata-popup.maplibregl-popup-anchor-top .maplibregl-popup-tip {
+  border-bottom-color: #0a0e17 !important;
+  border-bottom-color: var(--dashboard-bg) !important;
+}
+
+.maplibregl-popup.geodata-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+  border-top-color: #0a0e17 !important;
+  border-top-color: var(--dashboard-bg) !important;
+}
+
+.maplibregl-popup.geodata-popup.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: #0a0e17 !important;
+  border-right-color: var(--dashboard-bg) !important;
+}
+
+.maplibregl-popup.geodata-popup.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: #0a0e17 !important;
+  border-left-color: var(--dashboard-bg) !important;
+}
+
+.maplibregl-popup.geodata-popup.maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+.maplibregl-popup.geodata-popup.maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+  border-bottom-color: #0a0e17 !important;
+  border-bottom-color: var(--dashboard-bg) !important;
+}
+
+.maplibregl-popup.geodata-popup.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+.maplibregl-popup.geodata-popup.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+  border-top-color: #0a0e17 !important;
+  border-top-color: var(--dashboard-bg) !important;
+}

@@ -1,0 +1,21 @@
+---
+description: GIS 与地图规范 - 坐标、GeoJSON、性能与默认视野
+globs: **/*[Mm]ap*.tsx,**/*[Ll]ayer*.tsx,**/*[Ll]ayer*.ts,**/map/**/*
+alwaysApply: false
+---
+
+# GIS 与地图规则（必守）
+
+## 坐标与 GeoJSON
+- 一律使用 WGS84，数据格式为 **`[longitude, latitude]`** 数组。
+- 地理数据必须符合 GeoJSON 规范：`FeatureCollection`、`Feature`、`Point`、`Polygon` 等。
+
+## 性能
+- 单图层 **超过 1000 个点** 时，必须使用 MapLibre 原生 `addSource` + `addLayer`（WebGL 渲染），不得用 React DOM 标记点。
+
+## 默认视野
+- 初始 `zoom`、`center` 默认以亚太或全球视野为准，符合中国受众使用场景。
+
+## 图层与交互
+- 通过 Layer Manager 管理图层；图层 ID 与 URL 参数 `layers` 一致（见 `world-monitor-url-layers.mdc`）：conflicts、hotspots、bases、economic、waterways、natural、weather、military 等。
+- 缩放与定位使用 `flyTo` 平滑过渡；地图标注与 Tooltip 使用简体中文。

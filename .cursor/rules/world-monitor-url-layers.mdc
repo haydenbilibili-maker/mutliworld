@@ -1,0 +1,27 @@
+---
+description: URL 状态与图层 ID - 与 World Monitor 对齐，支持分享与深链
+globs: **/app/**/*,**/store/**/*,**/hooks/**/*,**/*[Ll]ayer*
+alwaysApply: false
+---
+
+# URL 状态与图层 ID
+
+## URL 与状态同步
+地图视图状态与 **URL SearchParams** 双向同步，支持分享链接与前进/后退：
+- `lat`、`lon` — 地图中心（WGS84）
+- `zoom` — 缩放级别
+- `view` — 视图预设（如 `global`、`asia`）
+- `timeRange` — 时间范围：`24h`、`7d`、`30d`
+- `layers` — 已开启图层，逗号分隔（如 `conflicts,economic,weather`）
+
+实现时：Zustand 与 URL 通过 hook（如 `useSyncStateToUrl`）或 store 的 `replaceState`/`pushState` 保持一致；初始渲染从 URL 读入默认值。
+
+## 图层 ID 规范
+与 PRD 和分享链接兼容，统一使用英文 id：
+- 冲突与安全：`conflicts`、`hotspots`、`bases`
+- 经济与基建：`economic`、`waterways`
+- 自然与气象：`natural`、`weather`
+- 军事：`military`
+- 扩展：`sanctions`、`nuclear`、`outages` 等按需
+
+UI 展示用中文标签（如「冲突与安全」），内部与 URL 仅用上述 id。

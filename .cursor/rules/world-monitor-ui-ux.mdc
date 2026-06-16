@@ -1,0 +1,23 @@
+---
+description: UI/UX - 主题、动效与响应式
+globs: **/*.tsx,**/*.css
+alwaysApply: false
+---
+
+# UI/UX 规范
+
+## 主题
+- 默认**深色**，赛博朋克/地缘政治仪表盘风格。
+- 背景：`#0A0E17` 或相近深蓝/黑。
+- 语义色：红-冲突、绿-经济、蓝-海事/军事。
+
+## 动效
+- 使用 **Framer Motion** 做侧边栏滑入/滑出、面板展开收起。
+- 点击标记时地图使用 `flyTo` 平滑飞向目标，与动效统一。
+
+## 布局与响应式
+- 侧边栏可折叠；在移动端以 overlay 形式覆盖，不破坏地图视口。
+
+## 组件位置
+- 地图相关：`components/map/`（MapContainer、LayerManager、MarkerNode）。
+- 界面相关：`components/ui/`（SidePanel、TimelineSlider、LayerToggle）。

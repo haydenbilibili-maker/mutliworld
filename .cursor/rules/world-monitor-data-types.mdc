@@ -1,0 +1,21 @@
+---
+description: 数据、类型与请求 - GeoJSON、接口与 SWR/React Query
+globs: **/*.ts,**/hooks/**/*,**/types/**/*
+alwaysApply: false
+---
+
+# 数据与类型规范
+
+## 数据请求
+- GeoJSON 使用 **SWR** 或 **React Query** 拉取，做好缓存与 revalidation。
+- 可按类别、时间范围封装 hook（如 `useGeodata`）统一过滤与消费。
+
+## 事件/新闻结构
+每条事件至少包含：`title`、`source`、`timestamp`、`location`（lat/lon）、`impact_level`。
+
+## TypeScript
+- 严格 TypeScript；为所有 GeoJSON 属性与 API 响应定义完整 `interface` 或 `type`。
+- 集中维护：`GeoPoint`、`LayerConfig`、`EventDetail` 及 GeoJSON 相关类型，禁止 `any`。
+
+## 命名
+- 禁止占位命名（如 `foo`、`bar`）；使用语义化名称（如 `conflictEventFeature`、`activeTimeRange`）。

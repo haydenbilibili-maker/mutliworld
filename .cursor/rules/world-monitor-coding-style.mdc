@@ -1,0 +1,17 @@
+---
+description: 编码风格 - 类型、命名与错误处理
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+
+# 编码风格
+
+## TypeScript
+- 严格使用 TypeScript；为 GeoJSON 与 API 定义完整接口，避免隐式类型与 `any`。
+
+## 命名
+- 禁止占位命名（`foo`、`bar`）；使用描述性名称（如 `conflictEventFeature`、`activeTimeRange`）。
+
+## 错误与健壮性
+- **Fail fast**：异常尽早暴露，便于定位。
+- 错误需妥善处理并给出降级体验（例如瓦片加载失败时显示 fallback UI，不白屏）。

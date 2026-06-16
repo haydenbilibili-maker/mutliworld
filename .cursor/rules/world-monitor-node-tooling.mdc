@@ -1,0 +1,14 @@
+---
+description: Node.js 与工程脚本 - npm、ESM、package.json
+globs: package.json,**/scripts/**/*.js,**/scripts/**/*.ts
+alwaysApply: false
+---
+
+# Node.js 与工具链
+
+## 运行时与模块
+- 数据处理与工具脚本使用 **Node.js**，采用 **ES Modules**（`import`/`export`）。
+
+## 脚本约定
+- 所有自定义命令写在 **`package.json`** 的 `scripts` 中，通过 npm 执行。
+- 示例：`npm run data:fetch`、`npm run dev`；命名清晰（如 `data:*` 表示数据相关）。
