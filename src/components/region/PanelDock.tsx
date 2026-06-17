@@ -5,19 +5,22 @@
  * 一排开关按钮，控制各信息面板显隐；仅中东区域显示。
  */
 
-import { usePanelStore, PANEL_META } from '@/store/usePanelStore';
+import { usePanelStore, getDockPanels } from '@/store/usePanelStore';
 import { useRegionData } from '@/hooks/useRegionData';
+import { useMapStore } from '@/store/useMapStore';
 
 interface PanelDockProps {
   className?: string;
 }
 
 export function PanelDock({ className = '' }: PanelDockProps) {
+  const region = useMapStore((s) => s.activeRegion);
   const data = useRegionData();
   const open = usePanelStore((s) => s.open);
   const toggle = usePanelStore((s) => s.toggle);
   const showAll = usePanelStore((s) => s.showAll);
   const hideAll = usePanelStore((s) => s.hideAll);
+  const dockPanels = getDockPanels(region);
 
   // 数据驱动：当前区域有任一面板数据才显示停靠工具条
   const hasPanels =
@@ -30,7 +33,7 @@ export function PanelDock({ className = '' }: PanelDockProps) {
     !!data.trend;
   if (!hasPanels) return null;
 
-  const anyOpen = PANEL_META.some((p) => open[p.id]);
+  const anyOpen = dockPanels.some((p) => open[p.id]);
 
   return (
     <div
@@ -39,12 +42,13 @@ export function PanelDock({ className = '' }: PanelDockProps) {
       aria-label="面板停靠"
     >
       <span className="text-[11px] text-dashboard-neutral px-1">面板</span>
-      {PANEL_META.map((p) => (
+      {dockPanels.map((p) => (
         <button
           key={p.id}
           type="button"
           onClick={() => toggle(p.id)}
           aria-pressed={open[p.id]}
+          title={p.title}
           className={`px-2 py-1 rounded-md text-xs transition-colors ${
             open[p.id]
               ? 'bg-dashboard-neutral/30 text-white'

@@ -68,14 +68,14 @@ export function UsBriefingPanel({ className = '' }: UsBriefingPanelProps) {
   return (
     <DockPanel
       id="us-briefing"
-      title="美国战略态势"
+      title="美国战略专题简报"
       className={`w-80 max-h-[64vh] ${className}`}
     >
       <div className="space-y-3">
         <div className="text-[11px] leading-snug text-dashboard-neutral/90">
-          <span className="text-white font-medium">战略研究对象</span> · 美国模块{' '}
+          <span className="text-white font-medium">专题简报</span> · 美国模块{' '}
           <span className="text-white">{usFeatures}</span> 处 · 全区域{' '}
-          <span className="text-white">{totalFeatures}</span> 处
+          <span className="text-white">{totalFeatures}</span> 处 · 不控制图层开关
         </div>
 
         {moduleStats.map((m) => (

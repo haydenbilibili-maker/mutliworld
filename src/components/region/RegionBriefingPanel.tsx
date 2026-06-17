@@ -61,7 +61,7 @@ export function RegionBriefingPanel({ className = '' }: RegionBriefingPanelProps
     stats.targets +
     stats.facilities +
     stats.incidents;
-  if (total === 0 || region === 'china') return null;
+  if (total === 0 || region === 'china' || region === 'north_america') return null;
 
   const coverage: [string, number][] = [
     ['事件', stats.events],

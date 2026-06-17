@@ -65,13 +65,13 @@ export function ChinaBriefingPanel({ className = '' }: ChinaBriefingPanelProps) 
   return (
     <DockPanel
       id="china-briefing"
-      title="中国周边态势"
+      title="中国周边专题简报"
       className={`w-80 max-h-[64vh] ${className}`}
     >
       <div className="space-y-3">
         <div className="text-[11px] leading-snug text-dashboard-neutral/90">
-          <span className="text-white font-medium">中国周边</span> · 地图要素{' '}
-          <span className="text-white">{totalFeatures}</span> 处（种子数据）
+          <span className="text-white font-medium">专题简报</span> · 汇总地图监测点{' '}
+          <span className="text-white">{totalFeatures}</span> 处 · 不控制图层开关
         </div>
 
         {moduleStats.map((m) => (

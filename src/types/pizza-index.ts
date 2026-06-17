@@ -1,9 +1,11 @@
 /**
  * 五角大楼披萨指数（Pentagon Pizza Index / PizzINT）类型
  *
- * 数据来源参考：pizzint.watch（Google Maps Popular Times，无公开 REST API）
- * 当前默认使用服务端模拟；设置 PIZZINT_API_URL 可接入第三方代理。
+ * 默认从 pizzint.watch 拉取实时数据；失败时回退服务端模拟。
+ * PIZZINT_API_URL 可覆盖 API 基址（默认 https://www.pizzint.watch）。
  */
+
+export type PizzaIndexSource = 'pizzint.watch' | 'simulated' | 'pizzint-proxy' | 'external';
 
 export type PizzaIndexLevel = 'LOW' | 'ELEVATED' | 'HIGH' | 'CRITICAL';
 
@@ -36,7 +38,6 @@ export interface PizzaIndexResponse {
   venues: PizzaVenue[];
   history: PizzaIndexHistoryPoint[];
   updatedAt: string;
-  /** simulated | pizzint-proxy | external */
-  source: string;
+  source: PizzaIndexSource | string;
   disclaimer: string;
 }

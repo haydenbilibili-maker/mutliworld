@@ -6,6 +6,7 @@
  */
 
 import { create } from 'zustand';
+import type { RegionId } from '@/types/region';
 
 export type PanelId =
   | 'overview'
@@ -27,8 +28,6 @@ export type PanelId =
 /** 面板元信息（用于停靠工具条按钮） */
 export const PANEL_META: { id: PanelId; label: string }[] = [
   { id: 'briefing', label: '简报' },
-  { id: 'china-briefing', label: '中国周边' },
-  { id: 'us-briefing', label: '美国战略' },
   { id: 'news', label: '新闻' },
   { id: 'markets', label: '市场' },
   { id: 'overview', label: '态势' },
@@ -40,6 +39,55 @@ export const PANEL_META: { id: PanelId; label: string }[] = [
   { id: 'trend', label: '趋势' },
   { id: 'marquee', label: '跑马灯' },
 ];
+
+/** 区域专题简报 — 仅在该区域激活时出现在停靠工具条（非地图图层开关） */
+export const REGION_BRIEFING_PANELS: {
+  id: PanelId;
+  label: string;
+  region: RegionId;
+  title: string;
+}[] = [
+  {
+    id: 'china-briefing',
+    label: '周边简报',
+    region: 'china',
+    title: '中国周边专题简报 · 汇总当前地图监测点，不切换图层',
+  },
+  {
+    id: 'us-briefing',
+    label: '战略简报',
+    region: 'north_america',
+    title: '美国战略专题简报 · 汇总当前地图监测点，不切换图层',
+  },
+];
+
+/** 通用「简报」被区域专题简报替代的区域 */
+const REGION_BRIEFING_REPLACES_GENERIC = new Set<RegionId>([
+  'china',
+  'north_america',
+]);
+
+/** 当前区域下应显示的停靠工具条按钮 */
+export function getDockPanels(region: RegionId): { id: PanelId; label: string; title?: string }[] {
+  const base = PANEL_META.filter(
+    (p) => p.id !== 'briefing' || !REGION_BRIEFING_REPLACES_GENERIC.has(region),
+  );
+  const regional = REGION_BRIEFING_PANELS.filter((p) => p.region === region).map(
+    ({ id, label, title }) => ({ id, label, title }),
+  );
+  const briefingIdx = base.findIndex((p) => p.id === 'briefing');
+  if (briefingIdx >= 0 && regional.length > 0) {
+    return [
+      ...base.slice(0, briefingIdx + 1),
+      ...regional,
+      ...base.slice(briefingIdx + 1),
+    ];
+  }
+  if (regional.length > 0) {
+    return [...regional, ...base];
+  }
+  return base;
+}
 
 interface PanelState {
   open: Record<PanelId, boolean>;

@@ -92,6 +92,7 @@ export function PentagonPizzaIndexPanel({ className = '' }: PentagonPizzaIndexPa
   const level = data?.level ?? 'LOW';
   const score = data?.score ?? 0;
   const trend = data?.trend ?? 'flat';
+  const isLive = data?.source === 'pizzint.watch';
   const isSimulated = data?.source === 'simulated';
 
   return (
@@ -115,6 +116,16 @@ export function PentagonPizzaIndexPanel({ className = '' }: PentagonPizzaIndexPa
                 🍕
               </span>
               <h2 className="truncate text-sm font-semibold text-white">五角大楼披萨指数</h2>
+              {isLive && (
+                <span className="shrink-0 rounded border border-emerald-500/40 bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-emerald-300">
+                  实时
+                </span>
+              )}
+              {isSimulated && (
+                <span className="shrink-0 rounded border border-amber-500/40 bg-amber-500/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-amber-300">
+                  演示
+                </span>
+              )}
             </div>
             <p className="mt-0.5 text-[10px] leading-snug text-dashboard-neutral/55">
               OSINT meme · 深夜披萨订单与军政活动相关性观察
@@ -170,7 +181,22 @@ export function PentagonPizzaIndexPanel({ className = '' }: PentagonPizzaIndexPa
 
           {isSimulated && (
             <p className="rounded border border-amber-500/25 bg-amber-500/10 px-2 py-1.5 text-[10px] leading-snug text-amber-200/90">
-              演示数据 / 待接入实时源（参考 pizzint.watch · Google Maps 热门时段）
+              演示数据 — pizzint.watch 实时源暂不可用，已回退本地模拟
+            </p>
+          )}
+
+          {isLive && (
+            <p className="text-[10px] leading-snug text-dashboard-neutral/55">
+              实时数据来自{' '}
+              <a
+                href="https://www.pizzint.watch/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-orange-300/90 underline decoration-orange-500/40 underline-offset-2 hover:text-orange-200"
+              >
+                pizzint.watch
+              </a>
+              （Google Maps 热门时段）
             </p>
           )}
 
@@ -213,7 +239,20 @@ export function PentagonPizzaIndexPanel({ className = '' }: PentagonPizzaIndexPa
             <span>
               来源：
               <span className="text-dashboard-neutral">
-                {isSimulated ? '模拟演示' : data?.source}
+                {isLive ? (
+                  <a
+                    href="https://www.pizzint.watch/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-emerald-400/90 underline-offset-2 hover:underline"
+                  >
+                    pizzint.watch
+                  </a>
+                ) : isSimulated ? (
+                  '模拟演示'
+                ) : (
+                  data?.source
+                )}
               </span>
             </span>
           </div>
