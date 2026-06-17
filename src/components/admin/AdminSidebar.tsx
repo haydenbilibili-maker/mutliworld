@@ -27,6 +27,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: '冲突区', href: '/admin/features/conflict-zones' },
       { label: '区域人物', href: '/admin/features/persons' },
       { label: '区域态势', href: '/admin/features/regional-situation' },
+      { label: '天体痕迹', href: '/admin/features/body-traces' },
       { label: '跑马灯种子', href: '/admin/data/news-feed' },
       { label: '股市指数', href: '/admin/data/markets' },
       { label: '实时数据源', href: '/admin/data/live-sources' },

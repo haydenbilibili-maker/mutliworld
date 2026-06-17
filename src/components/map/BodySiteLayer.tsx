@@ -12,6 +12,7 @@ import type { FeatureCollection } from 'geojson';
 import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import { useBodyStore } from '@/store/useBodyStore';
+import { useBodyOverridesStore } from '@/store/useBodyOverridesStore';
 import { getSitesForBody, BODY_LAYER_META } from '@/bodies/sites';
 
 const SOURCE = 'body-sites';
@@ -74,12 +75,14 @@ export function BodySiteLayer() {
   const styleEpoch = useMapStyleEpoch();
   const activeBody = useMapStore((s) => s.activeBody);
   const activeBodyLayers = useBodyStore((s) => s.activeBodyLayers);
+  const customSites = useBodyOverridesStore((s) => s.customSites);
 
   const enabled = activeBody !== 'earth';
 
   const geojson = useMemo<FeatureCollection>(() => {
     if (!enabled) return { type: 'FeatureCollection', features: [] };
-    const sites = getSitesForBody(activeBody).filter((s) => activeBodyLayers.includes(s.layer));
+    const merged = [...getSitesForBody(activeBody), ...customSites.filter((s) => s.body === activeBody)];
+    const sites = merged.filter((s) => activeBodyLayers.includes(s.layer));
     return {
       type: 'FeatureCollection',
       features: sites.map((s) => ({
@@ -100,11 +103,17 @@ export function BodySiteLayer() {
         },
       })),
     };
-  }, [enabled, activeBody, activeBodyLayers]);
+  }, [enabled, activeBody, activeBodyLayers, customSites]);
 
   const popupRef = useRef<maplibregl.Popup | null>(null);
   const lastKeyRef = useRef('');
-  const dataKey = useMemo(() => `${activeBody}:${geojson.features.length}`, [activeBody, geojson]);
+  const dataKey = useMemo(() => {
+    const sig = customSites
+      .filter((s) => s.body === activeBody)
+      .map((s) => `${s.id}@${s.lng},${s.lat}`)
+      .join('|');
+    return `${activeBody}:${geojson.features.length}:${sig}:${activeBodyLayers.join(',')}`;
+  }, [activeBody, geojson, customSites, activeBodyLayers]);
 
   useEffect(() => {
     if (!map) return;
