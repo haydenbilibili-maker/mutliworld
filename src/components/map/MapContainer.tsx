@@ -59,6 +59,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
   const initialSyncDone = useRef(false);
   const lastGlobeResetNonce = useRef(0);
   const [mapInstance, setMapInstance] = useState<maplibregl.Map | null>(null);
+  const [mapReady, setMapReady] = useState(false);
   const center = useMapStore((s) => s.center);
   const zoom = useMapStore((s) => s.zoom);
   const globeViewResetNonce = useMapStore((s) => s.globeViewResetNonce);
@@ -151,6 +152,9 @@ export function MapContainer({ className = '' }: MapContainerProps) {
 
     mapRef.current = map;
     setMapInstance(map);
+    // 首帧 idle（瓦片就绪、视野稳定）后淡入，隐藏初始化期间的 resize/样式抖动
+    map.once('idle', () => setMapReady(true));
+    const readyFallback = setTimeout(() => setMapReady(true), 1500);
 
     const raf = requestAnimationFrame(() => {
       try {
@@ -196,11 +200,13 @@ export function MapContainer({ className = '' }: MapContainerProps) {
     return () => {
       cancelAnimationFrame(raf);
       clearTimeout(t1);
+      clearTimeout(readyFallback);
       if (resizeTimer) clearTimeout(resizeTimer);
       ro.disconnect();
       map.remove();
       mapRef.current = null;
       setMapInstance(null);
+      setMapReady(false);
     };
   }, []);
 
@@ -313,7 +319,14 @@ export function MapContainer({ className = '' }: MapContainerProps) {
         <div
           ref={containerRef}
           className={className}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            opacity: mapReady ? 1 : 0,
+            transition: 'opacity 350ms ease',
+          }}
         />
         <BasemapController />
         <GlobeController />
