@@ -11,6 +11,9 @@ interface BodyLayerState {
   activeBodyLayers: BodyLayerId[];
   toggleBodyLayer: (id: BodyLayerId) => void;
   setBodyLayers: (ids: BodyLayerId[]) => void;
+  /** 天体百科面板开关 */
+  knowledgeOpen: boolean;
+  setKnowledgeOpen: (v: boolean) => void;
 }
 
 export const useBodyStore = create<BodyLayerState>((set) => ({
@@ -22,4 +25,6 @@ export const useBodyStore = create<BodyLayerState>((set) => ({
         : [...s.activeBodyLayers, id],
     })),
   setBodyLayers: (activeBodyLayers) => set({ activeBodyLayers }),
+  knowledgeOpen: false,
+  setKnowledgeOpen: (knowledgeOpen) => set({ knowledgeOpen }),
 }));

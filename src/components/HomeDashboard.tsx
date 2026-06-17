@@ -35,6 +35,7 @@ import { LiveLayerPerformanceGuard } from '@/components/ui/LiveLayerPerformanceG
 import { BodyTimelinePanel } from '@/components/ui/BodyTimelinePanel';
 import { BodyOverviewPanel } from '@/components/ui/BodyOverviewPanel';
 import { BodyViewControls } from '@/components/ui/BodyViewControls';
+import { BodyKnowledgePanel } from '@/components/ui/BodyKnowledgePanel';
 import { useMapStore } from '@/store/useMapStore';
 
 const StrategicResearchHost = dynamic(
@@ -61,6 +62,7 @@ export function HomeDashboard() {
           {!isEarth && <BodyTimelinePanel className="absolute top-3 left-4 z-20 w-[min(20rem,calc(100vw-2rem))]" />}
           {!isEarth && <BodyOverviewPanel className="absolute top-3 right-4 z-20 w-[min(20rem,calc(100vw-2rem))]" />}
           {!isEarth && <BodyViewControls className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2" />}
+          {!isEarth && <BodyKnowledgePanel />}
 
           {isEarth && (
           <>
