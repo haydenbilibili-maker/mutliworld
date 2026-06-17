@@ -7,11 +7,13 @@
  * 诚实合成、不编造（与 WM 的 LLM 简报不同，此处为确定性聚合）。区域无关，8 区域通用。
  */
 
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useMapStore } from '@/store/useMapStore';
 import { useRegionData } from '@/hooks/useRegionData';
 import { getRegion } from '@/regions';
 import { DockPanel } from '@/components/region/DockPanel';
+
+type AiState = 'idle' | 'loading' | 'done' | 'no_key' | 'error';
 
 interface RegionBriefingPanelProps {
   className?: string;
@@ -53,6 +55,37 @@ export function RegionBriefingPanel({ className = '' }: RegionBriefingPanelProps
     [data],
   );
 
+  const [aiState, setAiState] = useState<AiState>('idle');
+  const [aiText, setAiText] = useState('');
+
+  const generateAi = useCallback(async () => {
+    setAiState('loading');
+    setAiText('');
+    try {
+      const situation = (data.situation ?? [])
+        .map((s) => (typeof s === 'string' ? s : (s as { title?: string; summary?: string }).title ?? (s as { summary?: string }).summary ?? ''))
+        .filter(Boolean)
+        .slice(0, 8);
+      const recentPayload = [...(data.events ?? [])]
+        .filter((e) => e.timestamp)
+        .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
+        .slice(0, 8)
+        .map((e) => ({ title: e.title, source: e.source, timestamp: e.timestamp }));
+      const res = await fetch('/api/briefing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ regionName: mod?.name, stats, recent: recentPayload, situation }),
+      });
+      const json = await res.json();
+      if (json.degraded === 'no_key') { setAiState('no_key'); return; }
+      if (!json.briefing) { setAiState('error'); return; }
+      setAiText(json.briefing);
+      setAiState('done');
+    } catch {
+      setAiState('error');
+    }
+  }, [data, mod, stats]);
+
   const total =
     stats.events +
     stats.military +
@@ -83,6 +116,36 @@ export function RegionBriefingPanel({ className = '' }: RegionBriefingPanelProps
         <div className="text-[11px] leading-snug text-dashboard-neutral/90">
           <span className="text-white font-medium">{mod?.name}</span> ·{' '}
           {mod?.viewpoint}
+        </div>
+
+        {/* AI 简报（按需生成 · 仅基于本区域真实数据 · 保留来源） */}
+        <div className="rounded-md border border-brand-cyan/20 bg-brand-cyan/[0.04] p-2">
+          <div className="mb-1 flex items-center gap-2">
+            <span className="text-[10px] font-medium text-brand-cyan">✨ AI 态势简报</span>
+            <button
+              type="button"
+              onClick={generateAi}
+              disabled={aiState === 'loading'}
+              className="ml-auto rounded px-1.5 py-0.5 text-[10px] text-brand-cyan transition-colors hover:bg-brand-cyan/15 disabled:opacity-50"
+            >
+              {aiState === 'loading' ? '生成中…' : aiState === 'done' ? '重新生成' : '生成'}
+            </button>
+          </div>
+          {aiState === 'done' && (
+            <p className="text-[11px] leading-relaxed text-dashboard-neutral/90">{aiText}</p>
+          )}
+          {aiState === 'no_key' && (
+            <p className="text-[10px] leading-snug text-amber-300/80">未配置 LLM（设 LLM_API_KEY 即可启用）；当前展示下方规则化简报。</p>
+          )}
+          {aiState === 'error' && (
+            <p className="text-[10px] text-dashboard-conflict/80">生成失败，请稍后重试。</p>
+          )}
+          {aiState === 'idle' && (
+            <p className="text-[10px] leading-snug text-dashboard-neutral/55">基于本区域真实监测数据合成、保留来源、不编造。点击「生成」。</p>
+          )}
+          {aiState === 'done' && (
+            <div className="mt-1.5 text-[9px] text-dashboard-neutral/45">来源见下方「近期动态」· AI 合成仅供研判</div>
+          )}
         </div>
 
         {/* 覆盖概览 */}
