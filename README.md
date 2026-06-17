@@ -1,9 +1,19 @@
-# Multi World · 寰宇态势感知平台
+<div align="center">
 
-> **Global Situation Awareness Dashboard** — 一个**三位一体（天 / 地 / 海）**的全球态势实时可视化引擎。  
-> 在同一张地图上垂直贯通 **宇宙空间 / 地表 / 洋底** 三层，叠加冲突、军事、经济、能源、灾害、舆情、基础设施、卫星与海底命脉，支持 **3D 地球**、实时数据源与「天—地—海垂直剖面」交互。
+# 万象幻测 · OmniLens
+
+**包罗万象 · 变幻可测** — 中国视角的全球态势感知引擎
+
+</div>
+
+> **OmniLens（万象幻测）** — 一个**三位一体（天 / 地 / 海）**的全球态势实时可视化引擎，取「包罗万象、变幻可测」之意。
+> 在同一张地图上垂直贯通 **宇宙空间 / 地表 / 洋底** 三层，叠加冲突、军事、经济、能源、灾害、舆情、基础设施、卫星与海底命脉，支持 **3D 地球**、**真实数据源**与「天—地—海垂直剖面」交互，并内置**事件 × 行情关联引擎**为投资/政策模块奠基。
+>
+> 由**独立开发者 · 超级个体 Hayden** 携 **Linus / Turing 等多平台 AI agent 协作**共创。
 
 [![GitHub](https://img.shields.io/badge/GitHub-mutliworld-181717?logo=github)](https://github.com/haydenbilibili-maker/mutliworld.git)
+[![Version](https://img.shields.io/badge/version-1.3.0-E8B563)](#版本说明)
+[![姊妹作](https://img.shields.io/badge/姊妹作-国情调研系统-3FC8E0)](https://chinaos.hayden-bilibili.workers.dev/#/modules/zhengdi)
 
 ---
 
@@ -26,6 +36,8 @@
 - [招牌交互：天地海垂直剖面](#招牌交互天地海垂直剖面)
 - [部署说明](#部署说明)
 - [数据伦理与合规](#数据伦理与合规)
+- [版本说明](#版本说明)
+- [致谢、版权与友情链接](#致谢版权与友情链接)
 - [文档](#文档)
 - [截图](#截图)
 - [贡献与许可证](#贡献与许可证)
@@ -453,6 +465,35 @@ npm run data:launches
 
 ---
 
+## 版本说明
+
+| 版本 | 主题 | 要点 |
+|------|------|------|
+| **v1.3.0** | 真实化 · 关联 · 品牌 | 能源经济四源真实数据基座（FRED/EIA/World Bank/Stooq）；统一真实事件管道（USGS/GDACS/ReliefWeb/GDELT）；事件×行情关联引擎（投资/政策模块底座）；人物—地图联动；NASA FIRMS 火点；天地图合规底图；**品牌升级为「万象幻测 · OmniLens」** |
+| v1.2.0 | 封板 | 实时海运、区域人物/态势、3D 地球修复与运维后台 |
+| v1.1 | 三位一体 | 天/地/海三层、3D 地球、宇宙层、垂直剖面 |
+
+> 真实数据原则：**非预测、非示例、非估算**；缺 Key 或源失败时如实降级、绝不以假值填充。
+
+---
+
+## 致谢、版权与友情链接
+
+**万象幻测 · OmniLens** 取「包罗万象、变幻可测」之意，由**独立开发者 · 超级个体 Hayden** 携 **Linus / Turing 等多平台 AI agent 协作**共创。
+
+- **致敬开源精神** —— 站在 MapLibre、satellite.js、ECharts、Next.js 等开源巨人的肩膀上，本项目亦以开放心态持续迭代。
+- **致敬先行者 WorldMonitor** —— 感谢其在全球态势可视化上的开创探索；本项目独立实现、**不抄袭其代码**，并坚持中国视角与三位一体（天/地/海）的差异化路径。
+- **中国视角优先** —— 国界与敏感地理以官方合规底图（天地图）呈现；数据标注来源与时效，冲突信息中立表述、不编造。
+- **协作共创** —— 超级个体主导、多平台 AI agent 协同，验证环节坚持异源复核。
+
+**友情链接**
+
+- 🔗 [国情调研系统 · 政地模块](https://chinaos.hayden-bilibili.workers.dev/#/modules/zhengdi) —— 同为 Hayden 作品：结构化的中国国情与区域调研工具。
+
+© 2026 万象幻测 · OmniLens · Hayden．数据来源于公开真实接口，仅供研究与教育，非投资建议。
+
+---
+
 ## 文档
 
 | 文档 | 内容 |
@@ -489,7 +530,7 @@ npm run data:launches
 
 ## English
 
-**Multi World** is a geospatial situational awareness platform built with Next.js 14 and MapLibre GL v5. It visualizes global events across three orthogonal spatial tiers — **space**, **surface**, and **subsurface** — with 9 regional modules, 40+ semantic layers, real-time public data feeds, 3D globe rendering, orbital object propagation (SGP4/TLE), launch logs, and a strategic research side panel.
+**OmniLens (万象幻测)** is a China-perspective geospatial situational-awareness engine built with Next.js 14 and MapLibre GL v5, crafted by independent super-individual developer **Hayden** in collaboration with multiple AI agents. It visualizes global events across three orthogonal spatial tiers — **space**, **surface**, and **subsurface** — with 9 regional modules, 40+ semantic layers, real-time public data feeds, 3D globe rendering, orbital object propagation (SGP4/TLE), launch logs, and a strategic research side panel.
 
 ```bash
 git clone https://github.com/haydenbilibili-maker/mutliworld.git

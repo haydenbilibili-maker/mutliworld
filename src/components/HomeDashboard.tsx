@@ -25,6 +25,8 @@ import { NewsPanel } from '@/components/region/NewsPanel';
 import { MarketsPanel } from '@/components/region/MarketsPanel';
 import { EnergyEconPanel } from '@/components/region/EnergyEconPanel';
 import { InsightsPanel } from '@/components/region/InsightsPanel';
+import { BrandMark } from '@/components/ui/BrandMark';
+import { AboutPanel } from '@/components/ui/AboutPanel';
 import { RegionDetailCard } from '@/components/region/RegionDetailCard';
 import { TierSwitcher } from '@/components/ui/TierSwitcher';
 import { SeabedBriefingPanel } from '@/components/region/SeabedBriefingPanel';
@@ -51,9 +53,11 @@ export function HomeDashboard() {
       <main className="relative h-screen w-full overflow-hidden max-sm:overflow-x-hidden">
         <StarfieldBackdrop />
         <MapContainer className="absolute inset-0 z-0" />
-        <div className="pointer-events-none absolute top-4 left-4 z-30">
+        <div className="pointer-events-none absolute top-4 left-4 z-30 flex items-center gap-2 max-sm:gap-1.5">
+          <BrandMark className="pointer-events-auto" />
           <RegionSwitcher className="pointer-events-auto" />
         </div>
+        <AboutPanel />
         <TierSwitcher className="absolute top-1/2 left-4 z-20 -translate-y-1/2" />
         <RegionDetailCard className="absolute top-16 left-4 z-30" />
         <PanelDock className="absolute top-4 left-1/2 z-20 -translate-x-1/2 max-sm:top-[3.5rem] max-sm:max-w-[calc(100vw-1rem)] max-sm:px-1" />

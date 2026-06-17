@@ -20,6 +20,14 @@ const config: Config = {
           military: '#1890FF',
           neutral: '#BFBFBF',
         },
+        // 万象幻测 · OmniLens 品牌色（青金 · 中国视角）
+        brand: {
+          ink: '#0A0E17', // 深空墨
+          gold: '#E8B563', // 鎏金
+          'gold-bright': '#F4D08A',
+          cyan: '#3FC8E0', // 钴青
+          'cyan-deep': '#1B6E8C',
+        },
       },
     },
   },
