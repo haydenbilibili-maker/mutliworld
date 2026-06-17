@@ -20,7 +20,7 @@ const surfaceTier: TierModule = {
     'economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors',
     'hydrocarbon_reserves', 'pipelines',
     'natural', 'weather', 'live_weather', 'climate', 'protests',
-    'aviation', 'live_flights', 'live_maritime', 'outages', 'daynight',
+    'aviation', 'live_flights', 'live_fires', 'live_maritime', 'outages', 'daynight',
   ],
   defaultLayers: ['conflicts', 'economic', 'weather', 'natural'],
   basemap: 'imagery',

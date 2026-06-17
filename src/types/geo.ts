@@ -61,6 +61,7 @@ export type LayerId =
   | 'outages'
   | 'aviation'
   | 'live_flights'
+  | 'live_fires'
   | 'live_maritime'
   | 'maritime'
   | 'cables'

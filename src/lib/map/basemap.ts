@@ -9,6 +9,12 @@ import type { StyleSpecification } from 'maplibre-gl';
 import type { Map as MaplibreMap } from 'maplibre-gl';
 import type { BasemapMode, BasemapPreset } from '@/types/tier';
 import { buildGraticule } from '@/lib/graticule';
+import {
+  hasTianditu,
+  tiandituTiles,
+  buildTiandituStyle,
+  TDT_ATTRIBUTION,
+} from '@/lib/map/tianditu';
 
 /** OpenFreeMap planet 矢量瓦片 maxzoom（Fiord / Liberty 样式依赖此源） */
 export const SURFACE_BASEMAP_MAX_ZOOM = 14;
@@ -177,8 +183,11 @@ export function buildSatelliteStyle(): StyleSpecification {
   };
 }
 
-/** 混合样式：卫星底图 + 半透明国界矢量叠加 */
+/** 混合样式：卫星底图 + 国界矢量叠加。
+ *  合规：配置天地图 token 时，国界/注记改用天地图官方注记瓦片（cva，含九段线），
+ *  否则回退 demotiles（开发不阻塞，但非合规边界）。 */
 export function buildHybridStyle(): StyleSpecification {
+  const compliant = hasTianditu();
   return {
     version: 8,
     sources: {
@@ -189,84 +198,72 @@ export function buildHybridStyle(): StyleSpecification {
         maxzoom: SATELLITE_BASEMAP_MAX_ZOOM,
         attribution: 'Esri, Maxar, Earthstar Geographics',
       },
-      countries: {
-        type: 'vector',
-        url: 'https://demotiles.maplibre.org/tiles/tiles.json',
-      },
+      ...(compliant
+        ? { 'tdt-cva': { type: 'raster', tiles: tiandituTiles('cva'), tileSize: 256, attribution: TDT_ATTRIBUTION } }
+        : { countries: { type: 'vector', url: 'https://demotiles.maplibre.org/tiles/tiles.json' } }),
     },
     layers: [
-      {
-        id: 'background',
-        type: 'background',
-        paint: { 'background-color': '#0b1020' },
-      },
-      {
-        id: SATELLITE_LAYER_ID,
-        type: 'raster',
-        source: SATELLITE_SOURCE_ID,
-      },
-      {
-        id: 'mw-country-fill',
-        type: 'fill',
-        source: 'countries',
-        'source-layer': 'countries',
-        paint: { 'fill-color': '#1e3a5f', 'fill-opacity': 0.12 },
-      },
-      {
-        id: HYBRID_COUNTRY_LINE_ID,
-        type: 'line',
-        source: 'countries',
-        'source-layer': 'countries',
-        paint: {
-          'line-color': '#f8fafc',
-          'line-width': 1.2,
-          'line-opacity': 0.85,
-        },
-      },
+      { id: 'background', type: 'background', paint: { 'background-color': '#0b1020' } },
+      { id: SATELLITE_LAYER_ID, type: 'raster', source: SATELLITE_SOURCE_ID },
+      ...(compliant
+        ? [{ id: HYBRID_COUNTRY_LINE_ID, type: 'raster' as const, source: 'tdt-cva' }]
+        : [
+            {
+              id: 'mw-country-fill',
+              type: 'fill' as const,
+              source: 'countries',
+              'source-layer': 'countries',
+              paint: { 'fill-color': '#1e3a5f', 'fill-opacity': 0.12 },
+            },
+            {
+              id: HYBRID_COUNTRY_LINE_ID,
+              type: 'line' as const,
+              source: 'countries',
+              'source-layer': 'countries',
+              paint: { 'line-color': '#f8fafc', 'line-width': 1.2, 'line-opacity': 0.85 },
+            },
+          ]),
     ],
   };
 }
 
-/** 深色态势底图（遗留 starfield/seabed）：国界轮廓 + 经纬网 */
+/** 深色态势底图（遗留 starfield/seabed）：国界轮廓 + 经纬网。
+ *  合规：配置天地图 token 时，国界改用天地图注记瓦片（cva，含九段线，半透明保暗色风）。 */
 export function buildDarkBasemapStyle(): StyleSpecification {
+  const compliant = hasTianditu();
   return {
     version: 8,
     sources: {
-      countries: {
-        type: 'vector',
-        url: 'https://demotiles.maplibre.org/tiles/tiles.json',
-      },
+      ...(compliant
+        ? { 'tdt-cva': { type: 'raster', tiles: tiandituTiles('cva'), tileSize: 256, attribution: TDT_ATTRIBUTION } }
+        : { countries: { type: 'vector', url: 'https://demotiles.maplibre.org/tiles/tiles.json' } }),
       graticule: { type: 'geojson', data: buildGraticule(20) },
     },
     layers: [
-      {
-        id: 'background',
-        type: 'background',
-        paint: { 'background-color': '#0A0E17' },
-      },
-      {
-        id: 'country-fill',
-        type: 'fill',
-        source: 'countries',
-        'source-layer': 'countries',
-        paint: { 'fill-color': '#13233f', 'fill-opacity': 0.7 },
-      },
-      {
-        id: 'country-line',
-        type: 'line',
-        source: 'countries',
-        'source-layer': 'countries',
-        paint: { 'line-color': '#2d5a8c', 'line-width': 0.6 },
-      },
+      { id: 'background', type: 'background', paint: { 'background-color': '#0A0E17' } },
+      ...(compliant
+        ? [{ id: 'country-line', type: 'raster' as const, source: 'tdt-cva', paint: { 'raster-opacity': 0.55 } }]
+        : [
+            {
+              id: 'country-fill',
+              type: 'fill' as const,
+              source: 'countries',
+              'source-layer': 'countries',
+              paint: { 'fill-color': '#13233f', 'fill-opacity': 0.7 },
+            },
+            {
+              id: 'country-line',
+              type: 'line' as const,
+              source: 'countries',
+              'source-layer': 'countries',
+              paint: { 'line-color': '#2d5a8c', 'line-width': 0.6 },
+            },
+          ]),
       {
         id: 'graticule-lines',
         type: 'line',
         source: 'graticule',
-        paint: {
-          'line-color': '#3b6ea5',
-          'line-width': 0.5,
-          'line-opacity': 0.35,
-        },
+        paint: { 'line-color': '#3b6ea5', 'line-width': 0.5, 'line-opacity': 0.35 },
       },
     ],
   };
@@ -278,7 +275,8 @@ export function resolveImageryStyle(mode: BasemapMode): string | StyleSpecificat
     case 'satellite':
       return buildSatelliteStyle();
     case 'political':
-      return getPoliticalStyleUrl();
+      // 合规：天地图矢量政区（含九段线）；否则回退 OpenFreeMap Liberty
+      return hasTianditu() ? buildTiandituStyle() : getPoliticalStyleUrl();
     case 'hybrid':
     default:
       return buildHybridStyle();

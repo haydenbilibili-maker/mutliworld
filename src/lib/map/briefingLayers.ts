@@ -19,7 +19,7 @@ export const US_BRIEFING_MODULE_LAYERS: Record<string, LayerId[]> = {
   nato: ['military', 'bases', 'garrisons', 'sanctions'],
   supply: ['economic', 'minerals', 'pipelines', 'semiconductors'],
   domestic: ['protests', 'conflicts', 'conflict_zones', 'outages'],
-  surface: ['economic', 'weather', 'live_weather', 'live_flights', 'live_maritime', 'pizza_index'],
+  surface: ['economic', 'weather', 'live_weather', 'live_flights', 'live_fires', 'live_maritime', 'pizza_index'],
 };
 
 /** 简报模块点击：若相关图层未开则自动开启 */

@@ -4,6 +4,7 @@ import type { LayerId } from '@/types/geo';
 export const LIVE_API_LAYER_IDS: readonly LayerId[] = [
   'live_weather',
   'live_flights',
+  'live_fires',
   'live_maritime',
   'pizza_index',
   'space_stations',

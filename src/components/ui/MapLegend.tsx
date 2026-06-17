@@ -13,6 +13,7 @@ import type { LayerId } from '@/types/geo';
 const LIVE_OVERLAY_LAYERS = new Set<LayerId>([
   'live_weather',
   'live_flights',
+  'live_fires',
   'live_maritime',
   'conflict_zones',
   'pizza_index',

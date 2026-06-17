@@ -26,7 +26,7 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   },
   {
     title: '经济与自然',
-    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'hydrocarbon_reserves', 'natural', 'weather', 'live_weather', 'climate'],
+    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'hydrocarbon_reserves', 'natural', 'weather', 'live_weather', 'live_fires', 'climate'],
   },
   {
     title: '社会与时空',
@@ -67,6 +67,7 @@ const ALWAYS_ON: LayerId[] = [
   'conflict_zones',
   'aviation',
   'live_flights',
+  'live_fires',
   'live_maritime',
   'maritime',
   'cables',

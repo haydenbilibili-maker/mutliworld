@@ -29,6 +29,7 @@ const ALL_LAYERS: LayerId[] = [
   'outages',
   'aviation',
   'live_flights',
+  'live_fires',
   'live_maritime',
   'maritime',
   'cables',
