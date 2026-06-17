@@ -36,7 +36,6 @@ export const PANEL_META: { id: PanelId; label: string }[] = [
   { id: 'insights', label: '关联洞察' },
   { id: 'overview', label: '态势' },
   { id: 'military', label: '军力' },
-  { id: 'energy', label: '能源' },
   { id: 'persons', label: '人物' },
   { id: 'diplomacy', label: '外交' },
   { id: 'situation', label: '区域态势' },

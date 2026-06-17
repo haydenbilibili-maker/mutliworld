@@ -119,30 +119,29 @@ export function EnergyEconPanel({ className = '' }: EnergyEconPanelProps) {
     [byCategory],
   );
 
-  const tabChips = (
-    <div className="flex flex-wrap justify-end gap-1 text-[10px]">
-      {tabs.map((c) => (
-        <button
-          key={c}
-          type="button"
-          onClick={() => setTab(c)}
-          className={`rounded px-1.5 py-0.5 ${activeTab === c ? 'bg-white/15 text-white' : 'text-dashboard-neutral'}`}
-        >
-          {CAT_LABEL[c]}
-        </button>
-      ))}
-    </div>
-  );
-
   return (
     <DockPanel
       id="econ"
       icon="📈"
       title="能源经济 · 真实行情"
       count={total}
-      headerRight={tabChips}
-      className={`w-[min(22rem,calc(100vw-2rem))] ${className}`}
+      className={`w-[min(23rem,calc(100vw-2rem))] ${className}`}
     >
+      {tabs.length > 0 && (
+        <div className="mb-2 flex flex-wrap gap-1 text-[10px]">
+          {tabs.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setTab(c)}
+              className={`rounded px-2 py-0.5 transition-colors ${activeTab === c ? 'bg-brand-cyan/20 text-brand-cyan' : 'text-dashboard-neutral hover:bg-white/5'}`}
+            >
+              {CAT_LABEL[c]}
+            </button>
+          ))}
+        </div>
+      )}
+
       {isLoading && total === 0 ? (
         <div className="py-3 text-[11px] text-dashboard-neutral/60">加载真实数据…</div>
       ) : total === 0 ? (

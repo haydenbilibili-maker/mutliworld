@@ -9,7 +9,6 @@ import { MapControlBar } from '@/components/ui/MapControlBar';
 import { RegionSwitcher } from '@/components/ui/RegionSwitcher';
 import { MideastPanel } from '@/components/region/MideastPanel';
 import { MideastMilitaryPanel } from '@/components/region/MideastMilitaryPanel';
-import { MideastEnergyPanel } from '@/components/region/MideastEnergyPanel';
 import { PersonsPanel } from '@/components/region/PersonsPanel';
 import { MideastDiplomacyPanel } from '@/components/region/MideastDiplomacyPanel';
 import { RegionalSituationPanel } from '@/components/region/RegionalSituationPanel';
@@ -53,7 +52,7 @@ export function HomeDashboard() {
       <main className="relative h-screen w-full overflow-hidden max-sm:overflow-x-hidden">
         <StarfieldBackdrop />
         <MapContainer className="absolute inset-0 z-0" />
-        <div className="pointer-events-none absolute top-4 left-4 z-30 flex items-center gap-2 max-sm:gap-1.5">
+        <div className="pointer-events-none absolute top-4 left-4 z-40 flex items-center gap-2 max-sm:gap-1.5">
           <BrandMark className="pointer-events-auto" />
           <RegionSwitcher className="pointer-events-auto" />
         </div>
@@ -80,7 +79,6 @@ export function HomeDashboard() {
         <SurfaceLayerStatusStack />
         <VerticalProfilePanel className="absolute top-28 left-1/2 -translate-x-1/2 z-30 max-h-[80vh] overflow-y-auto" />
         <MideastMilitaryPanel className="absolute top-28 right-4 z-25" />
-        <MideastEnergyPanel className="absolute bottom-14 right-4 z-25" />
         <MapControlBar className="absolute bottom-14 left-1/2 z-20 -translate-x-1/2 max-sm:bottom-16 max-sm:max-w-[calc(100vw-1rem)]" />
         <MapHudStack className="absolute bottom-[4.75rem] left-4 z-20 max-sm:bottom-[5.25rem] max-sm:left-2" />
         <MarqueeTicker className="absolute bottom-0 left-0 right-0 z-20" />
