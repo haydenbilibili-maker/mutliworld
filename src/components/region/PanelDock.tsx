@@ -37,34 +37,36 @@ export function PanelDock({ className = '' }: PanelDockProps) {
 
   return (
     <div
-      className={`rounded-lg bg-dashboard-bg/90 border border-dashboard-neutral/20 p-1.5 flex flex-wrap items-center justify-center gap-1 max-w-[min(calc(100vw-1rem),36rem)] ${className}`}
+      className={`flex items-center gap-1.5 ${className}`}
       role="group"
       aria-label="面板停靠"
     >
-      <span className="hidden text-[11px] text-dashboard-neutral px-1 sm:inline">面板</span>
-      {dockPanels.map((p) => (
-        <button
-          key={p.id}
-          type="button"
-          onClick={() => toggle(p.id)}
-          aria-pressed={open[p.id]}
-          title={p.title}
-          className={`px-2 py-1 rounded-md text-xs transition-colors ${
-            open[p.id]
-              ? 'bg-dashboard-neutral/30 text-white'
-              : 'text-dashboard-neutral hover:text-white'
-          }`}
-        >
-          {p.label}
-        </button>
-      ))}
-      <span className="w-px h-4 bg-dashboard-neutral/20 mx-0.5" />
+      <div className="flex items-center gap-1 overflow-x-auto whitespace-nowrap rounded-lg border border-dashboard-neutral/15 bg-white/[0.02] px-1.5 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {dockPanels.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => toggle(p.id)}
+            aria-pressed={open[p.id]}
+            title={p.title}
+            className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+              open[p.id]
+                ? 'bg-brand-cyan/20 text-brand-cyan'
+                : 'text-dashboard-neutral/80 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            {p.label}
+          </button>
+        ))}
+      </div>
       <button
         type="button"
         onClick={() => (anyOpen ? hideAll() : showAll())}
-        className="px-2 py-1 rounded-md text-xs text-dashboard-neutral hover:text-white"
+        title={anyOpen ? '收起全部面板' : '展开全部面板'}
+        aria-label={anyOpen ? '收起全部面板' : '展开全部面板'}
+        className="shrink-0 rounded-md border border-dashboard-neutral/15 px-2 py-1.5 text-xs text-dashboard-neutral/80 transition-colors hover:bg-white/5 hover:text-white"
       >
-        {anyOpen ? '全收起' : '全展开'}
+        {anyOpen ? '收起' : '展开'}
       </button>
     </div>
   );
