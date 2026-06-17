@@ -39,6 +39,7 @@ import { FireLayer } from '@/components/map/FireLayer';
 import { BodySiteLayer } from '@/components/map/BodySiteLayer';
 import { BodyOrbiterLayer } from '@/components/map/BodyOrbiterLayer';
 import { BodyTraverseLayer } from '@/components/map/BodyTraverseLayer';
+import { BodyFeatureLayer } from '@/components/map/BodyFeatureLayer';
 import { MaritimeLayer } from '@/components/map/MaritimeLayer';
 import { PizzaIndexLayer } from '@/components/map/PizzaIndexLayer';
 import { ProfilePicker } from '@/components/map/ProfilePicker';
@@ -308,6 +309,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
 
         {/* 天体探索层（月/火）：始终挂载，内部按 activeBody 门控 */}
         <BodySiteLayer />
+        <BodyFeatureLayer />
         <BodyOrbiterLayer />
         <BodyTraverseLayer />
 

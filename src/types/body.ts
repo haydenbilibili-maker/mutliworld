@@ -14,10 +14,26 @@ export type BodyLayerId =
   | 'moon_change'
   | 'moon_legacy'
   | 'moon_orbiters'
+  | 'moon_features'
   | 'mars_rovers'
   | 'mars_landers'
   | 'mars_traverse'
-  | 'mars_orbiters';
+  | 'mars_orbiters'
+  | 'mars_features';
+
+/** 天体地貌要素（月海/撞击坑/火山/峡谷等） */
+export interface BodyFeature {
+  id: string;
+  body: CelestialBody;
+  layer: BodyLayerId; // moon_features | mars_features
+  name: string;
+  nameEn: string;
+  /** 地貌类型 */
+  type: string;
+  lng: number;
+  lat: number;
+  desc: string;
+}
 
 export type BodySiteStatus = 'active' | 'completed' | 'lost';
 
