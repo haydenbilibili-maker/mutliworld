@@ -18,6 +18,8 @@ export interface BodyKnowledge {
   cooperation: KItem[];
   photos: MediaLink[];
   films: MediaLink[];
+  /** 延伸知识：卫星、特殊现象、未解之谜等 */
+  extension: KItem[];
 }
 
 export const BODY_KNOWLEDGE: Record<'moon' | 'mars', BodyKnowledge> = {
@@ -68,6 +70,14 @@ export const BODY_KNOWLEDGE: Record<'moon' | 'mars', BodyKnowledge> = {
       { title: '为全人类 For All Mankind', meta: '剧集 · 架空登月竞赛' },
       { title: '2001 太空漫游', meta: '1968 · 科幻经典' },
       { title: '月球 Moon', meta: '2009 · 月球基地科幻' },
+      { title: '阿波罗任务纪录', meta: 'Apollo 11 (2019) · 实拍纪录' },
+    ],
+    extension: [
+      { title: '潮汐锁定 · 永远的正面', desc: '月球自转与公转同步，始终以同一面朝向地球；另一面称「月背」，1959 年月球 3 号才首次拍到。' },
+      { title: '月背为何难探测', desc: '月背无法直接与地球通信，嫦娥四/六号依靠「鹊桥」中继卫星实现月背着陆与通信。' },
+      { title: '月球水冰与永久阴影区', desc: '两极陨石坑底部终年不见阳光（永久阴影区），冷阱中保存水冰，是未来驻留与制取推进剂的关键资源。' },
+      { title: '月震', desc: '阿波罗布设的地震仪记录到浅源与深源月震，揭示月球内部结构与持续冷却收缩。' },
+      { title: '没有真正的「暗面」', desc: '月背同样接受日照，「月之暗面」是流行误称；暗指的是通信与认知上的「未知面」。' },
     ],
   },
   mars: {
@@ -117,7 +127,16 @@ export const BODY_KNOWLEDGE: Record<'moon' | 'mars', BodyKnowledge> = {
       { title: '火星任务 Mission to Mars', meta: '2000 · 科幻' },
       { title: '红色星球 Red Planet', meta: '2000 · 科幻' },
       { title: '火星时代 MARS', meta: '剧集 · 半纪录科幻' },
+      { title: '全面回忆 Total Recall', meta: '1990 · 火星殖民科幻' },
       { title: '流浪地球', meta: '2019/2023 · 中国科幻（行星发动机/航天叙事）' },
+    ],
+    extension: [
+      { title: '火卫一 Phobos', desc: '直径约 22 km 的不规则小卫星，距火星极近、约 7.6 小时绕行一圈，正缓慢螺旋靠近火星，数千万年后或解体成环。' },
+      { title: '火卫二 Deimos', desc: '直径约 12 km，更小更远，约 30 小时绕行一圈；两颗卫星可能是被俘获的小行星。' },
+      { title: '全球性沙尘暴', desc: '火星季节性沙尘暴可席卷全球、遮蔽数月，曾导致机遇号失联；对太阳能任务是重大威胁。' },
+      { title: '甲烷之谜', desc: '好奇号与轨道器探测到时强时弱的甲烷信号，来源（地质或生物）至今未有定论。' },
+      { title: '古代液态水与宜居性', desc: '河谷、三角洲与黏土矿物表明火星早期曾有持续液态水，是寻找古生命的核心线索。' },
+      { title: '低气压与辐射', desc: '气压仅地球约 0.6%，液态水难以稳定存在；缺全球磁场使表面辐射偏高，是载人探索的关键挑战。' },
     ],
   },
 };

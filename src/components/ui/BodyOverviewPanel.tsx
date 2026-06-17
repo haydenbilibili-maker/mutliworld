@@ -26,6 +26,7 @@ const MILESTONES: Record<CelestialBody, Milestone[]> = {
     { year: '1970', label: '首次机器人采样返回（月球 16 号）', agency: 'USSR' },
     { year: '2019', label: '首次月球背面软着陆（嫦娥四号）', agency: 'CNSA' },
     { year: '2023', label: '首次近月球南极着陆（月船 3 号）', agency: 'ISRO' },
+    { year: '2024', label: '首个商业航天器月球软着陆（奥德修斯 IM-1）', agency: 'NASA' },
     { year: '2024', label: '首次月球背面采样返回（嫦娥六号）', agency: 'CNSA' },
   ],
   mars: [

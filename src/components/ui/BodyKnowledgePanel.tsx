@@ -12,8 +12,8 @@ import { useBodyStore } from '@/store/useBodyStore';
 import { getBody } from '@/bodies';
 import { BODY_KNOWLEDGE } from '@/bodies/knowledge';
 
-type Tab = '概况' | '地理' | '载人' | '博弈' | '合作' | '影像' | '影视';
-const TABS: Tab[] = ['概况', '地理', '载人', '博弈', '合作', '影像', '影视'];
+type Tab = '概况' | '地理' | '延伸' | '载人' | '博弈' | '合作' | '影像' | '影视';
+const TABS: Tab[] = ['概况', '地理', '延伸', '载人', '博弈', '合作', '影像', '影视'];
 
 export function BodyKnowledgePanel() {
   const activeBody = useMapStore((s) => s.activeBody);
@@ -87,9 +87,9 @@ export function BodyKnowledgePanel() {
                 </ul>
               )}
 
-              {(tab === '载人' || tab === '博弈' || tab === '合作') && (
+              {(tab === '载人' || tab === '博弈' || tab === '合作' || tab === '延伸') && (
                 <ul className="space-y-2">
-                  {(tab === '载人' ? kn.crewed : tab === '博弈' ? kn.rivalry : kn.cooperation).map((k, i) => (
+                  {(tab === '载人' ? kn.crewed : tab === '博弈' ? kn.rivalry : tab === '合作' ? kn.cooperation : kn.extension).map((k, i) => (
                     <li key={i} className="rounded-md border border-dashboard-neutral/12 px-3 py-2">
                       <div className="text-[13px] font-medium text-white">{k.title}</div>
                       <div className="mt-0.5 text-[11px] leading-relaxed text-dashboard-neutral/80">{k.desc}</div>
