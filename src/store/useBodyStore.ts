@@ -14,6 +14,9 @@ interface BodyLayerState {
   /** 天体百科面板开关 */
   knowledgeOpen: boolean;
   setKnowledgeOpen: (v: boolean) => void;
+  /** 天体底图模式：地形图 / 卫星实拍 */
+  bodyBasemapMode: 'terrain' | 'imagery';
+  setBodyBasemapMode: (m: 'terrain' | 'imagery') => void;
 }
 
 export const useBodyStore = create<BodyLayerState>((set) => ({
@@ -27,4 +30,6 @@ export const useBodyStore = create<BodyLayerState>((set) => ({
   setBodyLayers: (activeBodyLayers) => set({ activeBodyLayers }),
   knowledgeOpen: false,
   setKnowledgeOpen: (knowledgeOpen) => set({ knowledgeOpen }),
+  bodyBasemapMode: 'terrain',
+  setBodyBasemapMode: (bodyBasemapMode) => set({ bodyBasemapMode }),
 }));

@@ -51,6 +51,7 @@ function syncBearingFromMap(
 export function CosmicGlobeAnimator() {
   const map = useMapContext();
   const activeTier = useMapStore((s) => s.activeTier);
+  const isEarth = useMapStore((s) => s.activeBody === 'earth');
   const playing = useMapStore((s) => s.globeMotionPlaying);
   const speed = useMapStore((s) => s.globeMotionSpeed);
   const globeViewResetNonce = useMapStore((s) => s.globeViewResetNonce);
@@ -61,7 +62,8 @@ export function CosmicGlobeAnimator() {
   const isResettingRef = useRef(false);
   const prevResetNonceRef = useRef(globeViewResetNonce);
 
-  const isCosmicActive = activeTier === 'space';
+  // 仅地球宇宙层自转；天体(月/火)不跑 bearing 动效，避免高频抖动
+  const isCosmicActive = activeTier === 'space' && isEarth;
 
   useEffect(() => {
     playingRef.current = playing;

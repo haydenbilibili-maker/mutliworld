@@ -59,7 +59,8 @@ export function MapContainer({ className = '' }: MapContainerProps) {
   const initialSyncDone = useRef(false);
   const lastGlobeResetNonce = useRef(0);
   const [mapInstance, setMapInstance] = useState<maplibregl.Map | null>(null);
-  const { center, zoom } = useMapStore();
+  const center = useMapStore((s) => s.center);
+  const zoom = useMapStore((s) => s.zoom);
   const globeViewResetNonce = useMapStore((s) => s.globeViewResetNonce);
   const activeTier = useMapStore((s) => s.activeTier);
   const isEarth = useMapStore((s) => s.activeBody === 'earth');
@@ -167,16 +168,28 @@ export function MapContainer({ className = '' }: MapContainerProps) {
     }, 400);
 
     let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+    let lastW = 0;
+    let lastH = 0;
     const ro = new ResizeObserver(() => {
+      const el = containerRef.current;
+      if (!el) return;
+      const w = Math.round(el.clientWidth);
+      const h = Math.round(el.clientHeight);
+      // 尺寸未实质变化（<2px）则跳过，断开 ResizeObserver↔resize 高频回环
+      if (Math.abs(w - lastW) < 2 && Math.abs(h - lastH) < 2) return;
+      lastW = w;
+      lastH = h;
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         resizeTimer = null;
-        try {
-          map.resize();
-        } catch {
-          /* */
-        }
-      }, 80);
+        requestAnimationFrame(() => {
+          try {
+            map.resize();
+          } catch {
+            /* */
+          }
+        });
+      }, 120);
     });
     ro.observe(containerRef.current);
 
