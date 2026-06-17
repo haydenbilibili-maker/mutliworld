@@ -31,4 +31,11 @@ export const MOON_SITES: BodySite[] = [
   { id: 'surveyor3', body: 'moon', layer: 'moon_legacy', name: '勘测者 3 号', nameEn: 'Surveyor 3', agency: 'NASA', lng: -23.34, lat: -2.97, date: '1967-04-20', status: 'completed', summary: '后被阿波罗 12 号造访并取回部件。' },
   { id: 'chandrayaan3', body: 'moon', layer: 'moon_legacy', name: '月船 3 号', nameEn: 'Chandrayaan-3', agency: 'ISRO', lng: 32.32, lat: -69.37, date: '2023-08-23', status: 'completed', summary: '近月球南极；首个着陆南极区域的任务，普拉吉安巡视器。', sourceUrl: 'https://www.isro.gov.in/' },
   { id: 'slim', body: 'moon', layer: 'moon_legacy', name: 'SLIM', nameEn: 'SLIM', agency: 'JAXA', lng: 25.25, lat: -13.32, date: '2024-01-19', status: 'completed', summary: '希奥利坑附近；日本首次月球软着陆，精度着陆验证。', sourceUrl: 'https://global.jaxa.jp/' },
+
+  // ── 近年商业/国际任务（含失败尝试，客观记录）──────────
+  { id: 'surveyor5', body: 'moon', layer: 'moon_legacy', name: '勘测者 5 号', nameEn: 'Surveyor 5', agency: 'NASA', lng: 23.18, lat: 1.46, date: '1967-09-11', status: 'completed', summary: '静海；首次就地分析月壤化学成分。' },
+  { id: 'beresheet', body: 'moon', layer: 'moon_legacy', name: '创世纪号', nameEn: 'Beresheet', agency: 'SpaceIL（以色列）', lng: 19.3, lat: 32.6, date: '2019-04-11', status: 'lost', summary: '澄海；首个民间月球着陆尝试，着陆失败坠毁。' },
+  { id: 'hakuto-r1', body: 'moon', layer: 'moon_legacy', name: '白兔-R M1', nameEn: 'Hakuto-R M1', agency: 'ispace（日本）', lng: 44.4, lat: 47.5, date: '2023-04-25', status: 'lost', summary: '阿特拉斯坑；商业着陆尝试，末段失联坠毁。' },
+  { id: 'luna25', body: 'moon', layer: 'moon_legacy', name: '月球 25 号', nameEn: 'Luna 25', agency: 'Roscosmos（俄罗斯）', lng: 43.5, lat: -57.5, date: '2023-08-20', status: 'lost', summary: '近月球南极；入轨机动异常坠毁，俄 47 年来首次探月。' },
+  { id: 'im1', body: 'moon', layer: 'moon_legacy', name: '奥德修斯号 IM-1', nameEn: 'Odysseus (IM-1)', agency: 'Intuitive Machines（美国）', lng: 1.44, lat: -80.13, date: '2024-02-22', status: 'completed', summary: '近月球南极玛拉佩特；首个商业航天器月球软着陆（着陆后侧倾）。', sourceUrl: 'https://www.intuitivemachines.com/' },
 ];

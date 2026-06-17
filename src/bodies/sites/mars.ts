@@ -22,4 +22,10 @@ export const MARS_SITES: BodySite[] = [
   { id: 'phoenix', body: 'mars', layer: 'mars_landers', name: '凤凰号', nameEn: 'Phoenix', agency: 'NASA', lng: -125.75, lat: 68.22, date: '2008-05-25', status: 'completed', summary: '北极平原；首次在火星就地确认水冰。', sourceUrl: 'https://www.nasa.gov/' },
   { id: 'insight', body: 'mars', layer: 'mars_landers', name: '洞察号', nameEn: 'InSight', agency: 'NASA', lng: 135.62, lat: 4.50, date: '2018-11-26', status: 'completed', summary: '埃律西昂平原；地震仪探测火星内部，2022 年退役。', sourceUrl: 'https://mars.nasa.gov/insight/' },
   { id: 'tianwen1', body: 'mars', layer: 'mars_landers', name: '天问一号着陆平台', nameEn: 'Tianwen-1 lander', agency: 'CNSA', lng: 110.08, lat: 25.10, date: '2021-05-15', status: 'completed', summary: '乌托邦平原；携祝融号着陆，中国首次火星软着陆。', sourceUrl: 'https://www.cnsa.gov.cn/' },
+
+  // ── 早期与失败尝试（客观记录）──────────────────────
+  { id: 'mars3', body: 'mars', layer: 'mars_landers', name: '火星 3 号', nameEn: 'Mars 3', agency: 'USSR', lng: -158.0, lat: -45.0, date: '1971-12-02', status: 'lost', summary: '人类首次火星软着陆，着陆后约 20 秒即失联。' },
+  { id: 'mpl', body: 'mars', layer: 'mars_landers', name: '火星极地着陆者', nameEn: 'Mars Polar Lander', agency: 'NASA', lng: 0, lat: -76.0, date: '1999-12-03', status: 'lost', summary: '南极区域；着陆阶段失联，任务失败。' },
+  { id: 'beagle2', body: 'mars', layer: 'mars_landers', name: '猎兔犬 2 号', nameEn: 'Beagle 2', agency: 'ESA/UK', lng: 90.4, lat: 11.5, date: '2003-12-25', status: 'lost', summary: '伊希斯平原；成功着陆但太阳能板未完全展开、失联。' },
+  { id: 'schiaparelli', body: 'mars', layer: 'mars_landers', name: '斯基亚帕雷利', nameEn: 'Schiaparelli EDM', agency: 'ESA/Roscosmos', lng: -6.21, lat: -2.07, date: '2016-10-19', status: 'lost', summary: '子午高原；着陆演示器，下降阶段坠毁。' },
 ];
