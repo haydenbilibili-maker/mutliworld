@@ -1,10 +1,16 @@
 'use client';
 
+import { TierSelector } from '@/components/ui/TierSelector';
 import { TimelineSlider } from '@/components/ui/TimelineSlider';
 import { LayerToggle } from '@/components/ui/LayerToggle';
 import { SearchBox } from '@/components/ui/SearchBox';
+import { ViewMenu } from '@/components/ui/ViewMenu';
 import { StrategicResearchMenu } from '@/components/ui/StrategicResearchMenu';
 import { MoreMenu } from '@/components/ui/MoreMenu';
+
+function Divider() {
+  return <div className="mx-1 hidden h-6 w-px shrink-0 bg-dashboard-neutral/20 sm:block" aria-hidden />;
+}
 
 interface MapControlBarProps {
   className?: string;
@@ -23,26 +29,18 @@ export function MapControlBar({ className = '' }: MapControlBarProps) {
       role="toolbar"
       aria-label="地图控制"
     >
+      <TierSelector />
+      <Divider />
       <TimelineSlider embedded />
-      <div
-        className="mx-1 hidden h-6 w-px shrink-0 bg-dashboard-neutral/20 sm:block"
-        aria-hidden
-      />
+      <Divider />
       <LayerToggle embedded />
-      <div
-        className="mx-1 hidden h-6 w-px shrink-0 bg-dashboard-neutral/20 sm:block"
-        aria-hidden
-      />
+      <Divider />
       <SearchBox embedded />
-      <div
-        className="mx-1 hidden h-6 w-px shrink-0 bg-dashboard-neutral/20 sm:block"
-        aria-hidden
-      />
+      <Divider />
+      <ViewMenu embedded />
+      <Divider />
       <StrategicResearchMenu embedded />
-      <div
-        className="mx-1 hidden h-6 w-px shrink-0 bg-dashboard-neutral/20 sm:block"
-        aria-hidden
-      />
+      <Divider />
       <MoreMenu embedded />
     </div>
   );

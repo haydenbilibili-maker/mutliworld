@@ -25,7 +25,6 @@ import { EnergyEconPanel } from '@/components/region/EnergyEconPanel';
 import { InsightsPanel } from '@/components/region/InsightsPanel';
 import { AboutPanel } from '@/components/ui/AboutPanel';
 import { RegionDetailCard } from '@/components/region/RegionDetailCard';
-import { TierSwitcher } from '@/components/ui/TierSwitcher';
 import { SeabedBriefingPanel } from '@/components/region/SeabedBriefingPanel';
 import { SpaceBriefingPanel } from '@/components/region/SpaceBriefingPanel';
 import { OrbitalListHost } from '@/components/ui/OrbitalListHost';
@@ -53,10 +52,9 @@ export function HomeDashboard() {
           <StarfieldBackdrop />
           <MapContainer className="absolute inset-0 z-0" />
           <AboutPanel />
-          <TierSwitcher className="absolute top-1/2 left-3 z-30 -translate-y-1/2" />
 
           {/* 左轨：区域 / 简报 / 态势 / 外交 / 新闻 / 人物（flex-col 堆叠，自动避让，整体滚动） */}
-          <div className="pointer-events-none absolute bottom-16 left-[4.5rem] top-3 z-20 flex w-[min(19rem,calc(100vw-6rem))] flex-col items-start gap-2 overflow-y-auto overscroll-contain pr-1 [&>*]:pointer-events-auto max-sm:left-14 max-sm:w-[min(17rem,calc(100vw-4rem))]">
+          <div className="pointer-events-none absolute bottom-16 left-4 top-3 z-20 flex w-[min(19rem,calc(100vw-2rem))] flex-col items-start gap-2 overflow-y-auto overscroll-contain pr-1 [&>*]:pointer-events-auto">
             <RegionDetailCard className="!w-full" />
             <RegionBriefingPanel className="!w-full !max-h-[46vh]" />
             <ChinaBriefingPanel className="!w-full !max-h-[46vh]" />
