@@ -13,7 +13,7 @@ const fetcher = (url: string) =>
 export function useMarkets() {
   const { data, error, isLoading } = useSWR<{
     items: MarketQuote[];
-    sources: { fx: boolean; crypto: boolean };
+    sources: { fx: boolean; crypto: boolean; index: boolean };
     generatedAt: string;
   }>('/api/markets', fetcher, {
     refreshInterval: 120_000,
@@ -23,7 +23,7 @@ export function useMarkets() {
 
   return {
     items: (data?.items ?? []) as MarketQuote[],
-    sources: data?.sources ?? { fx: false, crypto: false },
+    sources: data?.sources ?? { fx: false, crypto: false, index: false },
     generatedAt: data?.generatedAt ?? null,
     isLoading,
     error,

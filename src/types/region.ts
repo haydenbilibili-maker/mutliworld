@@ -11,7 +11,6 @@ import type {
   EnergyImpactRegion,
   EnergyDataPoint,
   OilProducerMapPoint,
-  TargetPerson,
   Facility,
   Incident,
   DiplomaticActor,
@@ -19,6 +18,8 @@ import type {
   TrendDataPoint,
   ConflictIntensityDay,
 } from '@/types/middleeast';
+import type { Person } from '@/types/person';
+import type { RegionalSituationItem } from '@/types/regional-situation';
 
 /** 区域 ID（新增区域时在此扩展） */
 export type RegionId =
@@ -55,18 +56,20 @@ export interface RegionDataset {
     /** 能源资源点位（用于地图经济图层） */
     oilProducers?: OilProducerMapPoint[];
   };
-  /** 高价值目标人物 */
-  targets?: TargetPerson[];
+  /** 区域公众人物（政治/经济/社会/文化/军事） */
+  persons?: Person[];
   /** 设施（可上地图） */
   facilities?: Facility[];
   /** 冲突事件（可上地图） */
   incidents?: Incident[];
   /** 外交反应 */
   diplomacy?: DiplomaticActor[];
-  /** 社媒热帖 */
+  /** 社媒热帖（遗留；展示已合并至 situation） */
   social?: SocialMediaPost[];
-  /** 趋势（军力曲线 + 冲突烈度） */
+  /** 趋势（军力曲线 + 冲突烈度；图表仍用于区域态势面板） */
   trend?: { force: TrendDataPoint[]; intensity: ConflictIntensityDay[] };
+  /** 区域态势统一 feed（社媒 + 趋势 + 态势）；由 regional-situation 模块注入 */
+  situation?: RegionalSituationItem[];
 }
 
 export interface RegionModule {

@@ -6,7 +6,7 @@ export const PENINSULA_MODULE: NortheastAsiaModule = {
   summary:
     '朝鲜半岛核问题与朝韩对峙是东北亚最紧迫的安全议程：三八线非军事区、朝鲜核导计划与美韩联合军演构成持续升级的三角循环。',
   mapView: { center: [127.5, 38.5], zoom: 6.5 },
-  relatedLayerIds: ['nuclear', 'conflicts', 'military', 'bases'],
+  relatedLayerIds: ['nuclear', 'conflicts', 'conflict_zones', 'military', 'bases'],
   sections: [
     {
       heading: '三八线与 DMZ：全球最紧张边界',

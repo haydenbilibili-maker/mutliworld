@@ -1,0 +1,36 @@
+import type { RegionalSituationItem } from '@/types/regional-situation';
+import { situation, ts } from './helpers';
+
+/** 北美（美国战略视角）· 区域态势 */
+export const NORTH_AMERICA_SITUATION: RegionalSituationItem[] = [
+  situation('sit-na-01', 'north_america', '社媒', '美国大选 · 外交政策辩论', 'X 上 #Election2026 讨论对华关税、援乌规模与中东军事介入立场。', 'mixed', 82, ['政治'], ts(0), { platform: 'X', engagement: 890000, lng: -77, lat: 38.9 }),
+  situation('sit-na-02', 'north_america', '社媒', '五角大楼披萨指数', 'OSINT 社区热议披萨订单与国防部加班关联，标签娱乐化传播。', 'mixed', 71, ['军事', '社会'], ts(1), { platform: 'X', engagement: 234000, lng: -77.1, lat: 38.87 }),
+  situation('sit-na-03', 'north_america', '社媒', '加州野火 · 保险危机', '当地居民在 FB 群组讨论房屋无法续保与疏散路线。', 'negative', 68, ['灾害', '社会'], ts(0, 12), { platform: 'FB', engagement: 67000, lng: -118.2, lat: 34.1 }),
+  situation('sit-na-04', 'north_america', '社媒', '德州边境 · 移民政策', '保守派媒体直播边境墙施工与庇护城市争议，情绪高度极化。', 'negative', 75, ['政治', '社会'], ts(2), { platform: 'X', engagement: 312000, lng: -106.5, lat: 31.8 }),
+  situation('sit-na-05', 'north_america', '社媒', '美联储利率 · 华尔街解读', '财经 X 账号热议点阵图与通胀数据，讨论降息窗口。', 'mixed', 64, ['经济'], ts(3), { platform: 'X', engagement: 145000, lng: -74, lat: 40.7 }),
+  situation('sit-na-06', 'north_america', '社媒', '波音质量 · 航空安全', '旅客论坛转发 FAA 检查通报与 737 MAX 交付延迟消息。', 'negative', 58, ['经济', '社会'], ts(4), { platform: 'Reddit', engagement: 89000, lng: -122.3, lat: 47.6 }),
+  situation('sit-na-07', 'north_america', '社媒', 'NASA 阿尔忒弥斯计划', '航天爱好者讨论登月时间表与 SpaceX 星舰测试进展。', 'positive', 52, ['军事', '文化'], ts(5), { platform: 'X', engagement: 78000, lng: -95.1, lat: 29.6 }),
+  situation('sit-na-08', 'north_america', '社媒', '芯片法案 · 亚利桑那建厂', '台积电凤凰城工厂招聘与本土供应链配套成为地方新闻热点。', 'positive', 56, ['经济'], ts(6), { platform: 'X', engagement: 45000, lng: -112, lat: 33.4 }),
+  situation('sit-na-09', 'north_america', '社媒', '芝加哥枪击 · 治安讨论', '市长选战候选人就警务改革与枪支管控交锋，全国媒体跟进。', 'negative', 62, ['社会'], ts(1, 14), { platform: 'X', engagement: 198000, lng: -87.6, lat: 41.9 }),
+  situation('sit-na-10', 'north_america', '社媒', '加拿大野火烟雾南下', '美东居民发布纽约橙色天空照片，讨论跨境气候协作。', 'negative', 54, ['灾害'], ts(7), { platform: 'IG', engagement: 112000, lng: -74, lat: 40.7 }),
+  situation('sit-na-11', 'north_america', '趋势', '美国军工股指数', '地缘冲突推高洛克希德、雷神等防务股相对大盘超额收益。', 'positive', 70, ['军事', '经济'], ts(0, 7), { lng: -77, lat: 38.9 }),
+  situation('sit-na-12', 'north_america', '趋势', '对华技术出口管制强度', '实体清单更新频次与半导体设备许可拒绝率处高位。', 'negative', 73, ['政治', '经济'], ts(1, 8)),
+  situation('sit-na-13', 'north_america', '趋势', '援乌援助舆论支持度', '民调显示跨党派对长期军援疲劳感上升，支持度指数下滑。', 'mixed', 60, ['政治', '军事'], ts(2, 8)),
+  situation('sit-na-14', 'north_america', '趋势', '本土极端天气损失', '保险业巨灾模型上调飓风与野火预期损失，保费上涨压力大。', 'negative', 66, ['灾害', '经济'], ts(3, 8)),
+  situation('sit-na-15', 'north_america', '趋势', '北美电网可靠性', '德州冬季风暴教训后储能部署加速，但输电升级投资仍滞后。', 'mixed', 48, ['经济', '灾害'], ts(4, 9)),
+  situation('sit-na-16', 'north_america', '趋势', '印太前沿部署指数', '关岛、菲律宾、澳大利亚轮换部署维持高位，后勤压力指数上升。', 'negative', 68, ['军事'], ts(0, 11), { lng: 144.9, lat: 13.6 }),
+  situation('sit-na-17', 'north_america', '趋势', '毒品芬太尼跨境', '美墨边境查获量与过量死亡统计仍处高位，政策工具争议激烈。', 'negative', 72, ['社会'], ts(5, 9), { lng: -106.5, lat: 31.8 }),
+  situation('sit-na-18', 'north_america', '趋势', 'AI 监管国会听证', '科技 CEO 出庭频率增加，立法草案数量指数同比上升。', 'neutral', 55, ['政治', '经济'], ts(6, 9)),
+  situation('sit-na-19', 'north_america', '态势', '大国竞争国内政治化', '对华强硬成为跨党派共识区，但贸易利益集团与农业州诉求形成牵制。', 'mixed', 76, ['政治', '经济'], ts(0, 8)),
+  situation('sit-na-20', 'north_america', '态势', '全球部署与本土疲惫', '同时支撑欧洲、中东、印太三条战线，征兵与军费预算辩论加剧。', 'negative', 74, ['军事', '政治'], ts(1, 8)),
+  situation('sit-na-21', 'north_america', '态势', '供应链友岸化', '墨西哥近岸制造、加拿大矿产与本土芯片补贴构成「北美堡垒」雏形。', 'positive', 58, ['经济'], ts(2, 8)),
+  situation('sit-na-22', 'north_america', '态势', '社会极化与选举诚信', '深度伪造、邮寄选票规则与街头抗议风险在选举年放大。', 'negative', 69, ['社会', '政治'], ts(3, 8)),
+  situation('sit-na-23', 'north_america', '态势', '能源转型政治拉锯', '页岩油气产量仍高，清洁能源补贴成为党派攻防焦点。', 'mixed', 57, ['经济', '政治'], ts(4, 8)),
+  situation('sit-na-24', 'north_america', '社媒', '好莱坞罢工余波', '编剧与演员工会后续合同谈判影响流媒体内容排期。', 'neutral', 40, ['文化'], ts(8), { platform: 'X', engagement: 34000, lng: -118.2, lat: 34.1 }),
+  situation('sit-na-25', 'north_america', '社媒', '纽约 congestion pricing', '通勤者抗议曼哈顿拥堵收费，环保组织发声支持。', 'mixed', 46, ['社会', '经济'], ts(9), { platform: 'X', engagement: 56000, lng: -74, lat: 40.7 }),
+  situation('sit-na-26', 'north_america', '趋势', '核武器现代化支出', '哨兵洲际导弹与哥伦比亚级潜艇预算超支风险受国会监督。', 'negative', 63, ['军事'], ts(7, 9)),
+  situation('sit-na-27', 'north_america', '社媒', '夏威夷火山监测', '地质调查局发布基拉韦厄活动更新，旅游业关注航线安全。', 'neutral', 38, ['灾害'], ts(10), { platform: 'X', engagement: 22000, lng: -155.3, lat: 19.4 }),
+  situation('sit-na-28', 'north_america', '态势', '北约与印太联动', '美国推动跨大西洋与印太安全议程融合，盟友负担分担争论持续。', 'mixed', 65, ['政治', '军事'], ts(5, 8)),
+  situation('sit-na-29', 'north_america', '社媒', '特斯拉 Cybertruck 交付', '车主论坛讨论产能爬坡与自动驾驶监管调查。', 'mixed', 50, ['经济'], ts(11), { platform: 'X', engagement: 178000, lng: -97.6, lat: 30.2 }),
+  situation('sit-na-30', 'north_america', '趋势', '对华农产品出口', '大豆、玉米长协谈判情绪指数随贸易政策表态波动。', 'mixed', 47, ['经济'], ts(8, 9)),
+];

@@ -15,6 +15,7 @@ import { GLOBAL_SUBMARINE_CABLES } from '@/regions/global.submarineCables';
 import { GLOBAL_CABLE_INCIDENTS } from '@/regions/global.cableIncidents';
 import { GLOBAL_DEEP_SEA_MINING } from '@/regions/global.deepSeaMining';
 import { GLOBAL_TECTONICS } from '@/regions/global.tectonics';
+import { QUAKE_DEPTH_HALO } from '@/lib/geodata/seismicStyle';
 import type { EventDetail } from '@/types/geo';
 
 interface SeabedBriefingPanelProps {
@@ -146,9 +147,27 @@ export function SeabedBriefingPanel({ className = '' }: SeabedBriefingPanelProps
             <div className="text-[11px] text-dashboard-conflict/80">震源数据暂不可用</div>
           ) : quakeDepth.total > 0 ? (
             <div className="flex items-center gap-2 text-[11px] text-dashboard-neutral/80">
-              <span>🔴 浅 {quakeDepth.shallow}</span>
-              <span>🟠 中 {quakeDepth.intermediate}</span>
-              <span>🟣 深 {quakeDepth.deep}</span>
+              <span>
+                <span
+                  className="mr-1 inline-block h-2 w-2 rounded-full"
+                  style={{ backgroundColor: QUAKE_DEPTH_HALO.shallow }}
+                />
+                浅 {quakeDepth.shallow}
+              </span>
+              <span>
+                <span
+                  className="mr-1 inline-block h-2 w-2 rounded-full"
+                  style={{ backgroundColor: QUAKE_DEPTH_HALO.intermediate }}
+                />
+                中 {quakeDepth.intermediate}
+              </span>
+              <span>
+                <span
+                  className="mr-1 inline-block h-2 w-2 rounded-full"
+                  style={{ backgroundColor: QUAKE_DEPTH_HALO.deep }}
+                />
+                深 {quakeDepth.deep}
+              </span>
             </div>
           ) : (
             <div className="text-[11px] text-dashboard-neutral/45">

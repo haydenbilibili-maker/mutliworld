@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 import { useRegionDetailStore } from '@/store/useRegionDetailStore';
 import { useMapStore } from '@/store/useMapStore';
 import { getRegion } from '@/regions';
+import { getSituationForRegion } from '@/regions/regional-situation';
 import { LAYER_LABELS } from '@/lib/constants';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import type { EventDetail, ImpactLevel } from '@/types/geo';
@@ -90,8 +91,8 @@ export function RegionDetailCard({ className = '' }: RegionDetailCardProps) {
           <Stat label="设施" value={ds?.facilities?.length ?? 0} />
           <Stat label="军力" value={ds?.military?.length ?? 0} />
           <Stat label="外交" value={ds?.diplomacy?.length ?? 0} />
-          <Stat label="社媒" value={ds?.social?.length ?? 0} />
-          <Stat label="目标" value={ds?.targets?.length ?? 0} />
+          <Stat label="态势" value={getSituationForRegion(regionId).length} />
+          <Stat label="人物" value={ds?.persons?.length ?? 0} />
           <Stat label="能源" value={ds?.energy?.points?.length ?? 0} />
         </div>
 

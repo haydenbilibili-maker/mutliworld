@@ -1,0 +1,36 @@
+import type { RegionalSituationItem } from '@/types/regional-situation';
+import { situation, ts } from './helpers';
+
+/** 全球视角 · 区域态势（种子/示例，2024–2026 语境） */
+export const GLOBAL_SITUATION: RegionalSituationItem[] = [
+  situation('sit-g-01', 'global', '社媒', '联合国大会 · 多极秩序辩论', 'X 上 #UNGA2025 话题量破 2.1 亿，南方国家呼吁改革安理会与 IMF 份额。', 'mixed', 72, ['政治'], ts(0, 10), { platform: 'X', engagement: 210000 }),
+  situation('sit-g-02', 'global', '社媒', '全球粮食价格 · 小麦期货讨论', '微博财经区热议黑海航运与厄尔尼诺对粮价传导，标签 #粮食安全 登上热搜。', 'negative', 58, ['经济', '灾害'], ts(1), { platform: '微博', engagement: 89000, lng: 116.4, lat: 39.9 }),
+  situation('sit-g-03', 'global', '社媒', 'AI 监管框架 · 欧美分歧', 'Telegram 科技频道转发欧盟 AI Act 与美国行政令对比，开发者群体关注度上升。', 'neutral', 64, ['社会', '经济'], ts(2), { platform: 'Telegram', engagement: 42000 }),
+  situation('sit-g-04', 'global', '社媒', '北极航道通航季开启', '航运博主发布西北航道冰情预报，讨论对亚欧贸易路线替代效应。', 'positive', 45, ['经济'], ts(3), { platform: 'X', engagement: 18000, lng: -120, lat: 75 }),
+  situation('sit-g-05', 'global', '社媒', '世卫组织 · 新变种监测通报', '官方账号发布呼吸道病毒监测周报，东南亚旅行健康提示转发量高。', 'neutral', 51, ['社会', '灾害'], ts(1, 14), { platform: 'X', engagement: 67000 }),
+  situation('sit-g-06', 'global', '社媒', 'OPEC+ 减产预期 · 油价话题', '中东能源分析师在 X 讨论沙特延长自愿减产对亚洲炼厂影响。', 'mixed', 69, ['经济'], ts(0, 16), { platform: 'X', engagement: 95000, lng: 50, lat: 26 }),
+  situation('sit-g-07', 'global', '社媒', '巴黎奥运会遗产 · 城市更新', 'Instagram 城市摄影标签展示奥运场馆赛后利用与低碳改造案例。', 'positive', 38, ['文化', '社会'], ts(5), { platform: 'IG', engagement: 12000, lng: 2.35, lat: 48.86 }),
+  situation('sit-g-08', 'global', '社媒', '深海采矿公约谈判', '环保组织在 X 发起 #DeepSeaNoMining 运动，讨论 ISA 规则草案表决前景。', 'negative', 55, ['经济', '灾害'], ts(4), { platform: 'X', engagement: 34000 }),
+  situation('sit-g-09', 'global', '社媒', '全球军费开支创新高', '斯德哥尔摩和平研究所报告截图在军事论坛热传，讨论无人机与网络战占比。', 'negative', 61, ['军事'], ts(2, 9), { platform: 'X', engagement: 78000 }),
+  situation('sit-g-10', 'global', '社媒', '金砖扩员 · 本币结算试点', '财经媒体解读新成员能源与矿产互补，讨论跨境支付基础设施。', 'positive', 57, ['政治', '经济'], ts(6), { platform: '微博', engagement: 112000, lng: 116.4, lat: 39.9 }),
+  situation('sit-g-11', 'global', '趋势', '全球冲突烈度指数', '综合乌克兰、中东、萨赫勒热点，烈度指数周环比 +4.2，处年内高位。', 'negative', 78, ['军事'], ts(0, 6), { lng: 33, lat: 49 }),
+  situation('sit-g-12', 'global', '趋势', '跨境资本流动情绪', '新兴市场债券利差收窄，风险偏好指数回升至 58（中性偏多）。', 'positive', 52, ['经济'], ts(1, 7)),
+  situation('sit-g-13', 'global', '趋势', '全球航运拥堵指数', '红海绕航效应消退后，苏伊士通行量回升，但集装箱运价仍高于疫情前均值。', 'mixed', 63, ['经济'], ts(2, 8), { lng: 32.3, lat: 30.0 }),
+  situation('sit-g-14', 'global', '趋势', '极端天气事件频率', 'GDACS 监测显示 30 日内重大气象灾害预警次数较五年均值 +18%。', 'negative', 71, ['灾害'], ts(0, 12)),
+  situation('sit-g-15', 'global', '趋势', '核扩散关切指数', '朝鲜试射、伊朗浓缩度、美俄战略对话停滞推高监测指数至 74。', 'negative', 74, ['军事', '政治'], ts(3, 11)),
+  situation('sit-g-16', 'global', '趋势', '全球通胀预期锚定', '主要央行沟通指数显示通胀回落叙事占主导，但能源波动风险仍被定价。', 'neutral', 48, ['经济'], ts(4, 9)),
+  situation('sit-g-17', 'global', '趋势', '社交媒体涉政话题量', '多平台涉选举与制裁话题周同比 +22%，算法推荐放大极化叙事。', 'negative', 66, ['社会', '政治'], ts(1, 15)),
+  situation('sit-g-18', 'global', '趋势', '太空碎片碰撞风险', '近地轨道物体登记数量上升，商业星座密集部署推高协调需求。', 'mixed', 54, ['军事'], ts(5, 10), { lng: 0, lat: 0 }),
+  situation('sit-g-19', 'global', '趋势', '全球半导体周期', 'AI 服务器需求拉动先进制程产能利用率，成熟制程仍处去库存尾声。', 'positive', 59, ['经济'], ts(2, 13), { lng: 121, lat: 25 }),
+  situation('sit-g-20', 'global', '趋势', '人道援助缺口指数', '联合国人道响应计划资金到位率低于同期均值，萨赫勒与加沙项目承压。', 'negative', 67, ['社会', '灾害'], ts(0, 18)),
+  situation('sit-g-21', 'global', '态势', '大国博弈 · 战略稳定', '美中保持沟通渠道但技术出口管制与台海、南海摩擦并行；俄乌战争进入消耗阶段。', 'mixed', 82, ['政治', '军事'], ts(0, 8)),
+  situation('sit-g-22', 'global', '态势', '能源与气候双重转型', '化石燃料投资仍高但可再生能源装机增速领先；极端天气推高保险与农业风险。', 'mixed', 70, ['经济', '灾害'], ts(1, 8)),
+  situation('sit-g-23', 'global', '态势', '全球供应链重构', '友岸外包、关键矿产联盟与区域贸易协定叠加，制造中心向东南亚、墨西哥分流。', 'neutral', 65, ['经济'], ts(2, 8)),
+  situation('sit-g-24', 'global', '态势', '多边机制承压', 'WTO 争端解决、气候融资与安理会改革进展缓慢，区域集团作用上升。', 'negative', 60, ['政治'], ts(3, 8)),
+  situation('sit-g-25', 'global', '态势', '网络与信息战常态化', '选举周期内深度伪造、机器人账号与跨境信息操作监测频次增加。', 'negative', 68, ['社会', '军事'], ts(4, 8)),
+  situation('sit-g-26', 'global', '社媒', '格陵兰冰盖融化 · 科研直播', '气候科学家在 X 直播冰芯钻探，讨论海平面上升对沿海城市影响。', 'negative', 44, ['灾害', '文化'], ts(7), { platform: 'X', engagement: 29000, lng: -42, lat: 72 }),
+  situation('sit-g-27', 'global', '社媒', '国际空间站退役路线图', '航天爱好者讨论商业空间站接替时间表与中俄月球基地合作动向。', 'neutral', 42, ['军事', '文化'], ts(8), { platform: 'X', engagement: 22000 }),
+  situation('sit-g-28', 'global', '趋势', '全球旅游复苏指数', '亚太国际客运恢复至 2019 年约 92%，签证便利化政策提振出境游预期。', 'positive', 50, ['经济', '社会'], ts(6, 9)),
+  situation('sit-g-29', 'global', '社媒', '跨境数据流动谈判', '欧盟—美国数据隐私框架续签讨论引发科技企业合规成本关注。', 'neutral', 47, ['经济', '政治'], ts(9), { platform: 'X', engagement: 31000 }),
+  situation('sit-g-30', 'global', '态势', '粮食与水资源安全', '厄尔尼诺消退但拉尼娜风险上升，主要产粮国出口限制政策仍影响脆弱经济体。', 'negative', 62, ['灾害', '经济'], ts(5, 8)),
+];

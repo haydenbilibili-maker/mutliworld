@@ -598,9 +598,12 @@ const AP_OIL: OilProducerMapPoint[] = [
   },
 ];
 
+import { getPersonsForRegion } from './persons';
+
 export const asiaPacificDataset: RegionDataset = {
   events: [...AP_EVENTS, ...AP_DENSIFY_EVENTS, ...NORTHEAST_ASIA_EVENTS],
   incidents: [...AP_INCIDENTS, ...AP_DENSIFY_INCIDENTS, ...NORTHEAST_ASIA_INCIDENTS],
   facilities: [...AP_FACILITIES, ...AP_DENSIFY_FACILITIES, ...NORTHEAST_ASIA_FACILITIES],
   energy: { regions: [], points: AP_ENERGY, oilProducers: AP_OIL },
+  persons: getPersonsForRegion('asia_pacific'),
 };

@@ -7,6 +7,8 @@
 import { useMemo } from 'react';
 import { useMapStore } from '@/store/useMapStore';
 import { useRegionData } from '@/hooks/useRegionData';
+import { focusEventOnMap, enableBriefingModuleLayers } from '@/lib/map/focusEvent';
+import { CHINA_BRIEFING_MODULE_LAYERS } from '@/lib/map/briefingLayers';
 import { DockPanel } from '@/components/region/DockPanel';
 
 interface ChinaBriefingPanelProps {
@@ -29,7 +31,19 @@ function matchesModule(id: string, prefixes: readonly string[]): boolean {
 export function ChinaBriefingPanel({ className = '' }: ChinaBriefingPanelProps) {
   const region = useMapStore((s) => s.activeRegion);
   const selectEvent = useMapStore((s) => s.selectEvent);
+  const setCenter = useMapStore((s) => s.setCenter);
+  const setZoom = useMapStore((s) => s.setZoom);
+  const activeLayers = useMapStore((s) => s.activeLayers);
+  const toggleLayer = useMapStore((s) => s.toggleLayer);
   const data = useRegionData();
+
+  const focusActions = {
+    selectEvent,
+    setCenter,
+    setZoom,
+    activeLayers,
+    toggleLayer,
+  };
 
   const moduleStats = useMemo(() => {
     const events = data.events ?? [];
@@ -71,24 +85,45 @@ export function ChinaBriefingPanel({ className = '' }: ChinaBriefingPanelProps) 
       <div className="space-y-3">
         <div className="text-[11px] leading-snug text-dashboard-neutral/90">
           <span className="text-white font-medium">专题简报</span> · 汇总地图监测点{' '}
-          <span className="text-white">{totalFeatures}</span> 处 · 不控制图层开关
+          <span className="text-white">{totalFeatures}</span> 处 · 点击模块自动开启相关图层
         </div>
 
         {moduleStats.map((m) => (
           <div key={m.key}>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] text-dashboard-neutral/70">{m.label}</span>
+            <button
+              type="button"
+              onClick={() =>
+                enableBriefingModuleLayers(
+                  m.key,
+                  CHINA_BRIEFING_MODULE_LAYERS,
+                  activeLayers,
+                  toggleLayer,
+                )
+              }
+              className="mb-1 flex w-full items-center justify-between rounded px-0.5 text-left transition-colors hover:bg-white/5"
+            >
+              <span className="text-[10px] text-dashboard-neutral/70 hover:text-white">
+                {m.label}
+              </span>
               <span className="text-[10px] text-dashboard-neutral">
                 事件 {m.eventCount} · 冲突 {m.incidentCount} · 设施 {m.facilityCount}
               </span>
-            </div>
+            </button>
             {m.recent.length > 0 && (
               <ul className="space-y-0.5">
                 {m.recent.map((e) => (
                   <li key={e.id}>
                     <button
                       type="button"
-                      onClick={() => selectEvent(e)}
+                      onClick={() =>
+                        focusEventOnMap(
+                          e,
+                          focusActions,
+                          5.2,
+                          m.key,
+                          CHINA_BRIEFING_MODULE_LAYERS,
+                        )
+                      }
                       className="w-full text-left text-[11px] text-dashboard-neutral hover:text-white transition-colors"
                     >
                       {e.title}

@@ -6,7 +6,7 @@
 import type { RegionDataset } from '@/types/region';
 import { MIDEAST_SEED_EVENTS } from './middleeast.events';
 import { MIDEAST_MILITARY_SECTIONS } from './middleeast.military';
-import { MIDEAST_TARGETS } from './middleeast.targets';
+import { getPersonsForRegion } from './persons';
 import { MIDEAST_FACILITIES } from './middleeast.facilities';
 import { MIDEAST_INCIDENTS } from './middleeast.incidents';
 import { MIDEAST_DIPLOMACY } from './middleeast.diplomacy';
@@ -33,7 +33,7 @@ export const middleEastDataset: RegionDataset = {
   factions: { label: MIDEAST_FACTION_LABEL, color: MIDEAST_FACTION_HEX },
   military: MIDEAST_MILITARY_SECTIONS,
   energy: { regions: energyImpactRegions, points: energyDataPoints, oilProducers: [...oilProducerMapPoints, ...ME_DENSIFY_OIL] },
-  targets: MIDEAST_TARGETS,
+  persons: getPersonsForRegion('middleeast'),
   facilities: [...MIDEAST_FACILITIES, ...ME_DENSIFY_FACILITIES],
   incidents: [...MIDEAST_INCIDENTS, ...ME_DENSIFY_INCIDENTS],
   diplomacy: MIDEAST_DIPLOMACY,

@@ -1,0 +1,36 @@
+import type { RegionalSituationItem } from '@/types/regional-situation';
+import { situation, ts } from './helpers';
+
+/** 亚太 · 区域态势 */
+export const ASIA_PACIFIC_SITUATION: RegionalSituationItem[] = [
+  situation('sit-ap-01', 'asia_pacific', '社媒', 'AUKUS 核潜艇 · 澳舆论分裂', '澳媒讨论核潜艇成本与对华贸易依赖，#AUKUS 标签两极化严重。', 'mixed', 74, ['军事', '政治'], ts(0), { platform: 'X', engagement: 89000, lng: 149.1, lat: -35.3 }),
+  situation('sit-ap-02', 'asia_pacific', '社媒', '所罗门群岛 · 警务合作', '太平洋岛国论坛相关讨论中国警务培训与美澳安全承诺竞争。', 'mixed', 62, ['政治', '军事'], ts(1), { platform: 'X', engagement: 22000, lng: 159.9, lat: -9.4 }),
+  situation('sit-ap-03', 'asia_pacific', '社媒', '印度大选后 · 对华边境', '印媒热议拉达克实控线巡逻与经贸脱钩政策平衡。', 'negative', 68, ['军事', '政治'], ts(2), { platform: 'X', engagement: 145000, lng: 77.2, lat: 28.6 }),
+  situation('sit-ap-04', 'asia_pacific', '社媒', '日本防卫预算 · 专守防卫', '雅虎日本评论区讨论导弹射程延伸与敌基地打击能力争议。', 'mixed', 65, ['军事', '政治'], ts(3), { platform: 'Yahoo JP', engagement: 98000, lng: 139.7, lat: 35.7 }),
+  situation('sit-ap-05', 'asia_pacific', '社媒', '澳锂矿 · 对华出口', '矿业股票论坛讨论中国电池厂长协与澳资源税改革。', 'positive', 51, ['经济'], ts(4), { platform: 'X', engagement: 34000, lng: 121.5, lat: -30.7 }),
+  situation('sit-ap-06', 'asia_pacific', '社媒', '巴布亚新几内亚 · 治安事件', '当地华人社区群组通报首都抢劫案件与使馆安全提醒。', 'negative', 55, ['社会'], ts(0, 13), { platform: '微信', engagement: 12000, lng: 147.2, lat: -9.5 }),
+  situation('sit-ap-07', 'asia_pacific', '社媒', '新西兰乳制品 · 中国市场', '农场主讨论中方检验检疫新规与出口价格谈判。', 'neutral', 42, ['经济'], ts(5), { platform: 'FB', engagement: 8000, lng: 174.8, lat: -41.3 }),
+  situation('sit-ap-08', 'asia_pacific', '社媒', '太平洋岛国气候峰会', '岛国领导人视频呼吁升温 1.5°C 目标资金兑现，标签 #ClimateJustice 热传。', 'negative', 58, ['灾害', '政治'], ts(6), { platform: 'X', engagement: 56000 }),
+  situation('sit-ap-09', 'asia_pacific', '社媒', '关岛安德森基地 · 部署讨论', '美军家属论坛转发 B-52 轮换部署通知与本地经济影响。', 'negative', 70, ['军事'], ts(1, 15), { platform: 'FB', engagement: 18000, lng: 144.9, lat: 13.6 }),
+  situation('sit-ap-10', 'asia_pacific', '社媒', '斐济旅游复苏', '旅游局 TikTok 推广潜水与文化节，讨论中国游客回流节奏。', 'positive', 38, ['文化', '经济'], ts(7), { platform: 'TikTok', engagement: 45000, lng: 178.4, lat: -18.1 }),
+  situation('sit-ap-11', 'asia_pacific', '趋势', '印太军演密度指数', '美日澳印四方及盟友演习场次处五年高位，军机舰机通报频繁。', 'negative', 76, ['军事'], ts(0, 7), { lng: 135, lat: 20 }),
+  situation('sit-ap-12', 'asia_pacific', '趋势', '太平洋岛国债务可持续性', '气候适应贷款与基建项目还款压力指数上升，主权债务谈判增多。', 'negative', 61, ['经济', '灾害'], ts(1, 8)),
+  situation('sit-ap-13', 'asia_pacific', '趋势', '澳中印太投入', '国防开支占 GDP 比例上升轨迹明确，舆论支持度指数中性。', 'mixed', 54, ['军事', '经济'], ts(2, 8), { lng: 149, lat: -35 }),
+  situation('sit-ap-14', 'asia_pacific', '趋势', '南亚安全紧张度', '印巴边境交火与克什米尔袭击事件推高区域紧张指数至 69。', 'negative', 69, ['军事'], ts(3, 8), { lng: 74, lat: 34 }),
+  situation('sit-ap-15', 'asia_pacific', '趋势', '关键矿产供应链', '锂、镍、稀土澳印合作指数上升，对华加工依赖仍高。', 'mixed', 57, ['经济'], ts(4, 9)),
+  situation('sit-ap-16', 'asia_pacific', '趋势', '台风季预警强度', '西太平洋台风生成频次预报高于均值，菲越缅防灾准备指数提升。', 'negative', 64, ['灾害'], ts(0, 11)),
+  situation('sit-ap-17', 'asia_pacific', '趋势', '区域自贸协定利用率', 'RCEP 与 CPTPP 成员国贸易优惠使用率稳步上升，情绪偏多。', 'positive', 49, ['经济', '政治'], ts(5, 9)),
+  situation('sit-ap-18', 'asia_pacific', '趋势', '对华认知民调', '澳日印对华不信任度维持高位，东南亚国家对华经济好感度分化。', 'mixed', 52, ['社会', '政治'], ts(6, 9)),
+  situation('sit-ap-19', 'asia_pacific', '态势', '印太战略竞争固化', '美国同盟体系强化前沿存在，中国反介入能力建设与外交反制并行。', 'negative', 78, ['军事', '政治'], ts(0, 8), { lng: 128, lat: 20 }),
+  situation('sit-ap-20', 'asia_pacific', '态势', '太平洋岛国选边压力', '警务、港口与海底电缆项目成为大国博弈载体，岛国强调自主外交。', 'mixed', 66, ['政治'], ts(1, 8), { lng: 170, lat: -10 }),
+  situation('sit-ap-21', 'asia_pacific', '态势', '南亚核态势阴影', '印巴核威慑与常规冲突风险并存，克什米尔局势周期性升温。', 'negative', 72, ['军事'], ts(2, 8), { lng: 74, lat: 34 }),
+  situation('sit-ap-22', 'asia_pacific', '态势', '澳资源与安全两难', '对华矿产出口与 AUKUS 军事承诺之间的政策张力持续。', 'mixed', 60, ['经济', '军事'], ts(3, 8), { lng: 149, lat: -35 }),
+  situation('sit-ap-23', 'asia_pacific', '态势', '日本军事正常化进程', '防卫预算突破、导弹射程延伸与西南诸岛部署引发邻国民意反弹。', 'negative', 70, ['军事', '政治'], ts(4, 8), { lng: 139.7, lat: 35.7 }),
+  situation('sit-ap-24', 'asia_pacific', '社媒', '蒙古国煤炭出口', '中蒙边境口岸通关效率讨论影响国内煤价预期。', 'neutral', 45, ['经济'], ts(8), { platform: '微博', engagement: 34000, lng: 106.9, lat: 47.9 }),
+  situation('sit-ap-25', 'asia_pacific', '社媒', '东帝汶油气收入', '政府宣布主权财富基金分红方案，青年就业话题受关注。', 'positive', 36, ['经济'], ts(9), { platform: 'FB', engagement: 6000, lng: 125.6, lat: -8.6 }),
+  situation('sit-ap-26', 'asia_pacific', '趋势', '海底电缆安全关切', '太平洋岛国担忧电缆切断与修复周期，区域韧性投资指数上升。', 'negative', 58, ['经济', '军事'], ts(7, 9)),
+  situation('sit-ap-27', 'asia_pacific', '社媒', '韩国济州反导弹部署', '当地居民抗议萨德雷达电磁辐射与健康风险，与中央政府立场对立。', 'negative', 59, ['社会', '军事'], ts(10), { platform: 'Naver', engagement: 112000, lng: 126.5, lat: 33.5 }),
+  situation('sit-ap-28', 'asia_pacific', '态势', '气候灾害连锁风险', '海平面上升威胁岛国生存，极端天气冲击澳印农业与保险业。', 'negative', 63, ['灾害'], ts(5, 8)),
+  situation('sit-ap-29', 'asia_pacific', '社媒', '台湾周边 · 外媒报道', '外媒记者发布巴士海峡舰机跟监画面，亚太防务圈广泛转载。', 'negative', 81, ['军事'], ts(0, 9), { platform: 'X', engagement: 198000, lng: 121, lat: 22 }),
+  situation('sit-ap-30', 'asia_pacific', '趋势', '无人机侦察频次', '西太平洋各方无人机抵近侦察事件月环比增加，危机管控需求上升。', 'negative', 67, ['军事'], ts(8, 9)),
+];

@@ -5,6 +5,7 @@ import type { LayerId, TimeRange, ViewPreset } from '@/types/geo';
 import type { EventDetail } from '@/types/geo';
 import type { RegionId } from '@/types/region';
 import type { SpatialTier } from '@/types/tier';
+import type { BasemapMode } from '@/types/tier';
 import { getRegion, DEFAULT_REGION_ID } from '@/regions';
 import { getTier, DEFAULT_TIER_ID } from '@/tiers';
 import { filterSensitive, SENSITIVE_LAYERS } from '@/lib/layers/sensitivity';
@@ -21,6 +22,8 @@ export interface MapState {
   activeTier: SpatialTier;
   /** 商用：一键下架敏感图层 */
   hideSensitive: boolean;
+  /** 地表/宇宙层底图模式：卫星 · 政区 · 混合 */
+  basemapMode: BasemapMode;
   /** 3D 地球（globe 投影）开关；需 maplibre v5 才实际生效，v4 下为 no-op */
   globe: boolean;
   /** 宇宙层地球自转动效播放（仅 space tier 生效） */
@@ -45,6 +48,8 @@ export interface MapActions {
   setTier: (tierId: SpatialTier) => void;
   /** 一键下架/恢复敏感图层 */
   setHideSensitive: (hide: boolean) => void;
+  /** 切换地表/宇宙底图显示模式 */
+  setBasemapMode: (mode: BasemapMode) => void;
   /** 切换 3D 地球（globe）投影 */
   setGlobe: (globe: boolean) => void;
   setGlobeMotionPlaying: (playing: boolean) => void;
@@ -53,6 +58,8 @@ export interface MapActions {
   resetGlobeToChinaView: () => void;
   setCenter: (center: [number, number]) => void;
   setZoom: (zoom: number) => void;
+  /** 原子更新视野，避免 moveend 连续触发两次 store 更新 */
+  setViewport: (center: [number, number], zoom: number) => void;
   setView: (view: ViewPreset) => void;
   setTimeRange: (timeRange: TimeRange) => void;
   setActiveLayers: (layers: LayerId[]) => void;
@@ -65,6 +72,7 @@ const initialState: MapState = {
   activeRegion: DEFAULT_REGION_ID,
   activeTier: DEFAULT_TIER_ID,
   hideSensitive: false,
+  basemapMode: 'hybrid',
   globe: false,
   globeMotionPlaying: true,
   globeMotionSpeed: 1,
@@ -110,6 +118,7 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
       hideSensitive,
       activeLayers: filterSensitive(s.activeLayers, hideSensitive),
     })),
+  setBasemapMode: (basemapMode) => set({ basemapMode }),
   setGlobe: (globe) => set({ globe }),
   setGlobeMotionPlaying: (globeMotionPlaying) => set({ globeMotionPlaying }),
   setGlobeMotionSpeed: (globeMotionSpeed) => set({ globeMotionSpeed }),
@@ -122,6 +131,16 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setCenter: (center) =>
     set((s) => (centersEqual(s.center, center) ? {} : { center })),
   setZoom: (zoom) => set((s) => (zoomsEqual(s.zoom, zoom) ? {} : { zoom })),
+  setViewport: (center, zoom) =>
+    set((s) => {
+      const sameCenter = centersEqual(s.center, center);
+      const sameZoom = zoomsEqual(s.zoom, zoom);
+      if (sameCenter && sameZoom) return {};
+      return {
+        ...(sameCenter ? {} : { center }),
+        ...(sameZoom ? {} : { zoom }),
+      };
+    }),
   setView: (view) => set({ view }),
   setTimeRange: (timeRange) => set({ timeRange }),
   setActiveLayers: (activeLayers) =>

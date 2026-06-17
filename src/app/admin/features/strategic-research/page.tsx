@@ -8,7 +8,12 @@ export default function AdminStrategicResearchPage() {
     <div className="mx-auto max-w-6xl">
       <AdminPageHeader
         title="战略研究专题"
-        description="STRATEGIC_RESEARCH_PANELS 注册表：研究主题启用状态、适用区域与模块数量。"
+        description="STRATEGIC_RESEARCH_PANELS 注册表：中美博弈、东北亚地缘等研究主题启用状态、适用区域与模块数量。"
+        breadcrumbs={[
+          { label: '管理后台', href: '/admin' },
+          { label: '功能配置' },
+          { label: '战略研究' },
+        ]}
       />
 
       <div className="overflow-x-auto rounded-xl border border-dashboard-neutral/15">

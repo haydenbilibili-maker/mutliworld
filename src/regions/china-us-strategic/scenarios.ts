@@ -6,7 +6,7 @@ export const SCENARIOS_MODULE: StrategicModule = {
   summary:
     '基于公开智库研究与历史经验，梳理中美博弈可能的升级路径、红线与降级窗口——仅供战略研判，非预测。',
   mapView: { center: [119.5, 24.5], zoom: 5.5 },
-  relatedLayerIds: ['military', 'conflicts', 'nuclear', 'waterways'],
+  relatedLayerIds: ['military', 'conflicts', 'conflict_zones', 'nuclear', 'waterways'],
   sections: [
     {
       heading: '基准情景：竞争性共存',

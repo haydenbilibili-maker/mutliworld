@@ -1,61 +1,39 @@
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminLayersTable } from '@/components/admin/AdminLayersTable';
 import { getAdminStats } from '@/lib/admin/stats';
 import { LAYER_LABELS } from '@/lib/constants';
 import { listRegions } from '@/regions';
 import type { LayerId } from '@/types/geo';
-import type { SpatialTier } from '@/types/tier';
-
-const TIER_LABELS: Record<SpatialTier, string> = {
-  surface: '地表',
-  subsurface: '洋底',
-  space: '宇宙',
-};
 
 export default function AdminLayersPage() {
   const { layers } = getAdminStats();
   const regions = listRegions();
 
+  const liveCount = layers.details.filter((l) => l.sourceKind === 'live_api').length;
+  const seedCount = layers.details.filter((l) => l.sourceKind === 'seed').length;
+  const staticCount = layers.details.filter((l) => l.sourceKind === 'static_embed').length;
+
   return (
     <div className="mx-auto max-w-6xl">
       <AdminPageHeader
-        title="区域与图层配置"
-        description="全部 LayerId 常量定义（LAYER_LABELS）及按空间层分组；各区域声明的可用图层列表。"
+        title="图层配置"
+        description="全部 LayerId 定义：空间层分组、数据来源（实时 API / 静态内嵌 / 种子缓存）及各区域启用计数。"
+        breadcrumbs={[
+          { label: '管理后台', href: '/admin' },
+          { label: '数据管理' },
+          { label: '图层配置' },
+        ]}
       />
 
-      {(Object.keys(layers.byTier) as SpatialTier[]).map((tierId) => {
-        const tierLayers = layers.byTier[tierId];
-        return (
-          <section key={tierId} className="mb-8">
-            <h2 className="mb-3 text-sm font-medium text-white">
-              {TIER_LABELS[tierId]}层 · {tierLayers.length} 个图层
-            </h2>
-            <div className="overflow-x-auto rounded-xl border border-dashboard-neutral/15">
-              <table className="w-full min-w-[480px] text-left text-sm">
-                <thead className="border-b border-dashboard-neutral/15 bg-white/[0.03] text-xs text-dashboard-neutral/60">
-                  <tr>
-                    <th className="px-3 py-2 font-medium">LayerId</th>
-                    <th className="px-3 py-2 font-medium">中文标签</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-dashboard-neutral/10">
-                  {tierLayers.map((layerId) => (
-                    <tr key={layerId} className="hover:bg-white/[0.02]">
-                      <td className="px-3 py-2 font-mono text-xs text-dashboard-military">
-                        {layerId}
-                      </td>
-                      <td className="px-3 py-2 text-white">
-                        {LAYER_LABELS[layerId as LayerId]}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-        );
-      })}
+      <div className="mb-6 grid gap-3 sm:grid-cols-3">
+        <SummaryPill label="实时 API" value={liveCount} accent />
+        <SummaryPill label="种子/缓存" value={seedCount} />
+        <SummaryPill label="静态内嵌" value={staticCount} />
+      </div>
 
-      <section>
+      <AdminLayersTable layers={layers.details} />
+
+      <section className="mt-10">
         <h2 className="mb-3 text-sm font-medium text-white">各区域启用图层</h2>
         <div className="space-y-4">
           {regions.map((region) => (
@@ -79,7 +57,7 @@ export default function AdminLayersPage() {
                     className="rounded-md border border-dashboard-neutral/20 bg-black/20 px-2 py-0.5 text-xs text-dashboard-neutral/80"
                     title={layerId}
                   >
-                    {LAYER_LABELS[layerId]}
+                    {LAYER_LABELS[layerId as LayerId]}
                   </span>
                 ))}
               </div>
@@ -87,6 +65,30 @@ export default function AdminLayersPage() {
           ))}
         </div>
       </section>
+    </div>
+  );
+}
+
+function SummaryPill({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: number;
+  accent?: boolean;
+}) {
+  return (
+    <div className="rounded-lg border border-dashboard-neutral/15 bg-white/[0.02] px-4 py-3">
+      <p className="text-xs text-dashboard-neutral/55">{label}</p>
+      <p
+        className={[
+          'text-xl font-semibold tabular-nums',
+          accent ? 'text-dashboard-military' : 'text-white',
+        ].join(' ')}
+      >
+        {value}
+      </p>
     </div>
   );
 }

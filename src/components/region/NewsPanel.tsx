@@ -2,10 +2,13 @@
 
 /**
  * 实时新闻面板 — 对标 World Monitor Round 4
- * 聚合 BBC/半岛/UN News 公开 RSS，标题 + 来源 + 相对时间 + 原文链接。全局（非区域专属）。
+ * 聚合 BBC/半岛/UN News 公开 RSS；二级筛选按当前区域过滤。
  */
 
+import { useMapStore } from '@/store/useMapStore';
+import { getRegion } from '@/regions';
 import { useNews } from '@/hooks/useNews';
+import { EMPTY_REGION_MESSAGE } from '@/lib/region/contentFilter';
 import { DockPanel } from '@/components/region/DockPanel';
 
 interface NewsPanelProps {
@@ -24,19 +27,24 @@ function timeAgo(iso: string): string {
 }
 
 export function NewsPanel({ className = '' }: NewsPanelProps) {
+  const region = useMapStore((s) => s.activeRegion);
   const { items, isLoading } = useNews();
-
-  if (!isLoading && items.length === 0) return null;
+  const regionName = getRegion(region)?.name ?? '全球';
+  const isEmpty = !isLoading && items.length === 0;
 
   return (
     <DockPanel
       id="news"
-      title="实时新闻"
+      title={`实时新闻 · ${regionName}`}
       count={items.length || undefined}
       className={`w-80 max-h-[60vh] ${className}`}
     >
       {isLoading && items.length === 0 ? (
         <div className="text-[11px] text-dashboard-neutral/60">加载中…</div>
+      ) : isEmpty ? (
+        <div className="text-[11px] text-dashboard-neutral/60">
+          {EMPTY_REGION_MESSAGE}
+        </div>
       ) : (
         <ul className="space-y-2">
           {items.map((n) => (

@@ -1,12 +1,13 @@
 {
   "name": "global-situation-awareness-dashboard",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "node scripts/next-dev.mjs",
+    "build": "node scripts/next-build.mjs",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "next build && tsc --noEmit",
     "data:fetch": "node scripts/fetch-geodata.js",
     "data:fetch:dry": "node scripts/fetch-geodata.js --dry-run",
     "data:launches": "node scripts/fetch-launches.js",

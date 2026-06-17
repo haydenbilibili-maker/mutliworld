@@ -7,16 +7,25 @@ import { useOrbitalPanelStore } from '@/store/useOrbitalPanelStore';
 import { UrlStateSync } from '@/hooks/useSyncStateToUrl';
 import { useRegionData } from '@/hooks/useRegionData';
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from '@/lib/constants';
-import { centersEqual, isProgrammaticBearingMove, zoomsEqual } from '@/lib/map/viewState';
+import {
+  centersEqual,
+  consumeViewportSyncFromMap,
+  isProgrammaticBearingMove,
+  markViewportSyncFromMap,
+  zoomsEqual,
+} from '@/lib/map/viewState';
 import { buildBoundsRing } from '@/lib/graticule';
 import { getTier } from '@/tiers';
 import {
   applyBasemapZoomConstraints,
   applyTerrainEnhancement,
   isTerrainEnhanceEnabled,
+  isTerrainPreset,
   resolveBasemapStyle,
+  SATELLITE_BASEMAP_MAX_ZOOM,
   SURFACE_BASEMAP_MAX_ZOOM,
 } from '@/lib/map/basemap';
+import { syncGlobeState } from '@/lib/map/globeProjection';
 import { MapProvider } from '@/context/MapContext';
 import { BasemapController } from '@/components/map/BasemapController';
 import { GeodataLayer } from '@/components/map/GeodataLayer';
@@ -26,11 +35,14 @@ import { CosmicGlobeAnimator } from '@/components/map/CosmicGlobeAnimator';
 import { OrbitRings } from '@/components/map/OrbitRings';
 import { OrbitalObjectsLayer } from '@/components/map/OrbitalObjectsLayer';
 import { FlightLayer } from '@/components/map/FlightLayer';
+import { MaritimeLayer } from '@/components/map/MaritimeLayer';
 import { PizzaIndexLayer } from '@/components/map/PizzaIndexLayer';
 import { ProfilePicker } from '@/components/map/ProfilePicker';
 import { CrossLayerLinks } from '@/components/map/CrossLayerLinks';
 import { LiveWeatherLayer } from '@/components/map/LiveWeatherLayer';
 import { ConflictZonesLayer } from '@/components/map/ConflictZonesLayer';
+import { MapSelectionPulse } from '@/components/map/MapSelectionPulse';
+import { GeodataFetchIndicator } from '@/components/map/GeodataFetchIndicator';
 
 interface MapContainerProps {
   className?: string;
@@ -59,9 +71,15 @@ export function MapContainer({ className = '' }: MapContainerProps) {
     if (!containerRef.current) return;
 
     const initialTier = useMapStore.getState().activeTier;
-    const preset = getTier(initialTier)?.basemap ?? 'geographic';
-    const style = resolveBasemapStyle(preset);
-    const terrainEnhance = preset === 'geographic' && isTerrainEnhanceEnabled();
+    const initialMode = useMapStore.getState().basemapMode;
+    const preset = getTier(initialTier)?.basemap ?? 'imagery';
+    const style = resolveBasemapStyle(preset, initialMode);
+    const terrainEnhance = isTerrainPreset(preset) && isTerrainEnhanceEnabled();
+    const initialMaxZoom = isTerrainPreset(preset)
+      ? SURFACE_BASEMAP_MAX_ZOOM
+      : initialMode === 'political'
+        ? SURFACE_BASEMAP_MAX_ZOOM
+        : SATELLITE_BASEMAP_MAX_ZOOM;
 
     const safeCenter: [number, number] =
       Number.isFinite(center[0]) && Number.isFinite(center[1])
@@ -74,22 +92,28 @@ export function MapContainer({ className = '' }: MapContainerProps) {
       style,
       center: safeCenter,
       zoom: safeZoom,
-      maxZoom: preset === 'geographic' ? SURFACE_BASEMAP_MAX_ZOOM : 22,
+      maxZoom: initialMaxZoom,
       // 球面模式下拖拽更接近拨动实体地球（宇宙层暂停时可手动旋转）
       aroundCenter: true,
     });
 
-    if (typeof style === 'string') {
-      map.once('load', () => {
-        try {
-          applyBasemapZoomConstraints(map, preset);
-          if (terrainEnhance) {
-            applyTerrainEnhancement(map);
-          }
-        } catch {
-          /* */
+    const onInitialStyleReady = () => {
+      try {
+        applyBasemapZoomConstraints(map, preset, initialMode);
+        if (terrainEnhance) {
+          applyTerrainEnhancement(map);
         }
-      });
+        const { globe, activeTier: tier } = useMapStore.getState();
+        syncGlobeState(map, globe, tier);
+      } catch {
+        /* */
+      }
+    };
+
+    if (typeof style === 'string') {
+      map.once('load', onInitialStyleReady);
+    } else {
+      map.once('style.load', onInitialStyleReady);
     }
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
     map.on('moveend', () => {
@@ -107,8 +131,8 @@ export function MapContainer({ className = '' }: MapContainerProps) {
       const nextCenter: [number, number] = [c.lng, c.lat];
       if (centersEqual(state.center, nextCenter) && zoomsEqual(state.zoom, z)) return;
 
-      state.setCenter(nextCenter);
-      state.setZoom(z);
+      markViewportSyncFromMap();
+      state.setViewport(nextCenter, z);
     });
     map.on('load', () => {
       try {
@@ -136,18 +160,24 @@ export function MapContainer({ className = '' }: MapContainerProps) {
       }
     }, 400);
 
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
     const ro = new ResizeObserver(() => {
-      try {
-        map.resize();
-      } catch {
-        /* */
-      }
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        resizeTimer = null;
+        try {
+          map.resize();
+        } catch {
+          /* */
+        }
+      }, 80);
     });
     ro.observe(containerRef.current);
 
     return () => {
       cancelAnimationFrame(raf);
       clearTimeout(t1);
+      if (resizeTimer) clearTimeout(resizeTimer);
       ro.disconnect();
       map.remove();
       mapRef.current = null;
@@ -167,6 +197,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
       lastGlobeResetNonce.current = globeViewResetNonce;
       return;
     }
+    if (consumeViewportSyncFromMap()) return;
     const c = map.getCenter();
     const z = map.getZoom();
     if (
@@ -274,10 +305,13 @@ export function MapContainer({ className = '' }: MapContainerProps) {
         <OrbitRings />
         <OrbitalObjectsLayer />
         <FlightLayer />
+        <MaritimeLayer />
         <PizzaIndexLayer />
         <ProfilePicker />
         <CrossLayerLinks />
         <GeodataLayer />
+        <GeodataFetchIndicator />
+        <MapSelectionPulse />
       </div>
     </MapProvider>
   );

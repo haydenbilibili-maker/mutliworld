@@ -9,7 +9,10 @@
  * 仅展示价格/涨跌等公开行情，不含投资建议。
  */
 
-export type MarketKind = 'fx' | 'crypto';
+import { fetchStockIndices } from '@/lib/markets/stock-indices';
+import type { RegionId } from '@/types/region';
+
+export type MarketKind = 'fx' | 'crypto' | 'index';
 
 export interface MarketQuote {
   id: string;
@@ -18,8 +21,10 @@ export interface MarketQuote {
   label: string;        // 中文名
   price: number;        // 现价
   changePct: number | null; // 涨跌幅 %（日 / 24h），无则 null
-  unit: string;         // 计价单位，如 CNY、USD
+  unit: string;         // 计价单位，如 CNY、USD、点
   asOf: string | null;  // 数据日期/时间
+  region?: string;      // 股指所属市场（仅 index）
+  regionIds?: RegionId[]; // 区域过滤标签（仅 index）
 }
 
 /** FX：以 USD 为基准的主要货币 + 卢布（俄乌相关） */
@@ -119,16 +124,21 @@ async function fetchCrypto(): Promise<MarketQuote[]> {
 /** 聚合所有市场源；任一失败不影响其余 */
 export async function fetchMarkets(): Promise<{
   quotes: MarketQuote[];
-  sources: { fx: boolean; crypto: boolean };
+  sources: { fx: boolean; crypto: boolean; index: boolean };
 }> {
-  const [fxRes, cryptoRes] = await Promise.allSettled([
+  const [fxRes, cryptoRes, indexRes] = await Promise.allSettled([
     fetchFx(),
     fetchCrypto(),
+    fetchStockIndices(),
   ]);
 
   const quotes: MarketQuote[] = [];
-  const sources = { fx: false, crypto: false };
+  const sources = { fx: false, crypto: false, index: false };
 
+  if (indexRes.status === 'fulfilled') {
+    quotes.push(...indexRes.value);
+    sources.index = indexRes.value.length > 0;
+  }
   if (fxRes.status === 'fulfilled') {
     quotes.push(...fxRes.value);
     sources.fx = fxRes.value.length > 0;

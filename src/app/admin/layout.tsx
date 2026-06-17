@@ -19,9 +19,9 @@ export default function AdminLayout({
           </p>
           <Link
             href="/"
-            className="text-xs text-dashboard-neutral hover:text-dashboard-military"
+            className="rounded-lg border border-dashboard-military/25 bg-dashboard-military/10 px-3 py-1.5 text-xs font-medium text-dashboard-military hover:bg-dashboard-military/20"
           >
-            返回地图
+            ← 返回态势地图
           </Link>
         </div>
         <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8 lg:py-8">

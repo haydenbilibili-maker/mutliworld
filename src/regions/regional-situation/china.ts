@@ -1,0 +1,37 @@
+import type { RegionalSituationItem } from '@/types/regional-situation';
+import { situation, ts } from './helpers';
+
+/** 中国及周边 · 区域态势 */
+export const CHINA_SITUATION: RegionalSituationItem[] = [
+  situation('sit-cn-01', 'china', '社媒', '台海海峡 · 海警执法巡查', '微博 #台海 话题讨论海警舰艇常态化巡航与两岸渔业执法边界。', 'mixed', 88, ['军事', '政治'], ts(0, 9), { platform: '微博', engagement: 420000, lng: 119.5, lat: 24.5 }),
+  situation('sit-cn-02', 'china', '社媒', '南海仁爱礁 · 补给对峙', 'X 上菲律宾媒体与中文军事博主就仁爱礁补给船遭遇发布对立叙事。', 'negative', 85, ['军事'], ts(0, 11), { platform: 'X', engagement: 156000, lng: 115.9, lat: 9.7 }),
+  situation('sit-cn-03', 'china', '社媒', '第一岛链 · 联合演训讨论', 'Telegram 军迷频道转发美日澳菲「肩并肩」演习舰机轨迹图。', 'negative', 76, ['军事'], ts(1), { platform: 'Telegram', engagement: 28000, lng: 126, lat: 26 }),
+  situation('sit-cn-04', 'china', '社媒', '中日钓鱼岛海空态势', '日本放送协会相关帖文讨论中国海警与自卫队接触频次上升。', 'negative', 72, ['政治', '军事'], ts(2), { platform: 'X', engagement: 67000, lng: 123.5, lat: 25.7 }),
+  situation('sit-cn-05', 'china', '社媒', '朝鲜半岛 · 导弹试射舆情', '微博军事区热议朝方固体燃料导弹试射与半岛无核化谈判停滞。', 'negative', 70, ['军事', '政治'], ts(1, 14), { platform: '微博', engagement: 198000, lng: 125.75, lat: 39.02 }),
+  situation('sit-cn-06', 'china', '社媒', '稀土出口管制 · 产业讨论', '财经自媒体解读镓锗出口许可对半导体供应链的传导路径。', 'mixed', 65, ['经济'], ts(3), { platform: '微博', engagement: 89000, lng: 115, lat: 28 }),
+  situation('sit-cn-07', 'china', '社媒', '香港国安案件 · 社会反响', '本地论坛讨论国安法下言论边界与司法程序透明度。', 'mixed', 58, ['社会', '政治'], ts(4), { platform: 'X', engagement: 45000, lng: 114.17, lat: 22.32 }),
+  situation('sit-cn-08', 'china', '社媒', '新能源汽车出海欧洲', '抖音汽车博主对比比亚迪、蔚来在欧洲关税调查下的定价策略。', 'positive', 52, ['经济'], ts(5), { platform: '抖音', engagement: 320000, lng: 121.5, lat: 31.2 }),
+  situation('sit-cn-09', 'china', '社媒', '长江中下游 · 汛情预警', '地方政务号发布洪峰过境信息，网民讨论水库泄洪与城市内涝防范。', 'negative', 61, ['灾害'], ts(0, 15), { platform: '微博', engagement: 145000, lng: 114.3, lat: 30.6 }),
+  situation('sit-cn-10', 'china', '社媒', 'A股北向资金波动', '雪球社区热议外资流向与房地产政策预期对蓝筹板块影响。', 'mixed', 55, ['经济'], ts(2, 10), { platform: '雪球', engagement: 76000, lng: 121.5, lat: 31.2 }),
+  situation('sit-cn-11', 'china', '趋势', '台海关注度指数', '多平台涉台话题量周环比 +15%，军机舰机活动报道占比上升。', 'negative', 82, ['军事', '政治'], ts(0, 7), { lng: 120, lat: 24 }),
+  situation('sit-cn-12', 'china', '趋势', '南海摩擦烈度', '中菲、中越海上执法接触次数较上月增加，舆论热度指数 79。', 'negative', 79, ['军事'], ts(1, 7), { lng: 114, lat: 12 }),
+  situation('sit-cn-13', 'china', '趋势', '周边外交互动频次', '中日韩领导人会议筹备消息提振区域合作预期，指数中性偏多。', 'positive', 48, ['政治'], ts(2, 8)),
+  situation('sit-cn-14', 'china', '趋势', '半岛安全紧张度', '朝韩边界炮击警告与气球传单事件推高紧张指数至 71。', 'negative', 71, ['军事'], ts(3, 8), { lng: 127, lat: 38 }),
+  situation('sit-cn-15', 'china', '趋势', '岛链军演密度', '西太平洋多国联合演习场次增加，军机识别区通报次数处高位。', 'negative', 74, ['军事'], ts(0, 12), { lng: 135, lat: 28 }),
+  situation('sit-cn-16', 'china', '趋势', '两岸经贸依存度', 'ECFA 部分产品关税优惠到期讨论引发产业界关注，情绪指数分化。', 'mixed', 56, ['经济', '政治'], ts(4, 9)),
+  situation('sit-cn-17', 'china', '趋势', '周边民意互视', '民调显示日韩对华好感度低位徘徊，东南亚国家对华经济依赖度仍高。', 'mixed', 50, ['社会'], ts(5, 9)),
+  situation('sit-cn-18', 'china', '趋势', '低空经济与 eVTOL', '深圳、合肥试点空域管理改革，资本市场关注度指数上升。', 'positive', 44, ['经济'], ts(6, 9), { lng: 114.1, lat: 22.5 }),
+  situation('sit-cn-19', 'china', '态势', '台海方向 · 综合研判', '海空常态化演训与外交博弈并行；美方对台军售与国会访台议题周期性发酵。', 'negative', 86, ['军事', '政治'], ts(0, 8), { lng: 119.5, lat: 24.5 }),
+  situation('sit-cn-20', 'china', '态势', '南海维权与规则博弈', '岛礁建设、海警执法与《南海各方行为准则》磋商同步推进，摩擦可控但易突发。', 'mixed', 80, ['军事', '政治'], ts(1, 8), { lng: 112, lat: 16 }),
+  situation('sit-cn-21', 'china', '态势', '第一岛链战略挤压', '美日强化前沿部署，解放军远海训练频次增加，接触规则与危机管控需求上升。', 'negative', 77, ['军事'], ts(2, 8), { lng: 128, lat: 26 }),
+  situation('sit-cn-22', 'china', '态势', '中日关系 · 经贸与安全', '历史与钓鱼岛议题与供应链合作并存；福岛水排问题余波仍在民间舆论中。', 'mixed', 68, ['政治', '经济'], ts(3, 8), { lng: 139.7, lat: 35.7 }),
+  situation('sit-cn-23', 'china', '态势', '朝鲜半岛局势', '朝俄军事合作深化，半岛无核化谈判停滞；中韩关系在萨德余波下谨慎修复。', 'negative', 73, ['军事', '政治'], ts(4, 8), { lng: 126.98, lat: 37.57 }),
+  situation('sit-cn-24', 'china', '社媒', '西藏旅游旺季 · 文化推广', '短视频平台展示川藏铁路沿线景观与非遗文化，境外叙事对比明显。', 'positive', 40, ['文化', '社会'], ts(7), { platform: '抖音', engagement: 210000, lng: 91.1, lat: 29.6 }),
+  situation('sit-cn-25', 'china', '社媒', '芯片自主 · 光刻机进展', '科技论坛讨论国产 DUV 量产与 EUV 研发路线图，情绪谨慎乐观。', 'positive', 62, ['经济', '军事'], ts(8), { platform: '微博', engagement: 134000, lng: 121.5, lat: 31.2 }),
+  situation('sit-cn-26', 'china', '趋势', '房地产政策预期', '一线城市限购松绑传闻推高搜索指数，市场观望情绪仍浓。', 'mixed', 53, ['经济'], ts(7, 9)),
+  situation('sit-cn-27', 'china', '社媒', '中缅边境 · 电诈打击', '官方通报跨境联合执法成果，网民关注遣返人员安置与边境安全。', 'positive', 59, ['社会', '军事'], ts(9), { platform: '微博', engagement: 167000, lng: 98.5, lat: 24 }),
+  situation('sit-cn-28', 'china', '态势', '周边经济一体化', 'RCEP 深化与中欧投资协定停滞形成对比；一带一路基建项目进入运营期。', 'positive', 55, ['经济', '政治'], ts(5, 8)),
+  situation('sit-cn-29', 'china', '社媒', '新疆棉花 · 国际叙事', '外贸企业回应欧美溯源要求，国内舆论强调产业链自主与就业稳定。', 'mixed', 57, ['经济', '社会'], ts(10), { platform: '微博', engagement: 98000, lng: 87.6, lat: 43.8 }),
+  situation('sit-cn-30', 'china', '趋势', '军民融合发展指数', '商业航天、北斗应用与国防动员演练报道量周环比上升。', 'neutral', 46, ['军事', '经济'], ts(8, 9)),
+  situation('sit-cn-31', 'china', '态势', '灾害与应急能力', '汛期南方强降雨与台风季叠加，转移安置与水库调度成为舆论焦点。', 'negative', 60, ['灾害'], ts(6, 8), { lng: 113, lat: 28 }),
+];

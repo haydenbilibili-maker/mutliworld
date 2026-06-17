@@ -20,12 +20,31 @@ export default function AdminLaunchLogPage() {
       <AdminPageHeader
         title="发射日志数据"
         description="本地结构化数据库 data/launch-log/launches.json，供地图发射日志图层与侧栏使用。"
+        breadcrumbs={[
+          { label: '管理后台', href: '/admin' },
+          { label: '数据管理' },
+          { label: '发射日志' },
+        ]}
       />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetaBox label="记录总数" value={String(meta.count)} />
         <MetaBox label="文件状态" value={meta.exists ? '已存在' : '种子兜底'} />
         <MetaBox label="抓取时间" value={formatDateTime(meta.fetchedAt)} />
+        <MetaBox
+          label="最近发射"
+          value={
+            launches[0]?.launchTime
+              ? formatDateTime(launches[0].launchTime)
+              : '—'
+          }
+          warn={
+            launches[0]?.launchTime
+              ? Date.now() - Date.parse(launches[0].launchTime) > 45 * 24 * 3600_000
+              : false
+          }
+          hint="若超过 45 天无新记录，建议 npm run data:launches"
+        />
         <MetaBox label="文件大小" value={meta.fileSize ? formatBytes(meta.fileSize) : '—'} />
       </div>
 
@@ -86,11 +105,27 @@ export default function AdminLaunchLogPage() {
   );
 }
 
-function MetaBox({ label, value }: { label: string; value: string }) {
+function MetaBox({
+  label,
+  value,
+  warn,
+  hint,
+}: {
+  label: string;
+  value: string;
+  warn?: boolean;
+  hint?: string;
+}) {
   return (
-    <div className="rounded-xl border border-dashboard-neutral/15 bg-white/[0.02] p-4">
+    <div
+      className={[
+        'rounded-xl border bg-white/[0.02] p-4',
+        warn ? 'border-amber-500/40' : 'border-dashboard-neutral/15',
+      ].join(' ')}
+    >
       <p className="text-xs text-dashboard-neutral/55">{label}</p>
-      <p className="mt-1 text-lg font-semibold text-white">{value}</p>
+      <p className={`mt-1 text-lg font-semibold ${warn ? 'text-amber-300' : 'text-white'}`}>{value}</p>
+      {hint && <p className="mt-1 text-[10px] text-dashboard-neutral/50">{hint}</p>}
     </div>
   );
 }

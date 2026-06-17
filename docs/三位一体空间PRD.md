@@ -183,7 +183,7 @@ TierModule 抽象（`src/types/tier.ts` + `src/tiers/`：registry + 三层模块
 **Phase 2 · 空间层 MVP** ✅ 已完成（2026-06-16）
 ✅ launch_sites 归位 · ✅ `launch_log`（发射任务记录）· ✅ `ground_stations`（深空网/测控站）· ✅ `sat_constellations`（GEO 气象/通信/北斗导航，赤道同步轨道带）· ✅ `space_events`（ASAT/在轨相撞/解体/再入/抵近，公开历史事件带日期来源；ASAT 等列为敏感、可一键下架）· ✅ `SpaceBriefingPanel`（进入宇宙层自动显示：发射场/测控/GEO/发射记录统计 + GEO 分类 + 近期空天事件，敏感下架时隐藏）。
 ✅ **3D 地球**前向兼容就绪（GlobeController + 星空 + 大气 + 轨道环），升级 `npm i maplibre-gl@^5` 即点亮。
-✅ **实时卫星 + 空间站高亮**：`/api/satellites`（wheretheiss.at，免费无 key，缓存 8s）+ `useLiveSatellites`（12s 刷新）+ `LiveSatellitesLayer`（普通卫星圆点 + ISS/天宫 DOM 脉冲标记与标签高亮，点击出实时星下点详情）+ `LiveStationsPanel`（ISS/天宫 实时经纬/高度/速度，进入宇宙层自动显示）。NORAD：ISS 25544 / 天宫天和 48274。
+✅ **实时卫星 + 空间站高亮**：`/api/satellites`（wheretheiss.at，免费无 key，缓存 8s）+ `useLiveSatellites`（12s 刷新）+ `LiveSatellitesLayer`（普通卫星圆点 + ISS/天宫 DOM 脉冲标记与标签高亮，点击出实时星下点详情）+ `OrbitalListHost` / `OrbitalObjectsPanel`（ISS/天宫 实时经纬/高度/速度，宇宙层 FAB 展开轨道列表）。NORAD：ISS 25544 / 天宫天和 48274。
 待办（v5 后）：更多 LEO 真实星历（TLE/satellite.js 客户端传播）· 球面下「天—地—海」垂直剖面联动。
 
 **Phase 3 · 实时与动效**

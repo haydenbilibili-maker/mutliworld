@@ -6,7 +6,7 @@ export const MILITARY_MODULE: StrategicModule = {
   summary:
     '印太军事态势日趋紧张：美军强化第一岛链前沿部署，解放军推进区域拒止/反介入能力建设，台海成为双方威慑博弈焦点。',
   mapView: { center: [125, 26], zoom: 4.5 },
-  relatedLayerIds: ['military', 'bases', 'garrisons', 'nuclear', 'waterways'],
+  relatedLayerIds: ['military', 'bases', 'garrisons', 'nuclear', 'waterways', 'conflict_zones'],
   sections: [
     {
       heading: '印太军事态势与力量对比',

@@ -92,6 +92,45 @@ function authHeader(): string | undefined {
   return `Basic ${Buffer.from(`${user}:${pass}`).toString('base64')}`;
 }
 
+const OPENSKY_TIMEOUT_MS = 30_000;
+const OPENSKY_MAX_ATTEMPTS = 3;
+
+async function fetchOpenSkyJson(url: string, headers: Record<string, string>): Promise<{ states?: OpenSkyRow[] | null }> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= OPENSKY_MAX_ATTEMPTS; attempt++) {
+    try {
+      const res = await fetch(url, {
+        headers: {
+          ...headers,
+          'User-Agent': 'MultiWorld-SituationMap/1.0',
+        },
+        signal: AbortSignal.timeout(OPENSKY_TIMEOUT_MS),
+        next: { revalidate: 0 },
+      });
+
+      if (res.status === 429) {
+        lastError = new Error(`OpenSky HTTP 429`);
+        await new Promise((r) => setTimeout(r, attempt * 2000));
+        continue;
+      }
+
+      if (!res.ok) {
+        throw new Error(`OpenSky HTTP ${res.status}`);
+      }
+
+      return (await res.json()) as { states?: OpenSkyRow[] | null };
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      if (attempt < OPENSKY_MAX_ATTEMPTS) {
+        await new Promise((r) => setTimeout(r, attempt * 1500));
+      }
+    }
+  }
+
+  throw lastError ?? new Error('OpenSky 请求失败');
+}
+
 /** 从 OpenSky 拉取并解析飞机状态 */
 export async function fetchOpenSkyFlights(
   options: FetchFlightsOptions = {},
@@ -102,16 +141,7 @@ export async function fetchOpenSkyFlights(
   const auth = authHeader();
   if (auth) headers.Authorization = auth;
 
-  const res = await fetch(url, {
-    headers,
-    next: { revalidate: 0 },
-  });
-
-  if (!res.ok) {
-    throw new Error(`OpenSky HTTP ${res.status}`);
-  }
-
-  const json = (await res.json()) as { states?: OpenSkyRow[] | null };
+  const json = await fetchOpenSkyJson(url, headers);
   let flights = (json.states ?? [])
     .map(parseRow)
     .filter((f): f is FlightState => f != null);

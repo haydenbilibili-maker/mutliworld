@@ -14,6 +14,21 @@ interface CacheEntry {
 
 let cache: CacheEntry | null = null;
 
+function staleCacheBody(key: string, errorMessage: string): unknown | null {
+  if (!cache || cache.key !== key) return null;
+  const body = cache.body as { meta?: Record<string, unknown> };
+  if (!body?.meta) return null;
+  return {
+    ...body,
+    meta: {
+      ...body.meta,
+      stale: true,
+      error: errorMessage,
+      generatedAt: new Date().toISOString(),
+    },
+  };
+}
+
 function parseBbox(searchParams: URLSearchParams): BboxFilter | null {
   const lamin = searchParams.get('lamin');
   const lomin = searchParams.get('lomin');
@@ -84,6 +99,12 @@ export async function GET(req: NextRequest) {
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : '获取航班数据失败';
+    const stale = staleCacheBody(key, message);
+    if (stale) {
+      return Response.json(stale, {
+        headers: { 'Cache-Control': 'public, s-maxage=15, stale-while-revalidate=30' },
+      });
+    }
     return Response.json(
       {
         type: 'FeatureCollection',
@@ -99,7 +120,7 @@ export async function GET(req: NextRequest) {
         },
       },
       {
-        status: 502,
+        status: 200,
         headers: { 'Cache-Control': 'no-store' },
       },
     );

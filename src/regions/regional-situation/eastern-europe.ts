@@ -1,0 +1,37 @@
+import type { RegionalSituationItem } from '@/types/regional-situation';
+import { situation, ts } from './helpers';
+
+/** 东欧·俄乌 · 区域态势 */
+export const EASTERN_EUROPE_SITUATION: RegionalSituationItem[] = [
+  situation('sit-ee-01', 'eastern_europe', '社媒', '乌克兰前线 · 每日战报', '乌军官方 Telegram 发布防线调整与无人机战果，全球军迷转发。', 'mixed', 88, ['军事'], ts(0), { platform: 'Telegram', engagement: 520000, lng: 37.5, lat: 48.5 }),
+  situation('sit-ee-02', 'eastern_europe', '社媒', '俄罗斯导弹袭击基辅', '基辅居民发布防空警报与拦截视频，国际媒体同步直播。', 'negative', 92, ['军事', '灾害'], ts(0, 8), { platform: 'X', engagement: 890000, lng: 30.5, lat: 50.5 }),
+  situation('sit-ee-03', 'eastern_europe', '社媒', '扎波罗热核电站安全', 'IAEA 账号发布视察通报，双方互相指责炮击威胁。', 'negative', 85, ['军事', '灾害'], ts(1), { platform: 'X', engagement: 234000, lng: 34.5, lat: 47.5 }),
+  situation('sit-ee-04', 'eastern_europe', '社媒', '波兰边境 · 农产品封锁', '农民抗议乌克兰谷物过境冲击本地价格，欧盟妥协方案受质疑。', 'negative', 66, ['经济', '政治'], ts(2), { platform: 'X', engagement: 112000, lng: 21, lat: 52 }),
+  situation('sit-ee-05', 'eastern_europe', '社媒', '白俄罗斯卢卡申科表态', '官方媒体发布与普京会晤画面，讨论核部署与动员演习。', 'negative', 72, ['政治', '军事'], ts(3), { platform: 'Telegram', engagement: 45000, lng: 27.5, lat: 53.9 }),
+  situation('sit-ee-06', 'eastern_europe', '社媒', '摩尔多瓦入欧公投', '亲欧政府推动宪法入欧，德左地区分离主义活动受关注。', 'mixed', 58, ['政治'], ts(4), { platform: 'FB', engagement: 34000, lng: 28.8, lat: 47.0 }),
+  situation('sit-ee-07', 'eastern_europe', '社媒', '波罗的海海底电缆受损', '芬兰爱沙尼亚调查可疑船只，北约加强波罗的海巡逻。', 'negative', 78, ['军事', '经济'], ts(1, 15), { platform: 'X', engagement: 178000, lng: 24.7, lat: 59.4 }),
+  situation('sit-ee-08', 'eastern_europe', '社媒', '匈牙利欧尔班和平使命', '欧尔班访俄乌引发欧盟内部批评，#Orban 标签两极化。', 'mixed', 64, ['政治'], ts(5), { platform: 'X', engagement: 98000, lng: 19.0, lat: 47.5 }),
+  situation('sit-ee-09', 'eastern_europe', '社媒', '捷克弹药援乌工厂', '防务企业宣布产能扩张，工人加班生产炮弹新闻热传。', 'positive', 55, ['军事', '经济'], ts(6), { platform: 'X', engagement: 56000, lng: 14.4, lat: 50.1 }),
+  situation('sit-ee-10', 'eastern_europe', '社媒', '罗马尼亚黑海防务', '北约战斗机紧急起飞应对俄舰活动，当地媒体报道增多。', 'negative', 68, ['军事'], ts(7), { platform: 'FB', engagement: 28000, lng: 28.6, lat: 44.4 }),
+  situation('sit-ee-11', 'eastern_europe', '趋势', '俄乌前线变化指数', '俄军东线推进与乌军库尔斯克行动并存，战线指数波动加剧。', 'negative', 86, ['军事'], ts(0, 7), { lng: 37.5, lat: 48.5 }),
+  situation('sit-ee-12', 'eastern_europe', '趋势', '乌克兰电力损毁率', '发电与输电设施遭袭，全国scheduled 停电时长指数上升。', 'negative', 84, ['灾害', '军事'], ts(1, 8), { lng: 30.5, lat: 50.5 }),
+  situation('sit-ee-13', 'eastern_europe', '趋势', '西方制裁规避监测', '第三国转运与影子舰队活动指数仍处高位，执法压力加大。', 'negative', 70, ['经济', '政治'], ts(2, 8)),
+  situation('sit-ee-14', 'eastern_europe', '趋势', '俄罗斯通胀与军费', '军事开支占预算比重上升，消费品通胀与劳动力短缺并存。', 'negative', 62, ['经济', '军事'], ts(3, 8), { lng: 37.6, lat: 55.8 }),
+  situation('sit-ee-15', 'eastern_europe', '趋势', '北约东翼兵力', '前沿驻军与预置装备增加，演习频次达冷战后高位。', 'negative', 74, ['军事'], ts(4, 9), { lng: 24, lat: 56 }),
+  situation('sit-ee-16', 'eastern_europe', '趋势', '乌克兰重建资金缺口', '世行估算需求与实际承诺差距扩大，私人投资观望。', 'negative', 58, ['经济'], ts(5, 9)),
+  situation('sit-ee-17', 'eastern_europe', '趋势', '难民返乡意愿', '波兰、德国安置压力缓解部分，但安全形势制约返乡规模。', 'mixed', 50, ['社会'], ts(6, 9)),
+  situation('sit-ee-18', 'eastern_europe', '趋势', '无人机作战占比', '双方 FPV 无人机日均使用量大增，改变战术与伤亡结构。', 'negative', 80, ['军事'], ts(0, 12)),
+  situation('sit-ee-19', 'eastern_europe', '态势', '战争长期化消耗', '双方均难以取得决定性突破，动员、弹药与工业产能成为关键变量。', 'negative', 88, ['军事'], ts(0, 8), { lng: 37.5, lat: 48.5 }),
+  situation('sit-ee-20', 'eastern_europe', '态势', '核风险阴影', '扎波罗热核电站与战略核武器言论偶发，危机管控机制薄弱。', 'negative', 82, ['军事', '灾害'], ts(1, 8), { lng: 34.5, lat: 47.5 }),
+  situation('sit-ee-21', 'eastern_europe', '态势', '欧洲安全架构重塑', '芬兰瑞典入约、北约东翼强化，俄白联盟与核部署对冲。', 'negative', 76, ['政治', '军事'], ts(2, 8)),
+  situation('sit-ee-22', 'eastern_europe', '态势', '制裁与全球经济外溢', '能源、粮食与化肥市场仍受战争影响，全球南方承受价格冲击。', 'negative', 65, ['经济'], ts(3, 8)),
+  situation('sit-ee-23', 'eastern_europe', '态势', '和平谈判前景黯淡', '双方立场差距巨大，领土与安全保障议题暂无妥协空间。', 'negative', 72, ['政治'], ts(4, 8)),
+  situation('sit-ee-24', 'eastern_europe', '社媒', '克里米亚大桥防护', '卫星图像爱好者讨论浮桥与防空部署变化。', 'negative', 67, ['军事'], ts(8), { platform: 'X', engagement: 78000, lng: 36.6, lat: 45.0 }),
+  situation('sit-ee-25', 'eastern_europe', '社媒', '格鲁吉亚外国代理人法', '第比利斯抗议与欧盟入盟进程受阻引发区域关注。', 'negative', 60, ['政治', '社会'], ts(9), { platform: 'X', engagement: 112000, lng: 44.8, lat: 41.7 }),
+  situation('sit-ee-26', 'eastern_europe', '趋势', '黑海粮食走廊', '海运出口在战争与保险成本下波动，全球粮价敏感。', 'mixed', 58, ['经济'], ts(7, 9), { lng: 30, lat: 46 }),
+  situation('sit-ee-27', 'eastern_europe', '社媒', '亚美尼亚阿塞拜疆和平', '边境划界谈判进展缓慢，纳卡流离人口安置问题持续。', 'negative', 54, ['政治', '军事'], ts(10), { platform: 'X', engagement: 45000, lng: 44.5, lat: 40.2 }),
+  situation('sit-ee-28', 'eastern_europe', '态势', '信息战与认知域', '双方宣传、深度伪造与战场视频塑造国内外舆论，真相鉴别困难。', 'negative', 68, ['社会', '军事'], ts(5, 8)),
+  situation('sit-ee-29', 'eastern_europe', '社媒', '立陶宛卡列宁格拉德过境', '运输限制与俄抗议周期性成为波罗的海热点。', 'negative', 56, ['政治', '经济'], ts(11), { platform: 'X', engagement: 32000, lng: 25.3, lat: 54.7 }),
+  situation('sit-ee-30', 'eastern_europe', '趋势', '乌军西方装备损耗', '装甲车辆与防空弹药补充速度成为西方工业产能考验。', 'negative', 75, ['军事', '经济'], ts(8, 9)),
+  situation('sit-ee-31', 'eastern_europe', '态势', '前线平民伤亡', '顿巴斯与哈尔科夫平民遭袭事件频发，战争罪调查与问责艰难。', 'negative', 86, ['社会', '灾害'], ts(6, 8), { lng: 37, lat: 48 }),
+];

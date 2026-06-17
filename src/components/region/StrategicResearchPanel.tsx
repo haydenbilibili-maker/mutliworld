@@ -5,12 +5,13 @@
  * 左侧模块导航 + 右侧可滚动长文；各主题面板共用此壳层。
  */
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
 import { useStrategicResearchStore } from '@/store/useStrategicResearchStore';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { LAYER_LABELS } from '@/lib/constants';
+import { tierForLayer } from '@/tiers';
 import type {
   StrategicResearchModule,
   StrategicResearchPanelId,
@@ -50,26 +51,48 @@ export function StrategicResearchPanel({
 }: StrategicResearchPanelProps) {
   const setCenter = useMapStore((s) => s.setCenter);
   const setZoom = useMapStore((s) => s.setZoom);
+  const setTier = useMapStore((s) => s.setTier);
+  const activeTier = useMapStore((s) => s.activeTier);
   const setActiveLayers = useMapStore((s) => s.setActiveLayers);
   const activeLayers = useMapStore((s) => s.activeLayers);
   const openPanel = useStrategicResearchStore((s) => s.openPanel);
+  const panelRef = useRef<HTMLElement>(null);
 
   const module =
     modules.find((m) => m.id === activeModuleId) ?? modules[0];
 
   const showOnMap = useCallback(() => {
     if (!module) return;
+    const layerIds = module.relatedLayerIds ?? [];
+    const needsSurface = layerIds.some((id) => tierForLayer(id) === 'surface');
+    if (needsSurface && activeTier !== 'surface') {
+      setTier('surface');
+    }
     if (module.mapView) {
       setCenter(module.mapView.center);
       setZoom(module.mapView.zoom);
     }
-    if (module.relatedLayerIds?.length) {
-      const merged = Array.from(
-        new Set([...activeLayers, ...module.relatedLayerIds]),
-      ) as LayerId[];
+    if (layerIds.length) {
+      const merged = Array.from(new Set([...activeLayers, ...layerIds])) as LayerId[];
       setActiveLayers(merged);
     }
-  }, [module, setCenter, setZoom, setActiveLayers, activeLayers]);
+  }, [module, setCenter, setZoom, setTier, activeTier, setActiveLayers, activeLayers]);
+
+  useEffect(() => {
+    if (!open) return;
+    const closeBtn = panelRef.current?.querySelector<HTMLButtonElement>(
+      '[aria-label*="关闭"]',
+    );
+    closeBtn?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      e.preventDefault();
+      onClose();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [open, onClose]);
 
   if (!module) return null;
 
@@ -88,6 +111,7 @@ export function StrategicResearchPanel({
             onClick={onClose}
           />
           <motion.aside
+            ref={panelRef}
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -99,6 +123,7 @@ export function StrategicResearchPanel({
               className,
             ].join(' ')}
             role="dialog"
+            aria-modal="true"
             aria-label={ariaLabel ?? title}
           >
             <div className="flex min-h-0 min-w-0 flex-1 flex-col">

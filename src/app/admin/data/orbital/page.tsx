@@ -1,5 +1,6 @@
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { AdminTleRefreshSection } from '@/components/admin/AdminTleRefreshSection';
+import { AdminMetaBox } from '@/components/admin/AdminMetaBox';
 import { formatDateTime } from '@/lib/admin/format';
 import { getAdminStats } from '@/lib/admin/stats';
 
@@ -16,20 +17,30 @@ export default function AdminOrbitalPage() {
     <div className="mx-auto max-w-6xl">
       <AdminPageHeader
         title="轨道 TLE 数据"
-        description="本地 TLE 数据库 data/orbital/tle.json，用于宇宙空间层在轨物体传播与展示。"
+        description="本地 TLE 数据库 data/orbital/tle.json，用于宇宙空间层在轨物体 SGP4 传播与展示。"
+        breadcrumbs={[
+          { label: '管理后台', href: '/admin' },
+          { label: '数据管理' },
+          { label: '轨道 TLE' },
+        ]}
       />
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <MetaBox label="物体总数" value={String(orbital.total)} />
-        <MetaBox label="数据源" value={orbital.source} />
-        <MetaBox label="抓取时间" value={formatDateTime(orbital.fetchedAt)} />
-        <MetaBox
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <AdminMetaBox label="物体总数" value={String(orbital.total)} accent />
+        <AdminMetaBox label="数据源" value={orbital.source} />
+        <AdminMetaBox label="抓取时间" value={formatDateTime(orbital.fetchedAt)} />
+        <AdminMetaBox
+          label="数据年龄"
+          value={orbital.ageLabel}
+          sub={orbital.stale ? `超过 ${orbital.staleThresholdHours}h 建议刷新` : '数据较新'}
+        />
+        <AdminMetaBox
           label="空间站 / 卫星 / 碎片"
           value={`${orbital.counts.station} / ${orbital.counts.satellite} / ${orbital.counts.debris}`}
         />
       </div>
 
-      <AdminTleRefreshSection />
+      <AdminTleRefreshSection showAge />
 
       <section>
         <h2 className="mb-3 text-sm font-medium text-white">分类统计</h2>
@@ -56,15 +67,6 @@ export default function AdminOrbitalPage() {
           </table>
         </div>
       </section>
-    </div>
-  );
-}
-
-function MetaBox({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-dashboard-neutral/15 bg-white/[0.02] p-4">
-      <p className="text-xs text-dashboard-neutral/55">{label}</p>
-      <p className="mt-1 text-lg font-semibold text-white">{value}</p>
     </div>
   );
 }

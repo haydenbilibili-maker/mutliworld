@@ -25,6 +25,7 @@ const KIND_DOT: Record<SearchKind, string> = {
   facility: 'bg-slate-300',
   infra: 'bg-teal-400',
   nuclear: 'bg-purple-400',
+  person: 'bg-violet-400',
 };
 
 export function SearchBox({ className = '', embedded = false }: SearchBoxProps) {

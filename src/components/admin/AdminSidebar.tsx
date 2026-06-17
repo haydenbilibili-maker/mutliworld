@@ -22,6 +22,14 @@ const NAV_GROUPS: NavGroup[] = [
   {
     title: '数据管理',
     items: [
+      { label: '区域数据集', href: '/admin/features/regions' },
+      { label: '图层配置', href: '/admin/features/layers' },
+      { label: '冲突区', href: '/admin/features/conflict-zones' },
+      { label: '区域人物', href: '/admin/features/persons' },
+      { label: '区域态势', href: '/admin/features/regional-situation' },
+      { label: '跑马灯种子', href: '/admin/data/news-feed' },
+      { label: '股市指数', href: '/admin/data/markets' },
+      { label: '实时数据源', href: '/admin/data/live-sources' },
       { label: '发射日志', href: '/admin/data/launch-log' },
       { label: '轨道 TLE', href: '/admin/data/orbital' },
       { label: 'Geodata 缓存', href: '/admin/data/geodata' },
@@ -30,10 +38,17 @@ const NAV_GROUPS: NavGroup[] = [
   {
     title: '功能配置',
     items: [
-      { label: '图层与区域', href: '/admin/features/layers' },
-      { label: '区域数据集', href: '/admin/features/regions' },
       { label: '战略研究', href: '/admin/features/strategic-research' },
+      { label: '分级展示', href: '/admin/features/content-hierarchy' },
       { label: '空间层', href: '/admin/features/tiers' },
+    ],
+  },
+  {
+    title: '运维',
+    items: [
+      { label: 'API 健康', href: '/admin/operations/health' },
+      { label: '缓存策略', href: '/admin/operations/cache' },
+      { label: '功能开关', href: '/admin/operations/feature-flags' },
     ],
   },
 ];
@@ -89,14 +104,22 @@ export function AdminSidebar() {
         <Link href="/admin" className="text-sm font-semibold text-white">
           管理后台
         </Link>
-        <button
-          type="button"
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-expanded={mobileOpen}
-          className="rounded-lg border border-dashboard-neutral/25 px-3 py-1.5 text-xs text-dashboard-neutral hover:text-white"
-        >
-          {mobileOpen ? '收起' : '菜单'}
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/"
+            className="rounded-lg border border-dashboard-neutral/25 px-2 py-1 text-[10px] text-dashboard-military"
+          >
+            地图
+          </Link>
+          <button
+            type="button"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-expanded={mobileOpen}
+            className="rounded-lg border border-dashboard-neutral/25 px-3 py-1.5 text-xs text-dashboard-neutral hover:text-white"
+          >
+            {mobileOpen ? '收起' : '菜单'}
+          </button>
+        </div>
       </div>
 
       {mobileOpen && (
@@ -118,9 +141,9 @@ export function AdminSidebar() {
         <div className="border-t border-dashboard-neutral/15 px-4 py-3">
           <Link
             href="/"
-            className="text-xs text-dashboard-neutral hover:text-dashboard-military"
+            className="inline-flex items-center gap-1 text-xs font-medium text-dashboard-military hover:underline"
           >
-            ← 返回地图
+            ← 返回态势地图
           </Link>
         </div>
       </aside>

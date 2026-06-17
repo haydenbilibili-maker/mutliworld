@@ -11,6 +11,8 @@
 
 - [项目简介](#项目简介)
 - [功能特性](#功能特性)
+- [v1.1 新增能力](#v11-新增2026-06)
+- [v1.2 更新（2026-06）](#v12-更新2026-06)
 - [技术栈](#技术栈)
 - [快速开始](#快速开始)
 - [环境变量](#环境变量)
@@ -44,11 +46,11 @@
 ### 地图与空间模型
 
 - **三位一体空间模型**：`space`（宇宙）/ `surface`（地表）/ `subsurface`（洋底）三层正交于地理区域，一键在层间切换
-- **3D 地球（MapLibre v5 Globe）**：宇宙层自动切换球面投影，附带星空背景、大气辉光、GEO/LEO 轨道环
+- **3D 地球（MapLibre v5 Globe）**：宇宙层自动球面，地表层可手动开启；`setStyle` 后于 `idle` 阶段重应用 `globe` 投影（见 `src/lib/map/globeProjection.ts`），附带星空背景、大气辉光、GEO/LEO 轨道环
 - **地球自转动效**：宇宙层支持可暂停/调速的自转（1× / 10× / 100×），暂停后可手动拖拽拨动地球
 - **图标标记系统**：统一 `markerStyle` 驱动 emoji 图标、光晕色与图例，点/线要素分层渲染
 - **全局搜索**：跨区域 + 全球图层构建索引，子串匹配 + 权重排序
-- **URL 深链**：支持 `lat` / `lon` / `zoom` / `view` / `timeRange` / `layers` / `region` 查询参数
+- **URL 深链**：支持 `lat` / `lon` / `zoom` / `view` / `timeRange` / `layers` / `region` / `basemap` 查询参数
 
 ### 区域模块（9 个）
 
@@ -90,6 +92,34 @@
 
 - 只读 MVP 仪表盘：区域/图层/空间层配置、发射日志、TLE、Geodata 缓存统计
 - 开发环境默认启用；生产需显式开启（见[管理后台](#管理后台)）
+
+### v1.1 新增（2026-06）
+
+自 v1.0 起陆续接入的实时与地理增强能力：
+
+| 能力 | 说明 |
+|------|------|
+| **地理底图** | 按空间层分配：**洋底** OpenFreeMap Fiord + Terrarium DEM；**地表/宇宙** ESRI 卫星 / OpenFreeMap Liberty 政区 / 混合叠加（`TierSwitcher` 底图样式切换，`?basemap=` 深链） |
+| **实时天气** | `live_weather` 图层：Open-Meteo 主要城市实况 + RainViewer 降水雷达栅格叠加 |
+| **实时航班** | `live_flights` 图层：OpenSky ADS-B，视口 bbox 过滤，约 45 秒刷新 |
+| **冲突区** | `conflict_zones` 图层：全球冲突区多边形填充（俄乌、中东、台海等） |
+| **披萨指数** | `pizza_index` OSINT：pizzint.watch 实时繁忙度 + 地图标记 + 右侧面板 |
+| **区域专题简报** | 中国/美国区域切换时显示周边/战略专题简报（`ChinaBriefingPanel` / `UsBriefingPanel`） |
+| **战略研究** | 中美博弈、东北亚五国等半屏研究抽屉（`StrategicResearchHost`） |
+
+### v1.2 更新（2026-06）
+
+| 能力 | 说明 |
+|------|------|
+| **3D 地球修复** | `globeProjection.ts` 在 `setStyle` 后于 `idle` 重应用 globe，避免球面被重置为 mercator |
+| **简报自动图层** | 中国/美国专题简报点击模块自动开启 `conflict_zones`、实时图层等关联 LayerId |
+| **战略研究地图联动** | 「在地图上查看」自动切换地表层、flyTo 视野并合并开启相关图层 |
+| **实时图层状态** | `SurfaceLayerStatusStack` 堆叠航班/天气/披萨 FAB；`GeodataFetchIndicator` 显示 geodata 加载态 |
+| **性能** | 航班 bbox 450ms 防抖；geodata / 航班图层仅在数据变化时 `setData`；战略研究面板 lazy load |
+| **无障碍** | 全局 ESC 关闭战略研究/事件侧栏；层级切换器 tooltip 说明地表/洋底/宇宙 |
+| **管理后台** | TLE 过期（>72h）与发射日志时效告警；实时图层计数摘要 |
+
+类型检查：`npm run typecheck`（先 `next build` 生成 `.next/types` 再 `tsc --noEmit`）。
 
 ---
 
@@ -165,6 +195,9 @@ cp .env.example .env.local
 | 变量 | 必填 | 默认值 | 说明 |
 |------|------|--------|------|
 | `NEXT_PUBLIC_ADMIN_ENABLED` | 否 | `false` | 设为 `true` 时在生产环境开放 `/admin` 管理后台 |
+| `NEXT_PUBLIC_MAP_STYLE_SURFACE` | 否 | OpenFreeMap Fiord | 洋底空间层地理矢量样式 URL |
+| `NEXT_PUBLIC_MAP_STYLE_POLITICAL` | 否 | OpenFreeMap Liberty | 地表/宇宙政区样式 URL |
+| `NEXT_PUBLIC_MAP_TERRAIN_ENHANCE` | 否 | `true` | 洋底层 DEM 山体阴影/3D 地形（`false` 关闭） |
 
 > 开发模式（`NODE_ENV=development`）下管理后台自动启用，无需配置。  
 > 其余数据源均为免费公开 API，**无需 API Key**。

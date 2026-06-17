@@ -40,6 +40,8 @@ export interface EventDetail {
   impact_level: ImpactLevel;
   description?: string;
   category?: string;
+  /** 可选原文链接（新闻快讯） */
+  url?: string;
 }
 
 /** 图层 ID，与 URL layers 参数一致 */
@@ -59,12 +61,14 @@ export type LayerId =
   | 'outages'
   | 'aviation'
   | 'live_flights'
+  | 'live_maritime'
   | 'maritime'
   | 'cables'
   | 'econ_hubs'
   | 'minerals'
   | 'daynight'
   | 'pipelines'
+  | 'hydrocarbon_reserves'
   | 'datacenters'
   | 'protests'
   | 'climate'
@@ -88,7 +92,8 @@ export type LayerId =
   | 'monsoon'
   | 'atmospheric_circulation'
   | 'deep_exploration'
-  | 'pizza_index';
+  | 'pizza_index'
+  | 'persons';
 
 /** 图层配置（显隐、样式、数据源） */
 export interface LayerConfig {

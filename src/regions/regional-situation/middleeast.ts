@@ -1,0 +1,37 @@
+import type { RegionalSituationItem } from '@/types/regional-situation';
+import { situation, ts } from './helpers';
+
+/** 中东 · 区域态势 */
+export const MIDDLEEAST_SITUATION: RegionalSituationItem[] = [
+  situation('sit-me-01', 'middleeast', '社媒', '以伊冲突 · 空袭与报复循环', 'IDF 官方 X 账号发布防空拦截画面，伊朗媒体称导弹突破以方防御。', 'negative', 95, ['军事'], ts(0, 6), { platform: 'X', engagement: 520000, lng: 35.2, lat: 31.8 }),
+  situation('sit-me-02', 'middleeast', '社媒', '霍尔木兹海峡 · 航运保险', '航运经纪人在 Telegram 讨论战争险保费飙升与油轮绕航方案。', 'negative', 88, ['经济', '军事'], ts(0, 10), { platform: 'Telegram', engagement: 34000, lng: 56.3, lat: 26.5 }),
+  situation('sit-me-03', 'middleeast', '社媒', '加沙人道走廊 · 援助受阻', '联合国机构账号发布援助车队等待入境画面，引发全球转发。', 'negative', 91, ['社会', '灾害'], ts(1), { platform: 'X', engagement: 890000, lng: 34.5, lat: 31.5 }),
+  situation('sit-me-04', 'middleeast', '社媒', '黎巴嫩真主党 · 边境交火', '半岛电视台记者直播以黎边境炮击，当地民众疏散视频热传。', 'negative', 84, ['军事'], ts(0, 14), { platform: 'X', engagement: 210000, lng: 35.6, lat: 33.4 }),
+  situation('sit-me-05', 'middleeast', '社媒', '沙特 Vision 2030 · 经济转型', '财经博主解读 NEOM 项目调整与非油收入目标进展。', 'positive', 52, ['经济'], ts(3), { platform: 'X', engagement: 45000, lng: 46.7, lat: 24.7 }),
+  situation('sit-me-06', 'middleeast', '社媒', '也门胡塞 · 红海袭击声明', '胡塞武装发言人视频宣称对关联以方船只继续打击。', 'negative', 79, ['军事'], ts(2), { platform: 'Telegram', engagement: 67000, lng: 44.2, lat: 15.3 }),
+  situation('sit-me-07', 'middleeast', '社媒', '伊朗浓缩铀丰度 · 外交博弈', '伊朗驻华使馆微博发布核计划说明，强调和平利用与国际法权利。', 'mixed', 77, ['政治', '军事'], ts(1, 16), { platform: '微博', engagement: 178000, lng: 51.4, lat: 35.7 }),
+  situation('sit-me-08', 'middleeast', '社媒', '土耳其地震重建 · 两年回顾', '本地媒体发布卡赫拉曼马拉什重建进度与临时安置现状。', 'mixed', 48, ['灾害', '社会'], ts(5), { platform: 'IG', engagement: 22000, lng: 36.9, lat: 37.6 }),
+  situation('sit-me-09', 'middleeast', '社媒', '阿联酋迪拜 · 科技峰会', '海湾科技创业者讨论 AI 数据中心投资与人才签证政策。', 'positive', 44, ['经济', '文化'], ts(6), { platform: 'X', engagement: 31000, lng: 55.3, lat: 25.2 }),
+  situation('sit-me-10', 'middleeast', '社媒', '伊拉克库区 · 安全态势', '库区媒体讨论伊朗跨境打击与美军基地周边无人机事件。', 'negative', 66, ['军事', '政治'], ts(4), { platform: 'X', engagement: 28000, lng: 44.0, lat: 36.2 }),
+  situation('sit-me-11', 'middleeast', '趋势', '中东冲突烈度指数', '以伊直接交火推高综合烈度至 94，为 2020 年以来最高。', 'negative', 94, ['军事'], ts(0, 7), { lng: 35, lat: 32 }),
+  situation('sit-me-12', 'middleeast', '趋势', '布伦特原油波动率', '地缘溢价推动油价突破关键心理关口，波动率指数处高位。', 'negative', 86, ['经济'], ts(0, 8), { lng: 50, lat: 26 }),
+  situation('sit-me-13', 'middleeast', '趋势', '美军前沿部署指数', '航母打击群与反导资产东调，区域美军基地戒备等级提升。', 'negative', 80, ['军事'], ts(1, 8), { lng: 50, lat: 26 }),
+  situation('sit-me-14', 'middleeast', '趋势', '伊朗导弹库存消耗评估', '开源情报社区估算发射批次与补充产能，舆论关注度指数 83。', 'negative', 83, ['军事'], ts(2, 8), { lng: 51.4, lat: 35.7 }),
+  situation('sit-me-15', 'middleeast', '趋势', '区域民航改航成本', '中东空域关闭与绕飞导致欧亚航线燃油与时间成本上升约 12%。', 'negative', 72, ['经济'], ts(3, 8)),
+  situation('sit-me-16', 'middleeast', '趋势', '人道援助缺口', '加沙与黎巴嫩南部援助资金到位率低于紧急需求，指数 88。', 'negative', 88, ['社会', '灾害'], ts(0, 12), { lng: 34.5, lat: 31.5 }),
+  situation('sit-me-17', 'middleeast', '趋势', '阿拉伯国家舆论分裂', '海湾国家与黎叙埃立场差异扩大，社媒涉战话题情绪极化。', 'mixed', 68, ['政治', '社会'], ts(4, 9)),
+  situation('sit-me-18', 'middleeast', '趋势', '以色列国内抗议指数', '人质家属与反战集会频次上升，政府支持率民调波动加大。', 'mixed', 62, ['社会', '政治'], ts(5, 9), { lng: 34.8, lat: 32.1 }),
+  situation('sit-me-19', 'middleeast', '态势', '以伊战争外溢风险', '直接打击本土目标打破长期默契，黎巴嫩、叙利亚、伊拉克连带安全风险上升。', 'negative', 92, ['军事', '政治'], ts(0, 8), { lng: 35, lat: 33 }),
+  situation('sit-me-20', 'middleeast', '态势', '能源命脉与全球通胀', '霍尔木兹通行不确定性推高油价，亚洲炼厂与欧洲气价承压。', 'negative', 87, ['经济'], ts(1, 8), { lng: 56.3, lat: 26.5 }),
+  situation('sit-me-21', 'middleeast', '态势', '加沙停火谈判僵局', '人质交换、撤军顺序与战后治理方案分歧难解，人道危机持续。', 'negative', 90, ['政治', '社会'], ts(2, 8), { lng: 34.5, lat: 31.5 }),
+  situation('sit-me-22', 'middleeast', '态势', '美国中东政策两难', '支持以色列与避免地区全面战争之间平衡艰难，国内选举年放大舆论压力。', 'mixed', 75, ['政治', '军事'], ts(3, 8)),
+  situation('sit-me-23', 'middleeast', '态势', '核扩散阴影', '伊朗核设施遭袭后浓缩活动与 IAEA 核查权限争议加剧国际社会担忧。', 'negative', 85, ['军事', '政治'], ts(4, 8), { lng: 51.4, lat: 35.7 }),
+  situation('sit-me-24', 'middleeast', '社媒', '叙利亚政权稳定 · 制裁讨论', '分析账号讨论阿萨德倒台后权力真空与极端组织回流风险。', 'negative', 58, ['政治', '军事'], ts(7), { platform: 'X', engagement: 38000, lng: 36.3, lat: 33.5 }),
+  situation('sit-me-25', 'middleeast', '社媒', '卡塔尔世界杯遗产 · 足球外交', '体育媒体回顾世界杯后区域软实力投资与球迷文化变化。', 'positive', 35, ['文化'], ts(8), { platform: 'IG', engagement: 15000, lng: 51.5, lat: 25.3 }),
+  situation('sit-me-26', 'middleeast', '趋势', '红海商船袭击频次', '胡塞袭击与护航编队部署维持高位，保险与运费指数仍处警戒区。', 'negative', 76, ['军事', '经济'], ts(6, 9), { lng: 42, lat: 15 }),
+  situation('sit-me-27', 'middleeast', '社媒', '埃及苏伊士运河 · 收入担忧', '运河管理局官员表态通行正常，分析师仍担心中东战事外溢影响。', 'mixed', 64, ['经济'], ts(9), { platform: 'X', engagement: 41000, lng: 32.3, lat: 30.0 }),
+  situation('sit-me-28', 'middleeast', '态势', '难民与流离失所', '叙利亚、黎巴嫩、加沙流离人口规模庞大，邻国社会服务与就业市场承压。', 'negative', 78, ['社会', '灾害'], ts(5, 8)),
+  situation('sit-me-29', 'middleeast', '社媒', 'BBC 中东记者 · 现场报道', '战地记者发布德黑兰与特拉维夫市民避难画面，全球媒体转载。', 'negative', 82, ['社会', '军事'], ts(0, 18), { platform: 'X', engagement: 340000 }),
+  situation('sit-me-30', 'middleeast', '趋势', '开源情报 OSINT 热度', '卫星图像与航班追踪账号粉丝激增，信息真伪鉴别成为舆论焦点。', 'mixed', 60, ['社会', '军事'], ts(7, 9)),
+  situation('sit-me-31', 'middleeast', '态势', '海湾国家斡旋空间', '阿曼、卡塔尔等保持沟通渠道，但全面停火斡旋窗口收窄。', 'neutral', 55, ['政治'], ts(6, 8), { lng: 58.5, lat: 23.6 }),
+];

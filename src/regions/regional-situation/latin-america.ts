@@ -1,0 +1,36 @@
+import type { RegionalSituationItem } from '@/types/regional-situation';
+import { situation, ts } from './helpers';
+
+/** 拉美 · 区域态势 */
+export const LATIN_AMERICA_SITUATION: RegionalSituationItem[] = [
+  situation('sit-la-01', 'latin_america', '社媒', '墨西哥大选 · 治安承诺', 'X 上候选人就卡特尔暴力与军队角色辩论，#Seguridad 热搜。', 'negative', 78, ['政治', '社会'], ts(0), { platform: 'X', engagement: 312000, lng: -99.1, lat: 19.4 }),
+  situation('sit-la-02', 'latin_america', '社媒', '巴拿马运河 · 干旱限航', '航运社区讨论水位下降对全球集装箱运价的影响。', 'negative', 72, ['经济', '灾害'], ts(1), { platform: 'X', engagement: 89000, lng: -79.5, lat: 9.0 }),
+  situation('sit-la-03', 'latin_america', '社媒', '阿根廷米莱改革', '本地 Twitter 热议比索贬值、公共部门裁员与 IMF 谈判。', 'mixed', 68, ['经济', '政治'], ts(2), { platform: 'X', engagement: 245000, lng: -58.4, lat: -34.6 }),
+  situation('sit-la-04', 'latin_america', '社媒', '巴西亚马孙 · 毁林数据', '环保组织发布卫星图像对比，总统府回应执法行动加强。', 'negative', 65, ['灾害', '政治'], ts(3), { platform: 'IG', engagement: 156000, lng: -60, lat: -3 }),
+  situation('sit-la-05', 'latin_america', '社媒', '委内瑞拉大选争议', '反对派与官方选举结果叙事对立， diaspora 社区抗议集会视频传播。', 'negative', 80, ['政治'], ts(0, 11), { platform: 'X', engagement: 420000, lng: -66.9, lat: 10.5 }),
+  situation('sit-la-06', 'latin_america', '社媒', '智利锂矿国有化讨论', '矿业股票论坛解读宪法改革对外资锂项目影响。', 'mixed', 58, ['经济'], ts(4), { platform: 'X', engagement: 45000, lng: -70.7, lat: -33.4 }),
+  situation('sit-la-07', 'latin_america', '社媒', '哥伦比亚和平进程', '农村社区发布武装团体招募青少年警示，和平协议落实受质疑。', 'negative', 62, ['社会', '军事'], ts(5), { platform: 'FB', engagement: 34000, lng: -74.1, lat: 4.6 }),
+  situation('sit-la-08', 'latin_america', '社媒', '古巴电力危机', '居民拍摄长时间停电与燃油短缺排队画面，海外侨民广泛转发。', 'negative', 70, ['社会', '经济'], ts(1, 15), { platform: 'X', engagement: 198000, lng: -82.4, lat: 23.1 }),
+  situation('sit-la-09', 'latin_america', '社媒', '秘鲁抗议 · 采矿冲突', '安第斯社区抗议大型铜矿用水与污染，警方清场视频引发争议。', 'negative', 66, ['社会', '经济'], ts(6), { platform: 'X', engagement: 67000, lng: -77, lat: -12 }),
+  situation('sit-la-10', 'latin_america', '社媒', '乌拉圭绿氢项目', '政府宣传港口绿氢出口愿景，投资者讨论成本竞争力。', 'positive', 44, ['经济'], ts(7), { platform: 'X', engagement: 12000, lng: -56.2, lat: -34.9 }),
+  situation('sit-la-11', 'latin_america', '趋势', '拉美通胀回落轨迹', '巴西、墨西哥通胀趋近目标区间，阿根廷仍处高位，指数分化。', 'mixed', 52, ['经济'], ts(0, 7)),
+  situation('sit-la-12', 'latin_america', '趋势', '有组织犯罪暴力指数', '墨西哥、厄瓜多尔、海地凶杀率处区域高位，治安指数承压。', 'negative', 76, ['社会'], ts(1, 8), { lng: -99, lat: 19 }),
+  situation('sit-la-13', 'latin_america', '趋势', '对华贸易依存度', '智利、秘鲁、巴西对华矿产与农产品出口占比高，价格周期敏感。', 'mixed', 55, ['经济'], ts(2, 8)),
+  situation('sit-la-14', 'latin_america', '趋势', '移民北上压力', '美墨边境 apprehension 数据仍处高位，区域合作资金缺口扩大。', 'negative', 68, ['社会', '政治'], ts(3, 8), { lng: -106.5, lat: 31.8 }),
+  situation('sit-la-15', 'latin_america', '趋势', '厄尔尼诺农业冲击', '阿根廷大豆、巴西咖啡产量预期下调，粮价传导指数上升。', 'negative', 61, ['灾害', '经济'], ts(0, 12)),
+  situation('sit-la-16', 'latin_america', '趋势', '左翼政府周期', '墨西哥、巴西、哥伦比亚左翼执政，与美关系及能源政策调整并行。', 'mixed', 54, ['政治'], ts(4, 9)),
+  situation('sit-la-17', 'latin_america', '趋势', '外国直接投资流向', '近岸制造与新能源吸引部分资本，但法治与汇率风险仍抑制流入。', 'mixed', 48, ['经济'], ts(5, 9)),
+  situation('sit-la-18', 'latin_america', '趋势', '区域一体化停滞', '南方共同市场与太平洋联盟进展缓慢，双边协定更受青睐。', 'neutral', 42, ['政治', '经济'], ts(6, 9)),
+  situation('sit-la-19', 'latin_america', '态势', '资源诅咒与治理', '矿产油气收入支撑福利但也滋生腐败与环境冲突，社会抗议周期性爆发。', 'negative', 64, ['经济', '社会'], ts(0, 8)),
+  situation('sit-la-20', 'latin_america', '态势', '美国后院政策回归', '移民、毒品与对华影响力成为华盛顿对拉美政策主轴。', 'mixed', 60, ['政治'], ts(1, 8)),
+  situation('sit-la-21', 'latin_america', '态势', '巴拿马运河战略价值', '干旱与地缘竞争凸显运河不可替代性，收费与通行规则受全球关注。', 'mixed', 70, ['经济', '军事'], ts(2, 8), { lng: -79.5, lat: 9.0 }),
+  situation('sit-la-22', 'latin_america', '态势', '委内瑞拉危机外溢', '石油制裁、难民潮与边境犯罪外溢影响邻国稳定。', 'negative', 74, ['政治', '社会'], ts(3, 8), { lng: -66.9, lat: 10.5 }),
+  situation('sit-la-23', 'latin_america', '态势', '气候脆弱性', '加勒比飓风、安第斯冰川消融与亚马孙火灾构成复合灾害风险。', 'negative', 67, ['灾害'], ts(4, 8)),
+  situation('sit-la-24', 'latin_america', '社媒', '波多黎各停电', '岛屿电网老化问题再次引发联邦援助辩论。', 'negative', 56, ['社会', '灾害'], ts(8), { platform: 'X', engagement: 78000, lng: -66.1, lat: 18.4 }),
+  situation('sit-la-25', 'latin_america', '社媒', '萨尔瓦多比特币实验', '国际加密货币社区讨论法定货币采用两年成效与旅游宣传。', 'mixed', 50, ['经济'], ts(9), { platform: 'X', engagement: 45000, lng: -89.2, lat: 13.7 }),
+  situation('sit-la-26', 'latin_america', '趋势', '中国基建项目舆情', '铁路、港口项目劳工与环保争议在本地社媒周期性发酵。', 'mixed', 53, ['经济', '政治'], ts(7, 9)),
+  situation('sit-la-27', 'latin_america', '社媒', '玻利维亚锂矿政变传闻', '阴谋论与官方辟谣交织，投资者谨慎观望。', 'negative', 59, ['政治', '经济'], ts(10), { platform: 'X', engagement: 34000, lng: -68.1, lat: -16.5 }),
+  situation('sit-la-28', 'latin_america', '态势', '毒品供应链', '可卡因生产与海运路线经厄瓜多尔港口外溢，执法合作需求上升。', 'negative', 71, ['社会', '军事'], ts(5, 8), { lng: -79.9, lat: -2.2 }),
+  situation('sit-la-29', 'latin_america', '社媒', '危地马拉反腐败', '司法独立运动人士发布审判进展，国际观察员关注。', 'mixed', 47, ['政治', '社会'], ts(11), { platform: 'FB', engagement: 18000, lng: -90.5, lat: 14.6 }),
+  situation('sit-la-30', 'latin_america', '趋势', '旅游业复苏', '加勒比与墨西哥度假胜地预订量回升，但治安担忧抑制部分市场。', 'positive', 46, ['经济', '文化'], ts(8, 9)),
+];

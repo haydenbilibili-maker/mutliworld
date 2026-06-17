@@ -25,6 +25,20 @@ export function layersEqual(a: LayerId[], b: LayerId[]): boolean {
   return true;
 }
 
+/** moveend 回写 store 后为 true，供 MapContainer 跳过 flyTo 反馈环 */
+let viewportSyncFromMap = false;
+
+export function markViewportSyncFromMap(): void {
+  viewportSyncFromMap = true;
+}
+
+/** 若为 map→store 同步则消费标记并返回 true */
+export function consumeViewportSyncFromMap(): boolean {
+  if (!viewportSyncFromMap) return false;
+  viewportSyncFromMap = false;
+  return true;
+}
+
 /** CosmicGlobeAnimator 程序化 setBearing 期间为 true，避免 moveend 回写 store */
 let programmaticBearing = false;
 

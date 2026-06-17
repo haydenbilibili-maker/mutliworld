@@ -1,0 +1,36 @@
+import type { RegionalSituationItem } from '@/types/regional-situation';
+import { situation, ts } from './helpers';
+
+/** 东南亚 · 区域态势 */
+export const SOUTHEAST_ASIA_SITUATION: RegionalSituationItem[] = [
+  situation('sit-sea-01', 'southeast_asia', '社媒', '马六甲海峡 · 海盗预警', '航运 Telegram 频道转发国际海事局海盗事件周报，讨论武装护航。', 'negative', 74, ['军事', '经济'], ts(0), { platform: 'Telegram', engagement: 12000, lng: 100.3, lat: 2.2 }),
+  situation('sit-sea-02', 'southeast_asia', '社媒', '南海仁爱礁 · 菲方叙事', '菲律宾网民发布海岸警卫队补给画面，中文社媒呈现不同法律立场。', 'negative', 82, ['军事', '政治'], ts(0, 10), { platform: 'X', engagement: 234000, lng: 115.9, lat: 9.7 }),
+  situation('sit-sea-03', 'southeast_asia', '社媒', '缅甸内战 · 民地武攻势', '流亡媒体直播掸邦战斗画面，泰国边境难民安置引发讨论。', 'negative', 76, ['军事', '社会'], ts(1), { platform: 'X', engagement: 89000, lng: 96.2, lat: 19.8 }),
+  situation('sit-sea-04', 'southeast_asia', '社媒', '印尼新首都建设', '雅加达网民对比努山塔拉建设进度与雅加达下沉风险。', 'mixed', 55, ['政治', '经济'], ts(2), { platform: 'X', engagement: 145000, lng: 116.7, lat: -0.9 }),
+  situation('sit-sea-05', 'southeast_asia', '社媒', '越南制造业外资', '工业园招聘广告在 TikTok 热传，讨论苹果供应链转移。', 'positive', 58, ['经济'], ts(3), { platform: 'TikTok', engagement: 320000, lng: 106.7, lat: 10.8 }),
+  situation('sit-sea-06', 'southeast_asia', '社媒', '泰国王室 · 社会敏感', '当地法律下讨论受限，海外泰侨社区偶发政治话题。', 'mixed', 48, ['政治', '社会'], ts(4), { platform: 'X', engagement: 45000, lng: 100.5, lat: 13.8 }),
+  situation('sit-sea-07', 'southeast_asia', '社媒', '新加坡房租上涨', 'Reddit r/singapore 热议外籍人才政策与组屋价格。', 'negative', 52, ['社会', '经济'], ts(5), { platform: 'Reddit', engagement: 67000, lng: 103.8, lat: 1.35 }),
+  situation('sit-sea-08', 'southeast_asia', '社媒', '马来西亚东铁项目', '本地华文媒体讨论工程进度、债务与地缘解读。', 'mixed', 54, ['经济', '政治'], ts(6), { platform: 'FB', engagement: 34000, lng: 101.7, lat: 3.1 }),
+  situation('sit-sea-09', 'southeast_asia', '社媒', '柬埔寨西港电诈园区', '中柬联合打击成果通报在中文社媒获高关注。', 'positive', 63, ['社会', '军事'], ts(1, 14), { platform: '微博', engagement: 198000, lng: 103.5, lat: 10.6 }),
+  situation('sit-sea-10', 'southeast_asia', '社媒', '菲律宾台风登陆', '气象博主直播台风路径，马尼拉停课通知快速传播。', 'negative', 68, ['灾害'], ts(0, 15), { platform: 'X', engagement: 112000, lng: 121, lat: 14.6 }),
+  situation('sit-sea-11', 'southeast_asia', '趋势', '东盟对华贸易依存', '中国连续为多数东盟国家最大贸易伙伴，供应链指数高位。', 'positive', 56, ['经济'], ts(0, 7)),
+  situation('sit-sea-12', 'southeast_asia', '趋势', '南海摩擦热度', '中菲、中越海上执法接触舆情指数周环比上升。', 'negative', 79, ['军事'], ts(1, 8), { lng: 114, lat: 12 }),
+  situation('sit-sea-13', 'southeast_asia', '趋势', '缅甸人道危机指数', '境内流离失所人口规模扩大，跨境援助通道受限。', 'negative', 72, ['社会', '灾害'], ts(2, 8), { lng: 96, lat: 20 }),
+  situation('sit-sea-14', 'southeast_asia', '趋势', '区域防务合作', '美菲加强基地准入、越澳防务对话频次增加，指数上升。', 'negative', 65, ['军事', '政治'], ts(3, 8)),
+  situation('sit-sea-15', 'southeast_asia', '趋势', '镍矿出口政策', '印尼出口禁令与下游冶炼投资重塑全球电池供应链。', 'mixed', 60, ['经济'], ts(4, 9), { lng: 106.8, lat: -6.2 }),
+  situation('sit-sea-16', 'southeast_asia', '趋势', '旅游业复苏', '泰马新国际游客恢复至疫情前约 85%，中国客源回升明显。', 'positive', 50, ['经济', '文化'], ts(5, 9)),
+  situation('sit-sea-17', 'southeast_asia', '趋势', '极端天气损失', '台风季预报偏强，农业与保险业损失预期指数上调。', 'negative', 64, ['灾害'], ts(0, 11)),
+  situation('sit-sea-18', 'southeast_asia', '趋势', '数字经济增长', '电商、金融科技与数据中心投资指数保持两位数增速。', 'positive', 53, ['经济'], ts(6, 9)),
+  situation('sit-sea-19', 'southeast_asia', '态势', '南海争端多边化', '菲律宾寻求国际仲裁与联合巡逻，东盟内部立场分裂。', 'negative', 77, ['军事', '政治'], ts(0, 8), { lng: 114, lat: 12 }),
+  situation('sit-sea-20', 'southeast_asia', '态势', '缅甸局势僵持', '军政府控制城市、民地武控制边境，和平谈判无实质进展。', 'negative', 74, ['军事', '社会'], ts(1, 8), { lng: 96, lat: 20 }),
+  situation('sit-sea-21', 'southeast_asia', '态势', '马六甲咽喉安全', '海盗、走私与大国海军存在叠加，航道韧性受全球供应链关注。', 'mixed', 71, ['经济', '军事'], ts(2, 8), { lng: 100.3, lat: 2.2 }),
+  situation('sit-sea-22', 'southeast_asia', '态势', '中美东盟博弈', '东盟强调中心性，但安全与经济选择面临压力。', 'mixed', 66, ['政治'], ts(3, 8)),
+  situation('sit-sea-23', 'southeast_asia', '态势', '产业链转移红利', '越南、印尼、泰国承接制造转移，但基础设施与人才瓶颈显现。', 'positive', 57, ['经济'], ts(4, 8)),
+  situation('sit-sea-24', 'southeast_asia', '社媒', '老挝湄公河大坝', '下游国家渔民组织抗议水位变化影响渔业。', 'negative', 51, ['灾害', '经济'], ts(7), { platform: 'FB', engagement: 22000, lng: 102.6, lat: 17.9 }),
+  situation('sit-sea-25', 'southeast_asia', '社媒', '文莱苏丹国庆', '官方庆典视频展示伊斯兰君主制文化软实力。', 'positive', 28, ['文化'], ts(8), { platform: 'IG', engagement: 8000, lng: 114.9, lat: 4.9 }),
+  situation('sit-sea-26', 'southeast_asia', '趋势', '跨境雾霾指数', '印尼烧芭与区域空气质量关联，新加坡马来西亚投诉频次上升。', 'negative', 58, ['灾害', '社会'], ts(7, 9), { lng: 106.8, lat: -6.2 }),
+  situation('sit-sea-27', 'southeast_asia', '社媒', '东帝汶加入东盟', '当地青年庆祝正式成员身份，讨论发展与安全合作。', 'positive', 42, ['政治'], ts(9), { platform: 'FB', engagement: 15000, lng: 125.6, lat: -8.6 }),
+  situation('sit-sea-28', 'southeast_asia', '态势', '电诈与跨国犯罪', '湄公河流域联合执法持续，园区转移与数字货币洗钱新趋势。', 'negative', 69, ['社会'], ts(5, 8), { lng: 100.5, lat: 13.8 }),
+  situation('sit-sea-29', 'southeast_asia', '社媒', 'RCEP 原产地规则', '出口企业微信群讨论合规成本与关税优惠申报。', 'neutral', 40, ['经济'], ts(10), { platform: '微信', engagement: 25000 }),
+  situation('sit-sea-30', 'southeast_asia', '趋势', '美军南海自由航行', '舰机过航报道周期性与中方海空跟监同时出现，舆论对抗性强。', 'negative', 75, ['军事'], ts(8, 9), { lng: 112, lat: 16 }),
+];

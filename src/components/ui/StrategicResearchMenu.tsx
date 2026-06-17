@@ -76,6 +76,7 @@ export function StrategicResearchMenu({
         aria-haspopup="listbox"
         aria-pressed={researchOpen}
         aria-label="战略研究"
+        title="打开战略研究专题面板"
         className={[
           'flex items-center gap-1.5 rounded px-2 py-1 text-xs transition-colors sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm',
           embedded

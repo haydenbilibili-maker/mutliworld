@@ -11,6 +11,7 @@ import { usePanelStore } from '@/store/usePanelStore';
 import type { PanelId } from '@/store/usePanelStore';
 import { listTiers } from '@/tiers';
 import { CosmicMotionControls } from '@/components/ui/CosmicMotionControls';
+import { BasemapModeSwitcher } from '@/components/ui/BasemapModeSwitcher';
 
 interface TierSwitcherProps {
   className?: string;
@@ -57,7 +58,7 @@ export function TierSwitcher({ className = '' }: TierSwitcherProps) {
             type="button"
             onClick={() => setTier(t.id)}
             aria-pressed={active}
-            title={`${t.name} · ${t.tagline}`}
+            title={`${t.name}：${t.tagline}${t.id === 'surface' ? ' · 冲突/军事/经济/实时图层' : t.id === 'subsurface' ? ' · 海缆/洋底管线/震源' : ' · 卫星/发射/在轨物体 · 自动 3D 球面'}`}
             className={[
               'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-xs transition-colors',
               active
@@ -81,6 +82,7 @@ export function TierSwitcher({ className = '' }: TierSwitcherProps) {
       })}
 
       <div className="mt-0.5 border-t border-dashboard-neutral/15 pt-1">
+        <BasemapModeSwitcher className="mb-1" />
         {tierBriefingId && (
           <button
             type="button"

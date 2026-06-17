@@ -14,7 +14,15 @@ export type SpatialTier = 'space' | 'surface' | 'subsurface';
 export type TierRenderMode = 'flat' | 'orbit' | 'depth';
 
 /** 底图预设（MapContainer / BasemapController 按层切换） */
-export type BasemapPreset = 'geographic' | 'graticule' | 'starfield' | 'seabed';
+export type BasemapPreset =
+  | 'geographic' // 洋底：OpenFreeMap Fiord + DEM 地形
+  | 'imagery' // 地表/宇宙：卫星·政区·混合（由 BasemapMode 决定）
+  | 'graticule'
+  | 'starfield'
+  | 'seabed';
+
+/** 地表/宇宙层底图显示模式 */
+export type BasemapMode = 'satellite' | 'political' | 'hybrid';
 
 export interface TierModule {
   id: SpatialTier;

@@ -5,7 +5,22 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
 import { useGeodataContext } from '@/context/GeodataContext';
 import { getLegendGroups, IMPACT_LEGEND } from '@/lib/geodata/markerStyle';
+import { QUAKE_DEPTH_HALO, QUAKE_MAG_HALO } from '@/lib/geodata/seismicStyle';
+import { GLOBAL_CONFLICT_ZONES } from '@/regions/global.conflict-zones';
 import type { LayerId } from '@/types/geo';
+
+/** 非 geodata API 供给、由独立图层渲染的实时层 */
+const LIVE_OVERLAY_LAYERS = new Set<LayerId>([
+  'live_weather',
+  'live_flights',
+  'live_maritime',
+  'conflict_zones',
+  'pizza_index',
+]);
+
+const LIVE_LAYER_FALLBACK_COUNT: Partial<Record<LayerId, number>> = {
+  conflict_zones: GLOBAL_CONFLICT_ZONES.length,
+};
 
 interface MapLegendProps {
   className?: string;
@@ -23,6 +38,20 @@ function zoomForSpan(span: number): number {
   return 7;
 }
 
+function legendEntryColor(imageId: string): string | undefined {
+  if (imageId.startsWith('quake-mag-')) {
+    const band = imageId.replace('quake-mag-', 'mag-') as keyof typeof QUAKE_MAG_HALO;
+    return QUAKE_MAG_HALO[band];
+  }
+  if (imageId === 'quake-shallow') return QUAKE_DEPTH_HALO.shallow;
+  if (imageId === 'quake-intermediate') return QUAKE_DEPTH_HALO.intermediate;
+  if (imageId === 'quake-deep') return QUAKE_DEPTH_HALO.deep;
+  if (imageId === 'hydrocarbon-mega') return '#3d2914';
+  if (imageId === 'hydrocarbon-large') return '#b8860b';
+  if (imageId === 'hydrocarbon-medium') return '#6b5a2a';
+  return undefined;
+}
+
 export function MapLegend({ className = '' }: MapLegendProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -35,6 +64,8 @@ export function MapLegend({ className = '' }: MapLegendProps) {
 
   const groups = useMemo(() => getLegendGroups(activeLayers), [activeLayers]);
   const entryCount = groups.reduce((n, g) => n + g.entries.length, 0);
+  const showSeismicHydrocarbonNote =
+    activeLayers.includes('natural') && activeLayers.includes('hydrocarbon_reserves');
 
   /** 各图层当前要素数（来自实时 geodata） */
   const counts = useMemo(() => {
@@ -136,7 +167,10 @@ export function MapLegend({ className = '' }: MapLegendProps) {
 
             <div className="space-y-2.5">
               {groups.map((group) => {
-                const n = counts.get(group.layerId) ?? 0;
+                const geoCount = counts.get(group.layerId) ?? 0;
+                const fallback = LIVE_LAYER_FALLBACK_COUNT[group.layerId];
+                const n = geoCount > 0 ? geoCount : (fallback ?? 0);
+                const isLiveOverlay = LIVE_OVERLAY_LAYERS.has(group.layerId);
                 return (
                   <section key={group.layerId}>
                     <div className="mb-1 flex items-center gap-1.5">
@@ -148,10 +182,16 @@ export function MapLegend({ className = '' }: MapLegendProps) {
                         type="button"
                         onClick={() => focusLayer(group.layerId)}
                         disabled={n === 0}
-                        title={n > 0 ? '缩放至该图层范围' : '当前无要素'}
+                        title={
+                          n > 0
+                            ? '缩放至该图层范围'
+                            : isLiveOverlay
+                              ? '实时数据源图层'
+                              : '当前无要素'
+                        }
                         className={[
                           'flex min-w-0 items-center gap-1.5 rounded px-1 py-0.5 text-xs font-medium transition-colors',
-                          n > 0
+                          n > 0 || isLiveOverlay
                             ? 'text-dashboard-neutral hover:bg-white/5 hover:text-white'
                             : 'text-dashboard-neutral/40',
                         ].join(' ')}
@@ -160,6 +200,11 @@ export function MapLegend({ className = '' }: MapLegendProps) {
                         {n > 0 && (
                           <span className="shrink-0 rounded-full bg-dashboard-neutral/15 px-1.5 text-[10px] tabular-nums text-dashboard-neutral/80">
                             {n}
+                          </span>
+                        )}
+                        {n === 0 && isLiveOverlay && (
+                          <span className="shrink-0 rounded-full bg-cyan-500/15 px-1.5 text-[10px] text-cyan-200/80">
+                            实时
                           </span>
                         )}
                       </button>
@@ -173,24 +218,55 @@ export function MapLegend({ className = '' }: MapLegendProps) {
                         ✕
                       </button>
                     </div>
+                    {group.hint && (
+                      <p
+                        className="mb-1 pl-3.5 text-[10px] leading-snug text-amber-200/55"
+                        title={group.hint}
+                      >
+                        {group.hint}
+                      </p>
+                    )}
                     <div className="grid grid-cols-2 gap-1 pl-3.5">
-                      {group.entries.map((entry) => (
-                        <div
-                          key={entry.imageId}
-                          className="flex items-center gap-1.5 rounded px-1 py-0.5 text-xs text-dashboard-neutral"
-                        >
-                          <span className="text-base leading-none" aria-hidden>
-                            {entry.emoji}
-                          </span>
-                          <span className="truncate">{entry.label}</span>
-                        </div>
-                      ))}
+                      {group.entries.map((entry) => {
+                        const swatch = legendEntryColor(entry.imageId);
+                        return (
+                          <div
+                            key={entry.imageId}
+                            className="flex items-center gap-1.5 rounded px-1 py-0.5 text-xs text-dashboard-neutral"
+                            title={
+                              entry.imageId.startsWith('quake-')
+                                ? '地震波图例 · 非油气储藏'
+                                : entry.imageId.startsWith('hydrocarbon-')
+                                  ? '油气储量波图例 · 非地震'
+                                  : undefined
+                            }
+                          >
+                            {swatch ? (
+                              <span
+                                className="h-2.5 w-2.5 shrink-0 rounded-full opacity-80"
+                                style={{ backgroundColor: swatch }}
+                                aria-hidden
+                              />
+                            ) : (
+                              <span className="text-base leading-none" aria-hidden>
+                                {entry.emoji}
+                              </span>
+                            )}
+                            <span className="truncate">{entry.label}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </section>
                 );
               })}
 
               <section className="border-t border-dashboard-neutral/15 pt-2">
+                {showSeismicHydrocarbonNote && (
+                  <p className="mb-2 text-[10px] leading-snug text-dashboard-neutral/55">
+                    橙红/琥珀圆环 = 地震波（USGS）· 棕黑/暗金圆环 = 油气储藏（≠ 地震）
+                  </p>
+                )}
                 <div className="mb-1 text-xs font-medium text-dashboard-neutral">
                   影响光晕
                 </div>

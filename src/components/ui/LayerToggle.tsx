@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
-import { LAYER_LABELS } from '@/lib/constants';
+import { LAYER_HINTS, LAYER_LABELS } from '@/lib/constants';
 import { getRegion } from '@/regions';
 import type { LayerId } from '@/types/geo';
 
@@ -18,15 +18,15 @@ interface LayerToggleProps {
 const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   {
     title: '冲突与安全',
-    ids: ['conflicts', 'conflict_zones', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions'],
+    ids: ['conflicts', 'conflict_zones', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions', 'persons'],
   },
   {
     title: '基础设施与通道',
-    ids: ['aviation', 'live_flights', 'maritime', 'cables', 'pipelines', 'waterways', 'outages'],
+    ids: ['aviation', 'live_flights', 'live_maritime', 'maritime', 'cables', 'pipelines', 'waterways', 'outages'],
   },
   {
     title: '经济与自然',
-    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'natural', 'weather', 'live_weather', 'climate'],
+    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'hydrocarbon_reserves', 'natural', 'weather', 'live_weather', 'climate'],
   },
   {
     title: '社会与时空',
@@ -67,6 +67,7 @@ const ALWAYS_ON: LayerId[] = [
   'conflict_zones',
   'aviation',
   'live_flights',
+  'live_maritime',
   'maritime',
   'cables',
   'econ_hubs',
@@ -91,6 +92,7 @@ const ALWAYS_ON: LayerId[] = [
   'monsoon',
   'atmospheric_circulation',
   'deep_exploration',
+  'hydrocarbon_reserves',
   'ground_stations',
   'sat_constellations',
   'space_stations',
@@ -162,6 +164,7 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label="地图图层"
+        title="开关地图数据图层"
         className={[
           'flex items-center gap-1.5 rounded px-2 py-1 text-xs transition-colors sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm',
           embedded
@@ -258,6 +261,7 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
                           key={id}
                           type="button"
                           aria-pressed={active}
+                          title={LAYER_HINTS[id] ?? LAYER_LABELS[id]}
                           onClick={() => toggleLayer(id)}
                           className={[
                             'rounded-md border px-2.5 py-1 text-xs transition-colors',

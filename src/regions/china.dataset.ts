@@ -13,12 +13,13 @@ import {
   CHINA_DISPUTE_INCIDENTS,
   CHINA_DISPUTE_FACILITIES,
 } from './china-focus/disputes';
-import { CHINA_FACTIONS, CHINA_MILITARY, CHINA_DIPLOMACY } from './china-focus/meta';
+import { getPersonsForRegion } from './persons';
 import {
   CHINA_DENSIFY_EVENTS,
   CHINA_DENSIFY_INCIDENTS,
   CHINA_DENSIFY_FACILITIES,
 } from './china-focus/densify-r2';
+import { CHINA_FACTIONS, CHINA_MILITARY, CHINA_DIPLOMACY } from './china-focus/meta';
 
 /**
  * 中国区域数据集 — 聚合南海/台海/第一岛链/中日/朝鲜半岛/岛礁争端六大模块
@@ -54,4 +55,5 @@ export const chinaDataset: RegionDataset = {
   factions: CHINA_FACTIONS,
   military: CHINA_MILITARY,
   diplomacy: CHINA_DIPLOMACY,
+  persons: getPersonsForRegion('china'),
 };

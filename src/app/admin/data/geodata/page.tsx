@@ -22,6 +22,11 @@ export default function AdminGeodataPage() {
       <AdminPageHeader
         title="Geodata 缓存状态"
         description="查看各区域种子数据要素统计，以及 npm run data:fetch 写入的静态缓存文件状态。"
+        breadcrumbs={[
+          { label: '管理后台', href: '/admin' },
+          { label: '数据管理' },
+          { label: 'Geodata 缓存' },
+        ]}
       />
 
       <section className="mb-8">

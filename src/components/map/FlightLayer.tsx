@@ -10,13 +10,36 @@ import maplibregl from 'maplibre-gl';
 import type { FeatureCollection } from 'geojson';
 import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
-import { findOverlayBeforeId } from '@/lib/map/basemap';
+import { findLiveOverlayBeforeId } from '@/lib/map/basemap';
 import { useLiveFlights } from '@/hooks/useLiveFlights';
 import type { EventDetail } from '@/types/geo';
 
 const SOURCE = 'live-flights';
+const HALO_LAYER = 'live-flights-halo';
 const LAYER = 'live-flights-symbols';
 const PLANE_ICON = 'flight-plane';
+const PLANE_SPRITE_SIZE = 64;
+
+/** 各 zoom 下的 icon-size（与 64px sprite 配合，全球视图也清晰可见） */
+const PLANE_ICON_SIZE: maplibregl.ExpressionSpecification = [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  2,
+  0.9,
+  4,
+  1.05,
+  6,
+  1.2,
+  8,
+  1.35,
+  10,
+  1.5,
+  12,
+  1.65,
+  14,
+  1.8,
+];
 
 const POPUP_BG = '#0A0E17';
 
@@ -65,25 +88,36 @@ function popupHtml(p: FlightProps): string {
 
 function registerPlaneIcon(map: maplibregl.Map) {
   if (map.hasImage(PLANE_ICON)) return;
-  const size = 32;
+  const size = PLANE_SPRITE_SIZE;
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
+  const cx = size / 2;
+  const cy = size / 2;
+
   ctx.clearRect(0, 0, size, size);
-  ctx.fillStyle = '#38bdf8';
-  ctx.strokeStyle = '#0A0E17';
-  ctx.lineWidth = 1.5;
+
+  // 暗色底衬
   ctx.beginPath();
-  ctx.moveTo(size / 2, 3);
-  ctx.lineTo(size - 5, size - 5);
-  ctx.lineTo(size / 2, size - 9);
-  ctx.lineTo(5, size - 5);
-  ctx.closePath();
+  ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(10, 14, 23, 0.6)';
   ctx.fill();
-  ctx.stroke();
+
+  // 外圈光晕
+  ctx.beginPath();
+  ctx.arc(cx, cy, 28, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(14, 165, 233, 0.4)';
+  ctx.fill();
+
+  // ✈️ 主体（随航向旋转）
+  ctx.font =
+    '40px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('✈️', cx, cy + 1);
 
   const imageData = ctx.getImageData(0, 0, size, size);
   map.addImage(PLANE_ICON, imageData, { pixelRatio: 2 });
@@ -128,6 +162,40 @@ export function FlightLayer() {
             data: { type: 'FeatureCollection', features: [] },
           });
         }
+        if (!map.getLayer(HALO_LAYER)) {
+          map.addLayer(
+            {
+              id: HALO_LAYER,
+              type: 'circle',
+              source: SOURCE,
+              layout: {
+                visibility: 'none',
+              },
+              paint: {
+                'circle-radius': [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  2,
+                  5,
+                  5,
+                  7,
+                  8,
+                  9,
+                  12,
+                  11,
+                ],
+                'circle-color': '#0ea5e9',
+                'circle-opacity': 0.42,
+                'circle-blur': 0.35,
+                'circle-stroke-width': 1,
+                'circle-stroke-color': '#e0f2fe',
+                'circle-stroke-opacity': 0.65,
+              },
+            },
+            findLiveOverlayBeforeId(map),
+          );
+        }
         if (!map.getLayer(LAYER)) {
           map.addLayer(
             {
@@ -137,29 +205,17 @@ export function FlightLayer() {
               layout: {
                 visibility: 'none',
                 'icon-image': PLANE_ICON,
-                'icon-size': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
-                  2,
-                  0.35,
-                  5,
-                  0.5,
-                  8,
-                  0.65,
-                  12,
-                  0.85,
-                ],
+                'icon-size': PLANE_ICON_SIZE,
                 'icon-rotate': ['get', 'heading'],
                 'icon-rotation-alignment': 'map',
                 'icon-allow-overlap': true,
                 'icon-ignore-placement': true,
               },
               paint: {
-                'icon-opacity': 0.92,
+                'icon-opacity': 0.98,
               },
             },
-            findOverlayBeforeId(map),
+            findLiveOverlayBeforeId(map),
           );
         }
       } catch {
@@ -175,6 +231,7 @@ export function FlightLayer() {
       popupRef.current?.remove();
       try {
         if (map.getLayer(LAYER)) map.removeLayer(LAYER);
+        if (map.getLayer(HALO_LAYER)) map.removeLayer(HALO_LAYER);
         if (map.getSource(SOURCE)) map.removeSource(SOURCE);
         if (map.hasImage(PLANE_ICON)) map.removeImage(PLANE_ICON);
       } catch {
@@ -183,6 +240,10 @@ export function FlightLayer() {
     };
   }, [map, styleEpoch]);
 
+  useEffect(() => {
+    lastDataKeyRef.current = '';
+  }, [styleEpoch]);
+
   // 更新数据与显隐
   useEffect(() => {
     if (!map) return;
@@ -190,13 +251,15 @@ export function FlightLayer() {
     const apply = () => {
       try {
         const src = map.getSource(SOURCE) as maplibregl.GeoJSONSource | undefined;
-        if (src && dataKey !== lastDataKeyRef.current) {
+        const hasLayers = Boolean(map.getLayer(LAYER) && map.getLayer(HALO_LAYER));
+        if (!src || !hasLayers) return;
+
+        if (dataKey !== lastDataKeyRef.current) {
           src.setData(geojson as FeatureCollection);
           lastDataKeyRef.current = dataKey;
         }
-        if (map.getLayer(LAYER)) {
-          map.setLayoutProperty(LAYER, 'visibility', enabled ? 'visible' : 'none');
-        }
+        map.setLayoutProperty(LAYER, 'visibility', enabled ? 'visible' : 'none');
+        map.setLayoutProperty(HALO_LAYER, 'visibility', enabled ? 'visible' : 'none');
       } catch {
         /* */
       }

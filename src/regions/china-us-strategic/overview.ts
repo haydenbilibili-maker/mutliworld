@@ -6,7 +6,7 @@ export const OVERVIEW_MODULE: StrategicModule = {
   summary:
     '中美战略竞争已进入长期结构性对峙阶段，涵盖安全、经济、科技与意识形态多维度，双方均在寻求避免热战的同时最大化自身战略利益。',
   mapView: { center: [160, 25], zoom: 2.2 },
-  relatedLayerIds: ['conflicts', 'garrisons', 'economic'],
+  relatedLayerIds: ['conflicts', 'garrisons', 'economic', 'conflict_zones'],
   sections: [
     {
       heading: '竞争框架与战略定位',

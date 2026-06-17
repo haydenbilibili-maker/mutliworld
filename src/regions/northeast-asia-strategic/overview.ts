@@ -6,7 +6,7 @@ export const OVERVIEW_MODULE: NortheastAsiaModule = {
   summary:
     '东北亚是全球大国利益最密集、军事部署最集中、历史恩怨最复杂的区域之一。中美战略博弈在此通过驻日驻韩美军、半岛核问题与日俄争端等多条轴线交织展开。',
   mapView: { center: [130, 42], zoom: 4.2 },
-  relatedLayerIds: ['garrisons', 'bases', 'conflicts', 'nuclear', 'military'],
+  relatedLayerIds: ['garrisons', 'bases', 'conflicts', 'conflict_zones', 'nuclear', 'military'],
   sections: [
     {
       heading: '东北亚的战略权重',

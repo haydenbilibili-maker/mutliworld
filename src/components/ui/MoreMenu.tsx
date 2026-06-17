@@ -96,6 +96,7 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
         aria-haspopup="menu"
         aria-pressed={hasActiveItem}
         aria-label="更多功能"
+        title="发射日志、轨道列表、披萨指数等"
         className={[
           'flex items-center gap-1 rounded px-2 py-1 text-xs transition-colors sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-sm',
           embedded
@@ -146,7 +147,7 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
             ].join(' ')}
           >
             <div className="border-b border-dashboard-neutral/15 px-3 py-2 text-[10px] uppercase tracking-wide text-dashboard-neutral/55">
-              更多
+              扩展功能
             </div>
             <ul className="py-1">
               <li>
@@ -154,6 +155,7 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
                   type="button"
                   role="menuitemcheckbox"
                   aria-checked={launchLogOpen}
+                  title="查看近一年全球航天发射记录"
                   onClick={handleLaunchLogToggle}
                   className={[
                     'flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] transition-colors',
@@ -201,6 +203,7 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
                   type="button"
                   role="menuitemcheckbox"
                   aria-checked={orbitalOpen}
+                  title="宇宙层在轨物体实时列表"
                   onClick={handleOrbitalToggle}
                   className={[
                     'flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] transition-colors',
@@ -249,6 +252,7 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
                     type="button"
                     role="menuitemcheckbox"
                     aria-checked={pizzaOpen}
+                    title="五角大楼披萨指数 OSINT 面板"
                     onClick={handlePizzaToggle}
                     className={[
                       'flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] transition-colors',

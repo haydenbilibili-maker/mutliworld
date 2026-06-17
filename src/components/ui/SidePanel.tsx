@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
 import { LAYER_LABELS } from '@/lib/constants';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
+import { NEWS_CATEGORY_COLORS } from '@/data/news-feed';
 import type { LayerId } from '@/types/geo';
 
 interface SidePanelProps {
@@ -38,11 +39,23 @@ export function SidePanel({ className = '' }: SidePanelProps) {
   const impactLabel = selectedEvent
     ? IMPACT_LABELS[selectedEvent.impact_level] ?? selectedEvent.impact_level
     : '';
-  const categoryLabel = selectedEvent?.category
-    ? LAYER_LABELS[(selectedEvent.category as LayerId) ?? 'conflicts']
-    : '';
-  const locationText = selectedEvent
-    ? `经度：${selectedEvent.location[0].toFixed(4)}，纬度：${selectedEvent.location[1].toFixed(4)}`
+  const newsCategory =
+    selectedEvent?.category?.startsWith('news:')
+      ? selectedEvent.category.slice(5)
+      : null;
+  const categoryLabel = newsCategory
+    ? newsCategory
+    : selectedEvent?.category
+      ? LAYER_LABELS[(selectedEvent.category as LayerId) ?? 'conflicts']
+      : '';
+  const categoryColor = newsCategory
+    ? NEWS_CATEGORY_COLORS[newsCategory as keyof typeof NEWS_CATEGORY_COLORS]
+    : undefined;
+  const hasLocation =
+    selectedEvent &&
+    (selectedEvent.location[0] !== 0 || selectedEvent.location[1] !== 0);
+  const locationText = hasLocation
+    ? `经度：${selectedEvent!.location[0].toFixed(4)}，纬度：${selectedEvent!.location[1].toFixed(4)}`
     : '';
 
   return (
@@ -74,15 +87,41 @@ export function SidePanel({ className = '' }: SidePanelProps) {
                   影响：{impactLabel}
                 </p>
                 {categoryLabel && (
-                  <p className="text-sm text-dashboard-neutral">
-                    类别：{categoryLabel}
+                  <p className="text-sm text-dashboard-neutral flex items-center gap-1.5">
+                    类别：
+                    {categoryColor ? (
+                      <span
+                        className="inline-block rounded px-1.5 py-0.5 text-xs font-medium"
+                        style={{
+                          color: categoryColor,
+                          backgroundColor: `${categoryColor}22`,
+                          border: `1px solid ${categoryColor}44`,
+                        }}
+                      >
+                        {categoryLabel}
+                      </span>
+                    ) : (
+                      categoryLabel
+                    )}
                   </p>
                 )}
-                {selectedEvent && locationText && (
+                {locationText && (
                   <p className="text-sm text-dashboard-neutral">{locationText}</p>
                 )}
                 {selectedEvent.description && (
-                  <p className="text-sm">{selectedEvent.description}</p>
+                  <p className="text-sm text-dashboard-neutral/90 leading-relaxed">
+                    {selectedEvent.description}
+                  </p>
+                )}
+                {selectedEvent.url && (
+                  <a
+                    href={selectedEvent.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 transition-colors mt-2"
+                  >
+                    阅读原文 →
+                  </a>
                 )}
               </div>
             ) : (

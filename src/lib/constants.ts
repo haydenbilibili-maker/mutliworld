@@ -27,12 +27,14 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   outages: '基础设施',
   aviation: '航空枢纽',
   live_flights: '实时航班',
+  live_maritime: '海运实时',
   maritime: '海运要道',
   cables: '海底光缆',
   econ_hubs: '全球经济中心',
   minerals: '关键矿产',
   daynight: '昼夜分界线',
   pipelines: '油气管线',
+  hydrocarbon_reserves: '油气储藏',
   datacenters: 'AI 数据中心',
   protests: '抗议活动',
   climate: '气候异常',
@@ -57,7 +59,26 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   atmospheric_circulation: '大气环流',
   deep_exploration: '深海探索',
   pizza_index: '披萨指数',
+  persons: '人物',
 };
 
 /** 默认开启的图层（MVP） */
 export const DEFAULT_LAYERS: LayerId[] = ['conflicts', 'economic', 'weather'];
+
+/** 图层开关悬停说明（区分易混淆项） */
+export const LAYER_HINTS: Partial<Record<LayerId, string>> = {
+  conflicts: '冲突事件点标记（种子 + 缓存）',
+  conflict_zones: '全球冲突区多边形填充（俄乌、中东、台海等）',
+  aviation: '机场与航线枢纽（静态种子数据）',
+  live_flights: 'OpenSky ADS-B 实时航迹（约 45 秒刷新）',
+  live_maritime: '全球 AIS 船舶航迹或航运通道模拟（约 75 秒刷新）',
+  weather: '区域气象预警（种子数据）',
+  live_weather: 'Open-Meteo 城市实况 + RainViewer 降水雷达',
+  pizza_index: '五角大楼周边披萨繁忙度（pizzint.watch OSINT）',
+  cables: '海底光缆登陆点与路由线',
+  maritime: '海运要道与港口节点',
+  natural: '实时 USGS 地震（橙红地震波图例）≠ 油气储藏',
+  hydrocarbon_reserves: '全球主要油气田/盆地（棕金储量波样式）≠ 地震',
+  quake_depth: 'USGS 震源深度分带（青紫橙）· 洋底层专用 · 非油气储藏',
+  persons: '区域公众人物标记（政治/经济/社会/文化/军事）',
+};

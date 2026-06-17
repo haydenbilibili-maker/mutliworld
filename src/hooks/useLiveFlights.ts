@@ -1,6 +1,7 @@
 'use client';
 
 import useSWR from 'swr';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import type { FeatureCollection } from 'geojson';
 import type { FlightsMeta, FlightsResponse } from '@/types/flights';
 
@@ -59,7 +60,9 @@ export function useLiveFlights(
   center: [number, number] = [0, 0],
   zoom = 3,
 ) {
-  const bounds = enabled ? boundsFromView(center, zoom) : null;
+  const debouncedCenter = useDebouncedValue(center, 450);
+  const debouncedZoom = useDebouncedValue(zoom, 450);
+  const bounds = enabled ? boundsFromView(debouncedCenter, debouncedZoom) : null;
   const url = enabled ? buildFlightsUrl(bounds) : null;
 
   const { data, error, isLoading, isValidating, mutate } = useSWR<FlightsResponse>(

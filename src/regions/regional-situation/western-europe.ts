@@ -1,0 +1,36 @@
+import type { RegionalSituationItem } from '@/types/regional-situation';
+import { situation, ts } from './helpers';
+
+/** 西欧 · 区域态势 */
+export const WESTERN_EUROPE_SITUATION: RegionalSituationItem[] = [
+  situation('sit-we-01', 'western_europe', '社媒', '欧洲议会选举 · 右翼崛起', 'X 上 #EUelections 讨论移民与绿色政策，极右翼席位增加引发担忧。', 'negative', 76, ['政治'], ts(0), { platform: 'X', engagement: 412000, lng: 4.35, lat: 50.85 }),
+  situation('sit-we-02', 'western_europe', '社媒', '德国工业 · 能源成本', 'LinkedIn 德企高管讨论天然气价格与对华出口下滑。', 'negative', 64, ['经济'], ts(1), { platform: 'LinkedIn', engagement: 45000, lng: 13.4, lat: 52.5 }),
+  situation('sit-we-03', 'western_europe', '社媒', '法国农民抗议', '拖拉机封锁巴黎高速公路视频在 TikTok 疯传，要求补贴与监管放松。', 'negative', 70, ['社会', '经济'], ts(0, 11), { platform: 'TikTok', engagement: 890000, lng: 2.35, lat: 48.86 }),
+  situation('sit-we-04', 'western_europe', '社媒', '英国斯塔默政府百日', '英媒讨论工党住房与增长计划，苏格兰独立议题再起。', 'mixed', 58, ['政治'], ts(2), { platform: 'X', engagement: 178000, lng: -0.12, lat: 51.5 }),
+  situation('sit-we-05', 'western_europe', '社媒', '意大利梅洛尼欧盟预算', '罗马讨论复苏基金使用与移民边境协议。', 'mixed', 55, ['政治', '经济'], ts(3), { platform: 'X', engagement: 98000, lng: 12.5, lat: 41.9 }),
+  situation('sit-we-06', 'western_europe', '社媒', '西班牙干旱 · 水库枯竭', '当地居民发布水库见底照片，农业用水配额成为热点。', 'negative', 66, ['灾害'], ts(1, 14), { platform: 'IG', engagement: 234000, lng: -3.7, lat: 40.4 }),
+  situation('sit-we-07', 'western_europe', '社媒', '北约芬兰瑞典成员', '北欧网民讨论东翼防御与军费 2% 目标落实。', 'mixed', 60, ['军事', '政治'], ts(4), { platform: 'X', engagement: 67000, lng: 24.9, lat: 60.2 }),
+  situation('sit-we-08', 'western_europe', '社媒', '荷兰阿斯麦出口许可', '半导体行业论坛解读对华 DUV 设备出口限制延伸。', 'negative', 68, ['经济', '政治'], ts(5), { platform: 'X', engagement: 112000, lng: 5.3, lat: 51.4 }),
+  situation('sit-we-09', 'western_europe', '社媒', '巴黎奥运后治安', '游客评价地铁扒窃与巡逻警力，市政面临舆论压力。', 'negative', 52, ['社会'], ts(6), { platform: 'X', engagement: 45000, lng: 2.35, lat: 48.86 }),
+  situation('sit-we-10', 'western_europe', '社媒', '爱尔兰企业税改革', '科技公司讨论全球最低税对都柏林总部吸引力影响。', 'mixed', 48, ['经济'], ts(7), { platform: 'X', engagement: 34000, lng: -6.26, lat: 53.35 }),
+  situation('sit-we-11', 'western_europe', '趋势', '欧元区增长疲软', '制造业 PMI 长期收缩，情绪指数接近荣枯线下方。', 'negative', 58, ['经济'], ts(0, 7)),
+  situation('sit-we-12', 'western_europe', '趋势', '对乌援助疲劳度', '多国民调显示长期军援支持度下滑，预算争论加剧。', 'mixed', 62, ['政治', '军事'], ts(1, 8)),
+  situation('sit-we-13', 'western_europe', '趋势', '能源去俄依赖进度', 'LNG 进口与可再生能源占比提升，但工业电价仍高于美中。', 'mixed', 54, ['经济', '政治'], ts(2, 8)),
+  situation('sit-we-14', 'western_europe', '趋势', '移民庇护申请量', '边境管控与欧盟分摊机制谈判僵持，右翼政党支持率上升。', 'negative', 71, ['社会', '政治'], ts(3, 8)),
+  situation('sit-we-15', 'western_europe', '趋势', '北约东翼部署', '德军、法军前沿存在增加，东欧盟友要求永久基地。', 'negative', 65, ['军事'], ts(4, 9), { lng: 21, lat: 52 }),
+  situation('sit-we-16', 'western_europe', '趋势', '绿色转型成本', '工业界游说放缓燃油车禁售时间表，就业担忧指数上升。', 'mixed', 56, ['经济', '政治'], ts(5, 9)),
+  situation('sit-we-17', 'western_europe', '趋势', '对华经贸依存', '德国汽车、法国奢侈品对华销售下滑，脱钩讨论升温。', 'negative', 59, ['经济', '政治'], ts(6, 9)),
+  situation('sit-we-18', 'western_europe', '趋势', '极端天气保险损失', '洪水与风暴理赔创纪录，再保险费率上调传导至居民。', 'negative', 63, ['灾害', '经济'], ts(0, 12)),
+  situation('sit-we-19', 'western_europe', '态势', '俄乌战争欧洲代价', '能源冲击余波、军援负担与难民安置重塑欧洲政治版图。', 'negative', 74, ['政治', '军事'], ts(0, 8), { lng: 33, lat: 49 }),
+  situation('sit-we-20', 'western_europe', '态势', '欧盟战略自主困境', '防务工业整合缓慢，对美安全依赖与战略自主口号之间存在落差。', 'mixed', 61, ['政治', '军事'], ts(1, 8)),
+  situation('sit-we-21', 'western_europe', '态势', '极右翼主流化', '移民与伊斯兰议题改变选举格局，传统中右翼向右靠拢。', 'negative', 68, ['政治', '社会'], ts(2, 8)),
+  situation('sit-we-22', 'western_europe', '态势', '工业竞争力危机', '高能源成本、官僚监管与中国竞争挤压汽车与化工优势。', 'negative', 66, ['经济'], ts(3, 8)),
+  situation('sit-we-23', 'western_europe', '态势', '跨大西洋团结考验', '特朗普可能回归引发北约与贸易政策不确定性，欧洲加速备胎计划。', 'mixed', 70, ['政治'], ts(4, 8)),
+  situation('sit-we-24', 'western_europe', '社媒', '威尼斯洪水 MOSE', '市民讨论防潮闸门效果与过度旅游治理。', 'mixed', 44, ['灾害', '文化'], ts(8), { platform: 'IG', engagement: 56000, lng: 12.3, lat: 45.4 }),
+  situation('sit-we-25', 'western_europe', '社媒', '比利时欧盟峰会', '记者发布领导人合影与预算谈判花絮。', 'neutral', 38, ['政治'], ts(9), { platform: 'X', engagement: 28000, lng: 4.35, lat: 50.85 }),
+  situation('sit-we-26', 'western_europe', '趋势', '欧洲央行降息预期', '通胀回落打开政策空间，但服务业通胀粘性仍受关注。', 'positive', 47, ['经济'], ts(7, 9)),
+  situation('sit-we-27', 'western_europe', '社媒', '葡萄牙野火', '夏季消防志愿者发布扑救画面，气候变化叙事强化。', 'negative', 57, ['灾害'], ts(10), { platform: 'IG', engagement: 89000, lng: -8.6, lat: 39.5 }),
+  situation('sit-we-28', 'western_europe', '态势', '文化认同与多元社会', '头巾禁令、学校课程与言论自由边界引发宪法法院裁决。', 'mixed', 53, ['社会', '文化'], ts(5, 8)),
+  situation('sit-we-29', 'western_europe', '社媒', '瑞士中立辩论', '议会讨论对乌武器再出口规则，中立传统受冲击。', 'mixed', 49, ['政治', '军事'], ts(11), { platform: 'X', engagement: 32000, lng: 7.4, lat: 46.9 }),
+  situation('sit-we-30', 'western_europe', '趋势', '防务开支达标率', '北约 2% 目标更多国家达标，但弹药库存补充仍滞后。', 'mixed', 57, ['军事'], ts(8, 9)),
+];

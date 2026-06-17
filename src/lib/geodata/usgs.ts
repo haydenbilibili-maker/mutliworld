@@ -6,6 +6,7 @@
  */
 
 import type { GeoJSONFeature } from '@/types/geo';
+import { magBand } from '@/lib/geodata/seismicStyle';
 
 // 过去一天 M4.5+ 地震（量级适中、点位不过密）；可换 2.5_day/all_day
 const USGS_URL =
@@ -76,6 +77,7 @@ export async function fetchUsgsEarthquakes(
             impact: impactByMag(mag),
             category: 'natural',
             layerId: 'natural',
+            subKind: magBand(mag),
             description: tsunami
               ? `${place}（含海啸提示）`
               : place,

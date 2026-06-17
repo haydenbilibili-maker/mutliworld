@@ -12,6 +12,7 @@ import type {
   PizzaIndexTrend,
   PizzaVenue,
 } from '@/types/pizza-index';
+import { resolveVenueCoords } from '@/lib/pizza-index/venueCoords';
 
 const DEFAULT_BASE = 'https://www.pizzint.watch';
 
@@ -149,13 +150,19 @@ export function mapPizzintResponse(raw: PizzintDashboardRaw): PizzaIndexResponse
   const level = defconToLevel(raw.defcon_level ?? 5);
 
   const venues: PizzaVenue[] = venuesRaw.map((v) => {
-    const coords = parseCoordsFromAddress(v.address);
+    const parsed = parseCoordsFromAddress(v.address);
+    const { lat, lng } = resolveVenueCoords(
+      v.name,
+      parsed?.lat ?? 0,
+      parsed?.lng ?? 0,
+      v.place_id,
+    );
     return {
       id: v.place_id,
       name: v.name,
       brand: extractBrand(v.name),
-      lat: coords?.lat ?? 0,
-      lng: coords?.lng ?? 0,
+      lat,
+      lng,
       busyLevel: resolvePopularity(v),
       delta: resolveDelta(v),
       contribution: 0,

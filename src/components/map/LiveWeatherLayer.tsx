@@ -10,13 +10,15 @@ import { useEffect, useMemo, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
-import { findOverlayBeforeId } from '@/lib/map/basemap';
+import { findRadarOverlayBeforeId } from '@/lib/map/basemap';
 import { useLiveWeather, useWeatherRadar } from '@/hooks/useLiveWeather';
 import { windDirectionLabel } from '@/lib/weather/wmoCode';
 import type { LiveWeatherPoint } from '@/types/weather';
 
 const RADAR_SOURCE = 'live-weather-radar';
 const RADAR_LAYER = 'live-weather-radar-raster';
+/** RainViewer 雷达瓦片最大 zoom（官方限制为 7，更高由 MapLibre overzoom） */
+const RADAR_MAX_ZOOM = 7;
 
 const POPUP_BG = '#0A0E17';
 
@@ -81,6 +83,10 @@ export function LiveWeatherLayer() {
   const popupRef = useRef<maplibregl.Popup | null>(null);
   const lastRadarTsRef = useRef<number | null>(null);
 
+  useEffect(() => {
+    lastRadarTsRef.current = null;
+  }, [styleEpoch]);
+
   const pointsKey = useMemo(
     () => points.map((p) => `${p.id}:${p.temperature}:${p.weatherCode}`).join('|'),
     [points],
@@ -99,9 +105,12 @@ export function LiveWeatherLayer() {
           return;
         }
 
-        const beforeId = findOverlayBeforeId(map);
+        const beforeId = findRadarOverlayBeforeId(map);
+        const layerMissing = !map.getLayer(RADAR_LAYER);
+        const needsRebuild =
+          layerMissing || lastRadarTsRef.current !== radar.timestamp;
 
-        if (lastRadarTsRef.current !== radar.timestamp) {
+        if (needsRebuild) {
           if (map.getLayer(RADAR_LAYER)) map.removeLayer(RADAR_LAYER);
           if (map.getSource(RADAR_SOURCE)) map.removeSource(RADAR_SOURCE);
 
@@ -109,6 +118,7 @@ export function LiveWeatherLayer() {
             type: 'raster',
             tiles: radar.tiles,
             tileSize: 256,
+            maxzoom: RADAR_MAX_ZOOM,
             attribution: '© RainViewer',
           });
           map.addLayer(
@@ -116,7 +126,7 @@ export function LiveWeatherLayer() {
               id: RADAR_LAYER,
               type: 'raster',
               source: RADAR_SOURCE,
-              paint: { 'raster-opacity': 0.55 },
+              paint: { 'raster-opacity': 0.62 },
               layout: { visibility: 'visible' },
             },
             beforeId,

@@ -1,133 +1,180 @@
 'use client';
 
 /**
- * 信息流跑马灯 — LIFEOS-005 交互增强
+ * 信息流跑马灯 — 时政/政经/国际局势快讯流
  *
- * 把当前区域的事件 + 社媒热帖汇成一条横向滚动信息流（态势大屏底部走马灯）。
- * - 无缝循环（内容复制一份）
- * - 悬停暂停
- * - 点击事件项 → 选中并在侧栏展示
- * - 数据驱动 + 受面板停靠开关控制（dock 的「跑马灯」）
+ * - 精选种子 + RSS 实时条目混排（useNewsFeed）
+ * - 无缝循环、悬停暂停、边缘渐隐
+ * - 分类色标；点击 → 侧栏详情 + 可选地图定位
+ * - 与 NewsPanel 区分：跑马灯=快讯流，面板=完整 RSS 列表
  */
 
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useMapStore } from '@/store/useMapStore';
-import { useRegionData } from '@/hooks/useRegionData';
 import { usePanelStore } from '@/store/usePanelStore';
-import { useLaunchLog } from '@/hooks/useLaunchLog';
-import type { EventDetail } from '@/types/geo';
+import { useNewsFeed } from '@/hooks/useNewsFeed';
+import {
+  newsFeedItemToEventDetail,
+  NEWS_CATEGORY_COLORS,
+  NEWS_CATEGORY_BG,
+  type NewsFeedCategory,
+  type NewsFeedItem,
+} from '@/data/news-feed';
+import { EMPTY_REGION_MESSAGE } from '@/lib/region/contentFilter';
 
 interface MarqueeTickerProps {
   className?: string;
 }
 
-interface TickerItem {
+interface TickerRow {
   key: string;
-  dot: string;
-  text: string;
-  sub: string;
-  event: EventDetail | null;
+  item: NewsFeedItem;
 }
 
-function impactColor(level: EventDetail['impact_level']): string {
-  if (level === 'critical') return '#ef4444';
-  if (level === 'high') return '#f59e0b';
-  if (level === 'medium') return '#3b82f6';
-  return '#94a3b8';
+function formatDateShort(iso: string): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso.slice(0, 10);
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${mm}-${dd}`;
+}
+
+function hasMapLocation(item: NewsFeedItem): boolean {
+  return item.location != null && (item.location[0] !== 0 || item.location[1] !== 0);
 }
 
 export function MarqueeTicker({ className = '' }: MarqueeTickerProps) {
   const open = usePanelStore((s) => s.open.marquee);
   const selectEvent = useMapStore((s) => s.selectEvent);
-  const { events, social } = useRegionData();
+  const setCenter = useMapStore((s) => s.setCenter);
+  const setZoom = useMapStore((s) => s.setZoom);
 
-  const { entries: launchEntries } = useLaunchLog('1y');
+  const { items, isLoading, hasLiveItems, error } = useNewsFeed(32);
 
-  const items = useMemo<TickerItem[]>(() => {
-    const launch = launchEntries[0] ?? null;
-    const launchItem: TickerItem | null = launch
-      ? {
-          key: 'launch-' + launch.id,
-          dot: launch.status === 'failure' ? '#ef4444' : launch.status === 'scheduled' ? '#3b82f6' : '#22c55e',
-          text: `🚀 ${launch.title}`,
-          sub: launch.launchTime.slice(0, 10),
-          event: {
-            id: launch.id,
-            title: launch.title,
-            source: launch.provider,
-            timestamp: launch.launchTime,
-            location: [launch.location.lng, launch.location.lat],
-            impact_level: launch.status === 'failure' ? 'critical' : 'low',
-            category: 'launch_log',
-            description: launch.payload ?? '',
-          },
-        }
-      : null;
+  const rows = useMemo<TickerRow[]>(
+    () => items.map((item) => ({ key: item.id, item })),
+    [items],
+  );
 
-    const evs: TickerItem[] = (events ?? []).map((e) => ({
-      key: 'e-' + e.id,
-      dot: impactColor(e.impact_level),
-      text: e.title,
-      sub: (e.timestamp || '').slice(0, 10) || e.source || '',
-      event: e,
-    }));
-    const socs: TickerItem[] = (social ?? []).slice(0, 14).map((s) => ({
-      key: 's-' + s.id,
-      dot: '#22d3ee',
-      text: `${s.authorName}：${s.content}`.slice(0, 90),
-      sub: s.platform,
-      event: null,
-    }));
-    return [...(launchItem ? [launchItem] : []), ...evs, ...socs];
-  }, [events, social, launchEntries]);
+  const handleClick = useCallback(
+    (item: NewsFeedItem) => {
+      const event = newsFeedItemToEventDetail(item);
+      selectEvent(event);
+      if (hasMapLocation(item)) {
+        setCenter(item.location!);
+        setZoom(5);
+      }
+    },
+    [selectEvent, setCenter, setZoom],
+  );
 
-  if (!open || items.length === 0) return null;
+  if (!open) return null;
 
-  // 无缝循环：复制一份；时长随条数增长
-  const loop = [...items, ...items];
-  const durationSec = Math.max(24, items.length * 4.5);
+  const showEmpty = !isLoading && rows.length === 0;
+  const loop = rows.length > 0 ? [...rows, ...rows] : [];
+  const durationSec = Math.max(28, rows.length * 5);
 
   return (
     <div
-      className={`mq group rounded-lg bg-dashboard-bg/90 border border-dashboard-neutral/20 overflow-hidden ${className}`}
+      className={`mq group rounded-lg bg-dashboard-bg/90 border border-dashboard-neutral/20 overflow-hidden backdrop-blur-sm ${className}`}
       aria-label="信息流跑马灯"
+      role="region"
     >
       <style>{`
-        @keyframes mqScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes mqScroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
         .mq:hover .mq-track { animation-play-state: paused; }
+        @media (prefers-reduced-motion: reduce) {
+          .mq-track { animation: none !important; flex-wrap: wrap; }
+        }
       `}</style>
-      <div className="flex items-center">
-        <span className="shrink-0 px-3 py-1.5 text-[11px] font-medium text-white bg-white/5 border-r border-dashboard-neutral/20">
+      <div className="flex items-stretch min-h-[2rem] max-sm:min-h-[1.75rem]">
+        <span className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 max-sm:px-2 max-sm:py-1 text-[11px] max-sm:text-[10px] font-medium text-white bg-white/5 border-r border-dashboard-neutral/20">
+          <span
+            className={`inline-block w-1.5 h-1.5 rounded-full shrink-0 ${isLoading ? 'animate-pulse bg-amber-400' : 'bg-emerald-400'}`}
+            aria-hidden
+          />
           实时信息流
         </span>
-        <div className="relative flex-1 overflow-hidden">
+
+        <div className="relative flex-1 overflow-hidden min-w-0">
+          {/* 左右渐隐遮罩 */}
           <div
-            className="mq-track flex w-max items-center gap-6 py-1.5 will-change-transform"
-            style={{ animation: `mqScroll ${durationSec}s linear infinite` }}
-          >
-            {loop.map((it, i) => (
-              <button
-                key={it.key + '-' + i}
-                type="button"
-                onClick={() => it.event && selectEvent(it.event)}
-                className={`flex items-center gap-1.5 text-xs text-dashboard-neutral hover:text-white transition-colors ${it.event ? 'cursor-pointer' : 'cursor-default'}`}
-                title={it.text}
-              >
-                <span
-                  className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
-                  style={{ backgroundColor: it.dot }}
+            className="pointer-events-none absolute inset-y-0 left-0 w-6 z-10 bg-gradient-to-r from-dashboard-bg/90 to-transparent"
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 w-6 z-10 bg-gradient-to-l from-dashboard-bg/90 to-transparent"
+            aria-hidden
+          />
+
+          {showEmpty ? (
+            <div className="flex items-center px-3 py-1.5 text-xs text-dashboard-neutral/60">
+              {error ? '快讯暂不可用，请稍后刷新' : EMPTY_REGION_MESSAGE}
+            </div>
+          ) : isLoading && rows.length === 0 ? (
+            <div className="flex items-center px-3 py-1.5 text-xs text-dashboard-neutral/60 animate-pulse">
+              加载快讯中…
+            </div>
+          ) : (
+            <div
+              className="mq-track flex w-max items-center gap-4 max-sm:gap-3 py-1.5 px-1 will-change-transform"
+              style={{ animation: `mqScroll ${durationSec}s linear infinite` }}
+            >
+              {loop.map(({ key, item }, i) => (
+                <TickerChip
+                  key={`${key}-${i}`}
+                  item={item}
+                  onClick={() => handleClick(item)}
                 />
-                <span className="whitespace-nowrap">{it.text}</span>
-                {it.sub && (
-                  <span className="whitespace-nowrap text-dashboard-neutral/50 text-[10px]">
-                    · {it.sub}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
+
+        {hasLiveItems && rows.length > 0 && (
+          <span className="shrink-0 hidden sm:flex items-center px-2 text-[9px] text-dashboard-neutral/40 border-l border-dashboard-neutral/20">
+            LIVE
+          </span>
+        )}
       </div>
     </div>
+  );
+}
+
+function TickerChip({
+  item,
+  onClick,
+}: {
+  item: NewsFeedItem;
+  onClick: () => void;
+}) {
+  const cat = item.category as NewsFeedCategory;
+  const color = NEWS_CATEGORY_COLORS[cat];
+  const bg = NEWS_CATEGORY_BG[cat];
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="group/chip flex items-center gap-1.5 text-xs max-sm:text-[11px] text-dashboard-neutral hover:text-white transition-colors cursor-pointer shrink-0"
+      title={`${item.title}\n${item.summary}`}
+    >
+      <span
+        className="shrink-0 rounded px-1 py-px text-[9px] max-sm:text-[8px] font-medium leading-tight"
+        style={{ color, backgroundColor: bg, border: `1px solid ${color}33` }}
+      >
+        {cat}
+      </span>
+      <span className="whitespace-nowrap max-w-[min(42vw,22rem)] max-sm:max-w-[55vw] truncate group-hover/chip:whitespace-normal group-hover/chip:max-w-none">
+        {item.title}
+      </span>
+      <span className="whitespace-nowrap text-dashboard-neutral/45 text-[10px] max-sm:text-[9px] shrink-0">
+        · {item.source} · {formatDateShort(item.publishedAt)}
+      </span>
+    </button>
   );
 }

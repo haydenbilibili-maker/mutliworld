@@ -4,6 +4,23 @@
 
 import type { ImpactLevel, LayerId } from '@/types/geo';
 import { LAYER_LABELS } from '@/lib/constants';
+import {
+  QUAKE_DEPTH_HALO,
+  QUAKE_DEPTH_LABEL,
+  QUAKE_MAG_HALO,
+  QUAKE_MAG_LABEL,
+  SEISMIC_LEGEND_HINTS,
+  magBand,
+  type QuakeDepthBand,
+  type QuakeMagBand,
+} from '@/lib/geodata/seismicStyle';
+import {
+  HYDROCARBON_LEGEND_HINTS,
+  HYDROCARBON_TIER_HALO,
+  HYDROCARBON_TIER_LABEL,
+  HYDROCARBON_TIER_IMAGE,
+  type HydrocarbonReserveTier,
+} from '@/lib/geodata/hydrocarbonStyle';
 
 /** 预注册图标（imageId → emoji + 图例标签） */
 export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> = {
@@ -14,7 +31,11 @@ export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> =
   economic: { emoji: '📊', label: '经济节点' },
   'economic-oil': { emoji: '🛢️', label: '油气生产' },
   waterways: { emoji: '⚓', label: '水道港口' },
-  natural: { emoji: '🌋', label: '自然灾害' },
+  natural: { emoji: '🌋', label: '其他自然灾害（GDACS）' },
+  'quake-mag-low': { emoji: '📳', label: QUAKE_MAG_LABEL['mag-low'] },
+  'quake-mag-medium': { emoji: '📳', label: QUAKE_MAG_LABEL['mag-medium'] },
+  'quake-mag-high': { emoji: '📳', label: QUAKE_MAG_LABEL['mag-high'] },
+  'quake-mag-critical': { emoji: '📳', label: QUAKE_MAG_LABEL['mag-critical'] },
   weather: { emoji: '🌪️', label: '气象预警' },
   'live-weather-radar': { emoji: '🌧️', label: '降水雷达' },
   'live-weather-city': { emoji: '🌡️', label: '城市实况' },
@@ -22,6 +43,7 @@ export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> =
   outages: { emoji: '⚡', label: '基础设施中断' },
   aviation: { emoji: '✈️', label: '航空枢纽' },
   live_flights: { emoji: '✈️', label: '实时航班（ADS-B）' },
+  live_maritime: { emoji: '🚢', label: '海运实时（AIS）' },
   maritime: { emoji: '🚢', label: '海运要道' },
   cables: { emoji: '🔌', label: '海底光缆登陆点' },
   'cable-route': { emoji: '〰️', label: '海缆路由（青色）' },
@@ -57,6 +79,10 @@ export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> =
   'mineral-tantalum': { emoji: '📱', label: '钽铌' },
   daynight: { emoji: '🌓', label: '晨昏线' },
   pipelines: { emoji: '🛢️', label: '油气管线' },
+  hydrocarbon_reserves: { emoji: '🛢️', label: '油气储藏' },
+  'hydrocarbon-mega': { emoji: '🟤', label: HYDROCARBON_TIER_LABEL.mega },
+  'hydrocarbon-large': { emoji: '🟡', label: HYDROCARBON_TIER_LABEL.large },
+  'hydrocarbon-medium': { emoji: '🟫', label: HYDROCARBON_TIER_LABEL.medium },
   datacenters: { emoji: '🖥️', label: 'AI 数据中心' },
   protests: { emoji: '✊', label: '抗议活动' },
   climate: { emoji: '🌡️', label: '气候异常' },
@@ -94,10 +120,10 @@ export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> =
   'tectonic-divergent': { emoji: '🌋', label: '离散边界（洋脊/裂谷）' },
   'tectonic-transform': { emoji: '↔️', label: '转换断层' },
   cable_incidents: { emoji: '✂️', label: '海缆中断' },
-  quake_depth: { emoji: '📏', label: '震源深度' },
-  'quake-shallow': { emoji: '🔴', label: '浅源 (<70km)' },
-  'quake-intermediate': { emoji: '🟠', label: '中源 (70–300km)' },
-  'quake-deep': { emoji: '🟣', label: '深源 (>300km)' },
+  quake_depth: { emoji: '📳', label: '震源深度' },
+  'quake-shallow': { emoji: '🌊', label: QUAKE_DEPTH_LABEL.shallow },
+  'quake-intermediate': { emoji: '🌊', label: QUAKE_DEPTH_LABEL.intermediate },
+  'quake-deep': { emoji: '🌊', label: QUAKE_DEPTH_LABEL.deep },
   ground_stations: { emoji: '📡', label: '测控/地面站' },
   'gs-deep-space': { emoji: '🛰️', label: '深空网' },
   'gs-tracking': { emoji: '📡', label: '常规测控站' },
@@ -139,6 +165,15 @@ export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> =
   'deep-manned': { emoji: '🤿', label: '载人深潜' },
   'deep-rov': { emoji: '🤖', label: '无人深潜器' },
   'deep-institution': { emoji: '🔬', label: '科考机构' },
+  pizza_index: { emoji: '🍕', label: '披萨指数门店' },
+  'pizza-busy': { emoji: '🍕', label: '繁忙门店' },
+  'pizza-quiet': { emoji: '🍕', label: '低繁忙门店' },
+  persons: { emoji: '👤', label: '人物' },
+  'person-political': { emoji: '🏛️', label: '政治人物' },
+  'person-economic': { emoji: '💹', label: '经济人物' },
+  'person-social': { emoji: '👥', label: '社会人物' },
+  'person-cultural': { emoji: '🎭', label: '文化人物' },
+  'person-military': { emoji: '⚔️', label: '军事人物' },
 };
 
 /** 图层主色（光晕底色） */
@@ -149,7 +184,7 @@ export const LAYER_HALO_COLORS: Record<string, string> = {
   hotspots: '#f59e0b',
   economic: '#52C41A',
   waterways: '#1890FF',
-  natural: '#3b82f6',
+  natural: '#f59e0b',
   weather: '#22d3ee',
   live_weather: '#06b6d4',
   bases: '#94a3b8',
@@ -158,12 +193,14 @@ export const LAYER_HALO_COLORS: Record<string, string> = {
   outages: '#fbbf24',
   aviation: '#38bdf8',
   live_flights: '#0ea5e9',
+  live_maritime: '#06b6d4',
   maritime: '#0ea5e9',
   cables: '#22d3ee',
   econ_hubs: '#22c55e',
   minerals: '#a16207',
   daynight: '#fbbf24',
   pipelines: '#f97316',
+  hydrocarbon_reserves: '#8b6914',
   datacenters: '#6366f1',
   protests: '#ec4899',
   climate: '#14b8a6',
@@ -174,7 +211,7 @@ export const LAYER_HALO_COLORS: Record<string, string> = {
   deep_sea_mining: '#0e7490',
   tectonics: '#b45309',
   cable_incidents: '#e11d48',
-  quake_depth: '#7c3aed',
+  quake_depth: '#fb923c',
   ground_stations: '#0ea5e9',
   sat_constellations: '#facc15',
   space_stations: '#22d3ee',
@@ -187,6 +224,8 @@ export const LAYER_HALO_COLORS: Record<string, string> = {
   monsoon: '#6366f1',
   atmospheric_circulation: '#8b5cf6',
   deep_exploration: '#0e7490',
+  pizza_index: '#f97316',
+  persons: '#8b5cf6',
 };
 
 const IMPACT_HALO: Record<ImpactLevel, string> = {
@@ -243,6 +282,14 @@ const LAUNCH_LOG_STATUS_IMAGE: Record<string, string> = {
   scrubbed: 'launch-log-scrubbed',
 };
 
+const PERSON_DOMAIN_IMAGE: Record<string, string> = {
+  政治: 'person-political',
+  经济: 'person-economic',
+  社会: 'person-social',
+  文化: 'person-cultural',
+  军事: 'person-military',
+};
+
 const SEMI_KIND_IMAGE: Record<string, string> = {
   foundry: 'semi-foundry',
   memory: 'semi-memory',
@@ -269,7 +316,14 @@ const TECTONIC_KIND_IMAGE: Record<string, string> = {
   transform: 'tectonic-transform',
 };
 
-const QUAKE_DEPTH_IMAGE: Record<string, string> = {
+const QUAKE_MAG_IMAGE: Record<QuakeMagBand, string> = {
+  'mag-low': 'quake-mag-low',
+  'mag-medium': 'quake-mag-medium',
+  'mag-high': 'quake-mag-high',
+  'mag-critical': 'quake-mag-critical',
+};
+
+const QUAKE_DEPTH_IMAGE: Record<QuakeDepthBand, string> = {
   shallow: 'quake-shallow',
   intermediate: 'quake-intermediate',
   deep: 'quake-deep',
@@ -357,6 +411,9 @@ export interface MarkerStyleProps {
   production?: string;
   subKind?: string;
   launchStatus?: string;
+  /** USGS 震级（实时地震） */
+  mag?: number;
+  live?: boolean;
 }
 
 export interface ResolvedMarkerStyle {
@@ -403,6 +460,11 @@ function resolveImageId(props: MarkerStyleProps): string {
     return LAUNCH_LOG_STATUS_IMAGE[status] ?? 'launch-log';
   }
 
+  if (layerId === 'persons') {
+    const domain = String(props.subKind ?? '');
+    return PERSON_DOMAIN_IMAGE[domain] ?? 'persons';
+  }
+
   if (layerId === 'semiconductors') {
     const kind = String(props.subKind ?? '');
     return SEMI_KIND_IMAGE[kind] ?? 'semiconductors';
@@ -423,9 +485,25 @@ function resolveImageId(props: MarkerStyleProps): string {
     return TECTONIC_KIND_IMAGE[kind] ?? 'tectonics';
   }
 
+  if (layerId === 'natural') {
+    const sub = String(props.subKind ?? '');
+    if (sub in QUAKE_MAG_IMAGE) return QUAKE_MAG_IMAGE[sub as QuakeMagBand];
+    if (typeof props.mag === 'number' && Number.isFinite(props.mag)) {
+      return QUAKE_MAG_IMAGE[magBand(props.mag)];
+    }
+    if (props.live && props.mag != null) {
+      return QUAKE_MAG_IMAGE[magBand(Number(props.mag))];
+    }
+  }
+
   if (layerId === 'quake_depth') {
-    const kind = String(props.subKind ?? '');
+    const kind = String(props.subKind ?? '') as QuakeDepthBand;
     return QUAKE_DEPTH_IMAGE[kind] ?? 'quake_depth';
+  }
+
+  if (layerId === 'hydrocarbon_reserves') {
+    const tier = String(props.subKind ?? '') as HydrocarbonReserveTier;
+    return HYDROCARBON_TIER_IMAGE[tier] ?? 'hydrocarbon_reserves';
   }
 
   if (layerId === 'ground_stations') {
@@ -491,20 +569,47 @@ function resolveImageId(props: MarkerStyleProps): string {
   return 'conflicts';
 }
 
-/** 根据要素属性解析地图图标与光晕 */
-export function resolveMarkerStyle(props: MarkerStyleProps): ResolvedMarkerStyle {
-  const imageId = resolveImageId(props);
-  const entry = MARKER_REGISTRY[imageId] ?? MARKER_REGISTRY.conflicts;
+function resolveHaloColor(props: MarkerStyleProps, imageId: string): string {
   const layerId = String(props.layerId ?? '');
   const impact = toImpact(props.impact);
   const layerColor = LAYER_HALO_COLORS[layerId] ?? '#BFBFBF';
   const impactColor = IMPACT_HALO[impact];
 
+  if (layerId === 'natural') {
+    const sub = String(props.subKind ?? '');
+    if (sub in QUAKE_MAG_HALO) return QUAKE_MAG_HALO[sub as QuakeMagBand];
+    if (typeof props.mag === 'number' && Number.isFinite(props.mag)) {
+      return QUAKE_MAG_HALO[magBand(props.mag)];
+    }
+    if (imageId.startsWith('quake-mag-')) {
+      const band = imageId.replace('quake-mag-', 'mag-') as QuakeMagBand;
+      if (band in QUAKE_MAG_HALO) return QUAKE_MAG_HALO[band];
+    }
+  }
+
+  if (layerId === 'quake_depth') {
+    const depthBand = String(props.subKind ?? '') as QuakeDepthBand;
+    if (depthBand in QUAKE_DEPTH_HALO) return QUAKE_DEPTH_HALO[depthBand];
+  }
+
+  if (layerId === 'hydrocarbon_reserves') {
+    const tier = String(props.subKind ?? '') as HydrocarbonReserveTier;
+    if (tier in HYDROCARBON_TIER_HALO) return HYDROCARBON_TIER_HALO[tier];
+  }
+
+  return impact === 'critical' || impact === 'high' ? impactColor : layerColor;
+}
+
+/** 根据要素属性解析地图图标与光晕 */
+export function resolveMarkerStyle(props: MarkerStyleProps): ResolvedMarkerStyle {
+  const imageId = resolveImageId(props);
+  const entry = MARKER_REGISTRY[imageId] ?? MARKER_REGISTRY.conflicts;
+
   return {
     markerImageId: imageId,
     markerEmoji: entry.emoji,
     markerLabel: entry.label,
-    haloColor: impact === 'critical' || impact === 'high' ? impactColor : layerColor,
+    haloColor: resolveHaloColor(props, imageId),
   };
 }
 
@@ -519,6 +624,8 @@ export interface LegendGroup {
   layerLabel: string;
   color: string;
   entries: LegendEntry[];
+  /** 图例分组悬停说明（如地震波 ≠ 油气储藏） */
+  hint?: string;
 }
 
 /** 各图层在图例中展示的图标子类 */
@@ -538,7 +645,13 @@ const LAYER_LEGEND_ENTRIES: Partial<Record<LayerId, string[]>> = {
   conflicts: ['conflicts', 'incident-military', 'incident-political'],
   conflict_zones: ['conflict_zones'],
   military: ['military', 'incident-military'],
-  natural: ['natural'],
+  natural: [
+    'quake-mag-low',
+    'quake-mag-medium',
+    'quake-mag-high',
+    'quake-mag-critical',
+    'natural',
+  ],
   weather: ['weather'],
   live_weather: ['live-weather-radar', 'live-weather-city'],
   waterways: ['waterways'],
@@ -547,6 +660,7 @@ const LAYER_LEGEND_ENTRIES: Partial<Record<LayerId, string[]>> = {
   outages: ['outages'],
   aviation: ['aviation'],
   live_flights: ['live_flights'],
+  live_maritime: ['live_maritime'],
   maritime: ['maritime'],
   cables: ['cables', 'cable-route'],
   econ_hubs: ['econ_hubs'],
@@ -583,6 +697,8 @@ const LAYER_LEGEND_ENTRIES: Partial<Record<LayerId, string[]>> = {
   monsoon: ['monsoon', 'monsoon-summer', 'monsoon-winter'],
   atmospheric_circulation: ['atmospheric_circulation', 'atmo-itcz', 'atmo-trade', 'atmo-jet'],
   deep_exploration: ['deep_exploration', 'deep-trench', 'deep-hydrothermal', 'deep-manned', 'deep-rov', 'deep-institution'],
+  pizza_index: ['pizza_index', 'pizza-busy', 'pizza-quiet'],
+  persons: ['persons', 'person-political', 'person-economic', 'person-social', 'person-cultural', 'person-military'],
 };
 
 /** 按当前开启图层生成图例分组 */
@@ -606,6 +722,7 @@ export function getLegendGroups(activeLayers: LayerId[]): LegendGroup[] {
       layerLabel: LAYER_LABELS[layerId] ?? layerId,
       color: LAYER_HALO_COLORS[layerId] ?? '#BFBFBF',
       entries,
+      hint: SEISMIC_LEGEND_HINTS[layerId] ?? HYDROCARBON_LEGEND_HINTS[layerId],
     });
   }
 

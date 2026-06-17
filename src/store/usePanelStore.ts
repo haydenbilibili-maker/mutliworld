@@ -7,15 +7,15 @@
 
 import { create } from 'zustand';
 import type { RegionId } from '@/types/region';
+import { formatDockPanelLabel, getRegionShortLabel } from '@/lib/region/contentFilter';
 
 export type PanelId =
   | 'overview'
   | 'military'
   | 'energy'
-  | 'targets'
+  | 'persons'
   | 'diplomacy'
-  | 'social'
-  | 'trend'
+  | 'situation'
   | 'marquee'
   | 'briefing'
   | 'china-briefing'
@@ -33,10 +33,9 @@ export const PANEL_META: { id: PanelId; label: string }[] = [
   { id: 'overview', label: '态势' },
   { id: 'military', label: '军力' },
   { id: 'energy', label: '能源' },
-  { id: 'targets', label: '目标' },
+  { id: 'persons', label: '人物' },
   { id: 'diplomacy', label: '外交' },
-  { id: 'social', label: '社媒' },
-  { id: 'trend', label: '趋势' },
+  { id: 'situation', label: '区域态势' },
   { id: 'marquee', label: '跑马灯' },
 ];
 
@@ -71,7 +70,14 @@ const REGION_BRIEFING_REPLACES_GENERIC = new Set<RegionId>([
 export function getDockPanels(region: RegionId): { id: PanelId; label: string; title?: string }[] {
   const base = PANEL_META.filter(
     (p) => p.id !== 'briefing' || !REGION_BRIEFING_REPLACES_GENERIC.has(region),
-  );
+  ).map((p) => ({
+    ...p,
+    label: formatDockPanelLabel(p.label, p.id, region),
+    title:
+      p.id === 'markets' || p.id === 'news' || p.id === 'marquee'
+        ? `${p.label} — 按「${getRegionShortLabel(region)}」区域筛选`
+        : undefined,
+  }));
   const regional = REGION_BRIEFING_PANELS.filter((p) => p.region === region).map(
     ({ id, label, title }) => ({ id, label, title }),
   );
@@ -101,10 +107,9 @@ const ALL: Record<PanelId, boolean> = {
   overview: false,
   military: true,
   energy: true,
-  targets: true,
+  persons: true,
   diplomacy: false,
-  social: false,
-  trend: false,
+  situation: false,
   marquee: true,
   briefing: true,
   'china-briefing': true,
@@ -123,10 +128,10 @@ export const usePanelStore = create<PanelState>((set) => ({
     set((s) => ({ open: { ...s.open, [id]: value } })),
   showAll: () =>
     set(() => ({
-      open: { overview: true, military: true, energy: true, targets: true, diplomacy: true, social: true, trend: true, marquee: true, briefing: true, 'china-briefing': true, 'us-briefing': true, 'seabed-briefing': true, 'space-briefing': true, news: true, markets: true },
+      open: { overview: true, military: true, energy: true, persons: true, diplomacy: true, situation: true, marquee: true, briefing: true, 'china-briefing': true, 'us-briefing': true, 'seabed-briefing': true, 'space-briefing': true, news: true, markets: true },
     })),
   hideAll: () =>
     set(() => ({
-      open: { overview: false, military: false, energy: false, targets: false, diplomacy: false, social: false, trend: false, marquee: false, briefing: false, 'china-briefing': false, 'us-briefing': false, 'seabed-briefing': false, 'space-briefing': false, news: false, markets: false },
+      open: { overview: false, military: false, energy: false, persons: false, diplomacy: false, situation: false, marquee: false, briefing: false, 'china-briefing': false, 'us-briefing': false, 'seabed-briefing': false, 'space-briefing': false, news: false, markets: false },
     })),
 }));

@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
 import { listRegions } from '@/regions';
 import type { RegionId } from '@/types/region';
+import { REGION_SWITCHER_TOOLTIP } from '@/lib/region/contentFilter';
 
 interface RegionSwitcherProps {
   className?: string;
@@ -61,6 +62,7 @@ export function RegionSwitcher({ className = '' }: RegionSwitcherProps) {
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label="区域切换"
+        title={REGION_SWITCHER_TOOLTIP}
         className={[
           'flex items-center gap-2 rounded-lg border px-3 py-2 text-sm shadow-lg backdrop-blur-md transition-colors',
           'ring-1 ring-white/10',

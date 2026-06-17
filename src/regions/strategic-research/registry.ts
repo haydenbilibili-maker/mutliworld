@@ -52,6 +52,11 @@ const PANELS: StrategicResearchPanelDef[] = [
         label: '返回中美博弈总览',
         moduleId: 'overview',
       },
+      {
+        panelId: 'china-us',
+        label: '台海情景推演',
+        moduleId: 'scenarios',
+      },
     ],
   },
   {

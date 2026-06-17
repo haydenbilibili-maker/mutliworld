@@ -16,6 +16,7 @@ import { GLOBAL_GARRISONS } from '@/regions/global.garrisons';
 import { GLOBAL_LAUNCH_SITES } from '@/regions/global.launchSites';
 import { GLOBAL_DEEP_SEA_MINING } from '@/regions/global.deepSeaMining';
 import { GLOBAL_TECTONICS } from '@/regions/global.tectonics';
+import { GLOBAL_HYDROCARBON_RESERVES } from '@/regions/global.hydrocarbon';
 import { GLOBAL_CABLE_INCIDENTS } from '@/regions/global.cableIncidents';
 import { GLOBAL_GROUND_STATIONS } from '@/regions/global.groundStations';
 import { GLOBAL_SATELLITES } from '@/regions/global.satellites';
@@ -36,7 +37,8 @@ export type SearchKind =
   | 'incident'
   | 'facility'
   | 'infra'
-  | 'nuclear';
+  | 'nuclear'
+  | 'person';
 
 export interface SearchEntry {
   id: string;
@@ -60,6 +62,7 @@ const KIND_LABEL: Record<SearchKind, string> = {
   facility: '设施',
   infra: '基础设施',
   nuclear: '核设施',
+  person: '人物',
 };
 
 let INDEX: SearchEntry[] | null = null;
@@ -132,6 +135,21 @@ function buildIndex(): SearchEntry[] {
         zoom: 6,
         description: f.notes,
         category: f.type,
+      });
+    }
+
+    for (const p of ds.persons ?? []) {
+      out.push({
+        id: `person-${r.id}-${p.id}`,
+        label: p.name,
+        sublabel: `${r.name} · ${p.domain} · ${KIND_LABEL.person}`,
+        kind: 'person',
+        regionId: r.id,
+        lng: p.lng,
+        lat: p.lat,
+        zoom: 5.5,
+        description: p.bio,
+        category: p.domain,
       });
     }
   }
@@ -252,6 +270,23 @@ function buildIndex(): SearchEntry[] {
       impact: t.impact,
       description: t.note,
       category: 'tectonics',
+    });
+  }
+
+  // 全球油气储藏
+  for (const h of GLOBAL_HYDROCARBON_RESERVES) {
+    out.push({
+      id: `hc-${h.id}`,
+      label: h.nameZh,
+      sublabel: `全球 · ${LAYER_LABELS.hydrocarbon_reserves}`,
+      kind: 'infra',
+      regionId: null,
+      lng: h.lng,
+      lat: h.lat,
+      zoom: 5,
+      impact: h.impact,
+      description: `${h.type} · ${h.estimatedReserves} · ${h.country}`,
+      category: 'hydrocarbon_reserves',
     });
   }
 

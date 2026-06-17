@@ -553,6 +553,8 @@ const EE_OIL_PRODUCERS: OilProducerMapPoint[] = [
   },
 ];
 
+import { getPersonsForRegion } from './persons';
+
 export const easternEuropeDataset: RegionDataset = {
   factions: { label: EE_FACTION_LABEL, color: EE_FACTION_HEX },
   events: [...EE_REFERENCE_POINTS, ...EE_KEY_EVENTS, ...EE_DENSIFY_EVENTS],
@@ -561,4 +563,5 @@ export const easternEuropeDataset: RegionDataset = {
   incidents: [...EE_INCIDENTS, ...EE_DENSIFY_INCIDENTS],
   facilities: [...EE_FACILITIES, ...EE_DENSIFY_FACILITIES],
   energy: { regions: [], points: [...EE_ENERGY_POINTS, ...EE_DENSIFY_ENERGY], oilProducers: EE_OIL_PRODUCERS },
+  persons: getPersonsForRegion('eastern_europe'),
 };

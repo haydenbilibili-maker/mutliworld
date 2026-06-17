@@ -12,6 +12,7 @@ import { useMapStore } from '@/store/useMapStore';
 import type { EventDetail } from '@/types/geo';
 import type { RegionId, RegionDataset } from '@/types/region';
 import { getRegion } from '@/regions';
+import { getSituationForRegion } from '@/regions/regional-situation';
 
 export interface RegionData extends RegionDataset {
   regionId: RegionId;
@@ -36,6 +37,7 @@ export function useRegionData(): RegionData {
       bounds: mod?.bounds ?? null,
       ...ds,
       events: ds.events ?? EMPTY_EVENTS,
+      situation: ds.situation ?? getSituationForRegion(region),
     };
   }, [region]);
 }

@@ -491,9 +491,12 @@ const SEA_OIL: OilProducerMapPoint[] = [
   },
 ];
 
+import { getPersonsForRegion } from './persons';
+
 export const southeastAsiaDataset: RegionDataset = {
   events: [...SEA_EVENTS, ...SEA_DENSIFY_EVENTS],
   incidents: [...SEA_INCIDENTS, ...SEA_DENSIFY_INCIDENTS],
   facilities: [...SEA_FACILITIES, ...SEA_DENSIFY_FACILITIES],
   energy: { regions: [], points: SEA_ENERGY, oilProducers: SEA_OIL },
+  persons: getPersonsForRegion('southeast_asia'),
 };

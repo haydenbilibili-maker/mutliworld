@@ -11,6 +11,11 @@ export default function AdminTiersPage() {
       <AdminPageHeader
         title="空间层配置"
         description="三位一体空间态势：地表 / 洋底 / 宇宙三层模块注册表与默认图层。"
+        breadcrumbs={[
+          { label: '管理后台', href: '/admin' },
+          { label: '功能配置' },
+          { label: '空间层' },
+        ]}
       />
 
       <div className="space-y-6">

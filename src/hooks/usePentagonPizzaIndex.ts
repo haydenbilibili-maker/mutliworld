@@ -20,7 +20,7 @@ export function usePentagonPizzaIndex(enabled = true) {
     {
       refreshInterval: 180_000,
       revalidateOnFocus: false,
-      dedupingInterval: 60_000,
+      dedupingInterval: 90_000,
       keepPreviousData: true,
     },
   );

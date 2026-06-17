@@ -513,9 +513,12 @@ const LA_OIL: OilProducerMapPoint[] = [
   },
 ];
 
+import { getPersonsForRegion } from './persons';
+
 export const latinAmericaDataset: RegionDataset = {
   events: [...LA_EVENTS, ...LA_DENSIFY_EVENTS],
   incidents: [...LA_INCIDENTS, ...LA_DENSIFY_INCIDENTS],
   facilities: [...LA_FACILITIES, ...LA_DENSIFY_FACILITIES],
   energy: { regions: [], points: LA_ENERGY, oilProducers: LA_OIL },
+  persons: getPersonsForRegion('latin_america'),
 };

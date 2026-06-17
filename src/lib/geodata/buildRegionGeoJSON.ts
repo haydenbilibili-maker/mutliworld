@@ -8,6 +8,7 @@ import type {
 } from '@/types/geo';
 import type { RegionId } from '@/types/region';
 import type { Facility, Incident } from '@/types/middleeast';
+import type { Person, PersonDomain } from '@/types/person';
 import { getRegionDataset } from '@/lib/geodata/datasets';
 import { getGlobalNuclearForRegion } from '@/lib/geodata/globalNuclear';
 import { getGlobalInfrastructureForRegion } from '@/lib/geodata/globalInfrastructure';
@@ -63,6 +64,11 @@ import {
   shiftTimestampToNow,
 } from '@/lib/timeRange';
 import { resolveMarkerStyle } from '@/lib/geodata/markerStyle';
+import { resolvePersonAvatar } from '@/lib/person/avatar';
+import { getGlobalHydrocarbonForRegion } from '@/lib/geodata/globalHydrocarbon';
+import type { HydrocarbonReserveSite } from '@/regions/global.hydrocarbon';
+import { getHighHeatSituation } from '@/regions/regional-situation';
+import { situationToEvent } from '@/lib/regional-situation/toEvent';
 
 export interface BuildGeoJSONOptions {
   regionId: RegionId;
@@ -213,6 +219,8 @@ function makePointFeature(
     production: String(props.production ?? ''),
     subKind: String(props.subKind ?? ''),
     launchStatus: String(props.launchStatus ?? ''),
+    mag: typeof props.mag === 'number' ? props.mag : undefined,
+    live: props.live === true,
   });
 
   return {
@@ -347,6 +355,99 @@ function facilitiesToFeatures(
         },
         f.position.lng,
         f.position.lat,
+      ),
+    );
+  }
+  return out;
+}
+
+const PERSON_DOMAIN_EMOJI: Record<PersonDomain, string> = {
+  政治: '🏛️',
+  经济: '💹',
+  社会: '👥',
+  文化: '🎭',
+  军事: '⚔️',
+};
+
+function personsToFeatures(
+  persons: Person[],
+  active: Set<LayerId>,
+): GeoJSONFeature[] {
+  if (!active.has('persons') || !persons.length) return [];
+
+  const out: GeoJSONFeature[] = [];
+  for (const p of persons) {
+    out.push(
+      makePointFeature(
+        {
+          id: p.id,
+          title: p.name,
+          source: p.role,
+          timestamp: p.since ? String(p.since) : '',
+          impact: 'medium' as ImpactLevel,
+          category: 'persons',
+          layerId: 'persons',
+          description: p.bio,
+          personDomain: p.domain,
+          personRole: p.role,
+          personStatus: p.status ?? 'active',
+          personAvatar: resolvePersonAvatar(p),
+          subKind: p.domain,
+          markerEmoji: PERSON_DOMAIN_EMOJI[p.domain],
+          markerLabel: p.domain,
+          opacity: p.status === 'deceased' ? 0.55 : 0.92,
+          lng: p.lng,
+          lat: p.lat,
+        },
+        p.lng,
+        p.lat,
+      ),
+    );
+  }
+  return out;
+}
+
+/** 高热度区域态势 → hotspots 图层标记 */
+function situationToFeatures(
+  regionId: RegionId,
+  active: Set<LayerId>,
+  windowMs: number,
+  latestMs: number | null,
+): GeoJSONFeature[] {
+  if (!active.has('hotspots')) return [];
+
+  const out: GeoJSONFeature[] = [];
+  for (const item of getHighHeatSituation(regionId, 75)) {
+    const e = situationToEvent(item);
+    const eventMs = parseIsoMs(e.timestamp);
+    if (!isWithinTimeWindow(eventMs, latestMs, windowMs)) continue;
+
+    const ageMs =
+      eventMs != null && latestMs != null ? latestMs - eventMs : windowMs * 0.5;
+    const timestamp =
+      eventMs != null && latestMs != null
+        ? shiftTimestampToNow(eventMs, latestMs)
+        : e.timestamp;
+
+    out.push(
+      makePointFeature(
+        {
+          id: e.id,
+          title: e.title,
+          source: e.source,
+          timestamp,
+          impact: e.impact_level,
+          category: 'hotspots',
+          layerId: 'hotspots',
+          description: e.description ?? '',
+          situationType: item.type,
+          situationHeat: item.heat,
+          opacity: opacityByAge(ageMs, windowMs),
+          lng: item.lng,
+          lat: item.lat,
+        },
+        item.lng!,
+        item.lat!,
       ),
     );
   }
@@ -857,6 +958,58 @@ function spaceEventsToFeatures(
 
 const TIMED_THEMATIC_LAYERS = new Set<LayerId>(['protests', 'climate']);
 
+const HYDROCARBON_TYPE_LABEL: Record<string, string> = {
+  石油: '石油',
+  天然气: '天然气',
+  油气: '油气',
+};
+
+/** 全球油气储藏 → feature；公开资料示意点，不做时间窗过滤 */
+function hydrocarbonToFeatures(
+  sites: HydrocarbonReserveSite[],
+  active: Set<LayerId>,
+  generatedAt: string,
+): GeoJSONFeature[] {
+  if (!active.has('hydrocarbon_reserves')) return [];
+  const out: GeoJSONFeature[] = [];
+  for (const s of sites) {
+    const typeLabel = HYDROCARBON_TYPE_LABEL[s.type] ?? s.type;
+    const description = [
+      `${s.nameZh}（${typeLabel}）`,
+      `储量：${s.estimatedReserves}`,
+      `国家/地区：${s.country} · ${s.status}`,
+      s.note,
+    ].join('\n');
+
+    out.push(
+      makePointFeature(
+        {
+          id: s.id,
+          title: `${s.nameZh} · ${typeLabel}`,
+          source: '公开油气资料（种子）',
+          timestamp: generatedAt,
+          impact: s.impact,
+          category: 'hydrocarbon_reserves',
+          layerId: 'hydrocarbon_reserves',
+          description,
+          production: s.estimatedReserves,
+          hydrocarbonType: s.type,
+          hydrocarbonCountry: s.country,
+          hydrocarbonStatus: s.status,
+          reserveTier: s.reserveTier,
+          subKind: s.reserveTier,
+          opacity: 0.88,
+          lng: s.lng,
+          lat: s.lat,
+        },
+        s.lng,
+        s.lat,
+      ),
+    );
+  }
+  return out;
+}
+
 /** 全球主题图层点（经济中心 / 矿产 / 数据中心 / 抗议 / 气候） */
 function thematicToFeatures(
   regionId: RegionId,
@@ -976,6 +1129,8 @@ export function buildRegionGeoJSON({
     ...eventsToFeatures(dataset.events ?? [], active, windowMs, latestMs),
     ...incidentsToFeatures(dataset.incidents ?? [], active, windowMs, latestMs),
     ...facilitiesToFeatures(mergedFacilities, active),
+    ...personsToFeatures(dataset.persons ?? [], active),
+    ...situationToFeatures(regionId, active, windowMs, latestMs),
     ...oilProducersToFeatures(
       dataset.energy?.oilProducers,
       active,
@@ -1043,6 +1198,11 @@ export function buildRegionGeoJSON({
     ...pipelinesToFeatures(regionId, active, generatedAt),
     ...daynightToFeatures(active, generatedAt),
     ...oceanLayersToFeatures(regionId, active, generatedAt),
+    ...hydrocarbonToFeatures(
+      getGlobalHydrocarbonForRegion(regionId),
+      active,
+      generatedAt,
+    ),
   ];
 
   const featureTimes = features

@@ -36,8 +36,8 @@ export function RegionBriefingPanel({ className = '' }: RegionBriefingPanelProps
       events: data.events?.length ?? 0,
       military: data.military?.length ?? 0,
       diplomacy: data.diplomacy?.length ?? 0,
-      social: data.social?.length ?? 0,
-      targets: data.targets?.length ?? 0,
+      social: data.situation?.length ?? data.social?.length ?? 0,
+      persons: data.persons?.length ?? 0,
       facilities: data.facilities?.length ?? 0,
       incidents: data.incidents?.length ?? 0,
     }),
@@ -58,7 +58,7 @@ export function RegionBriefingPanel({ className = '' }: RegionBriefingPanelProps
     stats.military +
     stats.diplomacy +
     stats.social +
-    stats.targets +
+    stats.persons +
     stats.facilities +
     stats.incidents;
   if (total === 0 || region === 'china' || region === 'north_america') return null;
@@ -67,8 +67,8 @@ export function RegionBriefingPanel({ className = '' }: RegionBriefingPanelProps
     ['事件', stats.events],
     ['军力', stats.military],
     ['外交', stats.diplomacy],
-    ['社媒', stats.social],
-    ['目标', stats.targets],
+    ['区域态势', stats.social],
+    ['人物', stats.persons],
     ['设施', stats.facilities],
   ];
 

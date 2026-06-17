@@ -112,6 +112,7 @@ function featureProps(p: Record<string, unknown> | undefined) {
     baseDesc: String(p?.description ?? ''),
     markerLabel: String(p?.markerLabel ?? ''),
     markerEmoji: String(p?.markerEmoji ?? ''),
+    personAvatar: String(p?.personAvatar ?? ''),
     selected: {
       id: String(p?.id ?? ''),
       title: String(p?.title ?? ''),
@@ -134,6 +135,7 @@ export function GeodataLayer() {
   const { data } = useGeodataContext();
   const selectEvent = useMapStore((s) => s.selectEvent);
   const popupRef = useRef<maplibregl.Popup | null>(null);
+  const lastFeaturesKeyRef = useRef('');
 
   useEffect(() => {
     if (!map) return;
@@ -153,6 +155,7 @@ export function GeodataLayer() {
         forces: string;
         baseDesc: string;
         link: string;
+        personAvatar: string;
       },
     ) => {
       const dateStr = selected.timestamp
@@ -175,8 +178,8 @@ export function GeodataLayer() {
         .setLngLat({ lng, lat })
         .setHTML(
           `<div style="font-size:12px;color:#e6edf3;background:transparent">
-             <div style="display:flex;align-items:center;gap:6px">
-               ${extras.markerEmoji ? `<span style="font-size:18px;line-height:1">${extras.markerEmoji}</span>` : ''}
+             <div style="display:flex;align-items:center;gap:8px">
+               ${extras.personAvatar ? `<img src="${extras.personAvatar}" alt="" width="36" height="36" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;background:rgba(255,255,255,0.1)" onerror="this.style.display='none'" />` : extras.markerEmoji ? `<span style="font-size:18px;line-height:1">${extras.markerEmoji}</span>` : ''}
                <span style="font-weight:600;color:#e6edf3">${selected.title}</span>
              </div>
              ${extras.markerLabel ? `<div style="color:#a855f7;margin-top:4px">${extras.markerLabel}</div>` : ''}
@@ -219,6 +222,7 @@ export function GeodataLayer() {
         forces: info.forces,
         baseDesc: info.baseDesc,
         link: info.link,
+        personAvatar: info.personAvatar,
       });
     };
 
@@ -240,6 +244,7 @@ export function GeodataLayer() {
         forces: info.forces,
         baseDesc: info.baseDesc,
         link: info.link,
+        personAvatar: info.personAvatar,
       });
     };
 
@@ -454,8 +459,13 @@ export function GeodataLayer() {
   }, [map, selectEvent, styleEpoch]);
 
   useEffect(() => {
+    lastFeaturesKeyRef.current = '';
+  }, [styleEpoch]);
+
+  useEffect(() => {
     if (!map) return;
 
+    const featuresKey = `${data?.meta?.generatedAt ?? ''}:${data?.features?.length ?? 0}`;
     const { points, lines } = splitFeatures(data?.features);
     const showPoints = points.features.length > 0;
     const showLines = lines.features.length > 0;
@@ -466,8 +476,11 @@ export function GeodataLayer() {
         const lineSrc = map.getSource(LINE_SOURCE) as maplibregl.GeoJSONSource | undefined;
         if (!pointSrc || !lineSrc) return;
 
-        pointSrc.setData(points);
-        lineSrc.setData(lines);
+        if (featuresKey !== lastFeaturesKeyRef.current) {
+          pointSrc.setData(points);
+          lineSrc.setData(lines);
+          lastFeaturesKeyRef.current = featuresKey;
+        }
 
         if (map.getLayer(SYMBOL_LAYER)) {
           map.setLayoutProperty(SYMBOL_LAYER, 'visibility', showPoints ? 'visible' : 'none');

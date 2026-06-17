@@ -287,6 +287,8 @@ const NA_OIL: OilProducerMapPoint[] = [
   },
 ];
 
+import { getPersonsForRegion } from './persons';
+
 export const northAmericaDataset: RegionDataset = {
   events: [
     ...US_NUCLEAR_EVENTS,
@@ -327,4 +329,5 @@ export const northAmericaDataset: RegionDataset = {
   military: US_MILITARY,
   diplomacy: US_DIPLOMACY,
   energy: { regions: [], points: NA_ENERGY, oilProducers: NA_OIL },
+  persons: getPersonsForRegion('north_america'),
 };

@@ -20,8 +20,8 @@ export const asiaPacificRegion: RegionModule = {
   viewpoint: '亚太地缘态势：海洋 / 军事 / 经济 / 热点',
   center: [128, 20],
   zoom: 3,
-  layers: ['conflicts', 'hotspots', 'bases', 'military', 'waterways', 'economic', 'natural', 'weather', 'nuclear'],
-  defaultLayers: ['conflicts', 'military', 'waterways'],
+  layers: ['conflicts', 'hotspots', 'bases', 'military', 'waterways', 'economic', 'natural', 'weather', 'nuclear', 'persons'],
+  defaultLayers: ['conflicts', 'conflict_zones', 'military', 'waterways'],
   bounds: [
     [60, -50],
     [180, 55],
@@ -57,6 +57,7 @@ export const northAmericaRegion: RegionModule = {
     'waterways',
     'maritime',
     'protests',
+    'persons',
   ],
   defaultLayers: ['military', 'nuclear', 'bases', 'garrisons'],
   bounds: [
@@ -76,7 +77,7 @@ export const latinAmericaRegion: RegionModule = {
   viewpoint: '拉美态势：经济 / 资源 / 社会 / 热点',
   center: [-65, -15],
   zoom: 2.8,
-  layers: ['economic', 'conflicts', 'natural', 'hotspots', 'waterways', 'weather', 'nuclear'],
+  layers: ['economic', 'conflicts', 'natural', 'hotspots', 'waterways', 'weather', 'nuclear', 'persons'],
   defaultLayers: ['economic', 'hotspots'],
   bounds: [
     [-118, -56],
@@ -95,7 +96,7 @@ export const southeastAsiaRegion: RegionModule = {
   viewpoint: '东南亚态势：航道 / 军事 / 经济 / 热点',
   center: [113, 5],
   zoom: 3.8,
-  layers: ['waterways', 'conflicts', 'economic', 'hotspots', 'military', 'bases', 'natural', 'weather', 'nuclear'],
+  layers: ['waterways', 'conflicts', 'economic', 'hotspots', 'military', 'bases', 'natural', 'weather', 'nuclear', 'persons'],
   defaultLayers: ['waterways', 'economic'],
   bounds: [
     [90, -12],
@@ -114,7 +115,7 @@ export const westernEuropeRegion: RegionModule = {
   viewpoint: '西欧态势：经济 / 能源 / 外交 / 安全',
   center: [4, 48],
   zoom: 4,
-  layers: ['economic', 'sanctions', 'conflicts', 'military', 'outages', 'nuclear'],
+  layers: ['economic', 'sanctions', 'conflicts', 'military', 'outages', 'nuclear', 'persons'],
   defaultLayers: ['economic', 'sanctions', 'military'],
   bounds: [
     [-11, 36],
@@ -133,8 +134,8 @@ export const easternEuropeRegion: RegionModule = {
   viewpoint: '东欧 / 俄乌战线：军事 / 能源 / 制裁 / 外交',
   center: [33, 49],
   zoom: 4.2,
-  layers: ['conflicts', 'hotspots', 'bases', 'military', 'sanctions', 'economic', 'nuclear'],
-  defaultLayers: ['conflicts', 'military', 'hotspots'],
+  layers: ['conflicts', 'hotspots', 'bases', 'military', 'sanctions', 'economic', 'nuclear', 'persons'],
+  defaultLayers: ['conflicts', 'conflict_zones', 'military', 'hotspots'],
   bounds: [
     [22, 44],
     [44, 56],

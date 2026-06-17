@@ -580,6 +580,8 @@ const WE_DIPLOMACY: DiplomaticActor[] = [
   },
 ];
 
+import { getPersonsForRegion } from './persons';
+
 export const westernEuropeDataset: RegionDataset = {
   factions: { label: WE_FACTION_LABEL, color: WE_FACTION_HEX },
   events: [...WE_EVENTS, ...WE_DENSIFY_EVENTS],
@@ -592,4 +594,5 @@ export const westernEuropeDataset: RegionDataset = {
     points: WE_ENERGY_POINTS,
     oilProducers: WE_OIL_PRODUCERS,
   },
+  persons: getPersonsForRegion('western_europe'),
 };

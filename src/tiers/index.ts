@@ -18,11 +18,12 @@ const surfaceTier: TierModule = {
   layers: [
     'conflicts', 'conflict_zones', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions',
     'economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors',
+    'hydrocarbon_reserves', 'pipelines',
     'natural', 'weather', 'live_weather', 'climate', 'protests',
-    'aviation', 'live_flights', 'outages', 'daynight',
+    'aviation', 'live_flights', 'live_maritime', 'outages', 'daynight',
   ],
   defaultLayers: ['conflicts', 'economic', 'weather', 'natural'],
-  basemap: 'geographic',
+  basemap: 'imagery',
   renderMode: 'flat',
   altitudeBand: [0, 0],
 };
@@ -36,7 +37,7 @@ const subsurfaceTier: TierModule = {
   // Phase 1 完整：海缆/海底管线/深海采矿/板块断层/震源深度/断缆事件 + 复用 maritime/natural（海床栅格随本层自动铺开）
   layers: ['cables', 'pipelines', 'deep_sea_mining', 'tectonics', 'quake_depth', 'cable_incidents', 'maritime', 'natural', 'marine_archaeology', 'ocean_currents', 'fisheries', 'monsoon', 'atmospheric_circulation', 'deep_exploration'],
   defaultLayers: ['cables', 'deep_sea_mining', 'tectonics', 'cable_incidents', 'ocean_currents'],
-  basemap: 'seabed',
+  basemap: 'geographic',
   renderMode: 'depth',
   altitudeBand: [-11, 0], // 海平面至马里亚纳海沟约 -11km
   note: 'Phase 1 将增补 海床地形 / 板块断层 / 震源深度 / 深海采矿 / 断缆事件',
@@ -57,7 +58,7 @@ const spaceTier: TierModule = {
     'launch_sites', 'launch_log', 'ground_stations',
     'space_stations', 'satellites',
   ],
-  basemap: 'starfield',
+  basemap: 'imagery',
   renderMode: 'orbit',
   altitudeBand: [200, 36000], // LEO 至 GEO
   note: 'Phase 2 将增补 星座/在轨星下点/测控站/空天事件，并上 3D 地球',

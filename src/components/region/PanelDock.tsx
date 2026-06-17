@@ -27,9 +27,9 @@ export function PanelDock({ className = '' }: PanelDockProps) {
     !!data.factions ||
     !!data.military ||
     !!data.energy ||
-    !!data.targets ||
+    !!data.persons ||
     !!data.diplomacy ||
-    !!data.social ||
+    !!data.situation?.length ||
     !!data.trend;
   if (!hasPanels) return null;
 
@@ -37,11 +37,11 @@ export function PanelDock({ className = '' }: PanelDockProps) {
 
   return (
     <div
-      className={`rounded-lg bg-dashboard-bg/90 border border-dashboard-neutral/20 p-1.5 flex items-center gap-1 ${className}`}
+      className={`rounded-lg bg-dashboard-bg/90 border border-dashboard-neutral/20 p-1.5 flex flex-wrap items-center justify-center gap-1 max-w-[min(calc(100vw-1rem),36rem)] ${className}`}
       role="group"
       aria-label="面板停靠"
     >
-      <span className="text-[11px] text-dashboard-neutral px-1">面板</span>
+      <span className="hidden text-[11px] text-dashboard-neutral px-1 sm:inline">面板</span>
       {dockPanels.map((p) => (
         <button
           key={p.id}
