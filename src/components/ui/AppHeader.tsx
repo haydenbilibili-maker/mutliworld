@@ -11,6 +11,7 @@ import { BodySwitcher } from '@/components/ui/BodySwitcher';
 import { RegionSwitcher } from '@/components/ui/RegionSwitcher';
 import { PanelDock } from '@/components/region/PanelDock';
 import { RealtimeDashboard } from '@/components/ui/RealtimeDashboard';
+import { BodyLayerToggle } from '@/components/ui/BodyLayerToggle';
 import { useMapStore } from '@/store/useMapStore';
 
 interface AppHeaderProps {
@@ -37,9 +38,7 @@ export function AppHeader({ className = '' }: AppHeaderProps) {
 
       {/* 中：面板 tab（单行横滚，不换行不溢出；仅地球） */}
       <div className="flex min-w-0 flex-1 justify-center overflow-hidden max-sm:order-3 max-sm:w-full max-sm:basis-full max-sm:justify-start">
-        {isEarth ? <PanelDock className="min-w-0 max-w-full" /> : (
-          <span className="text-xs text-dashboard-neutral/60">多天体探索 · Phase 0 · 探索图层建设中</span>
-        )}
+        {isEarth ? <PanelDock className="min-w-0 max-w-full" /> : <BodyLayerToggle />}
       </div>
 
       {/* 右：实时仪表盘（仅地球） */}

@@ -36,6 +36,7 @@ import { OrbitRings } from '@/components/map/OrbitRings';
 import { OrbitalObjectsLayer } from '@/components/map/OrbitalObjectsLayer';
 import { FlightLayer } from '@/components/map/FlightLayer';
 import { FireLayer } from '@/components/map/FireLayer';
+import { BodySiteLayer } from '@/components/map/BodySiteLayer';
 import { MaritimeLayer } from '@/components/map/MaritimeLayer';
 import { PizzaIndexLayer } from '@/components/map/PizzaIndexLayer';
 import { ProfilePicker } from '@/components/map/ProfilePicker';
@@ -307,6 +308,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
         <OrbitalObjectsLayer />
         <FlightLayer />
         <FireLayer />
+        <BodySiteLayer />
         <MaritimeLayer />
         <PizzaIndexLayer />
         <ProfilePicker />

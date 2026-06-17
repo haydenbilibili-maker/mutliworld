@@ -7,6 +7,7 @@
 
 import { useMapStore } from '@/store/useMapStore';
 import { getBody } from '@/bodies';
+import { getSitesForBody } from '@/bodies/sites';
 
 const PLANNED: Record<string, string[]> = {
   moon: ['阿波罗 11/12/14/15/16/17 着陆点', '嫦娥 3/4/5/6（含月背采样）', 'Luna / Surveyor / Chandrayaan-3 / SLIM', '在轨绕月：LRO · 鹊桥二号 · Danuri（实时星历）'],
@@ -18,6 +19,8 @@ export function BodyExploreHint() {
   const setBody = useMapStore((s) => s.setBody);
   const mod = getBody(activeBody);
   if (!mod || activeBody === 'earth') return null;
+  // 已有真实痕迹数据的天体（如月球）直接看地图标记，不再覆盖提示
+  if (getSitesForBody(activeBody).length > 0) return null;
   const planned = PLANNED[activeBody] ?? [];
 
   return (
