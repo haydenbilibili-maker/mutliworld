@@ -4,8 +4,9 @@
 
 import type { BodyLayerId, BodySite, CelestialBody } from '@/types/body';
 import { MOON_SITES } from './moon';
+import { MARS_SITES } from './mars';
 
-export const ALL_BODY_SITES: BodySite[] = [...MOON_SITES];
+export const ALL_BODY_SITES: BodySite[] = [...MOON_SITES, ...MARS_SITES];
 
 export function getSitesForBody(body: CelestialBody): BodySite[] {
   return ALL_BODY_SITES.filter((s) => s.body === body);
