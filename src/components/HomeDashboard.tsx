@@ -29,6 +29,7 @@ import { TierSwitcher } from '@/components/ui/TierSwitcher';
 import { SeabedBriefingPanel } from '@/components/region/SeabedBriefingPanel';
 import { SpaceBriefingPanel } from '@/components/region/SpaceBriefingPanel';
 import { OrbitalListHost } from '@/components/ui/OrbitalListHost';
+import { PizzaIndexHost } from '@/components/ui/PizzaIndexHost';
 import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
 import { useGlobalEscape } from '@/hooks/useGlobalEscape';
 import { LiveLayerPerformanceGuard } from '@/components/ui/LiveLayerPerformanceGuard';
@@ -52,26 +53,38 @@ export function HomeDashboard() {
           <StarfieldBackdrop />
           <MapContainer className="absolute inset-0 z-0" />
           <AboutPanel />
-          <TierSwitcher className="absolute top-1/2 left-4 z-20 -translate-y-1/2" />
-          <RegionDetailCard className="absolute top-12 left-4 z-30" />
-          <LiveEventFeed className="absolute top-4 left-1/2 z-10 w-72 -translate-x-1/2 max-h-[min(52vh,24rem)] max-sm:w-[min(20rem,calc(100vw-2rem))]" />
-          <LaunchLogPanel className="absolute top-4 right-4 z-30 w-[min(28rem,calc(100vw-2rem))]" />
-          <RegionBriefingPanel className="absolute top-16 left-4 z-25" />
-          <ChinaBriefingPanel className="absolute top-16 left-4 z-25" />
-          <UsBriefingPanel className="absolute top-16 left-4 z-25" />
-          <MideastPanel className="absolute top-16 left-4 z-25" />
-          <PersonsPanel className="absolute bottom-14 left-4 z-25" />
-          <MideastDiplomacyPanel className="absolute top-4 left-1/2 -translate-x-1/2 z-25" />
-          <RegionalSituationPanel className="absolute top-20 left-1/2 -translate-x-1/2 z-25" />
-          <NewsPanel className="absolute top-4 left-1/2 -translate-x-1/2 z-25" />
-          <MarketsPanel className="absolute top-32 left-4 z-25" />
-          <EnergyEconPanel className="absolute top-4 right-4 z-25 max-h-[44vh]" />
-          <InsightsPanel className="absolute top-[calc(44vh_+_1.5rem)] right-4 z-25 max-h-[40vh] max-sm:top-auto max-sm:bottom-14" />
-          <SeabedBriefingPanel className="absolute top-12 right-4 z-30" />
-          <SpaceBriefingPanel className="absolute top-12 right-4 z-30" />
-          <OrbitalListHost />
+          <TierSwitcher className="absolute top-1/2 left-3 z-30 -translate-y-1/2" />
+
+          {/* 左轨：区域 / 简报 / 态势 / 外交 / 新闻 / 人物（flex-col 堆叠，自动避让，整体滚动） */}
+          <div className="pointer-events-none absolute bottom-16 left-[4.5rem] top-3 z-20 flex w-[min(19rem,calc(100vw-6rem))] flex-col items-start gap-2 overflow-y-auto overscroll-contain pr-1 [&>*]:pointer-events-auto max-sm:left-14 max-sm:w-[min(17rem,calc(100vw-4rem))]">
+            <RegionDetailCard className="!w-full" />
+            <RegionBriefingPanel className="!w-full !max-h-[46vh]" />
+            <ChinaBriefingPanel className="!w-full !max-h-[46vh]" />
+            <UsBriefingPanel className="!w-full !max-h-[46vh]" />
+            <MideastPanel className="!w-full !max-h-[46vh]" />
+            <RegionalSituationPanel className="!w-full !max-h-[46vh]" />
+            <MideastDiplomacyPanel className="!w-full !max-h-[46vh]" />
+            <NewsPanel className="!w-full !max-h-[46vh]" />
+            <PersonsPanel className="!w-full !max-h-[46vh]" />
+          </div>
+
+          {/* 居中：仅地图 + 实时事件流 + 招牌剖面 */}
+          <LiveEventFeed className="absolute top-3 left-1/2 z-10 w-[19rem] -translate-x-1/2 max-h-[min(52vh,24rem)] max-sm:w-[min(20rem,calc(100vw-2rem))]" />
           <VerticalProfilePanel className="absolute top-12 left-1/2 -translate-x-1/2 z-30 max-h-[80vh] overflow-y-auto" />
-          <MideastMilitaryPanel className="absolute top-12 right-4 z-25" />
+
+          {/* 右轨：市场 / 能源经济 / 关联洞察 / 军力 / 简报 / 发射 / 披萨指数 */}
+          <div className="pointer-events-none absolute bottom-16 right-4 top-3 z-20 flex w-[min(22rem,calc(100vw-2rem))] flex-col items-end gap-2 overflow-y-auto overscroll-contain pl-1 [&>*]:pointer-events-auto">
+            <PizzaIndexHost className="!static !w-full" />
+            <MarketsPanel className="!w-full !max-h-[46vh]" />
+            <EnergyEconPanel className="!w-full !max-h-[46vh]" />
+            <InsightsPanel className="!w-full !max-h-[46vh]" />
+            <MideastMilitaryPanel className="!w-full !max-h-[46vh]" />
+            <SeabedBriefingPanel className="!w-full !max-h-[46vh]" />
+            <SpaceBriefingPanel className="!w-full !max-h-[46vh]" />
+            <LaunchLogPanel className="!w-full !max-h-[46vh]" />
+          </div>
+
+          <OrbitalListHost />
           <MapControlBar className="absolute bottom-14 left-1/2 z-20 -translate-x-1/2 max-sm:bottom-16 max-sm:max-w-[calc(100vw-1rem)]" />
           <MapHudStack className="absolute bottom-[4.75rem] left-4 z-20 max-sm:bottom-[5.25rem] max-sm:left-2" />
           <MarqueeTicker className="absolute bottom-0 left-0 right-0 z-20" />

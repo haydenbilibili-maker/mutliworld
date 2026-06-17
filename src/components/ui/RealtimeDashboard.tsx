@@ -23,6 +23,7 @@ const SOURCES: RealtimeSource[] = [
   { id: 'live_fires', tier: 'surface', icon: '🔥', label: '火点', color: '#f97316' },
   { id: 'live_flights', tier: 'surface', icon: '✈️', label: '航班', color: '#0ea5e9' },
   { id: 'live_maritime', tier: 'surface', icon: '🚢', label: '海运', color: '#22d3ee' },
+  { id: 'pizza_index', tier: 'surface', icon: '🍕', label: '披萨', color: '#eab308' },
   { id: 'satellites', tier: 'space', icon: '🛰️', label: '卫星', color: '#a78bfa' },
   { id: 'space_stations', tier: 'space', icon: '🛸', label: '空间站', color: '#f4d08a' },
 ];
