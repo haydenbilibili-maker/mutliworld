@@ -106,79 +106,46 @@ export function BodySiteLayer() {
   }, [enabled, activeBody, activeBodyLayers, customSites]);
 
   const popupRef = useRef<maplibregl.Popup | null>(null);
-  const lastKeyRef = useRef('');
-  const dataKey = useMemo(() => {
-    const sig = customSites
-      .filter((s) => s.body === activeBody)
-      .map((s) => `${s.id}@${s.lng},${s.lat}`)
-      .join('|');
-    return `${activeBody}:${geojson.features.length}:${sig}:${activeBodyLayers.join(',')}`;
-  }, [activeBody, geojson, customSites, activeBodyLayers]);
 
+  // 单一幂等副作用：建源/建层 → setData → 设可见性，一次完成；消除 setup/apply 分离的竞态。
   useEffect(() => {
     if (!map) return;
-    const setup = () => {
+    let cancelled = false;
+    const ensure = () => {
+      if (cancelled || !map.isStyleLoaded()) return;
       try {
         if (!map.getSource(SOURCE)) {
           map.addSource(SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
         }
         if (!map.getLayer(GLOW)) {
-          map.addLayer({ id: GLOW, type: 'circle', source: SOURCE, layout: { visibility: 'none' }, paint: { 'circle-radius': 12, 'circle-color': COLOR_EXPR, 'circle-opacity': 0.2, 'circle-blur': 0.6 } });
+          map.addLayer({ id: GLOW, type: 'circle', source: SOURCE, paint: { 'circle-radius': 12, 'circle-color': COLOR_EXPR, 'circle-opacity': 0.2, 'circle-blur': 0.6 } });
         }
         if (!map.getLayer(CORE)) {
-          map.addLayer({ id: CORE, type: 'circle', source: SOURCE, layout: { visibility: 'none' }, paint: { 'circle-radius': 5.5, 'circle-color': COLOR_EXPR, 'circle-opacity': 0.95, 'circle-stroke-width': 1.2, 'circle-stroke-color': '#0A0E17' } });
+          map.addLayer({ id: CORE, type: 'circle', source: SOURCE, paint: { 'circle-radius': 5.5, 'circle-color': COLOR_EXPR, 'circle-opacity': 0.95, 'circle-stroke-width': 1.2, 'circle-stroke-color': '#0A0E17' } });
         }
         if (!map.getLayer(LABEL)) {
-          map.addLayer({ id: LABEL, type: 'symbol', source: SOURCE, layout: { visibility: 'none', 'text-field': ['get', 'name'], 'text-size': 10, 'text-offset': [0, 1.2], 'text-anchor': 'top', 'text-optional': true, 'text-allow-overlap': false }, paint: { 'text-color': '#e6edf3', 'text-halo-color': '#0A0E17', 'text-halo-width': 1.2 } });
+          map.addLayer({ id: LABEL, type: 'symbol', source: SOURCE, layout: { 'text-field': ['get', 'name'], 'text-size': 10, 'text-offset': [0, 1.2], 'text-anchor': 'top', 'text-optional': true, 'text-allow-overlap': false }, paint: { 'text-color': '#e6edf3', 'text-halo-color': '#0A0E17', 'text-halo-width': 1.2 } });
         }
-      } catch {
-        /* 样式未就绪 */
-      }
-    };
-    if (map.isStyleLoaded()) setup();
-    map.on('style.load', setup);
-    return () => {
-      map.off('style.load', setup);
-      popupRef.current?.remove();
-      try {
-        if (map.getLayer(LABEL)) map.removeLayer(LABEL);
-        if (map.getLayer(CORE)) map.removeLayer(CORE);
-        if (map.getLayer(GLOW)) map.removeLayer(GLOW);
-        if (map.getSource(SOURCE)) map.removeSource(SOURCE);
-      } catch {
-        /* */
-      }
-    };
-  }, [map, styleEpoch]);
-
-  useEffect(() => {
-    lastKeyRef.current = '';
-  }, [styleEpoch]);
-
-  useEffect(() => {
-    if (!map) return;
-    const apply = () => {
-      try {
         const src = map.getSource(SOURCE) as maplibregl.GeoJSONSource | undefined;
-        if (!src || !map.getLayer(CORE)) return;
-        if (dataKey !== lastKeyRef.current) {
-          src.setData(geojson);
-          lastKeyRef.current = dataKey;
-        }
+        if (src) src.setData(geojson);
         const vis = enabled ? 'visible' : 'none';
-        map.setLayoutProperty(CORE, 'visibility', vis);
-        map.setLayoutProperty(GLOW, 'visibility', vis);
-        map.setLayoutProperty(LABEL, 'visibility', vis);
+        for (const id of [GLOW, CORE, LABEL]) if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis);
       } catch {
-        /* */
+        /* 样式切换中，稍后重试 */
       }
     };
-    if (map.isStyleLoaded()) apply();
-    map.on('style.load', apply);
+    ensure();
+    map.on('style.load', ensure);
+    // 兜底：样式异步加载时，短延迟后再确保一次，避免首帧落空导致标记不显示
+    const t1 = setTimeout(ensure, 120);
+    const t2 = setTimeout(ensure, 500);
     return () => {
-      map.off('style.load', apply);
+      cancelled = true;
+      clearTimeout(t1);
+      clearTimeout(t2);
+      map.off('style.load', ensure);
     };
-  }, [map, enabled, geojson, dataKey, styleEpoch]);
+  }, [map, styleEpoch, enabled, geojson]);
 
   useEffect(() => {
     if (!map) return;

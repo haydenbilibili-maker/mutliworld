@@ -68,64 +68,43 @@ export function BodyFeatureLayer() {
   }, [enabled, activeBody]);
 
   const popupRef = useRef<maplibregl.Popup | null>(null);
-  const lastKeyRef = useRef('');
-  const dataKey = useMemo(() => `${activeBody}:${geojson.features.length}`, [activeBody, geojson]);
 
+  // 单一幂等副作用：建源/建层 → setData → 设可见性；消除 setup/apply 分离竞态。
   useEffect(() => {
     if (!map) return;
-    const setup = () => {
+    let cancelled = false;
+    const ensure = () => {
+      if (cancelled || !map.isStyleLoaded()) return;
       try {
         if (!map.getSource(SOURCE)) map.addSource(SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
         if (!map.getLayer(RING)) {
-          map.addLayer({ id: RING, type: 'circle', source: SOURCE, layout: { visibility: 'none' }, paint: { 'circle-radius': 7, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-width': 1.6, 'circle-stroke-color': ['get', 'color'], 'circle-stroke-opacity': 0.85 } });
+          map.addLayer({ id: RING, type: 'circle', source: SOURCE, paint: { 'circle-radius': 7, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-width': 1.6, 'circle-stroke-color': ['get', 'color'], 'circle-stroke-opacity': 0.85 } });
         }
         if (!map.getLayer(CORE)) {
-          map.addLayer({ id: CORE, type: 'circle', source: SOURCE, layout: { visibility: 'none' }, paint: { 'circle-radius': 2.6, 'circle-color': ['get', 'color'], 'circle-opacity': 0.9 } });
+          map.addLayer({ id: CORE, type: 'circle', source: SOURCE, paint: { 'circle-radius': 2.6, 'circle-color': ['get', 'color'], 'circle-opacity': 0.9 } });
         }
         if (!map.getLayer(LABEL)) {
-          map.addLayer({ id: LABEL, type: 'symbol', source: SOURCE, layout: { visibility: 'none', 'text-field': ['get', 'name'], 'text-size': 10, 'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#bff7ec', 'text-halo-color': '#0A0E17', 'text-halo-width': 1.2 } });
+          map.addLayer({ id: LABEL, type: 'symbol', source: SOURCE, layout: { 'text-field': ['get', 'name'], 'text-size': 10, 'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#bff7ec', 'text-halo-color': '#0A0E17', 'text-halo-width': 1.2 } });
         }
-      } catch {
-        /* */
-      }
-    };
-    if (map.isStyleLoaded()) setup();
-    map.on('style.load', setup);
-    return () => {
-      map.off('style.load', setup);
-      popupRef.current?.remove();
-      try {
-        if (map.getLayer(LABEL)) map.removeLayer(LABEL);
-        if (map.getLayer(CORE)) map.removeLayer(CORE);
-        if (map.getLayer(RING)) map.removeLayer(RING);
-        if (map.getSource(SOURCE)) map.removeSource(SOURCE);
-      } catch {
-        /* */
-      }
-    };
-  }, [map, styleEpoch]);
-
-  useEffect(() => { lastKeyRef.current = ''; }, [styleEpoch]);
-
-  useEffect(() => {
-    if (!map) return;
-    const apply = () => {
-      try {
         const src = map.getSource(SOURCE) as maplibregl.GeoJSONSource | undefined;
-        if (!src || !map.getLayer(CORE)) return;
-        if (dataKey !== lastKeyRef.current) { src.setData(geojson); lastKeyRef.current = dataKey; }
+        if (src) src.setData(geojson);
         const vis = enabled ? 'visible' : 'none';
-        map.setLayoutProperty(CORE, 'visibility', vis);
-        map.setLayoutProperty(RING, 'visibility', vis);
-        map.setLayoutProperty(LABEL, 'visibility', vis);
+        for (const id of [RING, CORE, LABEL]) if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis);
       } catch {
-        /* */
+        /* 样式切换中 */
       }
     };
-    if (map.isStyleLoaded()) apply();
-    map.on('style.load', apply);
-    return () => { map.off('style.load', apply); };
-  }, [map, enabled, geojson, dataKey, styleEpoch]);
+    ensure();
+    map.on('style.load', ensure);
+    const t1 = setTimeout(ensure, 120);
+    const t2 = setTimeout(ensure, 500);
+    return () => {
+      cancelled = true;
+      clearTimeout(t1);
+      clearTimeout(t2);
+      map.off('style.load', ensure);
+    };
+  }, [map, styleEpoch, enabled, geojson]);
 
   useEffect(() => {
     if (!map) return;
