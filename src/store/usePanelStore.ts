@@ -23,13 +23,15 @@ export type PanelId =
   | 'seabed-briefing'
   | 'space-briefing'
   | 'news'
-  | 'markets';
+  | 'markets'
+  | 'econ';
 
 /** 面板元信息（用于停靠工具条按钮） */
 export const PANEL_META: { id: PanelId; label: string }[] = [
   { id: 'briefing', label: '简报' },
   { id: 'news', label: '新闻' },
   { id: 'markets', label: '市场' },
+  { id: 'econ', label: '能源经济' },
   { id: 'overview', label: '态势' },
   { id: 'military', label: '军力' },
   { id: 'energy', label: '能源' },
@@ -118,6 +120,7 @@ const ALL: Record<PanelId, boolean> = {
   'space-briefing': true,
   news: false,
   markets: false,
+  econ: false,
 };
 
 export const usePanelStore = create<PanelState>((set) => ({
@@ -128,10 +131,10 @@ export const usePanelStore = create<PanelState>((set) => ({
     set((s) => ({ open: { ...s.open, [id]: value } })),
   showAll: () =>
     set(() => ({
-      open: { overview: true, military: true, energy: true, persons: true, diplomacy: true, situation: true, marquee: true, briefing: true, 'china-briefing': true, 'us-briefing': true, 'seabed-briefing': true, 'space-briefing': true, news: true, markets: true },
+      open: { overview: true, military: true, energy: true, persons: true, diplomacy: true, situation: true, marquee: true, briefing: true, 'china-briefing': true, 'us-briefing': true, 'seabed-briefing': true, 'space-briefing': true, news: true, markets: true, econ: true },
     })),
   hideAll: () =>
     set(() => ({
-      open: { overview: false, military: false, energy: false, persons: false, diplomacy: false, situation: false, marquee: false, briefing: false, 'china-briefing': false, 'us-briefing': false, 'seabed-briefing': false, 'space-briefing': false, news: false, markets: false },
+      open: { overview: false, military: false, energy: false, persons: false, diplomacy: false, situation: false, marquee: false, briefing: false, 'china-briefing': false, 'us-briefing': false, 'seabed-briefing': false, 'space-briefing': false, news: false, markets: false, econ: false },
     })),
 }));

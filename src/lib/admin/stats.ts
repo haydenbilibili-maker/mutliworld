@@ -38,7 +38,8 @@ import {
   filterByRegion,
   filterMarketQuotes,
 } from '@/lib/region/contentFilter';
-import { STOCK_INDEX_SEEDS } from '@/lib/markets/stock-indices';
+import { STOOQ_INDICES } from '@/lib/datasources/stooq';
+import type { MarketQuote } from '@/lib/markets/markets';
 import type { PersonDomain } from '@/types/person';
 
 const LAUNCH_LOG_PATH = join(process.cwd(), 'data/launch-log/launches.json');
@@ -357,7 +358,18 @@ function getContentHierarchySummary(): ContentHierarchySummary {
     regions.map((r) => [
       r,
       filterMarketQuotes(
-        STOCK_INDEX_SEEDS.map((s) => ({ ...s, kind: 'index' as const })),
+        STOOQ_INDICES.map<MarketQuote>((s) => ({
+          id: `index-${s.symbol}`,
+          kind: 'index',
+          symbol: s.symbol,
+          label: s.label,
+          price: 0,
+          changePct: null,
+          unit: '点',
+          asOf: null,
+          region: s.region,
+          regionIds: s.regionIds,
+        })),
         r,
       ).length,
     ]),
@@ -404,17 +416,17 @@ function getRegionalSituationAdmin() {
 
 function getMarketsAdmin() {
   const byRegion: Record<string, number> = {};
-  for (const seed of STOCK_INDEX_SEEDS) {
+  for (const seed of STOOQ_INDICES) {
     for (const rid of seed.regionIds) {
       byRegion[rid] = (byRegion[rid] ?? 0) + 1;
     }
   }
   return {
-    stockIndexCount: STOCK_INDEX_SEEDS.length,
-    indices: STOCK_INDEX_SEEDS.map((s) => ({
-      id: s.id,
+    stockIndexCount: STOOQ_INDICES.length,
+    indices: STOOQ_INDICES.map((s) => ({
+      id: `index-${s.symbol.replace(/[^a-z0-9]/gi, '')}`,
       label: s.label,
-      symbol: s.symbol,
+      symbol: s.symbol.replace('^', '').toUpperCase(),
       region: s.region,
       regionIds: s.regionIds,
     })),
