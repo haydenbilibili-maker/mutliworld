@@ -20,6 +20,7 @@ import {
   resolveBasemapStyle,
   shouldSkipImageryStyleSwap,
 } from '@/lib/map/basemap';
+import { buildBodyStyle } from '@/lib/map/bodyBasemap';
 import { syncGlobeState } from '@/lib/map/globeProjection';
 
 function applyBasemap(
@@ -63,8 +64,10 @@ function applyBasemap(
 export function BasemapController() {
   const map = useMapContext();
   const bumpStyleEpoch = useBumpMapStyleEpoch();
+  const activeBody = useMapStore((s) => s.activeBody);
   const activeTier = useMapStore((s) => s.activeTier);
   const basemapMode = useMapStore((s) => s.basemapMode);
+  const prevBodyRef = useRef(activeBody);
   const prevTierRef = useRef(activeTier);
   const prevModeRef = useRef(basemapMode);
   const prevPresetRef = useRef<BasemapPreset>(
@@ -74,19 +77,44 @@ export function BasemapController() {
   useEffect(() => {
     if (!map) return;
 
+    const bodyChanged = prevBodyRef.current !== activeBody;
+    const cameFromBody = prevBodyRef.current !== 'earth';
+    prevBodyRef.current = activeBody;
+
+    // 天体分支：非地球 → 占位天体底图
+    if (activeBody !== 'earth') {
+      if (!bodyChanged) return;
+      const applyBody = () => {
+        try {
+          clearTerrainEnhancement(map);
+          map.setStyle(buildBodyStyle(activeBody));
+          map.once('style.load', () => bumpStyleEpoch());
+        } catch {
+          /* 地图销毁中 */
+        }
+      };
+      if (map.isStyleLoaded()) applyBody();
+      else map.once('load', applyBody);
+      return;
+    }
+
+    // 从天体切回地球 → 强制重建地球底图
+    const earthReturn = bodyChanged && cameFromBody;
+
     const preset = getTier(activeTier)?.basemap ?? 'imagery';
     const tierChanged = prevTierRef.current !== activeTier;
     const modeChanged = prevModeRef.current !== basemapMode;
     const prevPreset = prevPresetRef.current;
     const prevMode = prevModeRef.current;
 
-    if (!tierChanged && !modeChanged) return;
+    if (!tierChanged && !modeChanged && !earthReturn) return;
 
     prevTierRef.current = activeTier;
     prevModeRef.current = basemapMode;
     prevPresetRef.current = preset;
 
     if (
+      !earthReturn &&
       tierChanged &&
       !modeChanged &&
       shouldSkipImageryStyleSwap(prevPreset, preset, prevMode, basemapMode)
@@ -100,7 +128,7 @@ export function BasemapController() {
 
     if (map.isStyleLoaded()) run();
     else map.once('load', run);
-  }, [map, activeTier, basemapMode, bumpStyleEpoch]);
+  }, [map, activeBody, activeTier, basemapMode, bumpStyleEpoch]);
 
   return null;
 }

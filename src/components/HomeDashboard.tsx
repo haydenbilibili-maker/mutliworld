@@ -32,6 +32,8 @@ import { PizzaIndexHost } from '@/components/ui/PizzaIndexHost';
 import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
 import { useGlobalEscape } from '@/hooks/useGlobalEscape';
 import { LiveLayerPerformanceGuard } from '@/components/ui/LiveLayerPerformanceGuard';
+import { BodyExploreHint } from '@/components/ui/BodyExploreHint';
+import { useMapStore } from '@/store/useMapStore';
 
 const StrategicResearchHost = dynamic(
   () =>
@@ -43,6 +45,7 @@ const StrategicResearchHost = dynamic(
 
 export function HomeDashboard() {
   useGlobalEscape();
+  const isEarth = useMapStore((s) => s.activeBody === 'earth');
 
   return (
     <GeodataProvider>
@@ -53,6 +56,10 @@ export function HomeDashboard() {
           <MapContainer className="absolute inset-0 z-0" />
           <AboutPanel />
 
+          {!isEarth && <BodyExploreHint />}
+
+          {isEarth && (
+          <>
           {/* 左轨：区域 / 简报 / 态势 / 外交 / 新闻 / 人物（flex-col 堆叠，自动避让，整体滚动） */}
           <div className="pointer-events-none absolute bottom-16 left-4 top-3 z-20 flex w-[min(19rem,calc(100vw-2rem))] flex-col items-start gap-2 overflow-y-auto overscroll-contain pr-1 [&>*]:pointer-events-auto">
             <RegionDetailCard className="!w-full" />
@@ -89,6 +96,8 @@ export function HomeDashboard() {
           <SidePanel />
           <StrategicResearchHost />
           <LiveLayerPerformanceGuard />
+          </>
+          )}
         </div>
       </main>
     </GeodataProvider>

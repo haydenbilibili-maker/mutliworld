@@ -7,15 +7,18 @@
  */
 
 import { BrandMark } from '@/components/ui/BrandMark';
+import { BodySwitcher } from '@/components/ui/BodySwitcher';
 import { RegionSwitcher } from '@/components/ui/RegionSwitcher';
 import { PanelDock } from '@/components/region/PanelDock';
 import { RealtimeDashboard } from '@/components/ui/RealtimeDashboard';
+import { useMapStore } from '@/store/useMapStore';
 
 interface AppHeaderProps {
   className?: string;
 }
 
 export function AppHeader({ className = '' }: AppHeaderProps) {
+  const isEarth = useMapStore((s) => s.activeBody === 'earth');
   return (
     <header
       className={[
@@ -25,20 +28,23 @@ export function AppHeader({ className = '' }: AppHeaderProps) {
         className,
       ].join(' ')}
     >
-      {/* 左：品牌 + 区域 */}
+      {/* 左：品牌 + 天体 + 区域（区域仅地球） */}
       <div className="flex shrink-0 items-center gap-2.5">
         <BrandMark />
-        <RegionSwitcher />
+        <BodySwitcher />
+        {isEarth && <RegionSwitcher />}
       </div>
 
-      {/* 中：面板 tab（单行横滚，不换行不溢出） */}
+      {/* 中：面板 tab（单行横滚，不换行不溢出；仅地球） */}
       <div className="flex min-w-0 flex-1 justify-center overflow-hidden max-sm:order-3 max-sm:w-full max-sm:basis-full max-sm:justify-start">
-        <PanelDock className="min-w-0 max-w-full" />
+        {isEarth ? <PanelDock className="min-w-0 max-w-full" /> : (
+          <span className="text-xs text-dashboard-neutral/60">多天体探索 · Phase 0 · 探索图层建设中</span>
+        )}
       </div>
 
-      {/* 右：实时仪表盘（常驻 · 默认关 · 点击开） */}
+      {/* 右：实时仪表盘（仅地球） */}
       <div className="flex shrink-0 items-center">
-        <RealtimeDashboard />
+        {isEarth && <RealtimeDashboard />}
       </div>
     </header>
   );

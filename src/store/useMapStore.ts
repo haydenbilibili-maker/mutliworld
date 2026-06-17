@@ -6,8 +6,10 @@ import type { EventDetail } from '@/types/geo';
 import type { RegionId } from '@/types/region';
 import type { SpatialTier } from '@/types/tier';
 import type { BasemapMode } from '@/types/tier';
+import type { CelestialBody } from '@/types/body';
 import { getRegion, DEFAULT_REGION_ID } from '@/regions';
 import { getTier, DEFAULT_TIER_ID } from '@/tiers';
+import { getBody, DEFAULT_BODY } from '@/bodies';
 import { filterSensitive, SENSITIVE_LAYERS } from '@/lib/layers/sensitivity';
 import {
   CHINA_GLOBE_VIEW,
@@ -16,6 +18,8 @@ import {
 import { centersEqual, layersEqual, zoomsEqual } from '@/lib/map/viewState';
 
 export interface MapState {
+  /** 当前天体（多天体探索 v2.0：地球/月球/火星），默认 earth 零回归 */
+  activeBody: CelestialBody;
   /** 当前区域模块（LIFEOS-005 平台化） */
   activeRegion: RegionId;
   /** 当前空间层（三位一体：宇宙/地表/洋底） */
@@ -42,6 +46,8 @@ export interface MapState {
 }
 
 export interface MapActions {
+  /** 切换天体：应用该天体默认视野与底图；earth 恢复当前区域视野 */
+  setBody: (body: CelestialBody) => void;
   /** 切换区域：应用该区域的默认视野 / 图层 / 时间范围 */
   setRegion: (regionId: RegionId) => void;
   /** 切换空间层：应用该层默认图层（保持当前地理视野，原地穿越） */
@@ -69,6 +75,7 @@ export interface MapActions {
 }
 
 const initialState: MapState = {
+  activeBody: DEFAULT_BODY,
   activeRegion: DEFAULT_REGION_ID,
   activeTier: DEFAULT_TIER_ID,
   hideSensitive: false,
@@ -88,6 +95,30 @@ const initialState: MapState = {
 
 export const useMapStore = create<MapState & MapActions>((set) => ({
   ...initialState,
+  setBody: (body) =>
+    set((s) => {
+      if (s.activeBody === body) return {};
+      if (body === 'earth') {
+        const region = getRegion(s.activeRegion);
+        return {
+          activeBody: 'earth',
+          center: region?.center ?? [105, 28],
+          zoom: region?.zoom ?? 3.5,
+          activeLayers: filterSensitive(region?.defaultLayers ?? region?.layers ?? [], s.hideSensitive),
+          selectedEvent: null,
+          sidePanelOpen: false,
+        };
+      }
+      const mod = getBody(body);
+      return {
+        activeBody: body,
+        center: mod?.center ?? [0, 0],
+        zoom: mod?.zoom ?? 2,
+        activeLayers: [],
+        selectedEvent: null,
+        sidePanelOpen: false,
+      };
+    }),
   setRegion: (regionId) =>
     set(() => {
       const mod = getRegion(regionId);
