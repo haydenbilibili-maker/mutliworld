@@ -5,6 +5,7 @@
 import type { BodyLayerId, BodySite, CelestialBody } from '@/types/body';
 import { MOON_SITES } from './moon';
 import { MARS_SITES } from './mars';
+import { orbitersForBody } from '@/bodies/orbiters';
 
 export const ALL_BODY_SITES: BodySite[] = [...MOON_SITES, ...MARS_SITES];
 
@@ -35,9 +36,9 @@ export function bodyLayersFor(body: CelestialBody): BodyLayerMeta[] {
   return BODY_LAYER_META.filter((m) => m.body === body);
 }
 
-/** 当前有真实痕迹数据的图层（用于默认开启与是否显示图例） */
+/** 当前有数据（静态痕迹或在轨名册）的图层（用于显示图例与开关） */
 export function populatedLayersFor(body: CelestialBody): BodyLayerId[] {
-  const sites = getSitesForBody(body);
-  const set = new Set(sites.map((s) => s.layer));
+  const set = new Set(getSitesForBody(body).map((s) => s.layer));
+  for (const o of orbitersForBody(body)) set.add(o.layer);
   return BODY_LAYER_META.filter((m) => m.body === body && set.has(m.id)).map((m) => m.id);
 }
