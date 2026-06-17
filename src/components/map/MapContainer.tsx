@@ -61,6 +61,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
   const { center, zoom } = useMapStore();
   const globeViewResetNonce = useMapStore((s) => s.globeViewResetNonce);
   const activeTier = useMapStore((s) => s.activeTier);
+  const isEarth = useMapStore((s) => s.activeBody === 'earth');
   const orbitalOpen = useOrbitalPanelStore((s) => s.open);
   const { bounds } = useRegionData();
 
@@ -301,25 +302,33 @@ export function MapContainer({ className = '' }: MapContainerProps) {
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
         />
         <BasemapController />
-        <BathymetryLayer />
-        <LiveWeatherLayer />
-        <ConflictZonesLayer />
         <GlobeController />
         <CosmicGlobeAnimator />
         <OrbitRings />
-        <OrbitalObjectsLayer />
-        <FlightLayer />
-        <FireLayer />
+
+        {/* 天体探索层（月/火）：始终挂载，内部按 activeBody 门控 */}
         <BodySiteLayer />
         <BodyOrbiterLayer />
         <BodyTraverseLayer />
-        <MaritimeLayer />
-        <PizzaIndexLayer />
-        <ProfilePicker />
-        <CrossLayerLinks />
-        <GeodataLayer />
-        <GeodataFetchIndicator />
-        <MapSelectionPulse />
+
+        {/* 地球数据层：仅地球渲染，避免在月/火上泄漏地球事件/标记 */}
+        {isEarth && (
+          <>
+            <BathymetryLayer />
+            <LiveWeatherLayer />
+            <ConflictZonesLayer />
+            <OrbitalObjectsLayer />
+            <FlightLayer />
+            <FireLayer />
+            <MaritimeLayer />
+            <PizzaIndexLayer />
+            <ProfilePicker />
+            <CrossLayerLinks />
+            <GeodataLayer />
+            <GeodataFetchIndicator />
+            <MapSelectionPulse />
+          </>
+        )}
       </div>
     </MapProvider>
   );
