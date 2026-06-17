@@ -1,49 +1,56 @@
 'use client';
 
-import { useState } from 'react';
-import { useGeodataContext } from '@/context/GeodataContext';
+/**
+ * 实时事件流 — Wave 4 重构：消费统一真实事件管道 /api/events
+ * 源：USGS 地震 · GDACS 灾害 · ReliefWeb 人道 · GDELT 地缘新闻（全真实，无种子）。
+ * 分类筛选 + 点击地图联动（带坐标的事件飞行定位）+ 可点击溯源。
+ */
+
+import { useMemo, useState } from 'react';
 import { useMapStore } from '@/store/useMapStore';
-import type { GeoJSONFeature, ImpactLevel } from '@/types/geo';
+import { useLiveEvents } from '@/hooks/useLiveEvents';
+import type { LiveEvent, LiveEventCategory, LiveEventSeverity } from '@/types/liveEvent';
+import type { EventDetail, ImpactLevel } from '@/types/geo';
 
-const IMPACT_COLOR: Record<ImpactLevel, string> = {
-  critical: 'text-red-400',
-  high: 'text-orange-400',
-  medium: 'text-yellow-400',
-  low: 'text-blue-400',
-};
-
-const IMPACT_DOT: Record<ImpactLevel, string> = {
+const SEVERITY_DOT: Record<LiveEventSeverity, string> = {
   critical: 'bg-red-400',
   high: 'bg-orange-400',
   medium: 'bg-yellow-400',
   low: 'bg-blue-400',
 };
+const SEVERITY_COLOR: Record<LiveEventSeverity, string> = {
+  critical: 'text-red-400',
+  high: 'text-orange-400',
+  medium: 'text-yellow-400',
+  low: 'text-blue-400',
+};
+const SEVERITY_LABEL: Record<LiveEventSeverity, string> = {
+  critical: '严重',
+  high: '高',
+  medium: '中',
+  low: '低',
+};
 
-const LAYER_LABEL: Record<string, string> = {
-  conflicts: '冲突',
-  conflict_zones: '冲突区',
-  military: '军事',
-  hotspots: '热点',
-  economic: '经济',
-  waterways: '航运',
-  natural: '自然',
-  weather: '气象',
-  bases: '基地',
-  nuclear: '核',
-  sanctions: '制裁',
-  outages: '中断',
-  aviation: '航空',
-  maritime: '海运',
-  cables: '海缆',
-  econ_hubs: '经济中心',
-  minerals: '矿产',
-  daynight: '晨昏线',
-  pipelines: '管线',
-  datacenters: '数据中心',
-  protests: '抗议',
-  climate: '气候',
-  launch_sites: '发射场',
-  launch_log: '发射',
+const CATEGORY_LABEL: Record<LiveEventCategory, string> = {
+  quake: '地震',
+  disaster: '灾害',
+  humanitarian: '人道',
+  geopolitics: '地缘',
+  general: '综合',
+};
+const CATEGORY_EMOJI: Record<LiveEventCategory, string> = {
+  quake: '📳',
+  disaster: '🌋',
+  humanitarian: '🆘',
+  geopolitics: '📰',
+  general: '•',
+};
+
+const SEVERITY_TO_IMPACT: Record<LiveEventSeverity, ImpactLevel> = {
+  critical: 'critical',
+  high: 'high',
+  medium: 'medium',
+  low: 'low',
 };
 
 function formatTimestamp(iso: string): string {
@@ -57,60 +64,52 @@ function formatTimestamp(iso: string): string {
   return `${mm}-${dd} ${HH}:${MM}`;
 }
 
-function toImpact(raw: string): ImpactLevel {
-  if (raw === 'critical' || raw === 'high' || raw === 'medium' || raw === 'low') {
-    return raw;
-  }
-  return 'medium';
-}
-
 interface LiveEventFeedProps {
   className?: string;
-  /** 最多显示条数，默认 12 */
   maxItems?: number;
 }
 
-/**
- * 实时事件列表：消费 GeodataProvider 的同一份 /api/geodata 数据，
- * 按时间倒序列出，点击跳转地图 + 打开 SidePanel。
- */
-export function LiveEventFeed({ className = '', maxItems = 12 }: LiveEventFeedProps) {
-  const { data, isLoading, isValidating, error } = useGeodataContext();
-  const { selectEvent, setCenter, setZoom } = useMapStore();
+type CatFilter = 'all' | LiveEventCategory;
+
+export function LiveEventFeed({ className = '', maxItems = 14 }: LiveEventFeedProps) {
+  const { events, byCategory, providerCounts, isLoading, isValidating, error } = useLiveEvents(true);
+  const selectEvent = useMapStore((s) => s.selectEvent);
+  const setViewport = useMapStore((s) => s.setViewport);
   const [collapsed, setCollapsed] = useState(true);
+  const [cat, setCat] = useState<CatFilter>('all');
 
-  const items = [...(data?.features ?? [])]
-    .sort((a, b) => {
-      const ta = new Date(String(a.properties?.timestamp ?? '')).getTime() || 0;
-      const tb = new Date(String(b.properties?.timestamp ?? '')).getTime() || 0;
-      return tb - ta;
-    })
-    .slice(0, maxItems);
+  const cats = useMemo<LiveEventCategory[]>(
+    () => (['quake', 'disaster', 'humanitarian', 'geopolitics', 'general'] as LiveEventCategory[]).filter((c) => (byCategory.get(c) ?? 0) > 0),
+    [byCategory],
+  );
 
-  const handleClick = (f: GeoJSONFeature) => {
-    const p = f.properties ?? {};
-    const lng = Number(p.lng ?? 0);
-    const lat = Number(p.lat ?? 0);
-    const impact = toImpact(String(p.impact ?? ''));
-    selectEvent({
-      id: String(p.id ?? ''),
-      title: String(p.title ?? ''),
-      source: String(p.source ?? ''),
-      timestamp: String(p.timestamp ?? ''),
-      location: [lng, lat],
-      impact_level: impact,
-      category: String(p.category ?? p.layerId ?? ''),
-      description: String(p.description ?? ''),
-    });
-    setCenter([lng, lat]);
-    setZoom(5);
+  const list = useMemo(() => {
+    const filtered = cat === 'all' ? events : events.filter((e) => e.category === cat);
+    return filtered.slice(0, maxItems);
+  }, [events, cat, maxItems]);
+
+  const handleClick = (e: LiveEvent) => {
+    const detail: EventDetail = {
+      id: e.id,
+      title: e.title,
+      source: e.source,
+      timestamp: e.time,
+      location: [e.lng ?? 0, e.lat ?? 0],
+      impact_level: SEVERITY_TO_IMPACT[e.severity],
+      category: e.category,
+      description: e.summary ?? `${e.source}${e.area ? ' · ' + e.area : ''}`,
+      url: e.sourceUrl,
+    };
+    selectEvent(detail);
+    if (e.lat != null && e.lng != null) setViewport([e.lng, e.lat], 5);
   };
 
+  const providerLine = providerCounts
+    ? `USGS ${providerCounts.USGS} · GDACS ${providerCounts.GDACS} · ReliefWeb ${providerCounts.ReliefWeb} · GDELT ${providerCounts.GDELT}`
+    : '';
+
   return (
-    <div
-      className={`rounded-lg bg-dashboard-bg/90 border border-dashboard-neutral/20 text-sm overflow-hidden ${className}`}
-    >
-      {/* 标题栏 */}
+    <div className={`rounded-lg bg-dashboard-bg/90 border border-dashboard-neutral/20 text-sm overflow-hidden ${className}`}>
       <div
         className="flex cursor-pointer select-none items-center justify-between border-b border-dashboard-neutral/10 px-3 py-2"
         onClick={() => setCollapsed((c) => !c)}
@@ -132,72 +131,83 @@ export function LiveEventFeed({ className = '', maxItems = 12 }: LiveEventFeedPr
           )}
         </span>
         <span className="text-dashboard-neutral/50 text-xs">
-          {collapsed ? '展开' : `共 ${data?.meta?.featureCount ?? 0} 条`}
+          {collapsed ? '展开' : `共 ${events.length} 条`}
         </span>
       </div>
 
       {!collapsed && (
-        <div className="max-h-72 overflow-y-auto divide-y divide-dashboard-neutral/10">
-          {error ? (
-            <div className="px-3 py-3 text-dashboard-conflict/80">事件数据暂不可用</div>
-          ) : isLoading ? (
-            <div className="px-3 py-3 text-dashboard-neutral/50">加载中…</div>
-          ) : items.length === 0 ? (
-            <div className="px-3 py-3 text-dashboard-neutral/50">
-              当前时间范围内无事件
-            </div>
-          ) : null}
-          {!error &&
-            !isLoading &&
-            items.map((f) => {
-            const p = f.properties ?? {};
-            const impact = toImpact(String(p.impact ?? ''));
-            const layerId = String(p.layerId ?? '');
-            const title = String(p.title ?? '');
-            const ts = String(p.timestamp ?? '');
-            const markerEmoji = String(p.markerEmoji ?? '');
-            return (
+        <>
+          <div className="flex flex-wrap gap-1 border-b border-dashboard-neutral/10 px-2 py-1.5 text-[10px]">
+            <button
+              type="button"
+              onClick={() => setCat('all')}
+              className={`rounded px-1.5 py-0.5 ${cat === 'all' ? 'bg-white/15 text-white' : 'text-dashboard-neutral'}`}
+            >
+              全部
+            </button>
+            {cats.map((c) => (
               <button
-                key={String(p.id ?? Math.random())}
+                key={c}
                 type="button"
-                onClick={() => handleClick(f)}
-                className="w-full text-left px-3 py-2 hover:bg-white/5 transition-colors flex gap-2 items-start"
+                onClick={() => setCat(c)}
+                className={`rounded px-1.5 py-0.5 ${cat === c ? 'bg-white/15 text-white' : 'text-dashboard-neutral'}`}
               >
-                {markerEmoji ? (
-                  <span className="mt-0.5 flex-shrink-0 text-base leading-none" aria-hidden>
-                    {markerEmoji}
-                  </span>
-                ) : (
-                  <span
-                    className={`mt-1.5 flex-shrink-0 w-1.5 h-1.5 rounded-full ${IMPACT_DOT[impact]}`}
-                  />
-                )}
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-dashboard-neutral leading-snug">{title}</div>
-                  <div className="flex gap-2 mt-0.5">
-                    {layerId && (
-                      <span className="text-dashboard-neutral/50">
-                        {LAYER_LABEL[layerId] ?? layerId}
-                      </span>
-                    )}
-                    <span className={`${IMPACT_COLOR[impact]}`}>
-                      {impact === 'critical'
-                        ? '严重'
-                        : impact === 'high'
-                        ? '高'
-                        : impact === 'medium'
-                        ? '中'
-                        : '低'}
-                    </span>
-                    {ts && (
-                      <span className="text-dashboard-neutral/40">{formatTimestamp(ts)}</span>
-                    )}
-                  </div>
-                </div>
+                {CATEGORY_EMOJI[c]} {CATEGORY_LABEL[c]} {byCategory.get(c)}
               </button>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+
+          <div className="max-h-72 overflow-y-auto divide-y divide-dashboard-neutral/10">
+            {error ? (
+              <div className="px-3 py-3 text-dashboard-conflict/80">事件数据暂不可用</div>
+            ) : isLoading && events.length === 0 ? (
+              <div className="px-3 py-3 text-dashboard-neutral/50">加载真实事件…</div>
+            ) : list.length === 0 ? (
+              <div className="px-3 py-3 text-dashboard-neutral/50">该分类暂无事件</div>
+            ) : (
+              list.map((e) => (
+                <div key={e.id} className="flex items-start gap-2 px-3 py-2 hover:bg-white/5">
+                  <button
+                    type="button"
+                    onClick={() => handleClick(e)}
+                    title={e.lat != null ? '点击定位至地图' : '查看详情'}
+                    className="flex min-w-0 flex-1 items-start gap-2 text-left"
+                  >
+                    <span className="mt-0.5 flex-shrink-0 text-base leading-none" aria-hidden>
+                      {CATEGORY_EMOJI[e.category]}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-dashboard-neutral leading-snug">{e.title}</span>
+                      <span className="mt-0.5 flex flex-wrap gap-2">
+                        <span className="text-dashboard-neutral/50">{e.source}</span>
+                        <span className={SEVERITY_COLOR[e.severity]}>{SEVERITY_LABEL[e.severity]}</span>
+                        {e.magnitude != null && (
+                          <span className="text-dashboard-neutral/60">M{e.magnitude.toFixed(1)}</span>
+                        )}
+                        <span className="text-dashboard-neutral/40">{formatTimestamp(e.time)}</span>
+                      </span>
+                    </span>
+                  </button>
+                  <a
+                    href={e.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="原文溯源"
+                    className="mt-0.5 shrink-0 text-[11px] text-dashboard-neutral/40 hover:text-sky-300"
+                  >
+                    ↗
+                  </a>
+                </div>
+              ))
+            )}
+          </div>
+
+          {providerLine && (
+            <div className="border-t border-dashboard-neutral/10 px-3 py-1.5 text-[10px] text-dashboard-neutral/40">
+              真实源：{providerLine}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
