@@ -19,8 +19,7 @@ export function SurfaceLayerStatusStack({ className = '' }: SurfaceLayerStatusSt
   return (
     <div
       className={[
-        'pointer-events-none absolute right-4 top-4 z-30 flex max-w-[min(58vw,44rem)] flex-row flex-wrap items-center justify-end gap-1.5',
-        'max-sm:static max-sm:max-w-full max-sm:justify-end',
+        'flex flex-row flex-wrap items-center justify-end gap-1.5',
         className,
       ].join(' ')}
     >
