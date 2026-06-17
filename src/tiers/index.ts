@@ -32,7 +32,7 @@ const surfaceTier: TierModule = {
 /** 🌊 洋底空间层 — 海缆/管线/震源深度/海床（Phase 1 主战场） */
 const subsurfaceTier: TierModule = {
   id: 'subsurface',
-  name: '洋底空间',
+  name: '洋底',
   icon: '🌊',
   tagline: '海缆 · 海底管线 · 震源深度 · 海床 · 深海争夺',
   // Phase 1 完整：海缆/海底管线/深海采矿/板块断层/震源深度/断缆事件 + 复用 maritime/natural（海床栅格随本层自动铺开）
@@ -47,7 +47,7 @@ const subsurfaceTier: TierModule = {
 /** 🛰 宇宙空间层 — 发射场/星座/测控/空天事件（Phase 2，3D 分支） */
 const spaceTier: TierModule = {
   id: 'space',
-  name: '宇宙空间',
+  name: '宇宙',
   icon: '🛰',
   tagline: '卫星星座 · 在轨 · 测控站 · 发射 · 轨道安全',
   // Phase 2：发射场 + 测控站 + 在轨 GEO 卫星；后续增补 LEO 星座/星下点动效/space_events + 3D 地球
