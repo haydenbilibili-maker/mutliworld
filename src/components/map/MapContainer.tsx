@@ -38,6 +38,7 @@ import { FlightLayer } from '@/components/map/FlightLayer';
 import { FireLayer } from '@/components/map/FireLayer';
 import { BodySiteLayer } from '@/components/map/BodySiteLayer';
 import { BodyOrbiterLayer } from '@/components/map/BodyOrbiterLayer';
+import { BodyTraverseLayer } from '@/components/map/BodyTraverseLayer';
 import { MaritimeLayer } from '@/components/map/MaritimeLayer';
 import { PizzaIndexLayer } from '@/components/map/PizzaIndexLayer';
 import { ProfilePicker } from '@/components/map/ProfilePicker';
@@ -311,6 +312,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
         <FireLayer />
         <BodySiteLayer />
         <BodyOrbiterLayer />
+        <BodyTraverseLayer />
         <MaritimeLayer />
         <PizzaIndexLayer />
         <ProfilePicker />

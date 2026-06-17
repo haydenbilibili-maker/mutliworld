@@ -105,6 +105,7 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
           center: region?.center ?? [105, 28],
           zoom: region?.zoom ?? 3.5,
           activeLayers: filterSensitive(region?.defaultLayers ?? region?.layers ?? [], s.hideSensitive),
+          globe: false,
           selectedEvent: null,
           sidePanelOpen: false,
         };
@@ -115,6 +116,8 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
         center: mod?.center ?? [0, 0],
         zoom: mod?.zoom ?? 2,
         activeLayers: [],
+        // 天体默认 3D 球面视图
+        globe: true,
         selectedEvent: null,
         sidePanelOpen: false,
       };

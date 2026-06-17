@@ -6,6 +6,7 @@ import type { BodyLayerId, BodySite, CelestialBody } from '@/types/body';
 import { MOON_SITES } from './moon';
 import { MARS_SITES } from './mars';
 import { orbitersForBody } from '@/bodies/orbiters';
+import { traverseForBody } from '@/bodies/traverse';
 
 export const ALL_BODY_SITES: BodySite[] = [...MOON_SITES, ...MARS_SITES];
 
@@ -40,5 +41,6 @@ export function bodyLayersFor(body: CelestialBody): BodyLayerMeta[] {
 export function populatedLayersFor(body: CelestialBody): BodyLayerId[] {
   const set = new Set(getSitesForBody(body).map((s) => s.layer));
   for (const o of orbitersForBody(body)) set.add(o.layer);
+  for (const t of traverseForBody(body)) set.add(t.layer);
   return BODY_LAYER_META.filter((m) => m.body === body && set.has(m.id)).map((m) => m.id);
 }

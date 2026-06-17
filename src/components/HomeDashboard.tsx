@@ -32,8 +32,9 @@ import { PizzaIndexHost } from '@/components/ui/PizzaIndexHost';
 import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
 import { useGlobalEscape } from '@/hooks/useGlobalEscape';
 import { LiveLayerPerformanceGuard } from '@/components/ui/LiveLayerPerformanceGuard';
-import { BodyExploreHint } from '@/components/ui/BodyExploreHint';
 import { BodyTimelinePanel } from '@/components/ui/BodyTimelinePanel';
+import { BodyOverviewPanel } from '@/components/ui/BodyOverviewPanel';
+import { BodyViewControls } from '@/components/ui/BodyViewControls';
 import { useMapStore } from '@/store/useMapStore';
 
 const StrategicResearchHost = dynamic(
@@ -57,8 +58,9 @@ export function HomeDashboard() {
           <MapContainer className="absolute inset-0 z-0" />
           <AboutPanel />
 
-          {!isEarth && <BodyExploreHint />}
           {!isEarth && <BodyTimelinePanel className="absolute top-3 left-4 z-20 w-[min(20rem,calc(100vw-2rem))]" />}
+          {!isEarth && <BodyOverviewPanel className="absolute top-3 right-4 z-20 w-[min(20rem,calc(100vw-2rem))]" />}
+          {!isEarth && <BodyViewControls className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2" />}
 
           {isEarth && (
           <>
