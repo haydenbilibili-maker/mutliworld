@@ -13,8 +13,8 @@ export type SpatialTier = 'space' | 'surface' | 'subsurface';
 /** 渲染范式：平面 / 轨道（宇宙）/ 深度（洋底） */
 export type TierRenderMode = 'flat' | 'orbit' | 'depth';
 
-/** 底图预设（由 MapContainer 按层切换；Phase 0 仅声明，切换为后续阶段） */
-export type BasemapPreset = 'graticule' | 'starfield' | 'seabed';
+/** 底图预设（MapContainer / BasemapController 按层切换） */
+export type BasemapPreset = 'geographic' | 'graticule' | 'starfield' | 'seabed';
 
 export interface TierModule {
   id: SpatialTier;

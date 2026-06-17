@@ -10,7 +10,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import type { FeatureCollection } from 'geojson';
-import { useMapContext } from '@/context/MapContext';
+import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import { useLiveSatellites } from '@/hooks/useLiveSatellites';
 import type { LiveSat } from '@/lib/space/liveSatellites';
@@ -34,6 +34,7 @@ function toFC(sats: LiveSat[]): FeatureCollection {
 
 export function LiveSatellitesLayer() {
   const map = useMapContext();
+  const styleEpoch = useMapStyleEpoch();
   const inSpace = useMapStore((s) => s.activeTier === 'space');
   const selectEvent = useMapStore((s) => s.selectEvent);
   const setCenter = useMapStore((s) => s.setCenter);
@@ -100,9 +101,10 @@ export function LiveSatellitesLayer() {
     };
 
     if (map.isStyleLoaded()) setup();
-    else map.once('load', setup);
+    map.on('style.load', setup);
 
     return () => {
+      map.off('style.load', setup);
       try {
         if (map.getLayer(DOT)) map.removeLayer(DOT);
         if (map.getLayer(GLOW)) map.removeLayer(GLOW);
@@ -111,7 +113,7 @@ export function LiveSatellitesLayer() {
         /* */
       }
     };
-  }, [map]);
+  }, [map, styleEpoch]);
 
   // 数据更新：圆点 setData + 显隐
   useEffect(() => {
@@ -132,8 +134,11 @@ export function LiveSatellitesLayer() {
       }
     };
     if (map.isStyleLoaded()) apply();
-    else map.once('load', apply);
-  }, [map, items, itemsKey, inSpace]);
+    map.on('style.load', apply);
+    return () => {
+      map.off('style.load', apply);
+    };
+  }, [map, items, itemsKey, inSpace, styleEpoch]);
 
   // 空间站 DOM 高亮标记（脉冲 + 标签）
   useEffect(() => {

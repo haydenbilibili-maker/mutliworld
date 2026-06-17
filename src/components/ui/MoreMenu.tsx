@@ -4,9 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLaunchLogStore } from '@/store/useLaunchLogStore';
 import { useOrbitalPanelStore } from '@/store/useOrbitalPanelStore';
+import { usePizzaIndexPanelStore } from '@/store/usePizzaIndexPanelStore';
 import { useLaunchLog } from '@/hooks/useLaunchLog';
 import { useMapStore } from '@/store/useMapStore';
 import { useOrbitalObjects } from '@/hooks/useOrbitalObjects';
+import { usePentagonPizzaIndex } from '@/hooks/usePentagonPizzaIndex';
+import { PENTAGON_CENTER, PENTAGON_FLY_ZOOM } from '@/lib/pizza-index/venues';
 
 interface MoreMenuProps {
   className?: string;
@@ -22,11 +25,21 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
   const toggleLaunchLog = useLaunchLogStore((s) => s.toggle);
   const orbitalOpen = useOrbitalPanelStore((s) => s.open);
   const toggleOrbital = useOrbitalPanelStore((s) => s.toggle);
+  const pizzaOpen = usePizzaIndexPanelStore((s) => s.open);
+  const togglePizza = usePizzaIndexPanelStore((s) => s.toggle);
   const inSpace = useMapStore((s) => s.activeTier === 'space');
+  const inSurface = useMapStore((s) => s.activeTier === 'surface');
+  const setCenter = useMapStore((s) => s.setCenter);
+  const setZoom = useMapStore((s) => s.setZoom);
+  const toggleLayer = useMapStore((s) => s.toggleLayer);
+  const activeLayers = useMapStore((s) => s.activeLayers);
   const { total } = useLaunchLog('1y');
   const { meta: orbitalMeta } = useOrbitalObjects(inSpace && (menuOpen || orbitalOpen));
+  const { data: pizzaData } = usePentagonPizzaIndex(
+    inSurface && (menuOpen || pizzaOpen),
+  );
 
-  const hasActiveItem = launchLogOpen || orbitalOpen;
+  const hasActiveItem = launchLogOpen || orbitalOpen || pizzaOpen;
   const orbitalTotal = orbitalMeta?.total ?? 0;
   const adminEnabled =
     process.env.NEXT_PUBLIC_ADMIN_ENABLED === 'true' ||
@@ -60,6 +73,17 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
 
   const handleOrbitalToggle = () => {
     toggleOrbital();
+    setMenuOpen(false);
+  };
+
+  const handlePizzaToggle = () => {
+    const next = !pizzaOpen;
+    togglePizza();
+    if (next) {
+      setCenter(PENTAGON_CENTER);
+      setZoom(PENTAGON_FLY_ZOOM);
+      if (!activeLayers.includes('pizza_index')) toggleLayer('pizza_index');
+    }
     setMenuOpen(false);
   };
 
@@ -219,6 +243,55 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
                   )}
                 </button>
               </li>
+              {inSurface && (
+                <li>
+                  <button
+                    type="button"
+                    role="menuitemcheckbox"
+                    aria-checked={pizzaOpen}
+                    onClick={handlePizzaToggle}
+                    className={[
+                      'flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] transition-colors',
+                      pizzaOpen
+                        ? 'bg-dashboard-military/15 text-white'
+                        : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
+                    ].join(' ')}
+                  >
+                    <span aria-hidden className="shrink-0 text-sm">
+                      🍕
+                    </span>
+                    <span className="min-w-0 flex-1 font-medium">披萨指数</span>
+                    {pizzaData && (
+                      <span
+                        className={[
+                          'min-w-[1.25rem] rounded-full px-1.5 py-0.5 text-center text-[10px] font-medium tabular-nums',
+                          pizzaOpen
+                            ? 'bg-orange-500/30 text-orange-100'
+                            : 'bg-dashboard-neutral/15 text-dashboard-neutral/70',
+                        ].join(' ')}
+                      >
+                        {pizzaData.score}
+                      </span>
+                    )}
+                    {pizzaOpen && (
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                        className="shrink-0 text-dashboard-military"
+                      >
+                        <path d="M20 6 9 17l-5-5" />
+                      </svg>
+                    )}
+                  </button>
+                </li>
+              )}
               {adminEnabled && (
                 <li>
                   <a

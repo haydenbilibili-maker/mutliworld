@@ -11,7 +11,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import type maplibregl from 'maplibre-gl';
 import type { FeatureCollection } from 'geojson';
-import { useMapContext } from '@/context/MapContext';
+import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useProfileStore } from '@/store/useProfileStore';
 import { useGeodataContext } from '@/context/GeodataContext';
 import { useLiveSatellites } from '@/hooks/useLiveSatellites';
@@ -31,6 +31,7 @@ const TIER_COLOR: Record<string, string> = {
 
 export function CrossLayerLinks() {
   const map = useMapContext();
+  const styleEpoch = useMapStyleEpoch();
   const active = useProfileStore((s) => s.active);
   const point = useProfileStore((s) => s.point);
   const { data } = useGeodataContext();
@@ -133,9 +134,10 @@ export function CrossLayerLinks() {
     };
 
     if (map.isStyleLoaded()) ensure();
-    else map.once('load', ensure);
+    map.on('style.load', ensure);
 
     return () => {
+      map.off('style.load', ensure);
       try {
         if (map.getLayer(RING)) map.removeLayer(RING);
         if (map.getLayer(LINE)) map.removeLayer(LINE);
@@ -144,7 +146,7 @@ export function CrossLayerLinks() {
         /* */
       }
     };
-  }, [map]);
+  }, [map, styleEpoch]);
 
   // 数据更新
   useEffect(() => {

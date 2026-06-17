@@ -21,6 +21,7 @@ const IMPACT_DOT: Record<ImpactLevel, string> = {
 
 const LAYER_LABEL: Record<string, string> = {
   conflicts: '冲突',
+  conflict_zones: '冲突区',
   military: '军事',
   hotspots: '热点',
   economic: '经济',

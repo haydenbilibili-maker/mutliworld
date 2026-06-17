@@ -13,17 +13,20 @@ export const DEFAULT_TIME_RANGE = '7d' as const;
 /** 图层 ID 与中文标签 */
 export const LAYER_LABELS: Record<LayerId, string> = {
   conflicts: '冲突与安全',
+  conflict_zones: '冲突区',
   hotspots: '热点区域',
   bases: '基地与演习',
   economic: '经济与基建',
   waterways: '水道与港口',
   natural: '自然灾害',
   weather: '气象预警',
+  live_weather: '实时天气',
   military: '军事动态',
   sanctions: '制裁与博弈',
   nuclear: '核与战略',
   outages: '基础设施',
   aviation: '航空枢纽',
+  live_flights: '实时航班',
   maritime: '海运要道',
   cables: '海底光缆',
   econ_hubs: '全球经济中心',
@@ -53,6 +56,7 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   monsoon: '季风气候带',
   atmospheric_circulation: '大气环流',
   deep_exploration: '深海探索',
+  pizza_index: '披萨指数',
 };
 
 /** 默认开启的图层（MVP） */

@@ -8,9 +8,14 @@
 import { useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
+import { useStrategicResearchStore } from '@/store/useStrategicResearchStore';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { LAYER_LABELS } from '@/lib/constants';
-import type { StrategicResearchModule } from '@/types/strategic-research';
+import type {
+  StrategicResearchModule,
+  StrategicResearchPanelId,
+  StrategicResearchRelatedPanel,
+} from '@/types/strategic-research';
 import type { LayerId } from '@/types/geo';
 
 interface StrategicResearchPanelProps {
@@ -25,6 +30,8 @@ interface StrategicResearchPanelProps {
   className?: string;
   /** 面板 aria 标签 */
   ariaLabel?: string;
+  parentPanelId?: StrategicResearchPanelId;
+  relatedPanels?: StrategicResearchRelatedPanel[];
 }
 
 export function StrategicResearchPanel({
@@ -38,11 +45,14 @@ export function StrategicResearchPanel({
   footer,
   className = '',
   ariaLabel,
+  parentPanelId,
+  relatedPanels,
 }: StrategicResearchPanelProps) {
   const setCenter = useMapStore((s) => s.setCenter);
   const setZoom = useMapStore((s) => s.setZoom);
   const setActiveLayers = useMapStore((s) => s.setActiveLayers);
   const activeLayers = useMapStore((s) => s.activeLayers);
+  const openPanel = useStrategicResearchStore((s) => s.openPanel);
 
   const module =
     modules.find((m) => m.id === activeModuleId) ?? modules[0];
@@ -155,6 +165,23 @@ export function StrategicResearchPanel({
                         >
                           {LAYER_LABELS[lid]}
                         </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {relatedPanels && relatedPanels.length > 0 && (
+                    <div className="mb-5 flex min-w-0 flex-wrap gap-2">
+                      {relatedPanels.map((rel) => (
+                        <button
+                          key={rel.panelId}
+                          type="button"
+                          onClick={() => openPanel(rel.panelId, rel.moduleId)}
+                          className="shrink-0 rounded-md border border-dashboard-neutral/25 bg-white/5 px-3 py-1.5 text-[12px] text-dashboard-neutral/90 transition-colors hover:border-amber-500/35 hover:bg-amber-500/10 hover:text-amber-100"
+                        >
+                          {parentPanelId === rel.panelId ? '← ' : ''}
+                          {rel.label}
+                          {parentPanelId !== rel.panelId ? ' →' : ''}
+                        </button>
                       ))}
                     </div>
                   )}

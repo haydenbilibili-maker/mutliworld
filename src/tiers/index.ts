@@ -16,13 +16,13 @@ const surfaceTier: TierModule = {
   icon: '🌍',
   tagline: '冲突 · 军事 · 经济 · 能源 · 灾害 · 舆情',
   layers: [
-    'conflicts', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions',
+    'conflicts', 'conflict_zones', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions',
     'economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors',
-    'natural', 'weather', 'climate', 'protests',
-    'aviation', 'outages', 'daynight',
+    'natural', 'weather', 'live_weather', 'climate', 'protests',
+    'aviation', 'live_flights', 'outages', 'daynight',
   ],
   defaultLayers: ['conflicts', 'economic', 'weather', 'natural'],
-  basemap: 'graticule',
+  basemap: 'geographic',
   renderMode: 'flat',
   altitudeBand: [0, 0],
 };

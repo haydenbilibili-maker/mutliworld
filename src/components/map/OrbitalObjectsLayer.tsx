@@ -10,7 +10,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import type { Feature, FeatureCollection } from 'geojson';
-import { useMapContext } from '@/context/MapContext';
+import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import { useOrbitalObjects, LAYER_TO_ORBITAL_CATEGORY } from '@/hooks/useOrbitalObjects';
 import type { LayerId } from '@/types/geo';
@@ -76,6 +76,7 @@ function filterFeatures(
 
 export function OrbitalObjectsLayer() {
   const map = useMapContext();
+  const styleEpoch = useMapStyleEpoch();
   const inSpace = useMapStore((s) => s.activeTier === 'space');
   const activeLayers = useMapStore((s) => s.activeLayers);
   const selectEvent = useMapStore((s) => s.selectEvent);
@@ -168,9 +169,10 @@ export function OrbitalObjectsLayer() {
     };
 
     if (map.isStyleLoaded()) setup();
-    else map.once('load', setup);
+    map.on('style.load', setup);
 
     return () => {
+      map.off('style.load', setup);
       try {
         for (const id of [LAYER_DEBRIS, LAYER_SAT, LAYER_SAT_GLOW]) {
           if (map.getLayer(id)) map.removeLayer(id);
@@ -180,7 +182,7 @@ export function OrbitalObjectsLayer() {
         /* */
       }
     };
-  }, [map]);
+  }, [map, styleEpoch]);
 
   const combinedKey = useMemo(
     () =>
@@ -214,8 +216,11 @@ export function OrbitalObjectsLayer() {
     };
 
     if (map.isStyleLoaded()) apply();
-    else map.once('load', apply);
-  }, [map, combinedKey, filtered, inSpace, orbitalLayersOn]);
+    map.on('style.load', apply);
+    return () => {
+      map.off('style.load', apply);
+    };
+  }, [map, combinedKey, filtered, inSpace, orbitalLayersOn, styleEpoch]);
 
   // 空间站 DOM 标记
   useEffect(() => {
@@ -306,9 +311,12 @@ export function OrbitalObjectsLayer() {
     };
 
     if (map.isStyleLoaded()) attach();
-    else map.once('load', attach);
-    return detach;
-  }, [map]);
+    map.on('style.load', attach);
+    return () => {
+      map.off('style.load', attach);
+      detach();
+    };
+  }, [map, styleEpoch]);
 
   useEffect(() => {
     const markers = markersRef.current;

@@ -10,7 +10,7 @@
 
 import { useEffect } from 'react';
 import type maplibregl from 'maplibre-gl';
-import { useMapContext } from '@/context/MapContext';
+import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import type { FeatureCollection } from 'geojson';
 
@@ -60,6 +60,7 @@ function buildOrbitData(): FeatureCollection {
 
 export function OrbitRings() {
   const map = useMapContext();
+  const styleEpoch = useMapStyleEpoch();
   const show = useMapStore((s) => s.activeTier === 'space');
 
   useEffect(() => {
@@ -101,16 +102,17 @@ export function OrbitRings() {
     };
 
     if (map.isStyleLoaded()) ensure();
-    else map.once('load', ensure);
+    map.on('style.load', ensure);
 
     return () => {
+      map.off('style.load', ensure);
       try {
         if (map.getLayer(LAYER)) map.setLayoutProperty(LAYER, 'visibility', 'none');
       } catch {
         /* */
       }
     };
-  }, [map, show]);
+  }, [map, show, styleEpoch]);
 
   return null;
 }

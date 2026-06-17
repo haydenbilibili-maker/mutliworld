@@ -8,16 +8,29 @@ import { UrlStateSync } from '@/hooks/useSyncStateToUrl';
 import { useRegionData } from '@/hooks/useRegionData';
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from '@/lib/constants';
 import { centersEqual, isProgrammaticBearingMove, zoomsEqual } from '@/lib/map/viewState';
-import { buildGraticule, buildBoundsRing } from '@/lib/graticule';
+import { buildBoundsRing } from '@/lib/graticule';
+import { getTier } from '@/tiers';
+import {
+  applyBasemapZoomConstraints,
+  applyTerrainEnhancement,
+  isTerrainEnhanceEnabled,
+  resolveBasemapStyle,
+  SURFACE_BASEMAP_MAX_ZOOM,
+} from '@/lib/map/basemap';
 import { MapProvider } from '@/context/MapContext';
+import { BasemapController } from '@/components/map/BasemapController';
 import { GeodataLayer } from '@/components/map/GeodataLayer';
 import { BathymetryLayer } from '@/components/map/BathymetryLayer';
 import { GlobeController } from '@/components/map/GlobeController';
 import { CosmicGlobeAnimator } from '@/components/map/CosmicGlobeAnimator';
 import { OrbitRings } from '@/components/map/OrbitRings';
 import { OrbitalObjectsLayer } from '@/components/map/OrbitalObjectsLayer';
+import { FlightLayer } from '@/components/map/FlightLayer';
+import { PizzaIndexLayer } from '@/components/map/PizzaIndexLayer';
 import { ProfilePicker } from '@/components/map/ProfilePicker';
 import { CrossLayerLinks } from '@/components/map/CrossLayerLinks';
+import { LiveWeatherLayer } from '@/components/map/LiveWeatherLayer';
+import { ConflictZonesLayer } from '@/components/map/ConflictZonesLayer';
 
 interface MapContainerProps {
   className?: string;
@@ -44,47 +57,11 @@ export function MapContainer({ className = '' }: MapContainerProps) {
 
   useEffect(() => {
     if (!containerRef.current) return;
-    const style: maplibregl.StyleSpecification = {
-      version: 8,
-      sources: {
-        countries: {
-          type: 'vector',
-          url: 'https://demotiles.maplibre.org/tiles/tiles.json',
-        },
-        graticule: { type: 'geojson', data: buildGraticule(20) },
-      },
-      layers: [
-        {
-          id: 'background',
-          type: 'background',
-          paint: { 'background-color': '#0A0E17' },
-        },
-        {
-          id: 'country-fill',
-          type: 'fill',
-          source: 'countries',
-          'source-layer': 'countries',
-          paint: { 'fill-color': '#13233f', 'fill-opacity': 0.7 },
-        },
-        {
-          id: 'country-line',
-          type: 'line',
-          source: 'countries',
-          'source-layer': 'countries',
-          paint: { 'line-color': '#2d5a8c', 'line-width': 0.6 },
-        },
-        {
-          id: 'graticule-lines',
-          type: 'line',
-          source: 'graticule',
-          paint: {
-            'line-color': '#3b6ea5',
-            'line-width': 0.5,
-            'line-opacity': 0.35,
-          },
-        },
-      ],
-    };
+
+    const initialTier = useMapStore.getState().activeTier;
+    const preset = getTier(initialTier)?.basemap ?? 'geographic';
+    const style = resolveBasemapStyle(preset);
+    const terrainEnhance = preset === 'geographic' && isTerrainEnhanceEnabled();
 
     const safeCenter: [number, number] =
       Number.isFinite(center[0]) && Number.isFinite(center[1])
@@ -97,9 +74,23 @@ export function MapContainer({ className = '' }: MapContainerProps) {
       style,
       center: safeCenter,
       zoom: safeZoom,
+      maxZoom: preset === 'geographic' ? SURFACE_BASEMAP_MAX_ZOOM : 22,
       // 球面模式下拖拽更接近拨动实体地球（宇宙层暂停时可手动旋转）
       aroundCenter: true,
     });
+
+    if (typeof style === 'string') {
+      map.once('load', () => {
+        try {
+          applyBasemapZoomConstraints(map, preset);
+          if (terrainEnhance) {
+            applyTerrainEnhancement(map);
+          }
+        } catch {
+          /* */
+        }
+      });
+    }
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
     map.on('moveend', () => {
       const state = useMapStore.getState();
@@ -204,6 +195,11 @@ export function MapContainer({ className = '' }: MapContainerProps) {
     };
     if (map.isStyleLoaded()) apply();
     else map.once('load', apply);
+    map.on('style.load', apply);
+
+    return () => {
+      map.off('style.load', apply);
+    };
   }, [activeTier, orbitalOpen]);
 
   // 区域边界高亮
@@ -245,8 +241,10 @@ export function MapContainer({ className = '' }: MapContainerProps) {
 
     if (map.isStyleLoaded()) apply();
     else map.once('load', apply);
+    map.on('style.load', apply);
 
     return () => {
+      map.off('style.load', apply);
       try {
         const m = mapRef.current;
         if (!m) return;
@@ -267,11 +265,16 @@ export function MapContainer({ className = '' }: MapContainerProps) {
           className={className}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
         />
+        <BasemapController />
         <BathymetryLayer />
+        <LiveWeatherLayer />
+        <ConflictZonesLayer />
         <GlobeController />
         <CosmicGlobeAnimator />
         <OrbitRings />
         <OrbitalObjectsLayer />
+        <FlightLayer />
+        <PizzaIndexLayer />
         <ProfilePicker />
         <CrossLayerLinks />
         <GeodataLayer />

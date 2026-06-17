@@ -42,6 +42,8 @@ export const GLOBAL_GARRISONS: GarrisonBase[] = [
   // 英国
   { id: 'gar-akrotiri', name: '阿克罗蒂里基地', country: 'uk', lng: 32.96, lat: 34.59, role: '英军东地中海主权基地（塞浦路斯）', impact: 'medium' },
   { id: 'gar-kadena', name: '嘉手纳空军基地', country: 'us', lng: 127.77, lat: 26.35, role: '冲绳前沿空中力量（日本）', impact: 'high' },
+  { id: 'gar-yokota', name: '横田空军基地', country: 'us', lng: 139.35, lat: 35.75, role: '驻日美军司令部（东京西侧）', impact: 'high' },
+  { id: 'gar-osan', name: '乌山空军基地', country: 'us', lng: 127.03, lat: 37.09, role: '驻韩美军第七航空队（韩国）', impact: 'high' },
   { id: 'gar-sasebo', name: '佐世保海军基地', country: 'us', lng: 129.72, lat: 33.16, role: '美海军西太平洋前沿港口', impact: 'medium' },
   { id: 'gar-camp-humphreys', name: '平泽/汉弗莱斯', country: 'us', lng: 126.83, lat: 36.96, role: '驻韩美军司令部所在地', impact: 'high' },
   { id: 'gar-bahrain', name: '巴林第五舰队总部', country: 'us', lng: 50.58, lat: 26.23, role: '美海军中央司令部前沿', impact: 'high' },

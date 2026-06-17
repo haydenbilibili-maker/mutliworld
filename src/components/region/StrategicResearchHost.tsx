@@ -36,6 +36,8 @@ export function StrategicResearchHost() {
       onModuleChange={setActiveModule}
       footer={def.footer}
       ariaLabel={`${def.title}研究`}
+      parentPanelId={def.parentPanelId}
+      relatedPanels={def.relatedPanels}
     />
   );
 }

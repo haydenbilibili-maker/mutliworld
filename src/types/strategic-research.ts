@@ -20,8 +20,16 @@ export interface StrategicResearchModule {
 /** 注册表中的研究主题 id */
 export type StrategicResearchPanelId =
   | 'china-us'
+  | 'northeast-asia'
   | 'future-us'
   | 'future-scs';
+
+/** 关联研究主题（用于跨主题导航） */
+export interface StrategicResearchRelatedPanel {
+  panelId: StrategicResearchPanelId;
+  label: string;
+  moduleId?: string;
+}
 
 /** 战略研究主题注册项 */
 export interface StrategicResearchPanelDef {
@@ -35,4 +43,8 @@ export interface StrategicResearchPanelDef {
   defaultModuleId: string;
   getModules: () => StrategicResearchModule[];
   footer?: string;
+  /** 上级研究主题（如东北亚隶属中美博弈框架） */
+  parentPanelId?: StrategicResearchPanelId;
+  /** 关联研究主题入口 */
+  relatedPanels?: StrategicResearchRelatedPanel[];
 }

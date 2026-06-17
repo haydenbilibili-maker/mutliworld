@@ -45,17 +45,20 @@ export interface EventDetail {
 /** 图层 ID，与 URL layers 参数一致 */
 export type LayerId =
   | 'conflicts'
+  | 'conflict_zones'
   | 'hotspots'
   | 'bases'
   | 'economic'
   | 'waterways'
   | 'natural'
   | 'weather'
+  | 'live_weather'
   | 'military'
   | 'sanctions'
   | 'nuclear'
   | 'outages'
   | 'aviation'
+  | 'live_flights'
   | 'maritime'
   | 'cables'
   | 'econ_hubs'
@@ -84,7 +87,8 @@ export type LayerId =
   | 'fisheries'
   | 'monsoon'
   | 'atmospheric_circulation'
-  | 'deep_exploration';
+  | 'deep_exploration'
+  | 'pizza_index';
 
 /** 图层配置（显隐、样式、数据源） */
 export interface LayerConfig {

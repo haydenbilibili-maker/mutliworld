@@ -28,6 +28,8 @@ import { TierSwitcher } from '@/components/ui/TierSwitcher';
 import { SeabedBriefingPanel } from '@/components/region/SeabedBriefingPanel';
 import { SpaceBriefingPanel } from '@/components/region/SpaceBriefingPanel';
 import { OrbitalListHost } from '@/components/ui/OrbitalListHost';
+import { FlightListHost } from '@/components/ui/FlightListHost';
+import { PizzaIndexHost } from '@/components/ui/PizzaIndexHost';
 import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
 import { StrategicResearchHost } from '@/components/region/StrategicResearchHost';
 
@@ -57,6 +59,8 @@ export function HomeDashboard() {
         <SeabedBriefingPanel className="absolute top-28 right-4 z-30" />
         <SpaceBriefingPanel className="absolute top-28 right-4 z-30" />
         <OrbitalListHost />
+        <FlightListHost />
+        <PizzaIndexHost />
         <VerticalProfilePanel className="absolute top-28 left-1/2 -translate-x-1/2 z-30 max-h-[80vh] overflow-y-auto" />
         <MideastMilitaryPanel className="absolute top-28 right-4 z-25" />
         <MideastEnergyPanel className="absolute bottom-14 right-4 z-25" />

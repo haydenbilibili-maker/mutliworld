@@ -18,19 +18,23 @@ interface LayerToggleProps {
 const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   {
     title: '冲突与安全',
-    ids: ['conflicts', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions'],
+    ids: ['conflicts', 'conflict_zones', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions'],
   },
   {
     title: '基础设施与通道',
-    ids: ['aviation', 'maritime', 'cables', 'pipelines', 'waterways', 'outages'],
+    ids: ['aviation', 'live_flights', 'maritime', 'cables', 'pipelines', 'waterways', 'outages'],
   },
   {
     title: '经济与自然',
-    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'natural', 'weather', 'climate'],
+    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'natural', 'weather', 'live_weather', 'climate'],
   },
   {
     title: '社会与时空',
     ids: ['protests', 'daynight'],
+  },
+  {
+    title: 'OSINT 指标',
+    ids: ['pizza_index'],
   },
   {
     title: '海洋与洋底空间',
@@ -60,7 +64,9 @@ const LAYER_ORDER: LayerId[] = LAYER_GROUPS.flatMap((g) => g.ids);
 
 /** 始终可用的全球图层（不受区域 layers 限制：全球基础设施叠加） */
 const ALWAYS_ON: LayerId[] = [
+  'conflict_zones',
   'aviation',
+  'live_flights',
   'maritime',
   'cables',
   'econ_hubs',
@@ -70,6 +76,7 @@ const ALWAYS_ON: LayerId[] = [
   'datacenters',
   'protests',
   'climate',
+  'live_weather',
   'launch_sites',
   'launch_log',
   'semiconductors',
@@ -90,6 +97,7 @@ const ALWAYS_ON: LayerId[] = [
   'satellites',
   'space_debris',
   'space_events',
+  'pizza_index',
 ];
 
 export function LayerToggle({ className = '', embedded = false }: LayerToggleProps) {

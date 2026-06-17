@@ -11,6 +11,11 @@ import {
   AP_DENSIFY_INCIDENTS,
   AP_DENSIFY_FACILITIES,
 } from './regional-densify-r2';
+import {
+  NORTHEAST_ASIA_EVENTS,
+  NORTHEAST_ASIA_INCIDENTS,
+  NORTHEAST_ASIA_FACILITIES,
+} from './northeast-asia-strategic/geodata';
 
 const AP_EVENTS: EventDetail[] = [
   {
@@ -594,8 +599,8 @@ const AP_OIL: OilProducerMapPoint[] = [
 ];
 
 export const asiaPacificDataset: RegionDataset = {
-  events: [...AP_EVENTS, ...AP_DENSIFY_EVENTS],
-  incidents: [...AP_INCIDENTS, ...AP_DENSIFY_INCIDENTS],
-  facilities: [...AP_FACILITIES, ...AP_DENSIFY_FACILITIES],
+  events: [...AP_EVENTS, ...AP_DENSIFY_EVENTS, ...NORTHEAST_ASIA_EVENTS],
+  incidents: [...AP_INCIDENTS, ...AP_DENSIFY_INCIDENTS, ...NORTHEAST_ASIA_INCIDENTS],
+  facilities: [...AP_FACILITIES, ...AP_DENSIFY_FACILITIES, ...NORTHEAST_ASIA_FACILITIES],
   energy: { regions: [], points: AP_ENERGY, oilProducers: AP_OIL },
 };

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import type { Feature, FeatureCollection } from 'geojson';
-import { useMapContext } from '@/context/MapContext';
+import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useGeodataContext } from '@/context/GeodataContext';
 import { useMapStore } from '@/store/useMapStore';
 import { registerMarkerSprites } from '@/lib/map/emojiSprites';
@@ -130,6 +130,7 @@ function featureProps(p: Record<string, unknown> | undefined) {
  */
 export function GeodataLayer() {
   const map = useMapContext();
+  const styleEpoch = useMapStyleEpoch();
   const { data } = useGeodataContext();
   const selectEvent = useMapStore((s) => s.selectEvent);
   const popupRef = useRef<maplibregl.Popup | null>(null);
@@ -421,9 +422,10 @@ export function GeodataLayer() {
     };
 
     if (map.isStyleLoaded()) setup();
-    else map.once('load', setup);
+    map.on('style.load', setup);
 
     return () => {
+      map.off('style.load', setup);
       popupRef.current?.remove();
       popupRef.current = null;
       try {
@@ -449,7 +451,7 @@ export function GeodataLayer() {
         /* map 已销毁 */
       }
     };
-  }, [map, selectEvent]);
+  }, [map, selectEvent, styleEpoch]);
 
   useEffect(() => {
     if (!map) return;
@@ -484,8 +486,12 @@ export function GeodataLayer() {
     };
 
     if (map.isStyleLoaded()) apply();
-    else map.once('load', apply);
-  }, [map, data]);
+    map.on('style.load', apply);
+
+    return () => {
+      map.off('style.load', apply);
+    };
+  }, [map, data, styleEpoch]);
 
   return null;
 }

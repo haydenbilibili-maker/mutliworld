@@ -9,6 +9,7 @@
  */
 
 import { CHINA_US_STRATEGIC_MODULES } from '@/regions/china-us-strategic';
+import { NORTHEAST_ASIA_STRATEGIC_MODULES } from '@/regions/northeast-asia-strategic';
 import type {
   StrategicResearchPanelDef,
   StrategicResearchPanelId,
@@ -26,6 +27,32 @@ const PANELS: StrategicResearchPanelDef[] = [
     defaultModuleId: 'overview',
     getModules: () => CHINA_US_STRATEGIC_MODULES,
     footer: '种子战略分析 · 仅供研判参考 · 整理日 2026-06-16',
+    relatedPanels: [
+      {
+        panelId: 'northeast-asia',
+        label: '东北亚地缘博弈',
+        moduleId: 'overview',
+      },
+    ],
+  },
+  {
+    id: 'northeast-asia',
+    title: '东北亚地缘博弈',
+    subtitle: '战略研究 · 中美博弈子专题',
+    icon: '🌏',
+    regions: ['global', 'china', 'asia_pacific', 'north_america'],
+    enabled: true,
+    defaultModuleId: 'overview',
+    getModules: () => NORTHEAST_ASIA_STRATEGIC_MODULES,
+    footer: '种子战略分析 · 仅供研判参考 · 整理日 2026-06-17',
+    parentPanelId: 'china-us',
+    relatedPanels: [
+      {
+        panelId: 'china-us',
+        label: '返回中美博弈总览',
+        moduleId: 'overview',
+      },
+    ],
   },
   {
     id: 'future-us',

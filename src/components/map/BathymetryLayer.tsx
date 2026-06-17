@@ -8,8 +8,9 @@
 
 import { useEffect } from 'react';
 import type maplibregl from 'maplibre-gl';
-import { useMapContext } from '@/context/MapContext';
+import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
+import { findOverlayBeforeId } from '@/lib/map/basemap';
 
 const SOURCE = 'bathymetry-emodnet';
 const LAYER = 'bathymetry-emodnet-raster';
@@ -18,6 +19,7 @@ const TILES = ['https://tiles.emodnet-bathymetry.eu/2020/baselayer/web_mercator/
 
 export function BathymetryLayer() {
   const map = useMapContext();
+  const styleEpoch = useMapStyleEpoch();
   const active = useMapStore((s) => s.activeTier === 'subsurface');
 
   useEffect(() => {
@@ -35,8 +37,7 @@ export function BathymetryLayer() {
         }
         if (!map.getLayer(LAYER)) {
           // 尽量置于态势点/线之下
-          const beforeId = ['geodata-api-halo', 'geodata-api-lines', 'geodata-api-symbols']
-            .find((id) => map.getLayer(id));
+          const beforeId = findOverlayBeforeId(map);
           map.addLayer(
             {
               id: LAYER,
@@ -56,9 +57,10 @@ export function BathymetryLayer() {
     };
 
     if (map.isStyleLoaded()) ensure();
-    else map.once('load', ensure);
+    map.on('style.load', ensure);
 
     return () => {
+      map.off('style.load', ensure);
       try {
         if (map.getLayer(LAYER)) {
           map.setLayoutProperty(LAYER, 'visibility', 'none');
@@ -67,7 +69,7 @@ export function BathymetryLayer() {
         /* */
       }
     };
-  }, [map, active]);
+  }, [map, active, styleEpoch]);
 
   return null;
 }

@@ -12,7 +12,7 @@
  */
 
 import { useEffect } from 'react';
-import { useMapContext } from '@/context/MapContext';
+import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 
 /** v5 才有的能力，用最小结构类型避免依赖 v5 类型定义 */
@@ -35,9 +35,11 @@ const FLAT_BG = '#0A0E17';
 
 export function GlobeController() {
   const map = useMapContext();
+  const styleEpoch = useMapStyleEpoch();
   const globe = useMapStore((s) => s.globe);
   const activeTier = useMapStore((s) => s.activeTier);
   const wantGlobe = globe || activeTier === 'space';
+  const isGeographicBasemap = activeTier === 'surface';
 
   useEffect(() => {
     if (!map) return;
@@ -57,8 +59,8 @@ export function GlobeController() {
             ],
           });
           m.setPaintProperty?.('background', 'background-color', SPACE_BG);
-        } else if (supported) {
-          // 恢复平面深色底
+        } else if (supported && !isGeographicBasemap) {
+          // 深色底图恢复平面背景；地理底图保留样式自带背景
           m.setPaintProperty?.('background', 'background-color', FLAT_BG);
         }
       } catch {
@@ -68,7 +70,12 @@ export function GlobeController() {
 
     if (m.isStyleLoaded?.()) apply();
     else m.once?.('load', apply);
-  }, [map, wantGlobe]);
+    map.on('style.load', apply);
+
+    return () => {
+      map.off('style.load', apply);
+    };
+  }, [map, wantGlobe, isGeographicBasemap, styleEpoch]);
 
   return null;
 }
