@@ -33,6 +33,7 @@ import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
 import { useGlobalEscape } from '@/hooks/useGlobalEscape';
 import { LiveLayerPerformanceGuard } from '@/components/ui/LiveLayerPerformanceGuard';
 import { BodyExploreHint } from '@/components/ui/BodyExploreHint';
+import { BodyTimelinePanel } from '@/components/ui/BodyTimelinePanel';
 import { useMapStore } from '@/store/useMapStore';
 
 const StrategicResearchHost = dynamic(
@@ -57,6 +58,7 @@ export function HomeDashboard() {
           <AboutPanel />
 
           {!isEarth && <BodyExploreHint />}
+          {!isEarth && <BodyTimelinePanel className="absolute top-3 left-4 z-20 w-[min(20rem,calc(100vw-2rem))]" />}
 
           {isEarth && (
           <>
