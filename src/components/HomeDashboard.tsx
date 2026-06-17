@@ -54,7 +54,7 @@ export function HomeDashboard() {
           <AboutPanel />
           <TierSwitcher className="absolute top-1/2 left-4 z-20 -translate-y-1/2" />
           <RegionDetailCard className="absolute top-12 left-4 z-30" />
-          <LiveEventFeed className="absolute top-4 right-4 z-10 w-72 max-h-[min(52vh,24rem)] max-sm:right-2 max-sm:w-[min(18rem,calc(100vw-5.5rem))]" />
+          <LiveEventFeed className="absolute top-4 left-1/2 z-10 w-72 -translate-x-1/2 max-h-[min(52vh,24rem)] max-sm:w-[min(20rem,calc(100vw-2rem))]" />
           <LaunchLogPanel className="absolute top-4 right-4 z-30 w-[min(28rem,calc(100vw-2rem))]" />
           <RegionBriefingPanel className="absolute top-16 left-4 z-25" />
           <ChinaBriefingPanel className="absolute top-16 left-4 z-25" />
@@ -65,8 +65,8 @@ export function HomeDashboard() {
           <RegionalSituationPanel className="absolute top-20 left-1/2 -translate-x-1/2 z-25" />
           <NewsPanel className="absolute top-4 left-1/2 -translate-x-1/2 z-25" />
           <MarketsPanel className="absolute top-32 left-4 z-25" />
-          <EnergyEconPanel className="absolute top-20 right-4 z-25" />
-          <InsightsPanel className="absolute bottom-14 left-1/2 -translate-x-1/2 z-25" />
+          <EnergyEconPanel className="absolute top-4 right-4 z-25 max-h-[44vh]" />
+          <InsightsPanel className="absolute top-[calc(44vh_+_1.5rem)] right-4 z-25 max-h-[40vh] max-sm:top-auto max-sm:bottom-14" />
           <SeabedBriefingPanel className="absolute top-12 right-4 z-30" />
           <SpaceBriefingPanel className="absolute top-12 right-4 z-30" />
           <OrbitalListHost />

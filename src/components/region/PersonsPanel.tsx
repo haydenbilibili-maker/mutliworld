@@ -81,44 +81,43 @@ export function PersonsPanel({ className = '' }: PersonsPanelProps) {
   if (!persons || persons.length === 0) return null;
 
   const domainFilters: DomainFilter[] = ['all', '政治', '经济', '社会', '文化', '军事'];
-  const filterChips = (
-    <div className="flex flex-wrap gap-1 text-[10px] max-w-[12rem] justify-end">
-      {domainFilters.map((f) => (
-        <button
-          key={f}
-          type="button"
-          onClick={() => setDomainFilter(f)}
-          className={`px-1.5 py-0.5 rounded ${domainFilter === f ? 'bg-white/15 text-white' : 'text-dashboard-neutral'}`}
-        >
-          {f === 'all' ? '全部' : f}
-        </button>
-      ))}
-      {hasFactions && (
-        <>
-          <span className="w-full" />
-          {(['all', 'iran', 'israel', 'us'] as FactionFilter[]).map((f) => (
-            <button
-              key={f}
-              type="button"
-              onClick={() => setFactionFilter(f)}
-              className={`px-1.5 py-0.5 rounded ${factionFilter === f ? 'bg-white/15 text-white' : 'text-dashboard-neutral'}`}
-            >
-              {f === 'all' ? '全阵营' : MIDEAST_FACTION_LABEL[f]}
-            </button>
-          ))}
-        </>
-      )}
-    </div>
-  );
 
   return (
     <DockPanel
       id="persons"
       title="人物"
       count={list.length}
-      headerRight={filterChips}
-      className={`w-72 max-h-[60vh] ${className}`}
+      className={`w-72 max-w-[calc(100vw-2rem)] max-h-[60vh] ${className}`}
     >
+      {/* 领域/阵营筛选：移入面板体内整行排布，避免标题栏挤压溢出 */}
+      <div className="mb-2 flex flex-wrap gap-1 text-[10px]">
+        {domainFilters.map((f) => (
+          <button
+            key={f}
+            type="button"
+            onClick={() => setDomainFilter(f)}
+            className={`rounded px-2 py-0.5 transition-colors ${domainFilter === f ? 'bg-brand-cyan/20 text-brand-cyan' : 'text-dashboard-neutral hover:bg-white/5'}`}
+          >
+            {f === 'all' ? '全部' : f}
+          </button>
+        ))}
+        {hasFactions && (
+          <>
+            <span className="w-full" />
+            {(['all', 'iran', 'israel', 'us'] as FactionFilter[]).map((f) => (
+              <button
+                key={f}
+                type="button"
+                onClick={() => setFactionFilter(f)}
+                className={`rounded px-2 py-0.5 transition-colors ${factionFilter === f ? 'bg-brand-cyan/20 text-brand-cyan' : 'text-dashboard-neutral hover:bg-white/5'}`}
+              >
+                {f === 'all' ? '全阵营' : MIDEAST_FACTION_LABEL[f]}
+              </button>
+            ))}
+          </>
+        )}
+      </div>
+
       <ul className="space-y-1.5">
         {list.length === 0 ? (
           <li className="text-[11px] text-dashboard-neutral/60 py-2">
@@ -141,7 +140,7 @@ export function PersonsPanel({ className = '' }: PersonsPanelProps) {
               >
                 <PersonAvatar person={p} size={24} />
                 <span className="flex-1 min-w-0">
-                  <span className="text-xs text-white">{p.name}</span>
+                  <span className="block truncate text-xs text-white">{p.name}</span>
                   <span className="block text-[10px] text-dashboard-neutral truncate">{p.role}</span>
                 </span>
                 <span
