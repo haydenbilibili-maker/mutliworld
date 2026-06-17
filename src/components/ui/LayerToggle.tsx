@@ -101,6 +101,7 @@ const ALWAYS_ON: LayerId[] = [
   'space_debris',
   'space_events',
   'pizza_index',
+  'persons',
 ];
 
 export function LayerToggle({ className = '', embedded = false }: LayerToggleProps) {

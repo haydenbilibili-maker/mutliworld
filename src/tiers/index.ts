@@ -21,6 +21,7 @@ const surfaceTier: TierModule = {
     'hydrocarbon_reserves', 'pipelines',
     'natural', 'weather', 'live_weather', 'climate', 'protests',
     'aviation', 'live_flights', 'live_fires', 'live_maritime', 'outages', 'daynight',
+    'persons',
   ],
   defaultLayers: ['conflicts', 'economic', 'weather', 'natural'],
   basemap: 'imagery',

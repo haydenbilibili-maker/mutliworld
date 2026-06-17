@@ -5,14 +5,16 @@
  * 领域筛选 + 人物卡(状态着色) + 展开看简介与关联行动。
  */
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useRegionData } from '@/hooks/useRegionData';
+import { useMapStore } from '@/store/useMapStore';
 import { DockPanel } from '@/components/region/DockPanel';
 import { PersonAvatar } from '@/components/person/PersonAvatar';
 import { EMPTY_REGION_MESSAGE } from '@/lib/region/contentFilter';
 import { MIDEAST_FACTION_LABEL } from '@/regions/middleeast.factions';
-import type { PersonDomain } from '@/types/person';
+import type { Person, PersonDomain } from '@/types/person';
 import type { MideastFaction } from '@/regions/middleeast.factions';
+import type { EventDetail } from '@/types/geo';
 
 interface PersonsPanelProps {
   className?: string;
@@ -41,11 +43,32 @@ type FactionFilter = 'all' | MideastFaction;
 
 export function PersonsPanel({ className = '' }: PersonsPanelProps) {
   const { persons, regionId } = useRegionData();
+  const setViewport = useMapStore((s) => s.setViewport);
+  const selectEvent = useMapStore((s) => s.selectEvent);
   const [domainFilter, setDomainFilter] = useState<DomainFilter>('all');
   const [factionFilter, setFactionFilter] = useState<FactionFilter>('all');
   const [openId, setOpenId] = useState<string | null>(null);
 
   const hasFactions = regionId === 'middleeast';
+
+  /** 人物-地图联动：飞行至驻地坐标并选中（与地图人物层共享选中事件） */
+  const locateOnMap = useCallback(
+    (p: Person) => {
+      setViewport([p.lng, p.lat], 5);
+      const detail: EventDetail = {
+        id: `person-${p.id}`,
+        title: p.name,
+        source: '公开人物档案 · 中立表述',
+        timestamp: new Date().toISOString(),
+        location: [p.lng, p.lat],
+        impact_level: 'medium',
+        category: 'persons',
+        description: `${p.domain} · ${p.role} — ${p.bio}`,
+      };
+      selectEvent(detail);
+    },
+    [setViewport, selectEvent],
+  );
 
   const list = useMemo(() => {
     return (persons ?? []).filter((p) => {
@@ -108,7 +131,12 @@ export function PersonsPanel({ className = '' }: PersonsPanelProps) {
             <li key={p.id} className="rounded-md border border-dashboard-neutral/15">
               <button
                 type="button"
-                onClick={() => setOpenId(open ? null : p.id)}
+                onClick={() => {
+                  const next = open ? null : p.id;
+                  setOpenId(next);
+                  if (next) locateOnMap(p);
+                }}
+                title="点击定位至地图"
                 className="w-full flex items-center gap-2 px-2.5 py-1.5 text-left hover:bg-white/5"
               >
                 <PersonAvatar person={p} size={24} />
@@ -136,12 +164,20 @@ export function PersonsPanel({ className = '' }: PersonsPanelProps) {
                 <div className="px-2.5 pb-2 space-y-1.5">
                   <div className="flex items-center gap-2">
                     <PersonAvatar person={p} size={36} />
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="text-xs text-white">{p.name}</div>
                       {p.nameEn && (
                         <div className="text-[10px] text-dashboard-neutral/60 truncate">{p.nameEn}</div>
                       )}
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => locateOnMap(p)}
+                      title="定位至地图"
+                      className="shrink-0 rounded px-1.5 py-0.5 text-[10px] text-dashboard-neutral hover:bg-white/10 hover:text-white"
+                    >
+                      📍 定位
+                    </button>
                   </div>
                   <div className="text-[11px] text-dashboard-neutral/85 leading-snug">{p.bio}</div>
                   {p.since && (

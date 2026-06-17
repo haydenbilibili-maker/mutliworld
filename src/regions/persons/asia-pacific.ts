@@ -28,4 +28,8 @@ export const ASIA_PACIFIC_PERSONS = [
   person('per-ap-18', '马拉拉·优素福扎伊', '教育活动家', '社会', ['asia_pacific'], 73.05, 33.69, '诺贝尔和平奖得主，倡导女童教育。', { since: 2012 }),
   person('per-ap-19', '彼得·达顿', '澳大利亚反对党领袖', '政治', ['asia_pacific'], CANBERRA[0], CANBERRA[1], '自由党领袖，主张更强硬对华安全政策。'),
   person('per-ap-20', '普拉博沃·苏比安托', '印尼总统', '政治', ['asia_pacific', 'southeast_asia'], 106.85, -6.21, '印尼新任总统，东盟最大经济体领导人。', { since: 2024 }),
+  person('per-ap-21', '拉胡尔·甘地', '印度国大党领袖', '政治', ['asia_pacific'], DELHI[0], DELHI[1], '尼赫鲁-甘地家族成员，印度主要反对党领导人。'),
+  person('per-ap-22', '萨钦·坦杜尔卡', '印度板球传奇', '文化', ['asia_pacific'], 72.83, 19.08, '「板球之神」，印度国民级体育文化偶像。'),
+  person('per-ap-23', '黄英贤', '澳大利亚外长', '政治', ['asia_pacific'], CANBERRA[0], CANBERRA[1], '工党资深政治家，主导对华与太平洋岛国外交。', { since: 2022 }),
+  person('per-ap-24', '克里斯·希普金斯', '新西兰工党领袖', '政治', ['asia_pacific'], WELLINGTON[0], WELLINGTON[1], '前总理，现任主要反对党领袖。'),
 ];
