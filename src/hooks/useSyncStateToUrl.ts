@@ -129,7 +129,11 @@ export function useSyncStateToUrl() {
   const replaceUrl = (nextUrl: string) => {
     if (lastSyncedUrlRef.current === nextUrl) return;
     lastSyncedUrlRef.current = nextUrl;
-    router.replace(nextUrl, { scroll: false });
+    // 用 history.replaceState 而非 router.replace：仅更新地址栏，不触发 Next 软导航/RSC 重渲染，
+    // 根治视野同步引发的周期性闪烁与初始加载抖动。
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(window.history.state, '', nextUrl);
+    }
   };
 
   const syncFromStore = () => {
