@@ -33,8 +33,7 @@ function Stat({ label, value }: { label: string; value: number }) {
 
 export function SeabedBriefingPanel({ className = '' }: SeabedBriefingPanelProps) {
   const activeTier = useMapStore((s) => s.activeTier);
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
   const selectEvent = useMapStore((s) => s.selectEvent);
   const { data, isLoading: geodataLoading, error: geodataError } = useGeodataContext();
 
@@ -75,8 +74,7 @@ export function SeabedBriefingPanel({ className = '' }: SeabedBriefingPanelProps
   if (activeTier !== 'subsurface') return null;
 
   const flyToIncident = (id: string, name: string, lng: number, lat: number, desc: string) => {
-    setCenter([lng, lat]);
-    setZoom(5);
+    setViewport([lng, lat], 5);
     const ev: EventDetail = {
       id,
       title: name,

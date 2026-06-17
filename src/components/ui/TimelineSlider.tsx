@@ -19,7 +19,9 @@ const OPTIONS: { value: TimeRange; label: string }[] = [
 
 /** 时间范围筛选 — 下拉选择（替代平铺按钮，提升坪效） */
 export function TimelineSlider({ className = '', embedded = false }: TimelineSliderProps) {
-  const { timeRange, setTimeRange } = useMapStore();
+  // 选择性订阅：仅 timeRange/timeTimeRange，避免拖拽地图时 center/zoom 变化引发重渲染。
+  const timeRange = useMapStore((s) => s.timeRange);
+  const setTimeRange = useMapStore((s) => s.setTimeRange);
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
 

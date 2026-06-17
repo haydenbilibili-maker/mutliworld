@@ -31,7 +31,11 @@ const IMPACT_LABELS: Record<string, string> = {
 };
 
 export function SidePanel({ className = '' }: SidePanelProps) {
-  const { sidePanelOpen, selectedEvent, openSidePanel } = useMapStore();
+  // 选择性订阅：仅关心 sidePanelOpen/selectedEvent/openSidePanel。
+  // 原全量订阅 useMapStore() 会在拖拽地图（center/zoom 连续变化）时无谓重渲染。
+  const sidePanelOpen = useMapStore((s) => s.sidePanelOpen);
+  const selectedEvent = useMapStore((s) => s.selectedEvent);
+  const openSidePanel = useMapStore((s) => s.openSidePanel);
 
   const formattedTimestamp = selectedEvent
     ? formatTimestamp(selectedEvent.timestamp)

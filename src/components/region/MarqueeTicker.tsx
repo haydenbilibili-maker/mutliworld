@@ -47,8 +47,7 @@ function hasMapLocation(item: NewsFeedItem): boolean {
 export function MarqueeTicker({ className = '' }: MarqueeTickerProps) {
   const open = usePanelStore((s) => s.open.marquee);
   const selectEvent = useMapStore((s) => s.selectEvent);
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
 
   const { items, isLoading, hasLiveItems, error } = useNewsFeed(32);
 
@@ -62,11 +61,11 @@ export function MarqueeTicker({ className = '' }: MarqueeTickerProps) {
       const event = newsFeedItemToEventDetail(item);
       selectEvent(event);
       if (hasMapLocation(item)) {
-        setCenter(item.location!);
-        setZoom(5);
+        // 原子更新视野，避免 setCenter+setZoom 两次 store 更新触发两次 flyTo 抖动
+        setViewport(item.location!, 5);
       }
     },
-    [selectEvent, setCenter, setZoom],
+    [selectEvent, setViewport],
   );
 
   if (!open) return null;

@@ -22,7 +22,13 @@ function parseLayersParam(layers: LayerId[]): LayerId[] {
  * 按当前 store 的 region、timeRange、activeLayers 拉取 GeoJSON，并按时间范围自动轮询
  */
 export function useGeodata() {
-  const { activeRegion, timeRange, activeLayers } = useMapStore();
+  // 选择性订阅：仅 region/timeRange/activeLayers 影响请求 key 与轮询间隔。
+  // 反模式：原 `const { ... } = useMapStore()` 全量订阅，导致拖拽地图时 center/zoom
+  // 每帧变化都触发本 hook 重渲染 → 返回新 value 对象 → 经 GeodataContext 级联重渲染
+  // 所有消费者（GeodataLayer/MapLegend/SeabedBriefingPanel/...），是界面偶发抖动主因。
+  const activeRegion = useMapStore((s) => s.activeRegion);
+  const timeRange = useMapStore((s) => s.timeRange);
+  const activeLayers = useMapStore((s) => s.activeLayers);
   const layers = parseLayersParam(activeLayers);
 
   const params = new URLSearchParams({

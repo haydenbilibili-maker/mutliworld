@@ -40,8 +40,7 @@ const EVENT_EMOJI: Record<string, string> = {
 export function SpaceBriefingPanel({ className = '' }: SpaceBriefingPanelProps) {
   const activeTier = useMapStore((s) => s.activeTier);
   const hideSensitive = useMapStore((s) => s.hideSensitive);
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
   const selectEvent = useMapStore((s) => s.selectEvent);
 
   const satByKind = useMemo(() => {
@@ -67,8 +66,8 @@ export function SpaceBriefingPanel({ className = '' }: SpaceBriefingPanelProps) 
   if (activeTier !== 'space') return null;
 
   const flyTo = (id: string, name: string, lng: number, lat: number, desc: string) => {
-    setCenter([lng, lat]);
-    setZoom(4);
+    // 原子更新视野，避免 setCenter+setZoom 两次 store 更新触发两次 flyTo 抖动
+    setViewport([lng, lat], 4);
     const ev: EventDetail = {
       id,
       title: name,

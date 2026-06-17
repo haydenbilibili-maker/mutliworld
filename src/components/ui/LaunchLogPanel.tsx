@@ -73,8 +73,7 @@ export function LaunchLogPanel({ className = '' }: LaunchLogPanelProps) {
   const open = useLaunchLogStore((s) => s.open);
   const setOpen = useLaunchLogStore((s) => s.setOpen);
   const selectEvent = useMapStore((s) => s.selectEvent);
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
   const toggleLayer = useMapStore((s) => s.toggleLayer);
   const activeLayers = useMapStore((s) => s.activeLayers);
 
@@ -85,8 +84,8 @@ export function LaunchLogPanel({ className = '' }: LaunchLogPanelProps) {
       toggleLayer('launch_log');
     }
     selectEvent(entryToEvent(e));
-    setCenter([e.location.lng, e.location.lat]);
-    setZoom(6);
+    // 原子更新视野，避免 setCenter+setZoom 两次 store 更新触发两次 flyTo 抖动
+    setViewport([e.location.lng, e.location.lat], 6);
   };
 
   return (
