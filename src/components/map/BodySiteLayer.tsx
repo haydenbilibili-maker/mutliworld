@@ -13,7 +13,6 @@ import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import { useBodyStore } from '@/store/useBodyStore';
 import { getSitesForBody, BODY_LAYER_META } from '@/bodies/sites';
-import type { BodyLayerId } from '@/types/body';
 
 const SOURCE = 'body-sites';
 const GLOW = 'body-sites-glow';
@@ -21,20 +20,12 @@ const CORE = 'body-sites-core';
 const LABEL = 'body-sites-label';
 const POPUP_BG = '#0A0E17';
 
-const COLOR_BY_LAYER: Record<BodyLayerId, string> = Object.fromEntries(
+const COLOR_BY_LAYER: Record<string, string> = Object.fromEntries(
   BODY_LAYER_META.map((m) => [m.id, m.color]),
-) as Record<BodyLayerId, string>;
+);
 
-const COLOR_EXPR: maplibregl.ExpressionSpecification = [
-  'match',
-  ['get', 'layer'],
-  'moon_apollo', COLOR_BY_LAYER.moon_apollo,
-  'moon_change', COLOR_BY_LAYER.moon_change,
-  'moon_legacy', COLOR_BY_LAYER.moon_legacy,
-  'mars_rovers', COLOR_BY_LAYER.mars_rovers,
-  'mars_landers', COLOR_BY_LAYER.mars_landers,
-  '#cbd5e1',
-];
+/** 颜色写入要素属性，渲染用简单 ['get','color']（避免 match 表达式导致 addLayer 异常） */
+const COLOR_EXPR: maplibregl.ExpressionSpecification = ['get', 'color'];
 
 const STATUS_LABEL: Record<string, string> = { active: '在役', completed: '已完成', lost: '失联' };
 
@@ -103,6 +94,7 @@ export function BodySiteLayer() {
           summary: s.summary,
           sourceUrl: s.sourceUrl ?? '',
           layer: s.layer,
+          color: COLOR_BY_LAYER[s.layer] ?? '#cbd5e1',
           lat: s.lat,
           lng: s.lng,
         },
