@@ -24,6 +24,7 @@ import { UsBriefingPanel } from '@/components/region/UsBriefingPanel';
 import { NewsPanel } from '@/components/region/NewsPanel';
 import { MarketsPanel } from '@/components/region/MarketsPanel';
 import { EnergyEconPanel } from '@/components/region/EnergyEconPanel';
+import { InsightsPanel } from '@/components/region/InsightsPanel';
 import { RegionDetailCard } from '@/components/region/RegionDetailCard';
 import { TierSwitcher } from '@/components/ui/TierSwitcher';
 import { SeabedBriefingPanel } from '@/components/region/SeabedBriefingPanel';
@@ -68,6 +69,7 @@ export function HomeDashboard() {
         <NewsPanel className="absolute top-20 left-1/2 -translate-x-1/2 z-25" />
         <MarketsPanel className="absolute top-36 left-4 z-25" />
         <EnergyEconPanel className="absolute top-36 right-4 z-25" />
+        <InsightsPanel className="absolute bottom-14 left-1/2 -translate-x-1/2 z-25" />
         <SeabedBriefingPanel className="absolute top-28 right-4 z-30" />
         <SpaceBriefingPanel className="absolute top-28 right-4 z-30" />
         <OrbitalListHost />
