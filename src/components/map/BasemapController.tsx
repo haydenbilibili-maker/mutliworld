@@ -21,6 +21,7 @@ import {
   shouldSkipImageryStyleSwap,
 } from '@/lib/map/basemap';
 import { buildBodyStyle } from '@/lib/map/bodyBasemap';
+import { useBodyStore } from '@/store/useBodyStore';
 import { syncGlobeState } from '@/lib/map/globeProjection';
 
 function applyBasemap(
@@ -67,7 +68,9 @@ export function BasemapController() {
   const activeBody = useMapStore((s) => s.activeBody);
   const activeTier = useMapStore((s) => s.activeTier);
   const basemapMode = useMapStore((s) => s.basemapMode);
+  const bodyBasemapMode = useBodyStore((s) => s.bodyBasemapMode);
   const prevBodyRef = useRef(activeBody);
+  const prevBodyModeRef = useRef(bodyBasemapMode);
   const prevTierRef = useRef(activeTier);
   const prevModeRef = useRef(basemapMode);
   const prevPresetRef = useRef<BasemapPreset>(
@@ -79,15 +82,17 @@ export function BasemapController() {
 
     const bodyChanged = prevBodyRef.current !== activeBody;
     const cameFromBody = prevBodyRef.current !== 'earth';
+    const bodyModeChanged = prevBodyModeRef.current !== bodyBasemapMode;
     prevBodyRef.current = activeBody;
+    prevBodyModeRef.current = bodyBasemapMode;
 
-    // 天体分支：非地球 → 占位天体底图
+    // 天体分支：非地球 → 天体底图（地形/实拍）
     if (activeBody !== 'earth') {
-      if (!bodyChanged) return;
+      if (!bodyChanged && !bodyModeChanged) return;
       const applyBody = () => {
         try {
           clearTerrainEnhancement(map);
-          map.setStyle(buildBodyStyle(activeBody));
+          map.setStyle(buildBodyStyle(activeBody, bodyBasemapMode));
           map.once('style.load', () => bumpStyleEpoch());
         } catch {
           /* 地图销毁中 */
@@ -128,7 +133,7 @@ export function BasemapController() {
 
     if (map.isStyleLoaded()) run();
     else map.once('load', run);
-  }, [map, activeBody, activeTier, basemapMode, bumpStyleEpoch]);
+  }, [map, activeBody, bodyBasemapMode, activeTier, basemapMode, bumpStyleEpoch]);
 
   return null;
 }
