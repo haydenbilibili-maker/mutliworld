@@ -101,11 +101,12 @@ export function MapTooltip() {
 
     el.appendChild(btnGroup);
 
-    // 添加到地图（偏移到脉冲点右上方，避免遮挡脉冲）
+    // 添加到地图（偏移到脉冲点右方，避免与脉冲环重叠）
+    // 脉冲环最大扩张半径 ≈ 39px，工具放置于右侧 50px 处完全错开
     const marker = new maplibregl.Marker({
       element: el,
       anchor: 'left',
-      offset: [14, -40],
+      offset: [50, -30],
     })
       .setLngLat([lng, lat])
       .addTo(map);
