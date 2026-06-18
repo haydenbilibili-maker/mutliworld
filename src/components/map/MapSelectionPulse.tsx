@@ -1,7 +1,16 @@
 'use client';
 
 /**
- * 外部选中事件时的短暂高亮脉冲（简报、搜索、事件流等）
+ * 地图选中高亮脉冲标记 — 持续性橙色脉冲环 + 人物头像/事件标识 + 名称标签
+ *
+ * 所有外部点击路径（人物面板、跑马灯、事件流、简报、地图图层等）均通过
+ * store.selectedEvent 收敛，此处一次实现全链路覆盖。
+ *
+ * 视觉层次（从外到内）：
+ *   1. 两层脉冲环（持续向外扩散消散，无限循环）
+ *   2. 中心亮点（呼吸发光）
+ *   3. 人物头像（有 avatarUrl 时）或橙色圆点（事件时）
+ *   4. 底部名称标签（title）
  */
 
 import { useEffect, useRef } from 'react';
@@ -11,58 +20,153 @@ import { useMapStore } from '@/store/useMapStore';
 
 export function MapSelectionPulse() {
   const map = useMapContext();
-  const selectedEvent = useMapStore((s) => s.selectedEvent);
+  const mapTooltip = useMapStore((s) => s.mapTooltip);
   const markerRef = useRef<maplibregl.Marker | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!map || !selectedEvent?.location) return;
+    // 清除上一个标记
+    markerRef.current?.remove();
+    markerRef.current = null;
 
-    const [lng, lat] = selectedEvent.location;
+    if (!map || !mapTooltip?.location) return;
+
+    const [lng, lat] = mapTooltip.location;
     if (!Number.isFinite(lng) || !Number.isFinite(lat)) return;
 
-    markerRef.current?.remove();
-    if (timerRef.current) clearTimeout(timerRef.current);
+    const avatar = mapTooltip.avatarUrl;
 
+    // 构建 DOM 结构
     const el = document.createElement('div');
-    el.className = 'map-selection-pulse';
+    el.className = 'pulse-container';
+
+    // 脉冲环 × 2（交错延时产生连续波纹效果）
+    for (let i = 0; i < 2; i++) {
+      const ring = document.createElement('div');
+      ring.className = 'pulse-ring';
+      ring.style.animationDelay = `${i * 1.1}s`;
+      el.appendChild(ring);
+    }
+
+    // 中心内容：头像或圆点
+    const inner = document.createElement('div');
+    inner.className = 'pulse-inner';
+    if (avatar) {
+      const img = document.createElement('img');
+      img.className = 'pulse-avatar';
+      img.src = avatar;
+      img.alt = '';
+      img.onerror = () => { img.style.display = 'none'; };
+      inner.appendChild(img);
+    }
+    el.appendChild(inner);
+
+    // 名称标签
+    const label = document.createElement('div');
+    label.className = 'pulse-label';
+    label.textContent = mapTooltip.title;
+    el.appendChild(label);
+
     const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
       .setLngLat([lng, lat])
       .addTo(map);
     markerRef.current = marker;
 
-    timerRef.current = setTimeout(() => {
+    return () => {
       marker.remove();
       if (markerRef.current === marker) markerRef.current = null;
-    }, 2600);
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      markerRef.current?.remove();
-      markerRef.current = null;
     };
-  }, [map, selectedEvent?.id, selectedEvent?.location?.[0], selectedEvent?.location?.[1]]);
+  }, [map, mapTooltip?.id, mapTooltip?.location?.[0], mapTooltip?.location?.[1], mapTooltip?.avatarUrl, mapTooltip?.title]);
 
   return (
     <style jsx global>{`
-      .map-selection-pulse {
+      .pulse-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        pointer-events: none;
+        width: 0;
+        height: 0;
+      }
+
+      .pulse-ring {
+        position: absolute;
+        top: -14px;
+        left: -14px;
         width: 28px;
         height: 28px;
         border-radius: 50%;
-        border: 2px solid #f59e0b;
-        background: rgba(245, 158, 11, 0.2);
-        animation: mw-selection-pulse 1.1s ease-out 2;
+        border: 2.5px solid #f59e0b;
+        background: transparent;
+        animation: pulse-expand 2.2s ease-out infinite;
         pointer-events: none;
+        box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
       }
-      @keyframes mw-selection-pulse {
+
+      @keyframes pulse-expand {
         0% {
-          transform: scale(0.55);
-          opacity: 1;
+          transform: scale(0.6);
+          opacity: 0.8;
         }
         100% {
-          transform: scale(2.4);
+          transform: scale(2.8);
           opacity: 0;
         }
+      }
+
+      .pulse-inner {
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(245, 158, 11, 0.85);
+        border: 2px solid #f59e0b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pulse-glow 1.5s ease-in-out infinite;
+        overflow: hidden;
+      }
+
+      @keyframes pulse-glow {
+        0%, 100% {
+          box-shadow: 0 0 6px rgba(245, 158, 11, 0.5),
+                      0 0 12px rgba(245, 158, 11, 0.2);
+        }
+        50% {
+          box-shadow: 0 0 10px rgba(245, 158, 11, 0.7),
+                      0 0 22px rgba(245, 158, 11, 0.35);
+        }
+      }
+
+      .pulse-avatar {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .pulse-label {
+        position: absolute;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-size: 11px;
+        font-weight: 600;
+        color: #fff;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6);
+        background: rgba(10, 14, 23, 0.75);
+        padding: 1px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(245, 158, 11, 0.45);
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        pointer-events: none;
       }
     `}</style>
   );

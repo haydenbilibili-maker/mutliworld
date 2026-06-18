@@ -1,8 +1,11 @@
+import { batchTranslate } from '@/lib/translate';
+
 /**
  * RSS 新闻聚合 — 对标 World Monitor Round 4
  *
  * 服务端拉取若干公开 RSS（免费无 key），轻量正则解析 item，去重排序。
  * 仅存标题 + 链接 + 来源 + 时间（不缓存正文，尊重版权）。
+ * 英文标题自动翻译为简体中文（使用已配置的 LLM）。
  */
 
 export interface NewsItem {
@@ -83,5 +86,19 @@ export async function fetchNews(): Promise<NewsItem[]> {
     dedup.push(n);
   }
   dedup.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
-  return dedup.slice(0, 40);
+  const top = dedup.slice(0, 40);
+
+  // 英文标题自动翻译为简体中文
+  try {
+    const titles = top.map((n) => n.title);
+    const translationMap = await batchTranslate(titles);
+    for (const n of top) {
+      const translated = translationMap.get(n.title);
+      if (translated && translated !== n.title) n.title = translated;
+    }
+  } catch {
+    // 翻译失败不影响数据返回
+  }
+
+  return top;
 }

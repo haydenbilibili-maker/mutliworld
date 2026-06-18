@@ -39,6 +39,7 @@ export function SearchBox({ className = '', embedded = false }: SearchBoxProps) 
   const setCenter = useMapStore((s) => s.setCenter);
   const setZoom = useMapStore((s) => s.setZoom);
   const selectEvent = useMapStore((s) => s.selectEvent);
+  const focusOnMap = useMapStore((s) => s.focusOnMap);
   const openDetail = useRegionDetailStore((s) => s.open);
 
   const results = useMemo(() => searchEntries(q, 12), [q]);
@@ -71,7 +72,8 @@ export function SearchBox({ className = '', embedded = false }: SearchBoxProps) 
           category: e.category ?? e.kind,
           description: e.description,
         };
-        selectEvent(ev);
+        focusOnMap(ev);
+        selectEvent(null);
       }
       close();
     },

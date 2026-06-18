@@ -47,6 +47,7 @@ import { CrossLayerLinks } from '@/components/map/CrossLayerLinks';
 import { LiveWeatherLayer } from '@/components/map/LiveWeatherLayer';
 import { ConflictZonesLayer } from '@/components/map/ConflictZonesLayer';
 import { MapSelectionPulse } from '@/components/map/MapSelectionPulse';
+import { MapTooltip } from '@/components/map/MapTooltip';
 import { GeodataFetchIndicator } from '@/components/map/GeodataFetchIndicator';
 
 interface MapContainerProps {
@@ -355,6 +356,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <GeodataLayer />
             <GeodataFetchIndicator />
             <MapSelectionPulse />
+            <MapTooltip />
           </>
         )}
       </div>

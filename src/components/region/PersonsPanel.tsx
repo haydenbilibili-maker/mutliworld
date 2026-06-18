@@ -44,6 +44,7 @@ type FactionFilter = 'all' | MideastFaction;
 export function PersonsPanel({ className = '' }: PersonsPanelProps) {
   const { persons, regionId } = useRegionData();
   const setViewport = useMapStore((s) => s.setViewport);
+  const focusOnMap = useMapStore((s) => s.focusOnMap);
   const selectEvent = useMapStore((s) => s.selectEvent);
   const [domainFilter, setDomainFilter] = useState<DomainFilter>('all');
   const [factionFilter, setFactionFilter] = useState<FactionFilter>('all');
@@ -54,7 +55,10 @@ export function PersonsPanel({ className = '' }: PersonsPanelProps) {
   /** 人物-地图联动：飞行至驻地坐标并选中（与地图人物层共享选中事件） */
   const locateOnMap = useCallback(
     (p: Person) => {
+      focusOnMap(null);
       setViewport([p.lng, p.lat], 5);
+      // 解析实际头像 URL（与 PersonAvatar 相同的兜底链）
+      const avatar = p.avatar ?? undefined;
       const detail: EventDetail = {
         id: `person-${p.id}`,
         title: p.name,
@@ -64,10 +68,11 @@ export function PersonsPanel({ className = '' }: PersonsPanelProps) {
         impact_level: 'medium',
         category: 'persons',
         description: `${p.domain} · ${p.role} — ${p.bio}`,
+        avatarUrl: avatar,
       };
-      selectEvent(detail);
+      focusOnMap(detail);
     },
-    [setViewport, selectEvent],
+    [focusOnMap, setViewport, selectEvent],
   );
 
   const list = useMemo(() => {

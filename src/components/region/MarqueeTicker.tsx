@@ -47,6 +47,7 @@ function hasMapLocation(item: NewsFeedItem): boolean {
 export function MarqueeTicker({ className = '' }: MarqueeTickerProps) {
   const open = usePanelStore((s) => s.open.marquee);
   const selectEvent = useMapStore((s) => s.selectEvent);
+  const focusOnMap = useMapStore((s) => s.focusOnMap);
   const setViewport = useMapStore((s) => s.setViewport);
 
   const { items, isLoading, hasLiveItems, error } = useNewsFeed(32);
@@ -59,13 +60,13 @@ export function MarqueeTicker({ className = '' }: MarqueeTickerProps) {
   const handleClick = useCallback(
     (item: NewsFeedItem) => {
       const event = newsFeedItemToEventDetail(item);
-      selectEvent(event);
+      focusOnMap(event);
+      selectEvent(null); // 关闭右侧面板，信息先显示在地图浮窗
       if (hasMapLocation(item)) {
-        // 原子更新视野，避免 setCenter+setZoom 两次 store 更新触发两次 flyTo 抖动
         setViewport(item.location!, 5);
       }
     },
-    [selectEvent, setViewport],
+    [focusOnMap, selectEvent, setViewport],
   );
 
   if (!open) return null;

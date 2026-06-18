@@ -74,6 +74,7 @@ type CatFilter = 'all' | LiveEventCategory;
 export function LiveEventFeed({ className = '', maxItems = 14 }: LiveEventFeedProps) {
   const { events, byCategory, providerCounts, isLoading, isValidating, error } = useLiveEvents(true);
   const selectEvent = useMapStore((s) => s.selectEvent);
+  const focusOnMap = useMapStore((s) => s.focusOnMap);
   const setViewport = useMapStore((s) => s.setViewport);
   const [collapsed, setCollapsed] = useState(true);
   const [cat, setCat] = useState<CatFilter>('all');
@@ -100,7 +101,8 @@ export function LiveEventFeed({ className = '', maxItems = 14 }: LiveEventFeedPr
       description: e.summary ?? `${e.source}${e.area ? ' · ' + e.area : ''}`,
       url: e.sourceUrl,
     };
-    selectEvent(detail);
+    focusOnMap(detail);
+    selectEvent(null);
     if (e.lat != null && e.lng != null) setViewport([e.lng, e.lat], 5);
   };
 

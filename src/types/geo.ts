@@ -42,6 +42,8 @@ export interface EventDetail {
   category?: string;
   /** 可选原文链接（新闻快讯） */
   url?: string;
+  /** 可选头像URL（人物选中时显示在地图脉冲标记中心） */
+  avatarUrl?: string;
 }
 
 /** 图层 ID，与 URL layers 参数一致 */

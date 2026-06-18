@@ -42,6 +42,7 @@ export function SpaceBriefingPanel({ className = '' }: SpaceBriefingPanelProps) 
   const hideSensitive = useMapStore((s) => s.hideSensitive);
   const setViewport = useMapStore((s) => s.setViewport);
   const selectEvent = useMapStore((s) => s.selectEvent);
+  const focusOnMap = useMapStore((s) => s.focusOnMap);
 
   const satByKind = useMemo(() => {
     let weather = 0;
@@ -78,7 +79,8 @@ export function SpaceBriefingPanel({ className = '' }: SpaceBriefingPanelProps) 
       category: 'space_events',
       description: desc,
     };
-    selectEvent(ev);
+    focusOnMap(ev);
+    selectEvent(null);
   };
 
   return (

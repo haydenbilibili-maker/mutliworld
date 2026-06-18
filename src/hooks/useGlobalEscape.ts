@@ -25,6 +25,10 @@ export function useGlobalEscape() {
       if (map.sidePanelOpen || map.selectedEvent) {
         e.preventDefault();
         map.selectEvent(null);
+        map.focusOnMap(null);
+      } else if (map.mapTooltip) {
+        e.preventDefault();
+        map.focusOnMap(null);
       }
     };
 

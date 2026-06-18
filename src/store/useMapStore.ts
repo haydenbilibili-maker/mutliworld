@@ -42,6 +42,8 @@ export interface MapState {
   timeRange: TimeRange;
   activeLayers: LayerId[];
   selectedEvent: EventDetail | null;
+  /** 地图标记弹窗（点击后在地图脉冲点附近显示的浮窗，不自动打开右侧面板） */
+  mapTooltip: EventDetail | null;
   sidePanelOpen: boolean;
 }
 
@@ -70,6 +72,8 @@ export interface MapActions {
   setTimeRange: (timeRange: TimeRange) => void;
   setActiveLayers: (layers: LayerId[]) => void;
   toggleLayer: (layerId: LayerId) => void;
+  /** 在地图上聚焦显示脉冲标记+浮窗，不打开右侧面板 */
+  focusOnMap: (event: EventDetail | null) => void;
   selectEvent: (event: EventDetail | null) => void;
   openSidePanel: (open: boolean) => void;
 }
@@ -90,6 +94,7 @@ const initialState: MapState = {
   timeRange: '7d',
   activeLayers: ['conflicts', 'economic', 'weather'],
   selectedEvent: null,
+  mapTooltip: null,
   sidePanelOpen: false,
 };
 
@@ -107,6 +112,7 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
           activeLayers: filterSensitive(region?.defaultLayers ?? region?.layers ?? [], s.hideSensitive),
           globe: false,
           selectedEvent: null,
+          mapTooltip: null,
           sidePanelOpen: false,
         };
       }
@@ -119,6 +125,7 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
         // 天体默认 3D 球面视图
         globe: true,
         selectedEvent: null,
+        mapTooltip: null,
         sidePanelOpen: false,
       };
     }),
@@ -133,6 +140,7 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
         activeLayers: mod.defaultLayers ?? mod.layers,
         timeRange: mod.timeRange ?? '7d',
         selectedEvent: null,
+        mapTooltip: null,
         sidePanelOpen: false,
       };
     }),
@@ -144,6 +152,7 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
         activeTier: tierId,
         activeLayers: filterSensitive(tier.defaultLayers, s.hideSensitive),
         selectedEvent: null,
+        mapTooltip: null,
         sidePanelOpen: false,
       };
     }),
@@ -190,6 +199,12 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
           ? s.activeLayers.filter((id) => id !== layerId)
           : [...s.activeLayers, layerId],
       };
+    }),
+  /** 在地图上聚焦（显示脉冲标记+浮窗），不打开右侧面板 */
+  focusOnMap: (event: EventDetail | null) =>
+    set((s) => {
+      if (s.mapTooltip?.id === event?.id && !!event === !!s.mapTooltip) return {};
+      return { mapTooltip: event };
     }),
   selectEvent: (selectedEvent) =>
     set((s) => {

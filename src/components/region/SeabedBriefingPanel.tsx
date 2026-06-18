@@ -35,6 +35,7 @@ export function SeabedBriefingPanel({ className = '' }: SeabedBriefingPanelProps
   const activeTier = useMapStore((s) => s.activeTier);
   const setViewport = useMapStore((s) => s.setViewport);
   const selectEvent = useMapStore((s) => s.selectEvent);
+  const focusOnMap = useMapStore((s) => s.focusOnMap);
   const { data, isLoading: geodataLoading, error: geodataError } = useGeodataContext();
 
   const cableLandings = useMemo(
@@ -85,7 +86,8 @@ export function SeabedBriefingPanel({ className = '' }: SeabedBriefingPanelProps
       category: 'cable_incidents',
       description: desc,
     };
-    selectEvent(ev);
+    focusOnMap(ev);
+    selectEvent(null);
   };
 
   return (

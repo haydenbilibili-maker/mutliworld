@@ -113,16 +113,17 @@ function featureProps(p: Record<string, unknown> | undefined) {
     markerLabel: String(p?.markerLabel ?? ''),
     markerEmoji: String(p?.markerEmoji ?? ''),
     personAvatar: String(p?.personAvatar ?? ''),
-    selected: {
-      id: String(p?.id ?? ''),
-      title: String(p?.title ?? ''),
-      source: String(p?.source ?? ''),
-      timestamp: String(p?.timestamp ?? ''),
-      location: [lng, lat] as [number, number],
-      impact_level,
-      category: String(p?.category ?? p?.layerId ?? 'conflicts'),
-      description: '',
-    } satisfies EventDetail,
+	    selected: {
+	      id: String(p?.id ?? ''),
+	      title: String(p?.title ?? ''),
+	      source: String(p?.source ?? ''),
+	      timestamp: String(p?.timestamp ?? ''),
+	      location: [lng, lat] as [number, number],
+	      impact_level,
+	      category: String(p?.category ?? p?.layerId ?? 'conflicts'),
+	      description: '',
+	      avatarUrl: p?.personAvatar ? String(p.personAvatar) : undefined,
+	    } satisfies EventDetail,
   };
 }
 
