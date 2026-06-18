@@ -17,6 +17,8 @@ const FEEDS: { source: string; url: string }[] = [
   { source: 'BBC', url: 'https://feeds.bbci.co.uk/news/world/rss.xml' },
   { source: '半岛', url: 'https://www.aljazeera.com/xml/rss/all.xml' },
   { source: 'UN News', url: 'https://news.un.org/feed/subscribe/en/news/all/rss.xml' },
+  { source: 'France24', url: 'https://www.france24.com/en/rss' },
+  { source: 'DW', url: 'https://rss.dw.com/rdf/rss-en-all' },
 ];
 
 function decode(s: string): string {

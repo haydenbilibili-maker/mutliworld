@@ -1,17 +1,20 @@
 /**
- * LLM 客户端 — OpenAI 兼容 Chat Completions（区域简报 LLM 化）
+ * LLM 客户端 — DeepSeek Chat Completions（默认）+ 兼容 OpenAI（可切换）
  *
  * 环境变量（服务端）：
  *  - LLM_API_KEY   ：API 密钥（必填，缺失则功能优雅降级）
- *  - LLM_BASE_URL  ：兼容端点基址，默认 https://api.openai.com/v1
- *  - LLM_MODEL     ：模型名，默认 gpt-4o-mini
+ *                     DeepSeek 密钥可在 platform.deepseek.com/api_keys 获取
+ *  - LLM_BASE_URL  ：兼容端点基址，默认 https://api.deepseek.com
+ *                     切回 OpenAI 设为 https://api.openai.com/v1
+ *  - LLM_MODEL     ：模型名，默认 deepseek-chat
+ *                     切回 GPT 设为 gpt-4o-mini 等
  *
  * 仅用于「在给定真实数据上合成中立简报」，不引入模型自身的世界知识（RAG 式约束在提示词中声明）。
  */
 
 const KEY = (process.env.LLM_API_KEY ?? '').trim();
-const BASE = (process.env.LLM_BASE_URL ?? 'https://api.openai.com/v1').trim().replace(/\/$/, '');
-const MODEL = (process.env.LLM_MODEL ?? 'gpt-4o-mini').trim();
+const BASE = (process.env.LLM_BASE_URL ?? 'https://api.deepseek.com').trim().replace(/\/$/, '');
+const MODEL = (process.env.LLM_MODEL ?? 'deepseek-chat').trim();
 
 export function hasLlm(): boolean {
   return KEY.length > 0;

@@ -37,6 +37,8 @@ export interface Person {
   status?: PersonStatus;
   /** 阵营标识（中东等场景筛选用） */
   faction?: string;
+  /** 维基百科页面 URL（可选）—— 用于显示「维基百科 ↗」外链按钮 */
+  wikipedia?: string;
   avatar?: string;
   actions?: PersonAction[];
 }

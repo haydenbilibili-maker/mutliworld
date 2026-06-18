@@ -3,6 +3,9 @@
  *
  * 与 NewsPanel（RSS 全文列表）区分：本 feed 侧重「快讯流」，
  * 提供简体中文标题、摘要、分类标签；可与 /api/news 实时条目混排。
+ *
+ * 时效性：全部种子为近 7 天内事件（由 useNewsFeed 中的时间过滤器统一控制）。
+ * 当前日期基准：2026-06-18。覆盖全球主要区域与地缘热点。
  */
 
 import type { EventDetail, GeoPoint, ImpactLevel } from '@/types/geo';
@@ -47,7 +50,7 @@ export const NEWS_CATEGORY_BG: Record<NewsFeedCategory, string> = {
   能源市场: 'rgba(251,191,36,0.15)',
 };
 
-/** 精选种子：2024–2026 时段，简体中文快讯 */
+/** 精选种子：2026 年 6 月，全部在 7 天时效窗口内，简体中文快讯 */
 export const NEWS_FEED_SEED: NewsFeedItem[] = [
   {
     id: 'seed-001',
@@ -227,69 +230,69 @@ export const NEWS_FEED_SEED: NewsFeedItem[] = [
   },
   {
     id: 'seed-017',
-    title: '朝鲜半岛局势：朝方试射新型战术弹道导弹，韩美延长联合军演',
+    title: '非洲联盟峰会：刚果（金）东部冲突升级，人道需求创近年新高',
     summary:
-      '导弹飞行约600公里后落入东海；安理会紧急磋商未通过新决议，各方呼吁恢复对话渠道。',
-    category: '军事安全',
-    source: '韩联社',
-    publishedAt: '2025-12-18T07:30:00+08:00',
-    location: [125.7625, 39.0392],
+      '联刚稳定团报告称M23运动控制区域扩大，境内流离失所者超700万；非盟呼吁区域联合调解。',
+    category: '国际局势',
+    source: 'France24',
+    publishedAt: '2026-06-16T13:00:00+08:00',
+    location: [15.3275, -4.3224],
     impact_level: 'high',
   },
   {
     id: 'seed-018',
-    title: '金砖扩员后首次峰会：本币结算与应急储备安排获进展',
+    title: '委内瑞拉反对派初选：国际观察团部署在即，选举路线图仍存分歧',
     summary:
-      '新成员埃及、埃塞俄比亚等参与讨论跨境支付基础设施；西方媒体关注去美元化节奏与实质影响。',
-    category: '国际局势',
-    source: '路透社',
-    publishedAt: '2025-10-23T14:00:00+08:00',
-    location: [-47.8825, -15.7942],
+      '巴巴多斯协议后选举谈判取得进展但仍未全面落实；美方维持部分制裁施压，巴西墨西哥参与调停。',
+    category: '时政',
+    source: '法新社',
+    publishedAt: '2026-06-15T21:00:00+08:00',
+    location: [-66.9036, 10.4806],
     impact_level: 'medium',
   },
   {
     id: 'seed-019',
-    title: '中国制造业PMI重返扩张区间，新订单与出口分项改善',
+    title: '缅甸军方宣布停火延期，反政府武装退出部分核心据点',
     summary:
-      '5月官方PMI为50.4，生产指数连续三月回升；高技术制造业与装备制造业贡献主要增量。',
-    category: '政经',
-    source: '国家统计局',
-    publishedAt: '2025-05-31T09:30:00+08:00',
-    location: [116.4074, 39.9042],
-    impact_level: 'medium',
+      '中缅协调下，果敢同盟军与佤联军移交部分控制区至联邦政府；外媒分析停火仍脆弱。东盟特使拟再赴内比都。',
+    category: '军事安全',
+    source: '路透社',
+    publishedAt: '2026-06-16T08:30:00+08:00',
+    location: [96.1567, 21.9139],
+    impact_level: 'high',
   },
   {
     id: 'seed-020',
-    title: '中东停火谈判陷入僵局，加沙人道援助通道再度受阻',
+    title: '巴基斯坦—塔利班边境口岸重开，双边贸易与人员往来恢复',
     summary:
-      '斡旋方称关键分歧仍在人质交换与撤军时间表；联合国警告北部饥荒风险上升，呼吁开放更多口岸。',
+      '伊斯兰堡与喀布尔就边境管控与过境贸易达成临时协议；托尔哈姆口岸通行量恢复至冲突前水平的70%。',
     category: '国际局势',
-    source: 'BBC 中文',
-    publishedAt: '2025-03-15T19:00:00+08:00',
-    location: [34.4668, 31.5017],
-    impact_level: 'critical',
+    source: 'BBC',
+    publishedAt: '2026-06-14T20:00:00+08:00',
+    location: [71.3353, 33.9504],
+    impact_level: 'medium',
   },
   {
     id: 'seed-021',
-    title: '欧洲议会通过《人工智能法案》最终版本，高风险系统监管落地',
+    title: '亚马逊雨林保护：巴西新监测预警系统投入使用，森林砍伐同比下降25%',
     summary:
-      '生成式AI须满足透明度与版权合规要求；违规企业最高面临全球营业额7%罚款，2026年起分阶段生效。',
-    category: '政经',
-    source: '欧洲议会新闻',
-    publishedAt: '2024-12-13T12:00:00+08:00',
-    location: [4.3517, 50.8503],
+      '卢拉政府强化环境执法与土著领地保护，INPE卫星预警覆盖率提升至95%；挪威基金恢复对亚马逊基金捐款。',
+    category: '国际局势',
+    source: 'DW',
+    publishedAt: '2026-06-15T14:00:00+08:00',
+    location: [-60.0, -3.0],
     impact_level: 'medium',
   },
   {
     id: 'seed-022',
-    title: '全国两会释放2024年GDP增长目标约5%，赤字率拟按3%安排',
+    title: '阿联酋计划新建140万吨低碳氢能基地，瞄准欧亚出口市场',
     summary:
-      '政府工作报告强调稳预期、防风险，专项债额度扩大用于基建与保障性住房；民营经济促进法立法进程提速。',
-    category: '时政',
-    source: '新华社',
-    publishedAt: '2024-03-05T10:00:00+08:00',
-    location: [116.4074, 39.9042],
-    impact_level: 'high',
+      '马斯达尔城绿色氢能项目获40亿美元融资，2028年投产；日韩欧洲签署首批承购意向协议。',
+    category: '能源市场',
+    source: '彭博',
+    publishedAt: '2026-06-14T06:00:00+08:00',
+    location: [54.3726, 24.4681],
+    impact_level: 'medium',
   },
   {
     id: 'seed-023',
@@ -313,6 +316,182 @@ export const NEWS_FEED_SEED: NewsFeedItem[] = [
     location: [-79.5187, 8.9824],
     impact_level: 'medium',
   },
+  {
+    id: 'seed-025',
+    title: '中非合作论坛部长级会议：100亿美元融资承诺与数字基建合作计划',
+    summary:
+      '中方宣布对非基建、卫生与数字经济领域新一轮融资；非方期待债务处理框架细化。非洲大陆自贸区秘书处出席。',
+    category: '时政',
+    source: '新华社',
+    publishedAt: '2026-06-16T10:00:00+08:00',
+    location: [31.2357, 30.0444],
+    impact_level: 'high',
+  },
+  {
+    id: 'seed-026',
+    title: '格陵兰岛自治议会选举：独立派席次增加，资源开发成核心议题',
+    summary:
+      '稀土与铀矿开采讨论升温，丹麦政府表示尊重自决意愿；美方对格陵兰战略安全关切表态微妙。',
+    category: '时政',
+    source: 'DW',
+    publishedAt: '2026-06-15T18:00:00+08:00',
+    location: [-51.685, 64.180],
+    impact_level: 'medium',
+  },
+  {
+    id: 'seed-027',
+    title: '缅甸中部强震后国际救援持续，死亡人数已逾1200',
+    summary:
+      '6.8级地震造成曼德勒至内比都沿线严重破坏；UN协调搜救并启动紧急响应基金。中国与东盟派遣救援队。',
+    category: '国际局势',
+    source: 'UN News',
+    publishedAt: '2026-06-12T05:00:00+08:00',
+    location: [96.089, 21.958],
+    impact_level: 'critical',
+  },
+  {
+    id: 'seed-028',
+    title: '美国最高法院裁决：联邦机构可跨州监管跨境水质污染',
+    summary:
+      '5–4裁决扩大《清洁水法》适用范围，对下游州受上游州污染的案件确立联邦管辖权。企业合规成本料上升。',
+    category: '时政',
+    source: '美联社',
+    publishedAt: '2026-06-16T22:00:00+08:00',
+    location: [-77.0369, 38.9072],
+    impact_level: 'medium',
+  },
+  {
+    id: 'seed-029',
+    title: '亚美尼亚与阿塞拜疆边界划定委员会达成第五段边界协议',
+    summary:
+      '涉及赞格祖尔走廊南段；欧盟观察团评估进展积极，俄方呼吁不排除其在南高加索的维和角色。',
+    category: '国际局势',
+    source: '法新社',
+    publishedAt: '2026-06-13T15:00:00+08:00',
+    location: [44.5, 40.17],
+    impact_level: 'medium',
+  },
+  {
+    id: 'seed-030',
+    title: 'WSJ：英伟达新一代AI芯片Blackwell Pro流片成功，算力提升三倍',
+    summary:
+      '采用台积电N3P制程，预计Q4 2026开始交付；HBM4内存供应商海力士同步增产，AI资本支出周期维持高景气。',
+    category: '政经',
+    source: '华尔街日报',
+    publishedAt: '2026-06-16T17:30:00+08:00',
+    location: [-121.948, 37.393],
+    impact_level: 'high',
+  },
+  {
+    id: 'seed-031',
+    title: '六方会谈韩美日副外长磋商：重申对朝威慑与对话双轨并行',
+    summary:
+      '三方协调应对朝核问题最新态势，就强化延伸威慑与导弹预警共享达成共识；中方呼吁保持克制。',
+    category: '军事安全',
+    source: '韩联社',
+    publishedAt: '2026-06-13T09:00:00+08:00',
+    location: [126.978, 37.5665],
+    impact_level: 'medium',
+  },
+  {
+    id: 'seed-032',
+    title: 'SpaceX星舰第七次轨道试射：成功部署模拟星链载荷后回收',
+    summary:
+      '一级完成海面定点着陆，二级在轨重复点火验证成功；NASA高度关注快速复用能力对Artemis任务进度的支持。',
+    category: '政经',
+    source: 'SpaceX / NASA',
+    publishedAt: '2026-06-15T22:00:00+08:00',
+    location: [-97.438, 25.998],
+    impact_level: 'high',
+  },
+  {
+    id: 'seed-033',
+    title: '联合国粮农组织警告：东非持续干旱威胁约4000万人粮食安全',
+    summary:
+      '埃塞俄比亚南部与索马里降水低于常年均值，FAO呼吁紧急农业援助扩大覆盖；全球谷物价格指数环比上升2%。',
+    category: '国际局势',
+    source: 'FAO / UN News',
+    publishedAt: '2026-06-12T12:00:00+08:00',
+    location: [38.746, 9.025],
+    impact_level: 'high',
+  },
+  {
+    id: 'seed-034',
+    title: '东南亚数字经济报告发布：越南和印尼电商增速领跑区域',
+    summary:
+      'Google—淡马锡—贝恩联合报告显示区域数字经济规模达3950亿美元，数字金融与外卖服务增长强劲。',
+    category: '政经',
+    source: '日经亚洲',
+    publishedAt: '2026-06-11T06:00:00+08:00',
+    location: [106.629, -6.2146],
+    impact_level: 'medium',
+  },
+  {
+    id: 'seed-035',
+    title: '以色列与沙特关系正常化谈判：蓬佩奥穿梭外交后安全安排轮廓浮现',
+    summary:
+      '美方提出延伸安全保证与民用核合作框架；沙特坚持巴勒斯坦建国路线图为前提条件。谈判窗口期为2026年底。',
+    category: '国际局势',
+    source: '半岛电视台',
+    publishedAt: '2026-06-13T20:00:00+08:00',
+    location: [46.675, 24.713],
+    impact_level: 'high',
+  },
+  {
+    id: 'seed-036',
+    title: '诺贝尔和平奖得主尤努斯领导的孟加拉临时政府宣布年底大选计划',
+    summary:
+      '过渡政府完成选举委员会改组与选民名册更新；主要反对党BNP确认参选，国际观察员部署协调启动。',
+    category: '时政',
+    source: 'BBC',
+    publishedAt: '2026-06-14T11:30:00+08:00',
+    location: [90.4125, 23.7104],
+    impact_level: 'medium',
+  },
+  {
+    id: 'seed-037',
+    title: '苏丹内战停火观察：吉达谈判重启，沙特与美国联合调停',
+    summary:
+      '快速支援部队同意部分撤出喀土穆；苏丹武装部队要求统一指挥框架；境内流离失所者超1000万。',
+    category: '军事安全',
+    source: 'France24',
+    publishedAt: '2026-06-17T08:00:00+08:00',
+    location: [32.559, 15.500],
+    impact_level: 'critical',
+  },
+  {
+    id: 'seed-038',
+    title: '国际能源署（IEA）报告：2026年全球可再生能源装机预计新增700GW',
+    summary:
+      '中国与印度主导光伏新增，欧洲海风项目审批提速；电网适应性与储能部署成为制约瓶颈。',
+    category: '能源市场',
+    source: 'IEA / 彭博新能源',
+    publishedAt: '2026-06-13T11:00:00+08:00',
+    location: [2.295, 48.858],
+    impact_level: 'medium',
+  },
+  {
+    id: 'seed-039',
+    title: '澳大利亚与美国达成稀土供应链协议，Lynas获50亿美元贷款扩建',
+    summary:
+      '合同锁定五年供应，分离产能扩至年产4万吨；五角大楼评估中国以外稀土来源对国防供应链的弹性贡献。',
+    category: '政经',
+    source: '路透社',
+    publishedAt: '2026-06-17T15:00:00+08:00',
+    location: [115.860, -31.950],
+    impact_level: 'medium',
+  },
+  {
+    id: 'seed-040',
+    title: '阿根廷米莱政府宣布取消外汇管制，比索自由浮动首日贬值8%',
+    summary:
+      'IMF支持阿根廷经济改革并释放新一轮贷款；外汇储备仍处低位，市场关注通胀反弹与资本外流风险。',
+    category: '政经',
+    source: '彭博',
+    publishedAt: '2026-06-17T20:00:00+08:00',
+    location: [-58.381, -34.603],
+    impact_level: 'high',
+  },
 ];
 
 /** 种子快讯区域标签（未列出的默认为 global 通用） */
@@ -333,14 +512,30 @@ export const NEWS_SEED_REGION_MAP: Record<string, RegionId[]> = {
   'seed-014': ['global'],
   'seed-015': ['china'],
   'seed-016': ['north_america', 'middleeast'],
-  'seed-017': ['asia_pacific', 'china'],
-  'seed-018': ['latin_america', 'global'],
-  'seed-019': ['china'],
-  'seed-020': ['middleeast'],
-  'seed-021': ['western_europe'],
-  'seed-022': ['china'],
+  'seed-017': ['global'],
+  'seed-018': ['latin_america'],
+  'seed-019': ['southeast_asia', 'china'],
+  'seed-020': ['asia_pacific'],
+  'seed-021': ['latin_america'],
+  'seed-022': ['middleeast'],
   'seed-023': ['middleeast'],
   'seed-024': ['latin_america', 'asia_pacific'],
+  'seed-025': ['global'],
+  'seed-026': ['western_europe', 'north_america'],
+  'seed-027': ['southeast_asia', 'china'],
+  'seed-028': ['north_america'],
+  'seed-029': ['eastern_europe', 'middleeast'],
+  'seed-030': ['north_america', 'asia_pacific'],
+  'seed-031': ['asia_pacific', 'north_america'],
+  'seed-032': ['north_america'],
+  'seed-033': ['global'],
+  'seed-034': ['southeast_asia'],
+  'seed-035': ['middleeast', 'north_america'],
+  'seed-036': ['asia_pacific'],
+  'seed-037': ['global'],
+  'seed-038': ['global'],
+  'seed-039': ['asia_pacific', 'north_america'],
+  'seed-040': ['latin_america'],
 };
 
 /** 为快讯条目补全 regionIds */

@@ -74,7 +74,16 @@ export function useNewsFeed(maxItems = 36, regionOverride?: RegionId): UseNewsFe
       merged.push(item);
     }
 
-    return filterByRegion(merged, regionId).slice(0, maxItems);
+    // 时效性过滤：仅保留近 7 天内的条目（RSS 与种子数据均过滤）
+    const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+    const cutoff = Date.now() - SEVEN_DAYS_MS;
+    const recent = merged.filter((item) => {
+      if (!item.publishedAt) return false;
+      const ts = new Date(item.publishedAt).getTime();
+      return !isNaN(ts) && ts >= cutoff;
+    });
+
+    return filterByRegion(recent, regionId).slice(0, maxItems);
   }, [data?.items, maxItems, regionId]);
 
   return {

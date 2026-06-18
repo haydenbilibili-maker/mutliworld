@@ -179,9 +179,22 @@ export function PersonsPanel({ className = '' }: PersonsPanelProps) {
                     </button>
                   </div>
                   <div className="text-[11px] text-dashboard-neutral/85 leading-snug">{p.bio}</div>
-                  {p.since && (
-                    <div className="text-[10px] text-dashboard-neutral/60">相关年份：{p.since}</div>
-                  )}
+                  <div className="flex flex-wrap gap-2 text-[10px]">
+                    {p.since && (
+                      <span className="text-dashboard-neutral/60">相关年份：{p.since}</span>
+                    )}
+                    {p.wikipedia && (
+                      <a
+                        href={p.wikipedia}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-brand-cyan hover:text-white transition-colors inline-flex items-center gap-0.5"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        维基百科 ↗
+                      </a>
+                    )}
+                  </div>
                   {(p.actions?.length ?? 0) > 0 && (
                     <div className="space-y-1">
                       {p.actions!.map((a, i) => (
