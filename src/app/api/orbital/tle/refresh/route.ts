@@ -11,6 +11,14 @@ export async function POST() {
     );
   }
 
-  const result = await refreshTleData();
-  return NextResponse.json(result, { status: result.ok ? 200 : 500 });
+  try {
+    const result = await refreshTleData();
+    return NextResponse.json(result, { status: result.ok ? 200 : 500 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'TLE 刷新失败';
+    return NextResponse.json(
+      { ok: false, error: message, count: 0, fetchedAt: new Date().toISOString(), counts: { station: 0, satellite: 0, debris: 0 }, source: '', summary: message },
+      { status: 500 },
+    );
+  }
 }

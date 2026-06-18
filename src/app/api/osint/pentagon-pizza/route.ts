@@ -28,14 +28,21 @@ export async function GET() {
     });
   }
 
-  const live = await fetchPizzintWatch();
   let body: PizzaIndexResponse;
   let ttl: number;
 
-  if (live) {
-    body = live;
-    ttl = LIVE_CACHE_TTL_MS;
-  } else {
+  try {
+    const live = await fetchPizzintWatch();
+    if (live) {
+      body = live;
+      ttl = LIVE_CACHE_TTL_MS;
+    } else {
+      body = computePizzaIndex();
+      body.disclaimer = `${body.disclaimer}${FALLBACK_NOTE}`;
+      ttl = SIM_CACHE_TTL_MS;
+    }
+  } catch {
+    // 实时源不可用（网络超时/API 错误），回退模拟
     body = computePizzaIndex();
     body.disclaimer = `${body.disclaimer}${FALLBACK_NOTE}`;
     ttl = SIM_CACHE_TTL_MS;
