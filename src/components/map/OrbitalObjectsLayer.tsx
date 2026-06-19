@@ -16,9 +16,23 @@ import { useOrbitalObjects, LAYER_TO_ORBITAL_CATEGORY } from '@/hooks/useOrbital
 import type { LayerId } from '@/types/geo';
 
 const SOURCE = 'orbital-objects';
-const LAYER_SAT = 'orbital-sats-dot';
+/** 地表锚点（暗）+ 三段轨道高度的抬升卫星层 + 碎片层 */
+const LAYER_SAT_ANCHOR = 'orbital-sats-anchor';
+const LAYER_SAT_LEO = 'orbital-sats-leo';
+const LAYER_SAT_MEO = 'orbital-sats-meo';
+const LAYER_SAT_GEO = 'orbital-sats-geo';
 const LAYER_DEBRIS = 'orbital-debris-dot';
-const LAYER_SAT_GLOW = 'orbital-sats-glow';
+const SAT_BAND_LAYERS = [LAYER_SAT_LEO, LAYER_SAT_MEO, LAYER_SAT_GEO] as const;
+const ALL_ORBITAL_LAYERS = [LAYER_SAT_ANCHOR, ...SAT_BAND_LAYERS, LAYER_DEBRIS] as const;
+
+/** 屏幕向上抬升像素（漂浮高度）：按轨道高度分段 */
+const MEO_FLOOR_KM = 2000;
+const GEO_FLOOR_KM = 20000;
+function liftPx(altKm: number): number {
+  if (altKm < MEO_FLOOR_KM) return 18;
+  if (altKm < GEO_FLOOR_KM) return 38;
+  return 66;
+}
 
 const ORBITAL_LAYERS: LayerId[] = ['space_stations', 'satellites', 'space_debris'];
 
@@ -80,12 +94,12 @@ export function OrbitalObjectsLayer() {
   const inSpace = useMapStore((s) => s.activeTier === 'space');
   const activeLayers = useMapStore((s) => s.activeLayers);
   const selectEvent = useMapStore((s) => s.selectEvent);
-  const setCenter = useMapStore((s) => s.setCenter);
+  const setViewport = useMapStore((s) => s.setViewport);
 
   const selectEventRef = useRef(selectEvent);
-  const setCenterRef = useRef(setCenter);
+  const setViewportRef = useRef(setViewport);
   selectEventRef.current = selectEvent;
-  setCenterRef.current = setCenter;
+  setViewportRef.current = setViewport;
 
   const orbitalLayersOn = ORBITAL_LAYERS.some((id) => activeLayers.includes(id));
   const { geojson } = useOrbitalObjects(inSpace && orbitalLayersOn);
@@ -118,36 +132,59 @@ export function OrbitalObjectsLayer() {
             data: { type: 'FeatureCollection', features: [] },
           });
         }
-        if (!map.getLayer(LAYER_SAT_GLOW)) {
+
+        // 地表锚点：暗淡小点 + 连向漂浮卫星的"系绳"由抬升的明亮点与锚点之间的视觉间距体现
+        if (!map.getLayer(LAYER_SAT_ANCHOR)) {
           map.addLayer({
-            id: LAYER_SAT_GLOW,
+            id: LAYER_SAT_ANCHOR,
             type: 'circle',
             source: SOURCE,
             filter: ['==', ['get', 'category'], 'satellite'],
             layout: { visibility: 'none' },
             paint: {
-              'circle-radius': ['interpolate', ['linear'], ['get', 'alt_km'], 200, 5, 2000, 7, 36000, 10],
+              'circle-radius': 1.6,
               'circle-color': '#38bdf8',
-              'circle-opacity': 0.15,
-              'circle-blur': 0.7,
+              'circle-opacity': 0.35,
+              'circle-stroke-width': 0,
             },
           });
         }
-        if (!map.getLayer(LAYER_SAT)) {
+
+        // 三段轨道高度：用 circle-translate（viewport 锚，屏幕向上）把卫星抬离地表，漂浮在宇宙空间
+        const band = (
+          id: string,
+          altFilter: maplibregl.FilterSpecification,
+          lift: number,
+          radius: number,
+        ) => {
+          if (map.getLayer(id)) return;
           map.addLayer({
-            id: LAYER_SAT,
+            id,
             type: 'circle',
             source: SOURCE,
-            filter: ['==', ['get', 'category'], 'satellite'],
+            filter: ['all', ['==', ['get', 'category'], 'satellite'], altFilter] as maplibregl.FilterSpecification,
             layout: { visibility: 'none' },
             paint: {
-              'circle-radius': ['interpolate', ['linear'], ['get', 'alt_km'], 200, 2.5, 2000, 3.5, 36000, 5],
-              'circle-color': '#7dd3fc',
+              'circle-radius': radius,
+              'circle-color': '#bae6fd',
+              'circle-opacity': 0.95,
+              'circle-blur': 0.25,
               'circle-stroke-width': 1,
-              'circle-stroke-color': '#0A0E17',
+              'circle-stroke-color': '#0ea5e9',
+              'circle-translate': [0, -lift],
+              'circle-translate-anchor': 'viewport',
             },
           });
-        }
+        };
+        band(LAYER_SAT_LEO, ['<', ['get', 'alt_km'], MEO_FLOOR_KM], 18, 3.2);
+        band(
+          LAYER_SAT_MEO,
+          ['all', ['>=', ['get', 'alt_km'], MEO_FLOOR_KM], ['<', ['get', 'alt_km'], GEO_FLOOR_KM]],
+          38,
+          3.8,
+        );
+        band(LAYER_SAT_GEO, ['>=', ['get', 'alt_km'], GEO_FLOOR_KM], 66, 4.6);
+
         if (!map.getLayer(LAYER_DEBRIS)) {
           map.addLayer({
             id: LAYER_DEBRIS,
@@ -156,10 +193,12 @@ export function OrbitalObjectsLayer() {
             filter: ['==', ['get', 'category'], 'debris'],
             layout: { visibility: 'none' },
             paint: {
-              'circle-radius': 1.8,
+              'circle-radius': 1.6,
               'circle-color': '#c4b5fd',
-              'circle-opacity': 0.65,
+              'circle-opacity': 0.55,
               'circle-stroke-width': 0,
+              'circle-translate': [0, -10],
+              'circle-translate-anchor': 'viewport',
             },
           });
         }
@@ -174,7 +213,7 @@ export function OrbitalObjectsLayer() {
     return () => {
       map.off('style.load', setup);
       try {
-        for (const id of [LAYER_DEBRIS, LAYER_SAT, LAYER_SAT_GLOW]) {
+        for (const id of [...ALL_ORBITAL_LAYERS]) {
           if (map.getLayer(id)) map.removeLayer(id);
         }
         if (map.getSource(SOURCE)) map.removeSource(SOURCE);
@@ -207,7 +246,7 @@ export function OrbitalObjectsLayer() {
           lastCombinedRef.current = combinedKey;
         }
         const vis = visible ? 'visible' : 'none';
-        for (const id of [LAYER_SAT, LAYER_SAT_GLOW, LAYER_DEBRIS]) {
+        for (const id of [...ALL_ORBITAL_LAYERS]) {
           if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis);
         }
       } catch {
@@ -237,17 +276,21 @@ export function OrbitalObjectsLayer() {
       const color = isISS ? '#22d3ee' : '#fb7185';
       const shortLabel = isISS ? 'ISS' : s.noradId === 48274 ? '天宫' : s.name.slice(0, 8);
 
+      const lift = liftPx(s.alt_km);
       if (!mk) {
         const el = document.createElement('div');
         el.className = 'live-station-marker';
+        // 系绳：从漂浮的空间站向下连到地表星下点，凸显"漂浮在宇宙空间"
         el.innerHTML = `
+          <span class="lsm-tether" style="height:${lift}px"></span>
           <span class="lsm-pulse" style="--c:${color}"></span>
           <span class="lsm-dot" style="background:${color}"></span>
-          <span class="lsm-label" style="border-color:${color}66">🏠 ${shortLabel}</span>
+          <span class="lsm-label" style="border-color:${color}66">🛰 ${shortLabel}</span>
         `;
         el.style.cursor = 'pointer';
         el.addEventListener('click', () => {
-          setCenterRef.current([lng, lat]);
+          // 锁定：飞向空间站星下点并出详情卡
+          setViewportRef.current([lng, lat], Math.max(map.getZoom(), 3.2));
           selectEventRef.current({
             id: `orbital-${s.noradId}`,
             title: s.name,
@@ -259,7 +302,8 @@ export function OrbitalObjectsLayer() {
             description: `${s.operator ?? ''} · 高度 ${Math.round(s.alt_km)} km · 速度 ${Math.round(s.velocity_kmh).toLocaleString()} km/h · NORAD ${s.noradId}`,
           });
         });
-        mk = new maplibregl.Marker({ element: el }).setLngLat([lng, lat]).addTo(map);
+        // offset 向上抬升，使空间站漂浮在星下点上方
+        mk = new maplibregl.Marker({ element: el, offset: [0, -lift] }).setLngLat([lng, lat]).addTo(map);
         markers.set(s.noradId, mk);
       } else {
         mk.setLngLat([lng, lat]);
@@ -284,6 +328,8 @@ export function OrbitalObjectsLayer() {
       const p = f.properties as unknown as OrbitalProps;
       const coords = (f.geometry as { type: string; coordinates: [number, number] }).coordinates;
       const layerId: LayerId = p.category === 'debris' ? 'space_debris' : 'satellites';
+      // 锁定：飞向卫星星下点并出详情卡（类似地表概述卡片）
+      setViewportRef.current([coords[0], coords[1]], Math.max(map.getZoom(), 3.2));
       selectEventRef.current({
         id: `orbital-${p.noradId}`,
         title: p.name,
@@ -292,11 +338,11 @@ export function OrbitalObjectsLayer() {
         location: [coords[0], coords[1]],
         impact_level: p.category === 'debris' ? 'medium' : 'low',
         category: layerId,
-        description: `高度 ${p.alt_km} km · 速度 ${p.velocity_kmh.toLocaleString()} km/h · NORAD ${p.noradId}`,
+        description: `${p.operator ? p.operator + ' · ' : ''}高度 ${Math.round(p.alt_km)} km · 速度 ${Math.round(p.velocity_kmh).toLocaleString()} km/h · NORAD ${p.noradId}`,
       });
     };
 
-    const layers = [LAYER_SAT, LAYER_DEBRIS];
+    const layers = [...SAT_BAND_LAYERS, LAYER_DEBRIS];
     const attach = () => {
       for (const id of layers) {
         map.on('click', id, onClick);
@@ -329,6 +375,11 @@ export function OrbitalObjectsLayer() {
   return (
     <style>{`
       .live-station-marker { position: relative; width: 0; height: 0; }
+      .live-station-marker .lsm-tether {
+        position: absolute; left: -0.5px; top: 0; width: 1px;
+        background: linear-gradient(to bottom, rgba(125,211,252,0.7), rgba(125,211,252,0));
+        pointer-events: none;
+      }
       .live-station-marker .lsm-dot {
         position: absolute; left: -4px; top: -4px; width: 8px; height: 8px;
         border-radius: 50%; box-shadow: 0 0 6px currentColor;
