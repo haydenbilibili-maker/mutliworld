@@ -13,6 +13,7 @@ import {
   DENSIFY_CLIMATE,
   DENSIFY_PIPELINES,
 } from './global.layers-densify-r2';
+import { DENSIFY_INFRA } from './global.densify-infra';
 
 export interface ThematicPoint {
   id: string;
@@ -252,4 +253,5 @@ export const GLOBAL_THEMATIC_POINTS: ThematicPoint[] = [
   ...GLOBAL_DATACENTERS,
   ...GLOBAL_PROTESTS,
   ...GLOBAL_CLIMATE,
+  ...DENSIFY_INFRA,
 ];
