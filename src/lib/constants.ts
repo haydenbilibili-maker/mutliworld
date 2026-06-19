@@ -60,7 +60,7 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   atmospheric_circulation: '大气环流',
   deep_exploration: '深海探索',
   pizza_index: '披萨指数',
-  persons: '人物',
+  persons: '人物分布',
 };
 
 /** 默认开启的图层（MVP） */
@@ -82,5 +82,5 @@ export const LAYER_HINTS: Partial<Record<LayerId, string>> = {
   natural: '实时 USGS 地震（橙红地震波图例）≠ 油气储藏',
   hydrocarbon_reserves: '全球主要油气田/盆地（棕金储量波样式）≠ 地震',
   quake_depth: 'USGS 震源深度分带（青紫橙）· 洋底层专用 · 非油气储藏',
-  persons: '区域公众人物标记（政治/经济/社会/文化/军事）',
+  persons: '地图叠加：一键铺开全部人物的驻地地理分布（与右侧「人物」面板同源；面板用于按领域/阵营筛选、看简介与关联行动、逐个定位）',
 };

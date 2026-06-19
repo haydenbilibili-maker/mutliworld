@@ -6,6 +6,7 @@ import { useMapStore } from '@/store/useMapStore';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { LAYER_HINTS, LAYER_LABELS } from '@/lib/constants';
 import { getRegion } from '@/regions';
+import { tierForLayer } from '@/tiers';
 import type { LayerId } from '@/types/geo';
 
 interface LayerToggleProps {
@@ -14,7 +15,11 @@ interface LayerToggleProps {
   embedded?: boolean;
 }
 
-/** 图层按主题分组（对标 World Monitor 的归类导航） */
+/**
+ * 图层按主题分组（对标 World Monitor 的归类导航）。
+ * 注：实时源（天气/航班/海运/火点/披萨）由「实时仪表盘」统一管理，不在此重复列出；
+ *     图层按所属空间层（地表/洋底/宇宙）与当前空间筛选级联展示。
+ */
 const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   {
     title: '冲突与安全',
@@ -22,19 +27,15 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   },
   {
     title: '基础设施与通道',
-    ids: ['aviation', 'live_flights', 'live_maritime', 'maritime', 'cables', 'pipelines', 'waterways', 'outages'],
+    ids: ['aviation', 'maritime', 'cables', 'pipelines', 'waterways', 'outages'],
   },
   {
-    title: '经济与自然',
-    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'hydrocarbon_reserves', 'natural', 'weather', 'live_weather', 'live_fires', 'climate'],
+    title: '经济',
+    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'hydrocarbon_reserves', 'protests'],
   },
   {
-    title: '社会与时空',
-    ids: ['protests', 'daynight'],
-  },
-  {
-    title: 'OSINT 指标',
-    ids: ['pizza_index'],
+    title: '自然',
+    ids: ['natural', 'weather', 'climate', 'daynight'],
   },
   {
     title: '海洋与洋底空间',
@@ -62,13 +63,13 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
 
 const LAYER_ORDER: LayerId[] = LAYER_GROUPS.flatMap((g) => g.ids);
 
-/** 始终可用的全球图层（不受区域 layers 限制：全球基础设施叠加） */
+/**
+ * 始终可用的全球图层（不受区域 layers 限制：全球基础设施叠加）。
+ * 实时源（live_weather/live_flights/live_maritime/live_fires/pizza_index）改由实时仪表盘统一管理，故此处不再列出。
+ */
 const ALWAYS_ON: LayerId[] = [
   'conflict_zones',
   'aviation',
-  'live_flights',
-  'live_fires',
-  'live_maritime',
   'maritime',
   'cables',
   'econ_hubs',
@@ -78,7 +79,6 @@ const ALWAYS_ON: LayerId[] = [
   'datacenters',
   'protests',
   'climate',
-  'live_weather',
   'launch_sites',
   'launch_log',
   'semiconductors',
@@ -100,7 +100,6 @@ const ALWAYS_ON: LayerId[] = [
   'satellites',
   'space_debris',
   'space_events',
-  'pizza_index',
   'persons',
 ];
 
@@ -109,15 +108,22 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
   const [open, setOpen] = useState(false);
 
   const activeRegion = useMapStore((s) => s.activeRegion);
+  const activeTier = useMapStore((s) => s.activeTier);
   const activeLayers = useMapStore((s) => s.activeLayers);
   const toggleLayer = useMapStore((s) => s.toggleLayer);
   const setActiveLayers = useMapStore((s) => s.setActiveLayers);
 
+  /**
+   * 区域可用 + 与当前空间筛选级联：仅保留所属空间层 === 当前 tier 的图层。
+   * 例如地表（surface）下不展示洋底/宇宙图层。
+   */
   const regionLayers = useMemo(() => {
     const mod = getRegion(activeRegion);
     const allowed = new Set([...(mod?.layers ?? LAYER_ORDER), ...ALWAYS_ON]);
-    return LAYER_ORDER.filter((id) => allowed.has(id));
-  }, [activeRegion]);
+    return LAYER_ORDER.filter(
+      (id) => allowed.has(id) && tierForLayer(id) === activeTier,
+    );
+  }, [activeRegion, activeTier]);
 
   const groups = useMemo(() => {
     const allowed = new Set(regionLayers);

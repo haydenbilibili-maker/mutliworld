@@ -220,6 +220,9 @@ export function PersonsPanel({ className = '' }: PersonsPanelProps) {
 
       <div className="text-[10px] text-dashboard-neutral/60 pt-2 mt-1 border-t border-dashboard-neutral/10">
         公开人物档案 · 中立表述 · 坐标为代表性驻地
+        <span className="block mt-0.5 text-dashboard-neutral/45">
+          此处用于筛选浏览与逐个定位；如需在地图上一次铺开全部人物分布，请开启「人物分布」图层。
+        </span>
       </div>
     </DockPanel>
   );
