@@ -1,5 +1,5 @@
 /**
- * 全球主题图层种子数据 — 经济中心 / 矿产 / 管线 / AI 数据中心 / 抗议 / 气候异常
+ * 全球主题图层公开态势整理 — 经济中心 / 矿产 / 管线 / AI 数据中心 / 抗议 / 气候异常
  *
  * ⚠ 公开资料汇总与示意坐标，非实时情报。整理日：2026-06-16
  */
@@ -146,21 +146,21 @@ export const GLOBAL_PIPELINES: PipelineRoute[] = [
     id: 'pipe-power-siberia',
     name: '中俄东线天然气管道',
     coordinates: [[104.0, 52.0], [120.0, 48.0], [126.0, 45.0], [131.0, 43.0], [125.0, 42.0]],
-    note: '西伯利亚气田至中国东北干线（种子/示例走向）',
+    note: '西伯利亚气田至中国东北干线（示意走向）',
     impact: 'critical',
   },
   {
     id: 'pipe-east-med',
     name: '东地中海天然气管道',
     coordinates: [[34.8, 31.5], [33.0, 33.5], [30.0, 35.0], [28.0, 36.5], [26.0, 38.0]],
-    note: '以色列—塞浦路斯—希腊走廊（种子/示例）',
+    note: '以色列—塞浦路斯—希腊走廊',
     impact: 'high',
   },
   {
     id: 'pipe-southern-gas',
     name: '南部天然气走廊（TANAP/TAP）',
     coordinates: [[44.0, 41.0], [38.0, 40.5], [32.0, 40.0], [26.0, 40.5], [20.0, 41.0], [12.0, 42.0]],
-    note: '阿塞拜疆经土耳其至意大利（种子/示例）',
+    note: '阿塞拜疆经土耳其至意大利',
     impact: 'high',
   },
   {
@@ -174,7 +174,7 @@ export const GLOBAL_PIPELINES: PipelineRoute[] = [
     id: 'pipe-brazil-bolivia',
     name: '玻利维亚—巴西天然气管道',
     coordinates: [[-63.0, -17.0], [-60.0, -19.0], [-55.0, -22.0], [-50.0, -24.0], [-46.0, -23.5]],
-    note: '南美内陆气田至圣保罗工业区（种子/示例）',
+    note: '南美内陆气田至圣保罗工业区',
     impact: 'medium',
   },
   {
@@ -210,26 +210,26 @@ export const GLOBAL_DATACENTERS: ThematicPoint[] = [
   ...DENSIFY_DATACENTERS,
 ];
 
-/** 近期抗议与社会动员（种子示例） */
+/** 近期抗议与社会动员 */
 export const GLOBAL_PROTESTS: ThematicPoint[] = [
   { id: 'pro-fr-pension', name: '巴黎 · 养老金改革抗议', layerId: 'protests', lng: 2.35, lat: 48.86, note: '全国性罢工与示威持续', impact: 'high', updatedAt: T },
   { id: 'pro-ge-tbilisi', name: '第比利斯 · 外国代理人法抗议', layerId: 'protests', lng: 44.8, lat: 41.72, note: '亲欧示威与议会对峙', impact: 'high', updatedAt: T2 },
   { id: 'pro-bd-dhaka', name: '达卡 · 配额制抗议', layerId: 'protests', lng: 90.41, lat: 23.81, note: '青年就业诉求引发大规模集会', impact: 'critical', updatedAt: T3 },
   { id: 'pro-ke-nairobi', name: '内罗毕 · 财政紧缩抗议', layerId: 'protests', lng: 36.82, lat: -1.29, note: '税收与物价上涨引发街头示威', impact: 'medium', updatedAt: T2 },
   { id: 'pro-ar-buenos', name: '布宜诺斯艾利斯 · 经济紧缩抗议', layerId: 'protests', lng: -58.38, lat: -34.6, note: '通胀与减支政策引发工会动员', impact: 'medium', updatedAt: T },
-  { id: 'pro-us-campus', name: '美国多校 · 校园示威', layerId: 'protests', lng: -74.0, lat: 40.73, note: '中东政策相关校园集会（种子点位）', impact: 'medium', updatedAt: T3 },
+  { id: 'pro-us-campus', name: '美国多校 · 校园示威', layerId: 'protests', lng: -74.0, lat: 40.73, note: '中东政策相关校园集会', impact: 'medium', updatedAt: T3 },
   { id: 'pro-iran-women', name: '德黑兰 · 社会诉求集会', layerId: 'protests', lng: 51.42, lat: 35.69, note: '公民权利相关零星示威', impact: 'high', updatedAt: T2 },
-  { id: 'pro-seoul-labor', name: '首尔 · 劳工权益集会', layerId: 'protests', lng: 126.98, lat: 37.57, note: '制造业工会要求加薪与工时改革（种子/示例）', impact: 'medium', updatedAt: T },
-  { id: 'pro-jakarta-election', name: '雅加达 · 选举后示威', layerId: 'protests', lng: 106.85, lat: -6.21, note: '地方选举争议引发街头集会（种子/示例）', impact: 'medium', updatedAt: T3 },
-  { id: 'pro-london-climate', name: '伦敦 · 气候行动游行', layerId: 'protests', lng: -0.12, lat: 51.51, note: '环保组织要求加速能源转型（种子/示例）', impact: 'low', updatedAt: T2 },
-  { id: 'pro-santiago-pension', name: '圣地亚哥 · 养老金改革抗议', layerId: 'protests', lng: -70.67, lat: -33.45, note: '社保私有化争议持续（种子/示例）', impact: 'medium', updatedAt: T },
-  { id: 'pro-cairo-economic', name: '开罗 · 物价上涨抗议', layerId: 'protests', lng: 31.24, lat: 30.04, note: '通胀与补贴削减引发社会压力（种子/示例）', impact: 'high', updatedAt: T3 },
-  { id: 'pro-berlin-housing', name: '柏林 · 住房租金抗议', layerId: 'protests', lng: 13.4, lat: 52.52, note: '租金上限与保障房诉求（种子/示例）', impact: 'low', updatedAt: T2 },
-  { id: 'pro-manila-corruption', name: '马尼拉 · 反腐示威', layerId: 'protests', lng: 120.98, lat: 14.6, note: '公共采购腐败调查引发集会（种子/示例）', impact: 'medium', updatedAt: T },
+  { id: 'pro-seoul-labor', name: '首尔 · 劳工权益集会', layerId: 'protests', lng: 126.98, lat: 37.57, note: '制造业工会要求加薪与工时改革', impact: 'medium', updatedAt: T },
+  { id: 'pro-jakarta-election', name: '雅加达 · 选举后示威', layerId: 'protests', lng: 106.85, lat: -6.21, note: '地方选举争议引发街头集会', impact: 'medium', updatedAt: T3 },
+  { id: 'pro-london-climate', name: '伦敦 · 气候行动游行', layerId: 'protests', lng: -0.12, lat: 51.51, note: '环保组织要求加速能源转型', impact: 'low', updatedAt: T2 },
+  { id: 'pro-santiago-pension', name: '圣地亚哥 · 养老金改革抗议', layerId: 'protests', lng: -70.67, lat: -33.45, note: '社保私有化争议持续', impact: 'medium', updatedAt: T },
+  { id: 'pro-cairo-economic', name: '开罗 · 物价上涨抗议', layerId: 'protests', lng: 31.24, lat: 30.04, note: '通胀与补贴削减引发社会压力', impact: 'high', updatedAt: T3 },
+  { id: 'pro-berlin-housing', name: '柏林 · 住房租金抗议', layerId: 'protests', lng: 13.4, lat: 52.52, note: '租金上限与保障房诉求', impact: 'low', updatedAt: T2 },
+  { id: 'pro-manila-corruption', name: '马尼拉 · 反腐示威', layerId: 'protests', lng: 120.98, lat: 14.6, note: '公共采购腐败调查引发集会', impact: 'medium', updatedAt: T },
   ...DENSIFY_PROTESTS,
 ];
 
-/** 气候异常监测点（种子示例） */
+/** 气候异常监测点 */
 export const GLOBAL_CLIMATE: ThematicPoint[] = [
   { id: 'cli-india-heat', name: '印度次大陆 · 极端热浪', layerId: 'climate', lng: 78.96, lat: 20.59, note: '2026 初夏多地突破 45°C，农业与供电承压', impact: 'critical', updatedAt: T, subKind: 'heatwave' },
   { id: 'cli-mexico-drought', name: '墨西哥城 · 严重干旱', layerId: 'climate', lng: -99.13, lat: 19.43, note: '水库蓄水量创新低，限水措施', impact: 'high', updatedAt: T2, subKind: 'drought' },
@@ -238,13 +238,13 @@ export const GLOBAL_CLIMATE: ThematicPoint[] = [
   { id: 'cli-china-rain', name: '华南 · 极端强降雨', layerId: 'climate', lng: 113.26, lat: 23.13, note: '梅雨锋面持续，城市内涝风险', impact: 'high', updatedAt: T2, subKind: 'flood' },
   { id: 'cli-arctic-ice', name: '北极海冰 · 历史低位', layerId: 'climate', lng: 0.0, lat: 82.0, note: '北极夏季海冰范围低于常年均值', impact: 'high', updatedAt: T, subKind: 'ice' },
   { id: 'cli-australia-coral', name: '大堡礁 · 珊瑚白化预警', layerId: 'climate', lng: 147.0, lat: -18.0, note: '海水温度过高触发 bleaching alert', impact: 'medium', updatedAt: T3, subKind: 'ocean' },
-  { id: 'cli-sa-drought', name: '南非开普敦 · 干旱预警', layerId: 'climate', lng: 18.42, lat: -33.92, note: '水库蓄水量低于常年，限水措施（种子/示例）', impact: 'high', updatedAt: T2, subKind: 'drought' },
-  { id: 'cli-sea-haze', name: '东南亚 · 跨境烟霾', layerId: 'climate', lng: 104.0, lat: 0.5, note: '印尼烧芭引发新马空气质量恶化（种子/示例）', impact: 'high', updatedAt: T, subKind: 'haze' },
-  { id: 'cli-us-tornado', name: '美国中部 · 龙卷风高发季', layerId: 'climate', lng: -97.0, lat: 35.5, note: '强对流天气频发，保险损失上升（种子/示例）', impact: 'medium', updatedAt: T3, subKind: 'storm' },
-  { id: 'cli-alps-glacier', name: '阿尔卑斯 · 冰川加速消融', layerId: 'climate', lng: 8.0, lat: 46.5, note: '百年观测站记录融化速率创新高（种子/示例）', impact: 'medium', updatedAt: T2, subKind: 'ice' },
-  { id: 'cli-ganges-flood', name: '恒河平原 · 季风洪涝', layerId: 'climate', lng: 85.0, lat: 25.5, note: '强降雨致孟加拉国与比哈尔邦受灾（种子/示例）', impact: 'critical', updatedAt: T, subKind: 'flood' },
-  { id: 'cli-peru-el-nino', name: '秘鲁海岸 · 厄尔尼诺渔业冲击', layerId: 'climate', lng: -77.0, lat: -12.0, note: '海水升温影响鳀鱼渔获（种子/示例）', impact: 'high', updatedAt: T3, subKind: 'ocean' },
-  { id: 'cli-canada-wildfire', name: '加拿大西部 · 野火季', layerId: 'climate', lng: -120.0, lat: 54.0, note: '干旱与高温推高林火风险（种子/示例）', impact: 'high', updatedAt: T2, subKind: 'wildfire' },
+  { id: 'cli-sa-drought', name: '南非开普敦 · 干旱预警', layerId: 'climate', lng: 18.42, lat: -33.92, note: '水库蓄水量低于常年，限水措施', impact: 'high', updatedAt: T2, subKind: 'drought' },
+  { id: 'cli-sea-haze', name: '东南亚 · 跨境烟霾', layerId: 'climate', lng: 104.0, lat: 0.5, note: '印尼烧芭引发新马空气质量恶化', impact: 'high', updatedAt: T, subKind: 'haze' },
+  { id: 'cli-us-tornado', name: '美国中部 · 龙卷风高发季', layerId: 'climate', lng: -97.0, lat: 35.5, note: '强对流天气频发，保险损失上升', impact: 'medium', updatedAt: T3, subKind: 'storm' },
+  { id: 'cli-alps-glacier', name: '阿尔卑斯 · 冰川加速消融', layerId: 'climate', lng: 8.0, lat: 46.5, note: '百年观测站记录融化速率创新高', impact: 'medium', updatedAt: T2, subKind: 'ice' },
+  { id: 'cli-ganges-flood', name: '恒河平原 · 季风洪涝', layerId: 'climate', lng: 85.0, lat: 25.5, note: '强降雨致孟加拉国与比哈尔邦受灾', impact: 'critical', updatedAt: T, subKind: 'flood' },
+  { id: 'cli-peru-el-nino', name: '秘鲁海岸 · 厄尔尼诺渔业冲击', layerId: 'climate', lng: -77.0, lat: -12.0, note: '海水升温影响鳀鱼渔获', impact: 'high', updatedAt: T3, subKind: 'ocean' },
+  { id: 'cli-canada-wildfire', name: '加拿大西部 · 野火季', layerId: 'climate', lng: -120.0, lat: 54.0, note: '干旱与高温推高林火风险', impact: 'high', updatedAt: T2, subKind: 'wildfire' },
   ...DENSIFY_CLIMATE,
 ];
 

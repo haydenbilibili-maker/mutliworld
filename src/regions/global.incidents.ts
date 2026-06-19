@@ -16,7 +16,6 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     description:
       '多方通报显示，东亚外海航线风险溢出上升，部分航司调整安全航道与停靠港计划；市场对运价与船期波动的担忧加剧。',
     source: 'xinhua',
-    link: 'https://example.com/seed-cn-inc-1',
   },
   {
     id: 'cn-inc-2',
@@ -80,7 +79,7 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: 72.0, lng: 140.0 },
     description: '北方海路冰期缩短背景下，能源与集装箱试航频次增加。',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-8',
@@ -90,7 +89,7 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: -4.0, lng: 15.0 },
     description: '中资矿业项目加强驻地安保与撤离预案演练。',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-9',
@@ -100,7 +99,7 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: -31.95, lng: 115.86 },
     description: '西澳港口天气影响装船节奏，短期到港量下调。',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-10',
@@ -120,7 +119,7 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: 12.0, lng: 114.0 },
     description: '海警编队开展例行巡航与护渔行动。',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-12',
@@ -130,7 +129,7 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: 31.23, lng: 121.47 },
     description: '多家能源企业发布夏季用气补充采购计划。',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-13',
@@ -140,7 +139,7 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: 44.0, lng: 51.0 },
     description: '中亚国家就油气管道输送配额举行磋商。',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-14',
@@ -150,7 +149,7 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: 6.45, lng: 3.38 },
     description: '拉各斯港集装箱堆场饱和，船期延误。',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-15',
@@ -160,7 +159,7 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: 72.0, lng: -42.0 },
     description: '科考船队完成北极航道联合观测任务。',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-jun-1',
@@ -169,8 +168,8 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'cn',
     location: { lat: 43.82, lng: 87.62 },
-    description: '乌鲁木齐集结中心日均发运增长（种子/示例）',
-    source: 'seed/示例',
+    description: '乌鲁木齐集结中心日均发运增长',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-jun-2',
@@ -179,8 +178,8 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     type: 'diplomatic',
     faction: 'cn',
     location: { lat: 1.28, lng: 103.85 },
-    description: '东盟—中国自贸区升级谈判进展（种子/示例）',
-    source: 'seed/示例',
+    description: '东盟—中国自贸区升级谈判进展',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-jun-3',
@@ -189,8 +188,8 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'cn',
     location: { lat: 26.0, lng: 50.0 },
-    description: '炼厂加工利润承压，储备补库加快（种子/示例）',
-    source: 'seed/示例',
+    description: '炼厂加工利润承压，储备补库加快',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-jun-4',
@@ -199,8 +198,8 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     type: 'diplomatic',
     faction: 'cn',
     location: { lat: -15.8, lng: -47.9 },
-    description: '本币结算与供应链合作议题（种子/示例）',
-    source: 'seed/示例',
+    description: '本币结算与供应链合作议题',
+    source: '公开态势整理',
   },
   {
     id: 'cn-inc-jun-5',
@@ -209,8 +208,8 @@ export const GLOBAL_SEED_INCIDENTS: Incident[] = [
     type: 'military',
     faction: 'cn',
     location: { lat: 12.0, lng: 114.0 },
-    description: '海警舰艇编队例行执法（种子/示例）',
-    source: 'seed/示例',
+    description: '海警舰艇编队例行执法',
+    source: '公开态势整理',
   },
 ];
 

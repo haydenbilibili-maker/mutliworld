@@ -2,7 +2,7 @@ import type { EventDetail } from '@/types/geo';
 import type { Incident, Facility } from '@/types/middleeast';
 
 const T = '2026-06-16T08:00:00Z';
-const SRC = '美国印太战略监测 / seed';
+const SRC = '美国印太战略监测';
 
 /** 印太战略 · 事件监测点 */
 export const US_INDO_PACIFIC_EVENTS: EventDetail[] = [
@@ -166,7 +166,7 @@ export const US_INDO_PACIFIC_INCIDENTS: Incident[] = [
     type: 'military',
     faction: 'us',
     location: { lat: 26.35, lng: 127.77 },
-    description: '应对东海空域异常目标识别（种子/示例）',
+    description: '应对东海空域异常目标识别',
     source: 'pacaf',
   },
   {

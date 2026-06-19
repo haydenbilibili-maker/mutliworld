@@ -15,7 +15,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-malacca',
     title: '马六甲海峡 · 全球航运咽喉',
-    source: 'seed/示例（航运监测）',
+    source: '公开态势整理 · 航运监测',
     timestamp: '2026-06-15T08:00:00Z',
     location: [102.25, 2.3],
     impact_level: 'critical',
@@ -25,7 +25,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-singapore',
     title: '新加坡港 · 全球转运枢纽',
-    source: 'seed/示例（港口贸易）',
+    source: '公开态势整理 · 港口贸易',
     timestamp: '2026-06-15T10:00:00Z',
     location: [103.82, 1.35],
     impact_level: 'high',
@@ -35,7 +35,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-south-china-sea',
     title: '南海航道 · 通行与渔业监测',
-    source: 'seed/示例（海事监测）',
+    source: '公开态势整理 · 海事监测',
     timestamp: '2026-06-14T12:00:00Z',
     location: [112.0, 12.0],
     impact_level: 'high',
@@ -45,7 +45,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-manila-hotspot',
     title: '马尼拉湾 · 南海争端前沿',
-    source: 'seed/示例（热点）',
+    source: '公开态势整理 · 热点',
     timestamp: '2026-06-13T06:00:00Z',
     location: [120.98, 14.6],
     impact_level: 'high',
@@ -55,7 +55,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-jakarta-economic',
     title: '雅加达 · 东盟经济中心',
-    source: 'seed/示例（经济指标）',
+    source: '公开态势整理 · 经济指标',
     timestamp: '2026-06-14T04:00:00Z',
     location: [106.85, -6.21],
     impact_level: 'medium',
@@ -65,7 +65,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-bangkok',
     title: '曼谷 · 湄公河流域贸易枢纽',
-    source: 'seed/示例（贸易）',
+    source: '公开态势整理 · 贸易',
     timestamp: '2026-06-12T10:00:00Z',
     location: [100.5, 13.75],
     impact_level: 'medium',
@@ -75,7 +75,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-subic',
     title: '苏比克湾 · 美军准入港口',
-    source: 'seed/示例（军事基地）',
+    source: '公开态势整理 · 军事基地',
     timestamp: '2026-06-11T08:00:00Z',
     location: [120.27, 14.8],
     impact_level: 'medium',
@@ -85,7 +85,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-mekong',
     title: '湄公河 · 水文与航运监测',
-    source: 'MRC / seed（水道）',
+    source: 'MRC · 水道',
     timestamp: '2026-06-13T14:00:00Z',
     location: [105.8, 15.5],
     impact_level: 'medium',
@@ -95,7 +95,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-typhoon',
     title: '菲律宾海 · 台风路径预警',
-    source: 'PAGASA / seed（气象）',
+    source: 'PAGASA · 气象',
     timestamp: '2026-06-15T00:00:00Z',
     location: [125.0, 15.0],
     impact_level: 'medium',
@@ -105,7 +105,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-indonesia-quake',
     title: '苏门答腊 · 地震活动监测',
-    source: 'BMKG / USGS / seed',
+    source: 'BMKG / USGS',
     timestamp: '2026-06-14T18:00:00Z',
     location: [100.0, 0.0],
     impact_level: 'medium',
@@ -115,7 +115,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-myanmar',
     title: '缅甸 · 内战与安全热点',
-    source: 'seed/示例（冲突监测）',
+    source: '公开态势整理 · 冲突监测',
     timestamp: '2026-06-10T12:00:00Z',
     location: [96.15, 19.75],
     impact_level: 'high',
@@ -125,7 +125,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-vietnam-economic',
     title: '胡志明市 · 制造业出口枢纽',
-    source: 'seed/示例（产业链）',
+    source: '公开态势整理 · 产业链',
     timestamp: '2026-06-15T06:00:00Z',
     location: [106.63, 10.82],
     impact_level: 'high',
@@ -135,7 +135,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-straits-malacca-2',
     title: '新加坡海峡 · 过境流量监测',
-    source: 'MPA / seed',
+    source: 'MPA',
     timestamp: '2026-06-15T12:00:00Z',
     location: [103.85, 1.22],
     impact_level: 'critical',
@@ -145,7 +145,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-brunei',
     title: '文莱 · LNG 出口监测',
-    source: 'seed/示例（能源）',
+    source: '公开态势整理 · 能源',
     timestamp: '2026-06-14T08:00:00Z',
     location: [114.95, 4.94],
     impact_level: 'medium',
@@ -155,7 +155,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-cambodia',
     title: '西哈努克港 · 中资港口节点',
-    source: 'seed/示例（一带一路）',
+    source: '公开态势整理 · 一带一路',
     timestamp: '2026-06-12T10:00:00Z',
     location: [103.52, 10.62],
     impact_level: 'medium',
@@ -165,7 +165,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-thailand-military',
     title: '泰国湾 · 联合军演区域',
-    source: 'seed/示例（军事）',
+    source: '公开态势整理 · 军事',
     timestamp: '2026-06-13T06:00:00Z',
     location: [101.0, 9.0],
     impact_level: 'medium',
@@ -175,7 +175,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-laos-waterway',
     title: '湄公河金三角 · 水文监测',
-    source: 'MRC / seed',
+    source: 'MRC',
     timestamp: '2026-06-11T14:00:00Z',
     location: [100.1, 20.35],
     impact_level: 'low',
@@ -185,7 +185,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-bangkok-hotspot',
     title: '曼谷 · 政治集会与社会张力',
-    source: 'seed/示例（热点）',
+    source: '公开态势整理 · 热点',
     timestamp: '2026-06-13T12:00:00Z',
     location: [100.5, 13.75],
     impact_level: 'medium',
@@ -195,7 +195,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-palawan-bases',
     title: '巴拉望 · 前沿军事设施',
-    source: 'seed/示例（基地）',
+    source: '公开态势整理 · 基地',
     timestamp: '2026-06-12T08:00:00Z',
     location: [118.74, 9.83],
     impact_level: 'medium',
@@ -205,7 +205,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-sumatra-natural',
     title: '苏门答腊 · 森林火灾与雾霾',
-    source: 'BMKG / seed',
+    source: 'BMKG',
     timestamp: '2026-06-14T04:00:00Z',
     location: [101.5, 0.5],
     impact_level: 'medium',
@@ -215,7 +215,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-vietnam-conflicts',
     title: '西沙海域 · 渔业执法对峙',
-    source: 'seed/示例（冲突）',
+    source: '公开态势整理 · 冲突',
     timestamp: '2026-06-15T06:00:00Z',
     location: [112.3, 16.5],
     impact_level: 'high',
@@ -225,7 +225,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-malaysia-military',
     title: '柔佛海峡 · 联合巡逻演训',
-    source: 'seed/示例（军事）',
+    source: '公开态势整理 · 军事',
     timestamp: '2026-06-11T10:00:00Z',
     location: [103.8, 1.45],
     impact_level: 'low',
@@ -235,7 +235,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-philippines-weather',
     title: '吕宋岛 · 台风季首轮预警',
-    source: 'PAGASA / seed',
+    source: 'PAGASA',
     timestamp: '2026-06-14T00:00:00Z',
     location: [121.0, 16.0],
     impact_level: 'medium',
@@ -245,17 +245,17 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-timor-economic',
     title: '帝力 · 油气收入与主权基金',
-    source: 'seed/示例（能源）',
+    source: '公开态势整理 · 能源',
     timestamp: '2026-06-15T04:00:00Z',
     location: [125.57, -8.56],
     impact_level: 'low',
     category: 'economic',
-    description: '帝汶海油气开发收益分配（种子/示例）',
+    description: '帝汶海油气开发收益分配',
   },
   {
     id: 'sea-penang-waterway',
     title: '槟城港 · 半导体物流枢纽',
-    source: 'seed/示例（航运）',
+    source: '公开态势整理 · 航运',
     timestamp: '2026-06-14T10:00:00Z',
     location: [100.34, 5.41],
     impact_level: 'medium',
@@ -265,7 +265,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-aceh-natural',
     title: '亚齐 · 地震海啸预警',
-    source: 'BMKG / seed',
+    source: 'BMKG',
     timestamp: '2026-06-13T20:00:00Z',
     location: [95.32, 5.55],
     impact_level: 'medium',
@@ -275,7 +275,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-kl-economic',
     title: '吉隆坡 · 棕榈油出口定价',
-    source: 'seed/示例（贸易）',
+    source: '公开态势整理 · 贸易',
     timestamp: '2026-06-15T08:00:00Z',
     location: [101.69, 3.14],
     impact_level: 'medium',
@@ -285,7 +285,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-sabah-military',
     title: '沙巴 · 南海巡逻加强',
-    source: 'seed/示例（军事）',
+    source: '公开态势整理 · 军事',
     timestamp: '2026-06-12T16:00:00Z',
     location: [118.12, 5.98],
     impact_level: 'medium',
@@ -295,7 +295,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-ho-chi-minh-economic',
     title: '胡志明市 · 纺织出口订单',
-    source: 'seed/示例（产业链）',
+    source: '公开态势整理 · 产业链',
     timestamp: '2026-06-14T14:00:00Z',
     location: [106.7, 10.78],
     impact_level: 'medium',
@@ -305,7 +305,7 @@ const SEA_EVENTS: EventDetail[] = [
   {
     id: 'sea-lombok-waterway',
     title: '龙目海峡 · 替代航线流量',
-    source: 'seed/示例（航运）',
+    source: '公开态势整理 · 航运',
     timestamp: '2026-06-13T10:00:00Z',
     location: [116.0, -8.5],
     impact_level: 'low',
@@ -323,7 +323,7 @@ const SEA_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: 12.0, lng: 114.0 },
     description: '多国海岸警卫队在争议水域执法活动增加',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'sea-inc-2',
@@ -333,7 +333,7 @@ const SEA_INCIDENTS: Incident[] = [
     faction: 'us',
     location: { lat: -6.21, lng: 106.85 },
     description: '东盟外长会议就南海行为准则发表联合声明',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'sea-inc-3',
@@ -343,7 +343,7 @@ const SEA_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: -2.5, lng: 121.0 },
     description: '冶炼产能本地化政策影响电池供应链',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'sea-inc-4',
@@ -353,7 +353,7 @@ const SEA_INCIDENTS: Incident[] = [
     faction: 'us',
     location: { lat: 2.3, lng: 102.25 },
     description: '多国海军加强航道巡逻频率',
-    source: 'IMO / seed',
+    source: 'IMO',
   },
   {
     id: 'sea-inc-5',
@@ -362,8 +362,8 @@ const SEA_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'cn',
     location: { lat: 10.82, lng: 106.63 },
-    description: '电子产业链转移加速（种子/示例）',
-    source: 'seed/示例',
+    description: '电子产业链转移加速',
+    source: '公开态势整理',
   },
   {
     id: 'sea-inc-6',
@@ -372,8 +372,8 @@ const SEA_INCIDENTS: Incident[] = [
     type: 'diplomatic',
     faction: 'us',
     location: { lat: 14.6, lng: 120.98 },
-    description: '新增基地准入与联合演训安排（种子/示例）',
-    source: 'seed/示例',
+    description: '新增基地准入与联合演训安排',
+    source: '公开态势整理',
   },
   {
     id: 'sea-inc-7',
@@ -382,8 +382,8 @@ const SEA_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lat: 13.75, lng: 100.5 },
-    description: '宪法改革抗议持续（种子/示例）',
-    source: 'seed/示例',
+    description: '宪法改革抗议持续',
+    source: '公开态势整理',
   },
 ];
 
@@ -464,7 +464,7 @@ const SEA_ENERGY: EnergyDataPoint[] = [
     changePercent: 14.5,
     description: '中东风险推升到岸价',
     updatedAt: '2026-06-15T08:00:00Z',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
 ];
 

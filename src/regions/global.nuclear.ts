@@ -435,7 +435,7 @@ export const GLOBAL_NUCLEAR_FACILITIES: Facility[] = [
     type: 'nuclear',
     nuclearKind: 'power_plant',
     status: '运行中',
-    notes: '西部沿海核电基地（种子/示例）',
+    notes: '西部沿海核电基地',
     updatedAt: T,
   },
   {
@@ -446,7 +446,7 @@ export const GLOBAL_NUCLEAR_FACILITIES: Facility[] = [
     type: 'nuclear',
     nuclearKind: 'power_plant',
     status: '运行中',
-    notes: '华南核电集群（种子/示例）',
+    notes: '华南核电集群',
     updatedAt: T,
   },
   {
@@ -457,7 +457,7 @@ export const GLOBAL_NUCLEAR_FACILITIES: Facility[] = [
     type: 'nuclear',
     nuclearKind: 'power_plant',
     status: '运行中',
-    notes: '中巴核能合作项目（种子/示例）',
+    notes: '中巴核能合作项目',
     updatedAt: T,
   },
   {

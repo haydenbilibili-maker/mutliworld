@@ -94,7 +94,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-ukraine-aid',
     title: '欧盟对乌军事援助累计超 €170B',
-    source: 'EEAS / seed（2026）',
+    source: 'EEAS · 2026',
     timestamp: '2026-06-10T12:00:00Z',
     location: [4.35, 50.85], // 布鲁塞尔
     impact_level: 'high',
@@ -104,7 +104,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-north-stream',
     title: '北溪管道 · 欧洲能源基础设施监测',
-    source: 'seed/示例（能源）',
+    source: '公开态势整理 · 能源',
     timestamp: '2026-06-09T08:00:00Z',
     location: [12.0, 55.0], // 波罗的海
     impact_level: 'high',
@@ -114,7 +114,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-rotterdam-port',
     title: '鹿特丹港 · 欧洲最大港口',
-    source: 'seed/示例（贸易）',
+    source: '公开态势整理 · 贸易',
     timestamp: '2026-06-14T10:00:00Z',
     location: [4.48, 51.92],
     impact_level: 'high',
@@ -124,7 +124,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-brussels-sanctions',
     title: '布鲁塞尔 · 对俄制裁协调中心',
-    source: 'EEAS / seed',
+    source: 'EEAS（欧盟对外行动署）',
     timestamp: '2026-06-15T09:00:00Z',
     location: [4.35, 50.85],
     impact_level: 'high',
@@ -134,7 +134,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-ramstein',
     title: '拉姆施泰因 · 北约援乌协调',
-    source: 'NATO / seed',
+    source: 'NATO 公开资料',
     timestamp: '2026-06-13T14:00:00Z',
     location: [7.6, 49.44],
     impact_level: 'high',
@@ -144,7 +144,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-london-finance',
     title: '伦敦 · 能源金融与保险',
-    source: 'seed/示例（经济）',
+    source: '公开态势整理 · 经济',
     timestamp: '2026-06-14T16:00:00Z',
     location: [-0.12, 51.51],
     impact_level: 'medium',
@@ -154,7 +154,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-oslo-energy',
     title: '奥斯陆 · 挪威油气出口',
-    source: 'NPD / seed',
+    source: 'NPD',
     timestamp: '2026-06-12T10:00:00Z',
     location: [10.75, 59.91],
     impact_level: 'high',
@@ -164,7 +164,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-mediterranean',
     title: '地中海 · 移民与海上安全',
-    source: 'Frontex / seed',
+    source: 'Frontex',
     timestamp: '2026-06-11T08:00:00Z',
     location: [12.5, 36.0],
     impact_level: 'medium',
@@ -174,7 +174,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-warsaw-military',
     title: '华沙 · 北约东翼前沿指挥',
-    source: 'NATO / seed',
+    source: 'NATO 公开资料',
     timestamp: '2026-06-14T12:00:00Z',
     location: [21.01, 52.23],
     impact_level: 'high',
@@ -184,7 +184,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-finland-nato',
     title: '赫尔辛基 · 北约新成员国态势',
-    source: 'NATO / seed',
+    source: 'NATO 公开资料',
     timestamp: '2026-06-13T10:00:00Z',
     location: [24.94, 60.17],
     impact_level: 'medium',
@@ -194,7 +194,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-spain-outage',
     title: '西班牙 · 极端高温限电预警',
-    source: 'seed/示例（基础设施）',
+    source: '公开态势整理 · 基础设施',
     timestamp: '2026-06-15T14:00:00Z',
     location: [-3.7, 40.42],
     impact_level: 'medium',
@@ -204,7 +204,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-calais-hotspot',
     title: '加莱 · 英吉利海峡移民热点',
-    source: 'Frontex / seed',
+    source: 'Frontex',
     timestamp: '2026-06-12T08:00:00Z',
     location: [1.86, 50.95],
     impact_level: 'medium',
@@ -214,7 +214,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-stuttgart-economic',
     title: '斯图加特 · 汽车工业供应链',
-    source: 'seed/示例（经济）',
+    source: '公开态势整理 · 经济',
     timestamp: '2026-06-14T08:00:00Z',
     location: [9.18, 48.78],
     impact_level: 'medium',
@@ -224,7 +224,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-dublin-tech',
     title: '都柏林 · 科技巨头欧洲总部',
-    source: 'seed/示例（经济）',
+    source: '公开态势整理 · 经济',
     timestamp: '2026-06-15T10:00:00Z',
     location: [-6.26, 53.35],
     impact_level: 'medium',
@@ -234,7 +234,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-milan-fashion',
     title: '米兰 · 奢侈品与制造业',
-    source: 'seed/示例（经济）',
+    source: '公开态势整理 · 经济',
     timestamp: '2026-06-13T16:00:00Z',
     location: [9.19, 45.46],
     impact_level: 'medium',
@@ -244,7 +244,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-vienna-energy',
     title: '维也纳 · 中欧能源枢纽',
-    source: 'seed/示例（能源）',
+    source: '公开态势整理 · 能源',
     timestamp: '2026-06-14T12:00:00Z',
     location: [16.37, 48.21],
     impact_level: 'medium',
@@ -254,7 +254,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-copenhagen-wind',
     title: '哥本哈根 · 海上风电产业',
-    source: 'seed/示例（能源）',
+    source: '公开态势整理 · 能源',
     timestamp: '2026-06-12T10:00:00Z',
     location: [12.57, 55.68],
     impact_level: 'medium',
@@ -264,7 +264,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-lisbon-migration',
     title: '里斯本 · 移民与住房压力',
-    source: 'seed/示例（热点）',
+    source: '公开态势整理 · 热点',
     timestamp: '2026-06-11T14:00:00Z',
     location: [-9.14, 38.72],
     impact_level: 'low',
@@ -274,7 +274,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-belgium-nato',
     title: '布鲁塞尔 · 北约总部',
-    source: 'NATO / seed',
+    source: 'NATO 公开资料',
     timestamp: '2026-06-15T08:00:00Z',
     location: [4.42, 50.88],
     impact_level: 'high',
@@ -284,7 +284,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-norway-arctic',
     title: '特罗姆瑟 · 北极安全监测',
-    source: 'seed/示例（军事）',
+    source: '公开态势整理 · 军事',
     timestamp: '2026-06-13T12:00:00Z',
     location: [18.96, 69.65],
     impact_level: 'medium',
@@ -294,7 +294,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-france-strikes',
     title: '法国全国 · 交通罢工',
-    source: 'seed/示例（热点）',
+    source: '公开态势整理 · 热点',
     timestamp: '2026-06-14T06:00:00Z',
     location: [2.35, 48.86],
     impact_level: 'medium',
@@ -304,7 +304,7 @@ const WE_EVENTS: EventDetail[] = [
   {
     id: 'we-uk-energy',
     title: '英国北海 · 油气产量下滑',
-    source: 'seed/示例（能源）',
+    source: '公开态势整理 · 能源',
     timestamp: '2026-06-15T12:00:00Z',
     location: [-1.5, 57.5],
     impact_level: 'medium',
@@ -322,7 +322,7 @@ const WE_INCIDENTS: Incident[] = [
     faction: 'eu',
     location: { lat: 50.85, lng: 4.35 },
     description: '扩大实体清单，限制影子舰队与军民两用物项',
-    source: 'EEAS / seed',
+    source: 'EEAS（欧盟对外行动署）',
   },
   {
     id: 'we-inc-nato-drill',
@@ -332,7 +332,7 @@ const WE_INCIDENTS: Incident[] = [
     faction: 'nato',
     location: { lat: 54.0, lng: 19.0 },
     description: '波罗的海多国海空联合演训，检验快速反应能力',
-    source: 'NATO / seed',
+    source: 'NATO 公开资料',
   },
   {
     id: 'we-inc-energy-price',
@@ -342,7 +342,7 @@ const WE_INCIDENTS: Incident[] = [
     faction: 'eu',
     location: { lat: 52.37, lng: 4.9 },
     description: '中东航运风险溢价传导至欧洲气市',
-    source: 'ICE / seed',
+    source: 'ICE',
   },
   {
     id: 'we-inc-france-election',
@@ -351,8 +351,8 @@ const WE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'eu',
     location: { lat: 48.86, lng: 2.35 },
-    description: '各党派竞选集会增加（种子/示例）',
-    source: 'seed/示例',
+    description: '各党派竞选集会增加',
+    source: '公开态势整理',
   },
   {
     id: 'we-inc-germany-industry',
@@ -361,8 +361,8 @@ const WE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'eu',
     location: { lat: 50.11, lng: 8.68 },
-    description: '能源成本与对华出口疲软（种子/示例）',
-    source: 'seed/示例',
+    description: '能源成本与对华出口疲软',
+    source: '公开态势整理',
   },
   {
     id: 'we-inc-ukraine-aid',
@@ -371,8 +371,8 @@ const WE_INCIDENTS: Incident[] = [
     type: 'diplomatic',
     faction: 'nato',
     location: { lat: 51.51, lng: -0.12 },
-    description: '追加防空弹药与训练支持（种子/示例）',
-    source: 'seed/示例',
+    description: '追加防空弹药与训练支持',
+    source: '公开态势整理',
   },
   {
     id: 'we-inc-schengen',
@@ -381,8 +381,8 @@ const WE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'eu',
     location: { lat: 48.21, lng: 16.37 },
-    description: '移民压力致多国延长边境检查（种子/示例）',
-    source: 'seed/示例',
+    description: '移民压力致多国延长边境检查',
+    source: '公开态势整理',
   },
 ];
 
@@ -417,7 +417,7 @@ const WE_ENERGY_POINTS: EnergyDataPoint[] = [
     change: -3,
     description: '冬季末库存水平与补库节奏',
     updatedAt: '2026-06-15T08:00:00Z',
-    source: 'GIE / seed',
+    source: 'GIE',
   },
 ];
 

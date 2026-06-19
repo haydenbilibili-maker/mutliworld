@@ -55,28 +55,28 @@ export const DENSIFY_DATACENTERS: ThematicPoint[] = [
 ];
 
 export const DENSIFY_PROTESTS: ThematicPoint[] = [
-  { id: 'r2-pro-athens', name: '雅典 · 劳工抗议', layerId: 'protests', lng: 23.73, lat: 37.98, note: '养老金改革示威（种子/示例）', impact: 'medium', updatedAt: T },
-  { id: 'r2-pro-warsaw', name: '华沙 · 农民抗议', layerId: 'protests', lng: 21.01, lat: 52.23, note: '欧盟农业政策不满（种子/示例）', impact: 'medium', updatedAt: T2 },
-  { id: 'r2-pro-bangkok', name: '曼谷 · 政治集会', layerId: 'protests', lng: 100.5, lat: 13.75, note: '宪法改革诉求（种子/示例）', impact: 'medium', updatedAt: T3 },
-  { id: 'r2-pro-nairobi', name: '内罗毕 · 财政抗议', layerId: 'protests', lng: 36.82, lat: -1.29, note: '税收上涨示威（种子/示例）', impact: 'medium', updatedAt: T2 },
-  { id: 'r2-pro-tehran', name: '德黑兰 · 社会诉求', layerId: 'protests', lng: 51.42, lat: 35.69, note: '公民权利集会（种子/示例）', impact: 'high', updatedAt: T },
-  { id: 'r2-pro-seoul2', name: '首尔 · 医疗改革', layerId: 'protests', lng: 126.98, lat: 37.57, note: '医生罢工持续（种子/示例）', impact: 'medium', updatedAt: T3 },
+  { id: 'r2-pro-athens', name: '雅典 · 劳工抗议', layerId: 'protests', lng: 23.73, lat: 37.98, note: '养老金改革示威', impact: 'medium', updatedAt: T },
+  { id: 'r2-pro-warsaw', name: '华沙 · 农民抗议', layerId: 'protests', lng: 21.01, lat: 52.23, note: '欧盟农业政策不满', impact: 'medium', updatedAt: T2 },
+  { id: 'r2-pro-bangkok', name: '曼谷 · 政治集会', layerId: 'protests', lng: 100.5, lat: 13.75, note: '宪法改革诉求', impact: 'medium', updatedAt: T3 },
+  { id: 'r2-pro-nairobi', name: '内罗毕 · 财政抗议', layerId: 'protests', lng: 36.82, lat: -1.29, note: '税收上涨示威', impact: 'medium', updatedAt: T2 },
+  { id: 'r2-pro-tehran', name: '德黑兰 · 社会诉求', layerId: 'protests', lng: 51.42, lat: 35.69, note: '公民权利集会', impact: 'high', updatedAt: T },
+  { id: 'r2-pro-seoul2', name: '首尔 · 医疗改革', layerId: 'protests', lng: 126.98, lat: 37.57, note: '医生罢工持续', impact: 'medium', updatedAt: T3 },
 ];
 
 export const DENSIFY_CLIMATE: ThematicPoint[] = [
-  { id: 'r2-cli-pakistan-flood', name: '巴基斯坦 · 洪涝', layerId: 'climate', lng: 68.37, lat: 25.4, note: '季风强降雨致灾（种子/示例）', impact: 'critical', updatedAt: T, subKind: 'flood' },
-  { id: 'r2-cli-thailand-drought', name: '泰国 · 干旱', layerId: 'climate', lng: 100.5, lat: 14.0, note: '湄南河水位偏低（种子/示例）', impact: 'high', updatedAt: T2, subKind: 'drought' },
-  { id: 'r2-cli-norway-heat', name: '挪威 · 异常高温', layerId: 'climate', lng: 10.75, lat: 60.0, note: '北极圈暖化加速（种子/示例）', impact: 'medium', updatedAt: T3, subKind: 'heatwave' },
-  { id: 'r2-cli-africa-sahel', name: '萨赫勒 · 沙漠化', layerId: 'climate', lng: 2.0, lat: 14.0, note: '土地退化与粮食危机（种子/示例）', impact: 'high', updatedAt: T, subKind: 'drought' },
-  { id: 'r2-cli-pacific-cyclone', name: '太平洋 · 气旋预警', layerId: 'climate', lng: 170.0, lat: -15.0, note: '热带气旋逼近岛国（种子/示例）', impact: 'high', updatedAt: T2, subKind: 'storm' },
-  { id: 'r2-cli-europe-flood', name: '中欧 · 洪涝', layerId: 'climate', lng: 15.0, lat: 50.0, note: '极端降雨致河流水位上涨（种子/示例）', impact: 'high', updatedAt: T3, subKind: 'flood' },
+  { id: 'r2-cli-pakistan-flood', name: '巴基斯坦 · 洪涝', layerId: 'climate', lng: 68.37, lat: 25.4, note: '季风强降雨致灾', impact: 'critical', updatedAt: T, subKind: 'flood' },
+  { id: 'r2-cli-thailand-drought', name: '泰国 · 干旱', layerId: 'climate', lng: 100.5, lat: 14.0, note: '湄南河水位偏低', impact: 'high', updatedAt: T2, subKind: 'drought' },
+  { id: 'r2-cli-norway-heat', name: '挪威 · 异常高温', layerId: 'climate', lng: 10.75, lat: 60.0, note: '北极圈暖化加速', impact: 'medium', updatedAt: T3, subKind: 'heatwave' },
+  { id: 'r2-cli-africa-sahel', name: '萨赫勒 · 沙漠化', layerId: 'climate', lng: 2.0, lat: 14.0, note: '土地退化与粮食危机', impact: 'high', updatedAt: T, subKind: 'drought' },
+  { id: 'r2-cli-pacific-cyclone', name: '太平洋 · 气旋预警', layerId: 'climate', lng: 170.0, lat: -15.0, note: '热带气旋逼近岛国', impact: 'high', updatedAt: T2, subKind: 'storm' },
+  { id: 'r2-cli-europe-flood', name: '中欧 · 洪涝', layerId: 'climate', lng: 15.0, lat: 50.0, note: '极端降雨致河流水位上涨', impact: 'high', updatedAt: T3, subKind: 'flood' },
 ];
 
 export const DENSIFY_PIPELINES: PipelineRoute[] = [
-  { id: 'r2-pipe-yamal', name: '亚马尔—欧洲管道', coordinates: [[70.0, 68.0], [50.0, 60.0], [30.0, 55.0], [15.0, 52.0]], note: '俄气经白俄罗斯至欧洲（种子/示例）', impact: 'high' },
-  { id: 'r2-pipe-caspian', name: '里海原油管道', coordinates: [[51.0, 40.0], [48.0, 42.0], [44.0, 43.0], [40.0, 42.5]], note: '哈萨克斯坦至黑海出口（种子/示例）', impact: 'medium' },
-  { id: 'r2-pipe-transmed', name: '跨地中海管道', coordinates: [[9.0, 36.8], [12.0, 38.0], [15.0, 40.0], [18.0, 41.5]], note: '阿尔及利亚至意大利（种子/示例）', impact: 'medium' },
-  { id: 'r2-pipe-atlantic', name: '大西洋液化天然气', coordinates: [[-52.0, -23.0], [-45.0, -20.0], [-38.0, -15.0], [-35.0, -8.0]], note: '巴西至加勒比LNG航线（种子/示例）', impact: 'low' },
+  { id: 'r2-pipe-yamal', name: '亚马尔—欧洲管道', coordinates: [[70.0, 68.0], [50.0, 60.0], [30.0, 55.0], [15.0, 52.0]], note: '俄气经白俄罗斯至欧洲', impact: 'high' },
+  { id: 'r2-pipe-caspian', name: '里海原油管道', coordinates: [[51.0, 40.0], [48.0, 42.0], [44.0, 43.0], [40.0, 42.5]], note: '哈萨克斯坦至黑海出口', impact: 'medium' },
+  { id: 'r2-pipe-transmed', name: '跨地中海管道', coordinates: [[9.0, 36.8], [12.0, 38.0], [15.0, 40.0], [18.0, 41.5]], note: '阿尔及利亚至意大利', impact: 'medium' },
+  { id: 'r2-pipe-atlantic', name: '大西洋液化天然气', coordinates: [[-52.0, -23.0], [-45.0, -20.0], [-38.0, -15.0], [-35.0, -8.0]], note: '巴西至加勒比LNG航线', impact: 'low' },
 ];
 
 export const DENSIFY_GARRISONS: GarrisonBase[] = [
@@ -132,9 +132,9 @@ export const DENSIFY_SEMICONDUCTORS: SemiconductorFab[] = [
 ];
 
 export const DENSIFY_DEEP_SEA: SeabedMiningArea[] = [
-  { id: 'r2-sea-clarion', name: '克利珀顿断裂带', resource: 'nodules', lng: -115.0, lat: 10.0, note: '太平洋深海采矿试点（种子/示例）', impact: 'medium' },
-  { id: 'r2-sea-indian-ridge', name: '印度洋中脊硫化物', resource: 'sulphides', lng: 65.0, lat: -25.0, note: '深海矿产勘探（种子/示例）', impact: 'low' },
-  { id: 'r2-sea-atlantic', name: '大西洋中脊勘探', resource: 'sulphides', lng: -30.0, lat: 35.0, note: '欧方深海采矿许可（种子/示例）', impact: 'medium' },
+  { id: 'r2-sea-clarion', name: '克利珀顿断裂带', resource: 'nodules', lng: -115.0, lat: 10.0, note: '太平洋深海采矿试点', impact: 'medium' },
+  { id: 'r2-sea-indian-ridge', name: '印度洋中脊硫化物', resource: 'sulphides', lng: 65.0, lat: -25.0, note: '深海矿产勘探', impact: 'low' },
+  { id: 'r2-sea-atlantic', name: '大西洋中脊勘探', resource: 'sulphides', lng: -30.0, lat: 35.0, note: '欧方深海采矿许可', impact: 'medium' },
 ];
 
 export const DENSIFY_TECTONICS: TectonicFeature[] = [
@@ -146,8 +146,8 @@ export const DENSIFY_TECTONICS: TectonicFeature[] = [
 ];
 
 export const DENSIFY_CABLE_INCIDENTS: CableIncident[] = [
-  { id: 'r2-cab-redsea-2', name: '红海 SEA-ME-WE 受损', date: '2026-06-16', lng: 42.5, lat: 15.0, note: '胡塞袭击余波致多条光缆中断（种子/示例）', source: 'seed/示例', impact: 'critical' },
-  { id: 'r2-cab-taiwan-2', name: '台湾海峡电缆维护', date: '2026-06-15', lng: 119.5, lat: 24.5, note: '地震后例行检修（种子/示例）', source: 'seed/示例', impact: 'medium' },
-  { id: 'r2-cab-atlantic-2', name: '大西洋 FLAG 中断', date: '2026-06-14', lng: -40.0, lat: 45.0, note: '渔船锚泊致损（种子/示例）', source: 'seed/示例', impact: 'high' },
-  { id: 'r2-cab-south-china', name: '南海 AAG 电缆', date: '2026-06-13', lng: 112.0, lat: 12.0, note: '例行维护延期（种子/示例）', source: 'seed/示例', impact: 'low' },
+  { id: 'r2-cab-redsea-2', name: '红海 SEA-ME-WE 受损', date: '2026-06-16', lng: 42.5, lat: 15.0, note: '胡塞袭击余波致多条光缆中断', source: '公开态势整理', impact: 'critical' },
+  { id: 'r2-cab-taiwan-2', name: '台湾海峡电缆维护', date: '2026-06-15', lng: 119.5, lat: 24.5, note: '地震后例行检修', source: '公开态势整理', impact: 'medium' },
+  { id: 'r2-cab-atlantic-2', name: '大西洋 FLAG 中断', date: '2026-06-14', lng: -40.0, lat: 45.0, note: '渔船锚泊致损', source: '公开态势整理', impact: 'high' },
+  { id: 'r2-cab-south-china', name: '南海 AAG 电缆', date: '2026-06-13', lng: 112.0, lat: 12.0, note: '例行维护延期', source: '公开态势整理', impact: 'low' },
 ];

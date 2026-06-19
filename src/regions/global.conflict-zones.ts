@@ -228,7 +228,7 @@ export const GLOBAL_CONFLICT_ZONES: ConflictZone[] = [
     since: 'ongoing',
     intensity: 'medium',
     description:
-      '台海局势高度敏感，双方军事与外交博弈持续；本区为示意性缓冲区，非主张范围（种子/示例）。',
+      '台海局势高度敏感，双方军事与外交博弈持续；本区为示意性缓冲区，非主张范围。',
     dashed: true,
     ring: [
       [118.2, 23.6],

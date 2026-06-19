@@ -5,7 +5,7 @@
 import type { EventDetail } from '@/types/geo';
 import type { Incident, Facility } from '@/types/middleeast';
 
-const SRC = '美国地表层态势监测 / seed';
+const SRC = '美国地表层态势监测';
 const T16 = '2026-06-16T10:00:00Z';
 const T15 = '2026-06-15T14:00:00Z';
 const T14 = '2026-06-14T08:00:00Z';
@@ -99,7 +99,7 @@ export const US_SURFACE_FEDERAL_EVENTS: EventDetail[] = [
     location: [-77.0, 38.89],
     impact_level: 'high',
     category: 'hotspots',
-    description: '重大宪法与监管判例裁决窗口（种子/示例）',
+    description: '重大宪法与监管判例裁决窗口',
   },
   {
     id: 'us-surf-dc-treasury',
@@ -201,7 +201,7 @@ export const US_SURFACE_CAPITAL_EVENTS: EventDetail[] = STATE_CAPITALS.map((s, i
   location: [s.lng, s.lat] as [number, number],
   impact_level: 'medium' as const,
   category: 'hotspots',
-  description: `${s.name}州议会与州长行政决策监测（种子/示例）`,
+  description: `${s.name}州议会与州长行政决策监测`,
 }));
 
 /** 经济地标与金融中心 */
@@ -333,7 +333,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-san-andreas',
     title: '加州 · 圣安德烈亚斯断层',
-    source: 'USGS / seed',
+    source: 'USGS',
     timestamp: T16,
     location: [-118.24, 34.05],
     impact_level: 'high',
@@ -343,7 +343,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-new-madrid',
     title: '密苏里 · 新马德里地震带',
-    source: 'USGS / seed',
+    source: 'USGS',
     timestamp: T14,
     location: [-89.4, 36.0],
     impact_level: 'medium',
@@ -353,7 +353,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-cascadia',
     title: '太平洋西北 · 卡斯卡迪亚俯冲带',
-    source: 'USGS / seed',
+    source: 'USGS',
     timestamp: T15,
     location: [-124.0, 47.5],
     impact_level: 'critical',
@@ -363,7 +363,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-gulf-hurricane',
     title: '墨西哥湾 · 飓风走廊',
-    source: 'NHC / seed',
+    source: 'NHC（美国国家飓风中心）',
     timestamp: T16,
     location: [-90.0, 28.0],
     impact_level: 'high',
@@ -373,7 +373,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-florida-keys',
     title: '佛罗里达礁岛群 · 风暴潮',
-    source: 'NHC / seed',
+    source: 'NHC（美国国家飓风中心）',
     timestamp: T15,
     location: [-81.0, 24.5],
     impact_level: 'high',
@@ -383,7 +383,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-ca-wildfire-n',
     title: '北加州 · 野火季',
-    source: 'NIFC / seed',
+    source: 'NIFC',
     timestamp: T16,
     location: [-122.0, 39.0],
     impact_level: 'high',
@@ -393,7 +393,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-co-wildfire',
     title: '科罗拉多 · 山火监测',
-    source: 'NIFC / seed',
+    source: 'NIFC',
     timestamp: T13,
     location: [-105.0, 39.5],
     impact_level: 'medium',
@@ -403,7 +403,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-tornado-alley',
     title: '俄克拉荷马 · 龙卷风走廊',
-    source: 'NWS / seed',
+    source: 'NWS',
     timestamp: T14,
     location: [-97.0, 35.5],
     impact_level: 'high',
@@ -413,7 +413,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-yellowstone',
     title: '黄石 · 地热火山系统',
-    source: 'USGS / seed',
+    source: 'USGS',
     timestamp: T12,
     location: [-110.67, 44.43],
     impact_level: 'medium',
@@ -423,7 +423,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-hawaii-volcano',
     title: '夏威夷 · 基拉韦厄火山',
-    source: 'USGS / seed',
+    source: 'USGS',
     timestamp: T11,
     location: [-155.3, 19.4],
     impact_level: 'medium',
@@ -433,7 +433,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-atlantic-nc',
     title: '北卡罗来纳外海 · 大西洋飓风',
-    source: 'NHC / seed',
+    source: 'NHC（美国国家飓风中心）',
     timestamp: T16,
     location: [-76.0, 34.5],
     impact_level: 'high',
@@ -443,7 +443,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-pnw-wildfire',
     title: '俄勒冈 · 太平洋西北野火',
-    source: 'NIFC / seed',
+    source: 'NIFC',
     timestamp: T10,
     location: [-121.5, 44.0],
     impact_level: 'high',
@@ -453,7 +453,7 @@ export const US_SURFACE_HAZARD_EVENTS: EventDetail[] = [
   {
     id: 'us-surf-haz-socal-drought',
     title: '南加州 · 干旱与火灾',
-    source: 'NWS / seed',
+    source: 'NWS',
     timestamp: T15,
     location: [-117.5, 34.0],
     impact_level: 'high',
@@ -563,7 +563,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -77.04, lat: 38.89 },
-    description: '联邦基金利率维持不变，点阵图偏鹰（种子/示例）',
+    description: '联邦基金利率维持不变，点阵图偏鹰',
     source: SRC,
   },
   {
@@ -573,7 +573,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -77.0, lat: 38.89 },
-    description: '行政机构权力边界判例引发市场波动（种子/示例）',
+    description: '行政机构权力边界判例引发市场波动',
     source: SRC,
   },
   {
@@ -583,7 +583,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -90.0, lat: 28.0 },
-    description: 'NHC 发布飓风观察，油气平台撤离（种子/示例）',
+    description: 'NHC 发布飓风观察，油气平台撤离',
     source: SRC,
   },
   {
@@ -593,7 +593,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -122.0, lat: 39.0 },
-    description: '数千居民撤离，输电线路威胁（种子/示例）',
+    description: '数千居民撤离，输电线路威胁',
     source: SRC,
   },
   {
@@ -603,7 +603,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -118.27, lat: 33.74 },
-    description: '码头工人合同谈判影响跨太平洋货运（种子/示例）',
+    description: '码头工人合同谈判影响跨太平洋货运',
     source: SRC,
   },
   {
@@ -613,7 +613,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -87.9, lat: 41.98 },
-    description: '雷暴与空管人手短缺叠加（种子/示例）',
+    description: '雷暴与空管人手短缺叠加',
     source: SRC,
   },
   {
@@ -623,7 +623,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -80.85, lat: 40.9 },
-    description: '化学品车厢脱轨，EPA 现场监测（种子/示例）',
+    description: '化学品车厢脱轨，EPA 现场监测',
     source: SRC,
   },
   {
@@ -633,7 +633,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -97.74, lat: 30.27 },
-    description: 'ERCOT 发布节电呼吁，电价飙升（种子/示例）',
+    description: 'ERCOT 发布节电呼吁，电价飙升',
     source: SRC,
   },
   {
@@ -643,7 +643,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -122.14, lat: 37.44 },
-    description: '多家独角兽宣布裁员与重组（种子/示例）',
+    description: '多家独角兽宣布裁员与重组',
     source: SRC,
   },
   {
@@ -653,7 +653,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -84.39, lat: 33.75 },
-    description: '关键摇摆州竞选集会与安全部署（种子/示例）',
+    description: '关键摇摆州竞选集会与安全部署',
     source: SRC,
   },
   {
@@ -663,7 +663,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -121.49, lat: 38.58 },
-    description: '州议会审议大模型安全与透明度立法（种子/示例）',
+    description: '州议会审议大模型安全与透明度立法',
     source: SRC,
   },
   {
@@ -673,7 +673,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'military',
     faction: 'us',
     location: { lng: -124.0, lat: 47.5 },
-    description: '全州「ShakeOut」海啸疏散演练（种子/示例）',
+    description: '全州「ShakeOut」海啸疏散演练',
     source: SRC,
   },
   {
@@ -683,7 +683,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -74.01, lat: 40.71 },
-    description: '地铁进水与地下商业区关闭（种子/示例）',
+    description: '地铁进水与地下商业区关闭',
     source: SRC,
   },
   {
@@ -693,7 +693,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'diplomatic',
     faction: 'us',
     location: { lng: -111.9, lat: 33.45 },
-    description: 'CHIPS 法案资助工厂试产里程碑（种子/示例）',
+    description: 'CHIPS 法案资助工厂试产里程碑',
     source: SRC,
   },
   {
@@ -703,7 +703,7 @@ export const US_SURFACE_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lng: -80.19, lat: 25.76 },
-    description: '保险公司撤出高风险沿海保单（种子/示例）',
+    description: '保险公司撤出高风险沿海保单',
     source: SRC,
   },
 ];
@@ -717,7 +717,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 40.64, lng: -73.78 },
     faction: 'us',
     type: 'airfield',
-    notes: '美东国际门户，客运量全美前列（种子/示例）',
+    notes: '美东国际门户，客运量全美前列',
     updatedAt: T16,
   },
   {
@@ -726,7 +726,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 33.94, lng: -118.41 },
     faction: 'us',
     type: 'airfield',
-    notes: '跨太平洋货运与客运枢纽（种子/示例）',
+    notes: '跨太平洋货运与客运枢纽',
     updatedAt: T15,
   },
   {
@@ -735,7 +735,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 41.98, lng: -87.9 },
     faction: 'us',
     type: 'airfield',
-    notes: '全美转机量最大机场之一（种子/示例）',
+    notes: '全美转机量最大机场之一',
     updatedAt: T16,
   },
   {
@@ -744,7 +744,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 33.64, lng: -84.43 },
     faction: 'us',
     type: 'airfield',
-    notes: '全球客运量最高机场（种子/示例）',
+    notes: '全球客运量最高机场',
     updatedAt: T14,
   },
   {
@@ -753,7 +753,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 32.9, lng: -97.04 },
     faction: 'us',
     type: 'airfield',
-    notes: '美国航空枢纽，货运增长快（种子/示例）',
+    notes: '美国航空枢纽，货运增长快',
     updatedAt: T13,
   },
   {
@@ -762,7 +762,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 37.62, lng: -122.38 },
     faction: 'us',
     type: 'airfield',
-    notes: '硅谷商务与亚太航线门户（种子/示例）',
+    notes: '硅谷商务与亚太航线门户',
     updatedAt: T15,
   },
   {
@@ -771,7 +771,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 25.8, lng: -80.29 },
     faction: 'us',
     type: 'airfield',
-    notes: '拉美航线与冷链货运枢纽（种子/示例）',
+    notes: '拉美航线与冷链货运枢纽',
     updatedAt: T12,
   },
   {
@@ -780,7 +780,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 47.45, lng: -122.31 },
     faction: 'us',
     type: 'airfield',
-    notes: '波音与亚马逊物流辐射（种子/示例）',
+    notes: '波音与亚马逊物流辐射',
     updatedAt: T11,
   },
   {
@@ -789,7 +789,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 39.86, lng: -104.67 },
     faction: 'us',
     type: 'airfield',
-    notes: '中部高原转机与宽体机枢纽（种子/示例）',
+    notes: '中部高原转机与宽体机枢纽',
     updatedAt: T10,
   },
   {
@@ -798,7 +798,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 29.98, lng: -95.34 },
     faction: 'us',
     type: 'airfield',
-    notes: '休斯顿能源业商务航空（种子/示例）',
+    notes: '休斯顿能源业商务航空',
     updatedAt: T14,
   },
   {
@@ -807,7 +807,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 40.69, lng: -74.17 },
     faction: 'us',
     type: 'airfield',
-    notes: '纽约都会区货运与联航枢纽（种子/示例）',
+    notes: '纽约都会区货运与联航枢纽',
     updatedAt: T13,
   },
   {
@@ -816,7 +816,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 42.36, lng: -71.01 },
     faction: 'us',
     type: 'airfield',
-    notes: '新英格兰与欧洲航线门户（种子/示例）',
+    notes: '新英格兰与欧洲航线门户',
     updatedAt: T12,
   },
   // ── 主要港口 ──
@@ -826,7 +826,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 33.74, lng: -118.27 },
     faction: 'us',
     type: 'naval',
-    notes: '全美最大集装箱港口综合体（种子/示例）',
+    notes: '全美最大集装箱港口综合体',
     updatedAt: T16,
   },
   {
@@ -835,7 +835,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 40.67, lng: -74.04 },
     faction: 'us',
     type: 'naval',
-    notes: '美东最大集装箱与滚装码头（种子/示例）',
+    notes: '美东最大集装箱与滚装码头',
     updatedAt: T15,
   },
   {
@@ -844,7 +844,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 29.73, lng: -95.27 },
     faction: 'us',
     type: 'naval',
-    notes: '能源与石化出口第一大港（种子/示例）',
+    notes: '能源与石化出口第一大港',
     updatedAt: T14,
   },
   {
@@ -853,7 +853,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 32.08, lng: -81.09 },
     faction: 'us',
     type: 'naval',
-    notes: '东南沿海集装箱增长最快港口（种子/示例）',
+    notes: '东南沿海集装箱增长最快港口',
     updatedAt: T13,
   },
   {
@@ -862,7 +862,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 32.79, lng: -79.93 },
     faction: 'us',
     type: 'naval',
-    notes: '汽车出口与深水航道扩建（种子/示例）',
+    notes: '汽车出口与深水航道扩建',
     updatedAt: T12,
   },
   {
@@ -871,7 +871,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 47.6, lng: -122.34 },
     faction: 'us',
     type: 'naval',
-    notes: '阿拉斯加航线与亚太集装箱（种子/示例）',
+    notes: '阿拉斯加航线与亚太集装箱',
     updatedAt: T11,
   },
   {
@@ -880,7 +880,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 37.8, lng: -122.3 },
     faction: 'us',
     type: 'naval',
-    notes: '北加州农产品与集装箱出口（种子/示例）',
+    notes: '北加州农产品与集装箱出口',
     updatedAt: T10,
   },
   {
@@ -889,7 +889,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 29.95, lng: -90.06 },
     faction: 'us',
     type: 'naval',
-    notes: '密西西比河出海与粮食出口枢纽（种子/示例）',
+    notes: '密西西比河出海与粮食出口枢纽',
     updatedAt: T14,
   },
   {
@@ -898,7 +898,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 39.27, lng: -76.58 },
     faction: 'us',
     type: 'naval',
-    notes: '汽车滚装与煤炭出口（种子/示例）',
+    notes: '汽车滚装与煤炭出口',
     updatedAt: T13,
   },
   {
@@ -907,7 +907,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 36.85, lng: -76.29 },
     faction: 'us',
     type: 'naval',
-    notes: '煤炭出口与海军基地毗邻（种子/示例）',
+    notes: '煤炭出口与海军基地毗邻',
     updatedAt: T12,
   },
   // ── 铁路枢纽 ──
@@ -917,7 +917,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 41.88, lng: -87.64 },
     faction: 'us',
     type: 'base',
-    notes: '全美铁路货运编组中心（种子/示例）',
+    notes: '全美铁路货运编组中心',
     updatedAt: T16,
   },
   {
@@ -926,7 +926,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 39.1, lng: -94.58 },
     faction: 'us',
     type: 'base',
-    notes: '北美铁路十字路口（种子/示例）',
+    notes: '北美铁路十字路口',
     updatedAt: T15,
   },
   {
@@ -935,7 +935,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 35.15, lng: -90.05 },
     faction: 'us',
     type: 'base',
-    notes: 'FedEx 超级枢纽与货运铁路交汇（种子/示例）',
+    notes: 'FedEx 超级枢纽与货运铁路交汇',
     updatedAt: T14,
   },
   {
@@ -944,7 +944,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 33.75, lng: -84.39 },
     faction: 'us',
     type: 'base',
-    notes: '东南货运铁路网络核心（种子/示例）',
+    notes: '东南货运铁路网络核心',
     updatedAt: T13,
   },
   {
@@ -953,7 +953,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 32.78, lng: -96.8 },
     faction: 'us',
     type: 'base',
-    notes: '南部物流与联运中心（种子/示例）',
+    notes: '南部物流与联运中心',
     updatedAt: T12,
   },
   {
@@ -962,7 +962,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 34.06, lng: -118.24 },
     faction: 'us',
     type: 'base',
-    notes: '西海岸客运与货运铁路节点（种子/示例）',
+    notes: '西海岸客运与货运铁路节点',
     updatedAt: T11,
   },
   {
@@ -971,7 +971,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 40.75, lng: -73.99 },
     faction: 'us',
     type: 'base',
-    notes: '美东客运铁路最繁忙车站（种子/示例）',
+    notes: '美东客运铁路最繁忙车站',
     updatedAt: T10,
   },
   {
@@ -980,7 +980,7 @@ export const US_SURFACE_FACILITIES: Facility[] = [
     position: { lat: 39.96, lng: -75.18 },
     faction: 'us',
     type: 'base',
-    notes: '东北走廊铁路枢纽（种子/示例）',
+    notes: '东北走廊铁路枢纽',
     updatedAt: T14,
   },
 ];

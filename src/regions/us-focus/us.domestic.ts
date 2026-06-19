@@ -2,7 +2,7 @@ import type { EventDetail } from '@/types/geo';
 import type { Incident, Facility } from '@/types/middleeast';
 
 const T = '2026-06-16T08:00:00Z';
-const SRC = '美国国内政治与安全热点监测 / seed';
+const SRC = '美国国内政治与安全热点监测';
 
 /** 国内政治与安全热点 · 事件监测点 */
 export const US_DOMESTIC_EVENTS: EventDetail[] = [
@@ -64,7 +64,7 @@ export const US_DOMESTIC_EVENTS: EventDetail[] = [
     location: [-93.27, 44.98],
     impact_level: 'medium',
     category: 'protests',
-    description: '执法改革与社会抗议（种子/示例）',
+    description: '执法改革与社会抗议',
   },
   {
     id: 'us-dom-portland',
@@ -117,7 +117,7 @@ export const US_DOMESTIC_INCIDENTS: Incident[] = [
     faction: 'us',
     location: { lat: 31.75, lng: -106.5 },
     description: '州政府边境执法与联邦移民政策冲突',
-    source: 'seed',
+    source: '公开态势整理',
   },
   {
     id: 'us-dom-inc-2',
@@ -136,8 +136,8 @@ export const US_DOMESTIC_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lat: 41.88, lng: -87.63 },
-    description: '枪支暴力统计与社会政策辩论（种子/示例）',
-    source: 'seed',
+    description: '枪支暴力统计与社会政策辩论',
+    source: '公开态势整理',
   },
   {
     id: 'us-dom-inc-4',
@@ -157,7 +157,7 @@ export const US_DOMESTIC_INCIDENTS: Incident[] = [
     faction: 'us',
     location: { lat: 42.33, lng: -83.05 },
     description: '投票规则与选区划分司法挑战',
-    source: 'seed',
+    source: '公开态势整理',
   },
   {
     id: 'us-dom-inc-6',
@@ -166,8 +166,8 @@ export const US_DOMESTIC_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lat: 45.52, lng: -122.68 },
-    description: '社会运动与治安执法（种子/示例）',
-    source: 'seed',
+    description: '社会运动与治安执法',
+    source: '公开态势整理',
   },
 ];
 

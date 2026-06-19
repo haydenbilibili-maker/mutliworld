@@ -714,8 +714,8 @@ export const MIDEAST_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'iran',
     location: { lat: 26.57, lng: 56.4 },
-    description: '保险费率飙升致部分船东改道（种子/示例）',
-    source: 'seed/示例',
+    description: '保险费率飙升致部分船东改道',
+    source: '公开态势整理',
   },
   {
     id: 'me-inc-jun-2',
@@ -724,8 +724,8 @@ export const MIDEAST_INCIDENTS: Incident[] = [
     type: 'military',
     faction: 'israel',
     location: { lat: 33.0, lng: 35.5 },
-    description: '黎以边境交火升级（种子/示例）',
-    source: 'seed/示例',
+    description: '黎以边境交火升级',
+    source: '公开态势整理',
   },
   {
     id: 'me-inc-jun-3',
@@ -734,8 +734,8 @@ export const MIDEAST_INCIDENTS: Incident[] = [
     type: 'diplomatic',
     faction: 'us',
     location: { lat: 24.71, lng: 46.72 },
-    description: 'OPEC+ 内部协调增产配额（种子/示例）',
-    source: 'seed/示例',
+    description: 'OPEC+ 内部协调增产配额',
+    source: '公开态势整理',
   },
   {
     id: 'me-inc-jun-4',
@@ -744,8 +744,8 @@ export const MIDEAST_INCIDENTS: Incident[] = [
     type: 'military',
     faction: 'us',
     location: { lat: 25.0, lng: 55.0 },
-    description: '波斯湾前沿部署加强（种子/示例）',
-    source: 'seed/示例',
+    description: '波斯湾前沿部署加强',
+    source: '公开态势整理',
   },
   {
     id: 'me-inc-jun-5',
@@ -754,7 +754,7 @@ export const MIDEAST_INCIDENTS: Incident[] = [
     type: 'diplomatic',
     faction: 'us',
     location: { lat: 15.0, lng: 43.0 },
-    description: '安理会讨论护航机制（种子/示例）',
-    source: 'seed/示例',
+    description: '安理会讨论护航机制',
+    source: '公开态势整理',
   },
 ]

@@ -140,8 +140,8 @@ export const oilProducerMapPoints: OilProducerMapPoint[] = [
   { id: 'oil-bh', name: '巴林', lng: 50.58, lat: 26.23, production: '约 20 万桶/日', exportShare: '与沙特管线相连', note: '地区金融与炼化枢纽；美第五舰队总部所在', updatedAt: '2026-06-14T08:00:00Z' },
   { id: 'oil-ru', name: '俄罗斯', lng: 37.6, lat: 55.75, production: '约 950 万桶/日', exportShare: '欧洲转向亚洲，折扣与航线敏感', note: '油价上涨利好财政；乌拉尔与远东出口增加', updatedAt: '2026-06-13T16:00:00Z' },
   { id: 'oil-ye', name: '也门', lng: 44.2, lat: 15.4, production: '战前约 7 万桶/日，当前几乎停产', exportShare: '红海出口曾经曼德海峡', note: '胡塞控制区；油轮与港口屡遭袭', updatedAt: '2026-06-12T12:00:00Z' },
-  { id: 'oil-ly-jun', name: '利比亚', lng: 13.18, lat: 32.89, production: '约 120 万桶/日（示例）', exportShare: '地中海出口', note: '内战分裂影响产量（种子/示例）', updatedAt: '2026-06-14T10:00:00Z' },
-  { id: 'oil-tr-jun', name: '土耳其', lng: 32.86, lat: 39.93, production: '约 6 万桶/日（示例）', exportShare: '过境枢纽', note: '黑海—地中海能源通道（种子/示例）', updatedAt: '2026-06-13T08:00:00Z' },
+  { id: 'oil-ly-jun', name: '利比亚', lng: 13.18, lat: 32.89, production: '约 120 万桶/日', exportShare: '地中海出口', note: '内战分裂影响产量', updatedAt: '2026-06-14T10:00:00Z' },
+  { id: 'oil-tr-jun', name: '土耳其', lng: 32.86, lat: 39.93, production: '约 6 万桶/日', exportShare: '过境枢纽', note: '黑海—地中海能源通道', updatedAt: '2026-06-13T08:00:00Z' },
 ]
 
 /** 能源价格与产能（可替换为实时数据源） */

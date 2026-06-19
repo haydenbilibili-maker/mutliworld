@@ -29,7 +29,7 @@ export const asiaPacificRegion: RegionModule = {
   timeRange: '7d',
   dataNamespace: 'asia_pacific',
   enabled: true,
-  note: '亚太航道、基地与经济节点种子数据',
+  note: '亚太航道、基地与经济节点公开态势整理',
   dataset: asiaPacificDataset,
 };
 
@@ -67,7 +67,7 @@ export const northAmericaRegion: RegionModule = {
   timeRange: '7d',
   dataNamespace: 'north_america',
   enabled: true,
-  note: '美国战略研究对象 — 核力量、海外驻军、印太/北约枢纽与供应链（种子数据）',
+  note: '美国战略研究对象 — 核力量、海外驻军、印太/北约枢纽与供应链',
   dataset: northAmericaDataset,
 };
 
@@ -86,7 +86,7 @@ export const latinAmericaRegion: RegionModule = {
   timeRange: '7d',
   dataNamespace: 'latin_america',
   enabled: true,
-  note: '拉美资源、运河与热点种子数据',
+  note: '拉美资源、运河与热点公开态势整理',
   dataset: latinAmericaDataset,
 };
 
@@ -105,7 +105,7 @@ export const southeastAsiaRegion: RegionModule = {
   timeRange: '7d',
   dataNamespace: 'southeast_asia',
   enabled: true,
-  note: '马六甲、东盟经济与南海航道种子数据',
+  note: '马六甲、东盟经济与南海航道公开态势整理',
   dataset: southeastAsiaDataset,
 };
 

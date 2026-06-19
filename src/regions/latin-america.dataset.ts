@@ -15,7 +15,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-panama-canal',
     title: '巴拿马运河 · 全球航运咽喉',
-    source: 'seed/示例（航运监测）',
+    source: '公开态势整理 · 航运监测',
     timestamp: '2026-06-15T10:00:00Z',
     location: [-79.92, 9.08],
     impact_level: 'high',
@@ -25,7 +25,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-lithium-triangle',
     title: '锂三角 · 关键矿产供应链',
-    source: 'seed/示例（资源贸易）',
+    source: '公开态势整理 · 资源贸易',
     timestamp: '2026-06-14T14:00:00Z',
     location: [-67.0, -23.0],
     impact_level: 'high',
@@ -35,7 +35,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-brazil-economic',
     title: '圣保罗 · 拉美最大经济体',
-    source: 'seed/示例（经济指标）',
+    source: '公开态势整理 · 经济指标',
     timestamp: '2026-06-15T18:00:00Z',
     location: [-46.63, -23.55],
     impact_level: 'high',
@@ -45,7 +45,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-venezuela-hotspot',
     title: '委内瑞拉 · 石油与政治热点',
-    source: 'seed/示例（热点监测）',
+    source: '公开态势整理 · 热点监测',
     timestamp: '2026-06-13T12:00:00Z',
     location: [-66.9, 10.5],
     impact_level: 'high',
@@ -55,7 +55,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-amazon-natural',
     title: '亚马逊流域 · 极端降雨与洪涝',
-    source: 'INPE / seed（自然灾害）',
+    source: 'INPE · 自然灾害',
     timestamp: '2026-06-14T08:00:00Z',
     location: [-60.0, -3.0],
     impact_level: 'medium',
@@ -65,7 +65,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-mexico-border',
     title: '美墨边境 · 贸易与移民交汇',
-    source: 'seed/示例（热点）',
+    source: '公开态势整理 · 热点',
     timestamp: '2026-06-12T20:00:00Z',
     location: [-106.5, 31.75],
     impact_level: 'medium',
@@ -75,7 +75,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-chile-copper',
     title: '智利铜矿带 · 全球铜供应监测',
-    source: 'seed/示例（资源）',
+    source: '公开态势整理 · 资源',
     timestamp: '2026-06-11T16:00:00Z',
     location: [-70.67, -33.45],
     impact_level: 'high',
@@ -85,7 +85,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-caribbean-weather',
     title: '加勒比海 · 飓风季预警',
-    source: 'NHC / seed（气象）',
+    source: 'NHC · 气象',
     timestamp: '2026-06-15T12:00:00Z',
     location: [-75.0, 18.0],
     impact_level: 'medium',
@@ -95,7 +95,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-argentina',
     title: '布宜诺斯艾利斯 · 债务与通胀监测',
-    source: 'seed/示例（经济）',
+    source: '公开态势整理 · 经济',
     timestamp: '2026-06-14T20:00:00Z',
     location: [-58.38, -34.6],
     impact_level: 'medium',
@@ -105,7 +105,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-colombia',
     title: '哥伦比亚 · 和平进程与安全热点',
-    source: 'seed/示例（安全）',
+    source: '公开态势整理 · 安全',
     timestamp: '2026-06-10T14:00:00Z',
     location: [-74.07, 4.71],
     impact_level: 'medium',
@@ -115,7 +115,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-peru-mining',
     title: '秘鲁铜矿 · 社会抗议与供应',
-    source: 'seed/示例（资源）',
+    source: '公开态势整理 · 资源',
     timestamp: '2026-06-13T16:00:00Z',
     location: [-77.03, -12.05],
     impact_level: 'medium',
@@ -125,7 +125,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-guyana-oil',
     title: '圭亚那海上油田 · 产能扩张',
-    source: 'seed/示例（能源）',
+    source: '公开态势整理 · 能源',
     timestamp: '2026-06-15T08:00:00Z',
     location: [-58.0, 7.0],
     impact_level: 'high',
@@ -135,7 +135,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-cuba-hotspot',
     title: '古巴 · 能源短缺与社会压力',
-    source: 'seed/示例（热点）',
+    source: '公开态势整理 · 热点',
     timestamp: '2026-06-11T12:00:00Z',
     location: [-82.37, 23.13],
     impact_level: 'medium',
@@ -145,7 +145,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-santos-port',
     title: '桑托斯港 · 巴西大豆出口枢纽',
-    source: 'seed/示例（航运）',
+    source: '公开态势整理 · 航运',
     timestamp: '2026-06-14T12:00:00Z',
     location: [-46.33, -23.96],
     impact_level: 'high',
@@ -155,7 +155,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-ecuador-natural',
     title: '厄瓜多尔海岸 · 地震海啸预警',
-    source: 'USGS / seed',
+    source: 'USGS',
     timestamp: '2026-06-13T06:00:00Z',
     location: [-80.0, -2.0],
     impact_level: 'medium',
@@ -165,7 +165,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-bolivia-lithium',
     title: '乌尤尼 · 盐湖锂资源',
-    source: 'seed/示例（资源）',
+    source: '公开态势整理 · 资源',
     timestamp: '2026-06-14T12:00:00Z',
     location: [-67.49, -20.13],
     impact_level: 'high',
@@ -175,7 +175,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-haiti-conflicts',
     title: '海地 · 帮派暴力与社会危机',
-    source: 'seed/示例（冲突）',
+    source: '公开态势整理 · 冲突',
     timestamp: '2026-06-10T14:00:00Z',
     location: [-72.34, 18.54],
     impact_level: 'high',
@@ -185,7 +185,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-mexico-weather',
     title: '尤卡坦半岛 · 飓风监视',
-    source: 'NHC / seed',
+    source: 'NHC（美国国家飓风中心）',
     timestamp: '2026-06-15T10:00:00Z',
     location: [-89.6, 20.97],
     impact_level: 'medium',
@@ -195,7 +195,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-suriname-oil',
     title: '苏里南海上油田 · 新发现产区',
-    source: 'seed/示例（能源）',
+    source: '公开态势整理 · 能源',
     timestamp: '2026-06-12T16:00:00Z',
     location: [-54.0, 6.0],
     impact_level: 'medium',
@@ -205,17 +205,17 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-central-america-drought',
     title: '中美洲 · 干旱与粮食安全',
-    source: 'seed/示例（自然灾害）',
+    source: '公开态势整理 · 自然灾害',
     timestamp: '2026-06-14T06:00:00Z',
     location: [-87.2, 14.1],
     impact_level: 'high',
     category: 'natural',
-    description: '厄尔尼诺余波致玉米产量下调（种子/示例）',
+    description: '厄尔尼诺余波致玉米产量下调',
   },
   {
     id: 'la-argentina-shale',
     title: '瓦卡穆尔塔 · 页岩油气',
-    source: 'seed/示例（能源）',
+    source: '公开态势整理 · 能源',
     timestamp: '2026-06-15T12:00:00Z',
     location: [-69.0, -38.5],
     impact_level: 'high',
@@ -225,17 +225,17 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-bogota-hotspot',
     title: '波哥大 · 和平协议执行争议',
-    source: 'seed/示例（热点）',
+    source: '公开态势整理 · 热点',
     timestamp: '2026-06-13T14:00:00Z',
     location: [-74.07, 4.71],
     impact_level: 'medium',
     category: 'hotspots',
-    description: '武装团体解除武装进度受阻（种子/示例）',
+    description: '武装团体解除武装进度受阻',
   },
   {
     id: 'la-lima-economic',
     title: '利马 · 铜矿社会抗议',
-    source: 'seed/示例（经济）',
+    source: '公开态势整理 · 经济',
     timestamp: '2026-06-14T18:00:00Z',
     location: [-77.03, -12.05],
     impact_level: 'medium',
@@ -245,7 +245,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-montevideo-waterway',
     title: '蒙得维的亚港 · 谷物出口',
-    source: 'seed/示例（航运）',
+    source: '公开态势整理 · 航运',
     timestamp: '2026-06-12T10:00:00Z',
     location: [-56.21, -34.9],
     impact_level: 'medium',
@@ -255,17 +255,17 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-guatemala-conflicts',
     title: '危地马拉 · 帮派暴力热点',
-    source: 'seed/示例（冲突）',
+    source: '公开态势整理 · 冲突',
     timestamp: '2026-06-11T08:00:00Z',
     location: [-90.51, 14.63],
     impact_level: 'medium',
     category: 'conflicts',
-    description: '北部边境走私与暴力升级（种子/示例）',
+    description: '北部边境走私与暴力升级',
   },
   {
     id: 'la-chile-weather',
     title: '智利中部 · 野火预警',
-    source: 'seed/示例（气象）',
+    source: '公开态势整理 · 气象',
     timestamp: '2026-06-15T08:00:00Z',
     location: [-70.67, -33.45],
     impact_level: 'medium',
@@ -275,7 +275,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-trinidad-gas',
     title: '特立尼达 · 液化天然气出口',
-    source: 'seed/示例（能源）',
+    source: '公开态势整理 · 能源',
     timestamp: '2026-06-13T16:00:00Z',
     location: [-61.5, 10.5],
     impact_level: 'medium',
@@ -285,7 +285,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-belem-amazon',
     title: '贝伦 · 亚马逊河口航运',
-    source: 'seed/示例（航运）',
+    source: '公开态势整理 · 航运',
     timestamp: '2026-06-14T12:00:00Z',
     location: [-48.5, -1.45],
     impact_level: 'low',
@@ -295,7 +295,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-dominican-tourism',
     title: '多米尼加 · 飓风季旅游风险',
-    source: 'NHC / seed',
+    source: 'NHC（美国国家飓风中心）',
     timestamp: '2026-06-15T14:00:00Z',
     location: [-69.93, 18.48],
     impact_level: 'low',
@@ -305,7 +305,7 @@ const LA_EVENTS: EventDetail[] = [
   {
     id: 'la-paraguay-soy',
     title: '亚松森 · 大豆出口内陆枢纽',
-    source: 'seed/示例（经济）',
+    source: '公开态势整理 · 经济',
     timestamp: '2026-06-12T14:00:00Z',
     location: [-57.63, -25.26],
     impact_level: 'medium',
@@ -323,7 +323,7 @@ const LA_INCIDENTS: Incident[] = [
     faction: 'us',
     location: { lat: -15.0, lng: -55.0 },
     description: '南美农业出口国发布产量修正，国际粮价波动',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'la-inc-2',
@@ -333,7 +333,7 @@ const LA_INCIDENTS: Incident[] = [
     faction: 'us',
     location: { lat: 9.08, lng: -79.92 },
     description: '运河管理局宣布干旱期通行限制延续',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'la-inc-3',
@@ -343,7 +343,7 @@ const LA_INCIDENTS: Incident[] = [
     faction: 'us',
     location: { lat: -33.45, lng: -70.67 },
     description: '国有化与特许权改革讨论',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'la-inc-4',
@@ -352,8 +352,8 @@ const LA_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lat: -23.55, lng: -46.63 },
-    description: 'Selic 利率上调 50 基点（种子/示例）',
-    source: 'seed/示例',
+    description: 'Selic 利率上调 50 基点',
+    source: '公开态势整理',
   },
   {
     id: 'la-inc-5',
@@ -362,8 +362,8 @@ const LA_INCIDENTS: Incident[] = [
     type: 'diplomatic',
     faction: 'us',
     location: { lat: 25.67, lng: -100.31 },
-    description: '蒙特雷汽车产业链扩张（种子/示例）',
-    source: 'seed/示例',
+    description: '蒙特雷汽车产业链扩张',
+    source: '公开态势整理',
   },
   {
     id: 'la-inc-6',
@@ -372,8 +372,8 @@ const LA_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lat: -0.18, lng: -78.47 },
-    description: '干旱致水电短缺，限电措施（种子/示例）',
-    source: 'seed/示例',
+    description: '干旱致水电短缺，限电措施',
+    source: '公开态势整理',
   },
   {
     id: 'la-inc-7',
@@ -382,8 +382,8 @@ const LA_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lat: -34.6, lng: -58.38 },
-    description: '外汇市场波动，IMF 谈判敏感（种子/示例）',
-    source: 'seed/示例',
+    description: '外汇市场波动，IMF 谈判敏感',
+    source: '公开态势整理',
   },
 ];
 
@@ -456,7 +456,7 @@ const LA_ENERGY: EnergyDataPoint[] = [
     changePercent: 2.2,
     description: '南美产量预期影响定价',
     updatedAt: '2026-06-15T14:00:00Z',
-    source: 'CBOT / seed',
+    source: 'CBOT',
   },
 ];
 
@@ -488,7 +488,7 @@ const LA_OIL: OilProducerMapPoint[] = [
     lat: 7.5,
     production: '约 60 万桶/日',
     exportShare: '全球增速最快新油田',
-    note: '埃克森美孚主导开发（种子/示例）',
+    note: '埃克森美孚主导开发',
     updatedAt: '2026-06-14T12:00:00Z',
   },
   {
@@ -498,7 +498,7 @@ const LA_OIL: OilProducerMapPoint[] = [
     lat: 19.5,
     production: '约 160 万桶/日',
     exportShare: '本土炼厂为主',
-    note: '墨西哥国家石油主导（种子/示例）',
+    note: '墨西哥国家石油主导',
     updatedAt: '2026-06-13T10:00:00Z',
   },
   {
@@ -508,7 +508,7 @@ const LA_OIL: OilProducerMapPoint[] = [
     lat: 4.5,
     production: '约 75 万桶/日',
     exportShare: '美国炼厂供应',
-    note: '武装冲突影响部分区块（种子/示例）',
+    note: '武装冲突影响部分区块',
     updatedAt: '2026-06-12T08:00:00Z',
   },
 ];

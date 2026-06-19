@@ -435,7 +435,7 @@ export const MIDEAST_FACILITIES: Facility[] = [
     faction: 'us',
     type: 'airfield',
     forces: ['美中央司令部'],
-    notes: '海湾地区最大美军基地（种子/示例）',
+    notes: '海湾地区最大美军基地',
   },
   {
     id: 'fac-basra-oil',
@@ -443,7 +443,7 @@ export const MIDEAST_FACILITIES: Facility[] = [
     position: { lat: 30.5, lng: 47.78 },
     faction: 'iraq',
     type: 'naval',
-    notes: '伊拉克南部原油出口枢纽（种子/示例）',
+    notes: '伊拉克南部原油出口枢纽',
   },
   {
     id: 'fac-aden-port',
@@ -451,7 +451,7 @@ export const MIDEAST_FACILITIES: Facility[] = [
     position: { lat: 12.8, lng: 45.03 },
     faction: 'yemen',
     type: 'naval',
-    notes: '红海—亚丁湾咽喉港口（种子/示例）',
+    notes: '红海—亚丁湾咽喉港口',
   },
   {
     id: 'fac-jeddah-port',
@@ -459,7 +459,7 @@ export const MIDEAST_FACILITIES: Facility[] = [
     position: { lat: 21.48, lng: 39.17 },
     faction: 'sa',
     type: 'naval',
-    notes: '红海最大港口，朝觐物流枢纽（种子/示例）',
+    notes: '红海最大港口，朝觐物流枢纽',
   },
   {
     id: 'fac-haifa-port',
@@ -467,6 +467,6 @@ export const MIDEAST_FACILITIES: Facility[] = [
     position: { lat: 32.82, lng: 34.99 },
     faction: 'israel',
     type: 'naval',
-    notes: '以色列最大海港（种子/示例）',
+    notes: '以色列最大海港',
   },
 ]

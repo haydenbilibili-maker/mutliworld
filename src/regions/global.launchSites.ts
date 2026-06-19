@@ -297,7 +297,7 @@ export const GLOBAL_LAUNCH_SITES: LaunchSitePoint[] = [
     operator: '中国',
     status: 'active',
     subKind: 'orbital',
-    note: '海上固体火箭发射平台（种子/示例）',
+    note: '海上固体火箭发射平台',
     impact: 'medium',
   },
   {
@@ -308,7 +308,7 @@ export const GLOBAL_LAUNCH_SITES: LaunchSitePoint[] = [
     operator: '英国',
     status: 'planned',
     subKind: 'orbital',
-    note: '英国本土垂直发射场规划（种子/示例）',
+    note: '英国本土垂直发射场规划',
     impact: 'low',
   },
   {
@@ -319,7 +319,7 @@ export const GLOBAL_LAUNCH_SITES: LaunchSitePoint[] = [
     operator: '德国/Isar Aerospace',
     status: 'planned',
     subKind: 'orbital',
-    note: '欧洲商业小型火箭发射场（种子/示例）',
+    note: '欧洲商业小型火箭发射场',
     impact: 'low',
   },
   {
@@ -330,7 +330,7 @@ export const GLOBAL_LAUNCH_SITES: LaunchSitePoint[] = [
     operator: '意大利/肯尼亚',
     status: 'active',
     subKind: 'orbital',
-    note: '海上发射平台，赤道优势（种子/示例）',
+    note: '海上发射平台，赤道优势',
     impact: 'low',
   },
   {
@@ -341,7 +341,7 @@ export const GLOBAL_LAUNCH_SITES: LaunchSitePoint[] = [
     operator: '澳大利亚',
     status: 'planned',
     subKind: 'orbital',
-    note: '北澳商业发射场规划（种子/示例）',
+    note: '北澳商业发射场规划',
     impact: 'low',
   },
   ...DENSIFY_LAUNCH_SITES,

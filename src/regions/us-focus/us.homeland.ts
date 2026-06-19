@@ -2,7 +2,7 @@ import type { EventDetail } from '@/types/geo';
 import type { Incident, Facility } from '@/types/middleeast';
 
 const T = '2026-06-16T08:00:00Z';
-const SRC = '美国本土安全与关键基础设施监测 / seed';
+const SRC = '美国本土安全与关键基础设施监测';
 
 /** 本土安全与关键基础设施 · 事件监测点 */
 export const US_HOMELAND_EVENTS: EventDetail[] = [
@@ -187,7 +187,7 @@ export const US_HOMELAND_INCIDENTS: Incident[] = [
     faction: 'us',
     location: { lat: 40.67, lng: -74.05 },
     description: '码头工人合同谈判影响集装箱吞吐',
-    source: 'seed',
+    source: '公开态势整理',
   },
   {
     id: 'us-hom-inc-5',

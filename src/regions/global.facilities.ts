@@ -1,7 +1,7 @@
 import type { Facility } from '@/types/middleeast';
 
 /**
- * 全球关键节点与海外保障设施（种子数据）
+ * 全球关键节点与海外保障设施
  * ⚠ 占位/示例：用于 bases / economic 图层演示，非实时情报。
  */
 export const GLOBAL_SEED_FACILITIES: Facility[] = [
@@ -162,7 +162,7 @@ export const GLOBAL_SEED_FACILITIES: Facility[] = [
     position: { lat: 38.91, lng: 121.6 },
     faction: 'cn',
     type: 'naval',
-    notes: 'LNG 与原油进口主港（种子/示例）',
+    notes: 'LNG 与原油进口主港',
   },
   {
     id: 'cn-fac-xiamen',
@@ -170,7 +170,7 @@ export const GLOBAL_SEED_FACILITIES: Facility[] = [
     position: { lat: 24.48, lng: 118.08 },
     faction: 'cn',
     type: 'naval',
-    notes: '对台贸易与集装箱转运（种子/示例）',
+    notes: '对台贸易与集装箱转运',
   },
   {
     id: 'cn-fac-alexandria',
@@ -178,7 +178,7 @@ export const GLOBAL_SEED_FACILITIES: Facility[] = [
     position: { lat: 31.2, lng: 29.92 },
     faction: 'cn',
     type: 'naval',
-    notes: '苏伊士运河西侧转运枢纽（种子/示例）',
+    notes: '苏伊士运河西侧转运枢纽',
   },
   {
     id: 'cn-fac-valencia',
@@ -186,7 +186,7 @@ export const GLOBAL_SEED_FACILITIES: Facility[] = [
     position: { lat: 39.45, lng: -0.32 },
     faction: 'cn',
     type: 'naval',
-    notes: '中欧班列南线海运衔接（种子/示例）',
+    notes: '中欧班列南线海运衔接',
   },
   {
     id: 'cn-fac-darwin',
@@ -194,6 +194,6 @@ export const GLOBAL_SEED_FACILITIES: Facility[] = [
     position: { lat: -12.46, lng: 130.84 },
     faction: 'cn',
     type: 'naval',
-    notes: '铁矿石与 LNG 进口节点（种子/示例）',
+    notes: '铁矿石与 LNG 进口节点',
   },
 ];

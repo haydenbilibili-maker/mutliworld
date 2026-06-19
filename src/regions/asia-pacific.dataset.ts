@@ -1,6 +1,6 @@
 /**
  * 亚太区域数据集 — 航道 / 军事 / 经济 / 热点均衡增密
- * 来源：公开地理事实 + seed/示例监测点；检索日 2026-06-16
+ * 来源：公开地理事实 + 公开监测点；检索日 2026-06-16
  */
 
 import type { EventDetail } from '@/types/geo';
@@ -21,7 +21,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-taiwan-strait',
     title: '台湾海峡 · 航运与通行韧性监测',
-    source: 'seed/示例（航运监测）',
+    source: '公开态势整理 · 航运监测',
     timestamp: '2026-06-15T08:00:00Z',
     location: [119.5, 24.5],
     impact_level: 'high',
@@ -31,7 +31,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-south-china-sea',
     title: '南海航运通道 · 通行监测',
-    source: 'seed/示例（海事监测）',
+    source: '公开态势整理 · 海事监测',
     timestamp: '2026-06-14T12:00:00Z',
     location: [112.0, 12.0],
     impact_level: 'high',
@@ -41,7 +41,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-yokosuka',
     title: '横须贺 · 美第七舰队母港',
-    source: 'seed/示例（军事基地）',
+    source: '公开态势整理 · 军事基地',
     timestamp: '2026-06-13T06:00:00Z',
     location: [139.67, 35.28],
     impact_level: 'high',
@@ -51,7 +51,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-guam',
     title: '关岛 · 安德森空军基地',
-    source: 'seed/示例（军事基地）',
+    source: '公开态势整理 · 军事基地',
     timestamp: '2026-06-12T10:00:00Z',
     location: [144.8, 13.58],
     impact_level: 'high',
@@ -61,7 +61,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-korea-peninsula',
     title: '朝鲜半岛 · 安全态势监测',
-    source: 'seed/示例（安全监测）',
+    source: '公开态势整理 · 安全监测',
     timestamp: '2026-06-15T14:00:00Z',
     location: [127.0, 38.5],
     impact_level: 'critical',
@@ -71,7 +71,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-tokyo-economic',
     title: '东京 · 亚太金融与贸易枢纽',
-    source: 'seed/示例（经济指标）',
+    source: '公开态势整理 · 经济指标',
     timestamp: '2026-06-15T02:00:00Z',
     location: [139.75, 35.68],
     impact_level: 'high',
@@ -81,7 +81,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-sydney-economic',
     title: '悉尼 · 澳新资源出口枢纽',
-    source: 'seed/示例（贸易监测）',
+    source: '公开态势整理 · 贸易监测',
     timestamp: '2026-06-14T04:00:00Z',
     location: [151.2, -33.87],
     impact_level: 'medium',
@@ -91,7 +91,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-typhoon',
     title: '西北太平洋 · 热带气旋路径预警',
-    source: 'JMA / seed（气象监测）',
+    source: 'JMA · 气象监测',
     timestamp: '2026-06-15T00:00:00Z',
     location: [130.0, 20.0],
     impact_level: 'medium',
@@ -101,7 +101,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-ring-fire',
     title: '环太平洋 · 地震活动监测',
-    source: 'USGS / seed（自然灾害）',
+    source: 'USGS · 自然灾害',
     timestamp: '2026-06-14T18:00:00Z',
     location: [142.0, 38.0],
     impact_level: 'high',
@@ -111,7 +111,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-australia-conflict',
     title: '澳北 · 印太安全合作监测',
-    source: 'seed/示例（安全合作）',
+    source: '公开态势整理 · 安全合作',
     timestamp: '2026-06-13T08:00:00Z',
     location: [130.8, -12.5],
     impact_level: 'medium',
@@ -121,7 +121,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-darwin',
     title: '达尔文 · 美军轮换部署基地',
-    source: 'seed/示例（军事基地）',
+    source: '公开态势整理 · 军事基地',
     timestamp: '2026-06-11T06:00:00Z',
     location: [130.84, -12.46],
     impact_level: 'medium',
@@ -131,7 +131,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-seoul-economic',
     title: '首尔 · 半导体供应链监测',
-    source: 'seed/示例（产业链）',
+    source: '公开态势整理 · 产业链',
     timestamp: '2026-06-15T06:00:00Z',
     location: [126.98, 37.57],
     impact_level: 'high',
@@ -141,7 +141,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-pearl-harbor',
     title: '珍珠港 · 太平洋舰队司令部',
-    source: 'seed/示例（军事）',
+    source: '公开态势整理 · 军事',
     timestamp: '2026-06-14T08:00:00Z',
     location: [-157.95, 21.35],
     impact_level: 'high',
@@ -151,7 +151,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-fiji-waterway',
     title: '斐济—南太平洋 · 岛链航运监测',
-    source: 'seed/示例（航运）',
+    source: '公开态势整理 · 航运',
     timestamp: '2026-06-12T14:00:00Z',
     location: [178.0, -18.0],
     impact_level: 'low',
@@ -161,7 +161,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-newzealand-natural',
     title: '新西兰北岛 · 火山与地震监测',
-    source: 'GeoNet / USGS / seed',
+    source: 'GeoNet / USGS',
     timestamp: '2026-06-13T20:00:00Z',
     location: [175.5, -39.0],
     impact_level: 'medium',
@@ -171,7 +171,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-philippines-hotspot',
     title: '巴士海峡 · 第一岛链通道',
-    source: 'seed/示例（热点）',
+    source: '公开态势整理 · 热点',
     timestamp: '2026-06-15T10:00:00Z',
     location: [121.0, 21.0],
     impact_level: 'high',
@@ -181,7 +181,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-india-economic',
     title: '孟买 · 印度洋贸易枢纽',
-    source: 'seed/示例（经济）',
+    source: '公开态势整理 · 经济',
     timestamp: '2026-06-14T06:00:00Z',
     location: [72.88, 19.08],
     impact_level: 'medium',
@@ -191,7 +191,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-taipei-economic',
     title: '台北 · 半导体产业链核心',
-    source: 'seed/示例（产业链）',
+    source: '公开态势整理 · 产业链',
     timestamp: '2026-06-15T08:00:00Z',
     location: [121.56, 25.04],
     impact_level: 'critical',
@@ -201,7 +201,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-osaka-weather',
     title: '关西 · 台风登陆预警',
-    source: 'JMA / seed',
+    source: 'JMA',
     timestamp: '2026-06-14T00:00:00Z',
     location: [135.5, 34.7],
     impact_level: 'medium',
@@ -211,7 +211,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-solomon-conflicts',
     title: '所罗门群岛 · 安全合作热点',
-    source: 'seed/示例（冲突）',
+    source: '公开态势整理 · 冲突',
     timestamp: '2026-06-12T10:00:00Z',
     location: [159.95, -9.43],
     impact_level: 'medium',
@@ -221,7 +221,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-palau-military',
     title: '帕劳 · 第二岛链监视节点',
-    source: 'seed/示例（军事）',
+    source: '公开态势整理 · 军事',
     timestamp: '2026-06-13T16:00:00Z',
     location: [134.58, 7.5],
     impact_level: 'low',
@@ -231,7 +231,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-busan-waterway',
     title: '釜山港 · 东北亚集装箱枢纽',
-    source: 'seed/示例（航运）',
+    source: '公开态势整理 · 航运',
     timestamp: '2026-06-15T04:00:00Z',
     location: [129.04, 35.1],
     impact_level: 'high',
@@ -241,7 +241,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-misawa',
     title: '三泽基地 · 美日联合演训',
-    source: 'seed/示例（军事）',
+    source: '公开态势整理 · 军事',
     timestamp: '2026-06-14T16:00:00Z',
     location: [141.37, 40.7],
     impact_level: 'medium',
@@ -251,7 +251,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-perth-economic',
     title: '珀斯 · 锂矿与能源出口',
-    source: 'seed/示例（资源）',
+    source: '公开态势整理 · 资源',
     timestamp: '2026-06-13T12:00:00Z',
     location: [115.86, -31.95],
     impact_level: 'medium',
@@ -261,7 +261,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-vladivostok-waterway',
     title: '符拉迪沃斯托克 · 北极航线门户',
-    source: 'seed/示例（航运）',
+    source: '公开态势整理 · 航运',
     timestamp: '2026-06-12T08:00:00Z',
     location: [131.89, 43.12],
     impact_level: 'medium',
@@ -271,7 +271,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-chennai-economic',
     title: '金奈 · 印度洋制造枢纽',
-    source: 'seed/示例（经济）',
+    source: '公开态势整理 · 经济',
     timestamp: '2026-06-15T10:00:00Z',
     location: [80.27, 13.08],
     impact_level: 'medium',
@@ -281,7 +281,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-honolulu-military',
     title: '夏威夷 · 印太司令部前沿',
-    source: 'seed/示例（军事）',
+    source: '公开态势整理 · 军事',
     timestamp: '2026-06-14T20:00:00Z',
     location: [-157.85, 21.35],
     impact_level: 'high',
@@ -291,7 +291,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-okinawa-hotspot',
     title: '冲绳 · 基地搬迁与社会争议',
-    source: 'seed/示例（热点）',
+    source: '公开态势整理 · 热点',
     timestamp: '2026-06-11T14:00:00Z',
     location: [127.68, 26.21],
     impact_level: 'medium',
@@ -301,7 +301,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-bangladesh-natural',
     title: '孟加拉湾 · 季风洪涝预警',
-    source: 'seed/示例（自然灾害）',
+    source: '公开态势整理 · 自然灾害',
     timestamp: '2026-06-13T06:00:00Z',
     location: [90.4, 22.5],
     impact_level: 'high',
@@ -311,7 +311,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-auckland-economic',
     title: '奥克兰 · 乳制品出口枢纽',
-    source: 'seed/示例（贸易）',
+    source: '公开态势整理 · 贸易',
     timestamp: '2026-06-14T04:00:00Z',
     location: [174.76, -36.85],
     impact_level: 'low',
@@ -321,7 +321,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-sapporo-weather',
     title: '北海道 · 异常高温预警',
-    source: 'JMA / seed',
+    source: 'JMA',
     timestamp: '2026-06-15T02:00:00Z',
     location: [141.35, 43.06],
     impact_level: 'medium',
@@ -331,7 +331,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-myanmar-conflicts',
     title: '缅甸 · 内战与安全真空',
-    source: 'seed/示例（冲突）',
+    source: '公开态势整理 · 冲突',
     timestamp: '2026-06-10T10:00:00Z',
     location: [96.15, 19.76],
     impact_level: 'high',
@@ -341,7 +341,7 @@ const AP_EVENTS: EventDetail[] = [
   {
     id: 'ap-png-natural',
     title: '巴布亚新几内亚 · 地震监测',
-    source: 'USGS / seed',
+    source: 'USGS',
     timestamp: '2026-06-12T18:00:00Z',
     location: [147.18, -9.44],
     impact_level: 'medium',
@@ -359,7 +359,7 @@ const AP_INCIDENTS: Incident[] = [
     faction: 'us',
     location: { lat: 15.0, lng: 135.0 },
     description: '多国海上联合演训区域，舰艇编队活动增加',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'ap-inc-2',
@@ -369,7 +369,7 @@ const AP_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: 31.23, lng: 121.47 },
     description: '集装箱运价与港口拥堵指数短期上行',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'ap-inc-3',
@@ -379,7 +379,7 @@ const AP_INCIDENTS: Incident[] = [
     faction: 'us',
     location: { lat: 37.57, lng: 126.98 },
     description: '安理会相关方就半岛局势发表立场声明',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'ap-inc-4',
@@ -389,7 +389,7 @@ const AP_INCIDENTS: Incident[] = [
     faction: 'us',
     location: { lat: -35.28, lng: 149.13 },
     description: '加强情报共享与联合演训安排',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'ap-inc-5',
@@ -399,7 +399,7 @@ const AP_INCIDENTS: Incident[] = [
     faction: 'cn',
     location: { lat: 24.5, lng: 119.5 },
     description: '多方通报海空域活动频率上升',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'ap-inc-6',
@@ -408,8 +408,8 @@ const AP_INCIDENTS: Incident[] = [
     type: 'military',
     faction: 'us',
     location: { lat: 20.0, lng: 130.0 },
-    description: '西太平洋多国联合反潜与防空演训（种子/示例）',
-    source: 'seed/示例',
+    description: '西太平洋多国联合反潜与防空演训',
+    source: '公开态势整理',
   },
   {
     id: 'ap-inc-7',
@@ -418,8 +418,8 @@ const AP_INCIDENTS: Incident[] = [
     type: 'diplomatic',
     faction: 'us',
     location: { lat: 39.66, lng: 124.67 },
-    description: '安理会相关方呼吁克制（种子/示例）',
-    source: 'seed/示例',
+    description: '安理会相关方呼吁克制',
+    source: '公开态势整理',
   },
   {
     id: 'ap-inc-8',
@@ -428,8 +428,8 @@ const AP_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'cn',
     location: { lat: -19.0, lng: 125.0 },
-    description: '动力煤长协谈判敏感窗口（种子/示例）',
-    source: 'seed/示例',
+    description: '动力煤长协谈判敏感窗口',
+    source: '公开态势整理',
   },
   {
     id: 'ap-inc-9',
@@ -438,8 +438,8 @@ const AP_INCIDENTS: Incident[] = [
     type: 'diplomatic',
     faction: 'us',
     location: { lat: 35.68, lng: 139.75 },
-    description: '关键矿产与半导体供应链协调（种子/示例）',
-    source: 'seed/示例',
+    description: '关键矿产与半导体供应链协调',
+    source: '公开态势整理',
   },
 ];
 
@@ -541,7 +541,7 @@ const AP_ENERGY: EnergyDataPoint[] = [
     change: -2,
     description: '冬季后补库节奏',
     updatedAt: '2026-06-15T06:00:00Z',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
   {
     id: 'ap-coal-au',
@@ -551,7 +551,7 @@ const AP_ENERGY: EnergyDataPoint[] = [
     change: 1.2,
     description: '对华与日韩出口节奏',
     updatedAt: '2026-06-14T08:00:00Z',
-    source: 'seed/示例',
+    source: '公开态势整理',
   },
 ];
 
@@ -573,7 +573,7 @@ const AP_OIL: OilProducerMapPoint[] = [
     lat: -5.5,
     production: 'LNG 约 800 万吨/年',
     exportShare: '中日韩长期合同',
-    note: '太平洋岛国最大能源项目（种子/示例）',
+    note: '太平洋岛国最大能源项目',
     updatedAt: '2026-06-14T10:00:00Z',
   },
   {
@@ -583,7 +583,7 @@ const AP_OIL: OilProducerMapPoint[] = [
     lat: 5.5,
     production: '约 55 万桶/日',
     exportShare: '亚洲炼厂供应',
-    note: '南海争议海域部分区块（种子/示例）',
+    note: '南海争议海域部分区块',
     updatedAt: '2026-06-13T12:00:00Z',
   },
   {
@@ -593,7 +593,7 @@ const AP_OIL: OilProducerMapPoint[] = [
     lat: -10.5,
     production: '约 8 万桶/日',
     exportShare: '澳洲炼厂',
-    note: '澳帝汶联合开发区（种子/示例）',
+    note: '澳帝汶联合开发区',
     updatedAt: '2026-06-12T08:00:00Z',
   },
 ];

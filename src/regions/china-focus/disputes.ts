@@ -8,7 +8,7 @@ export const CHINA_DISPUTE_EVENTS: EventDetail[] = [
   {
     id: 'cn-disp-spratly-cn',
     title: '南沙群岛 · 中方实际控制岛礁群',
-    source: 'seed/争端监测',
+    source: '公开态势整理 · 争端监测',
     timestamp: '2026-06-16T10:00:00Z',
     location: [114.0, 9.5],
     impact_level: 'critical',
@@ -18,7 +18,7 @@ export const CHINA_DISPUTE_EVENTS: EventDetail[] = [
   {
     id: 'cn-disp-paracel',
     title: '西沙群岛 · 中方完全控制',
-    source: 'seed/争端监测',
+    source: '公开态势整理 · 争端监测',
     timestamp: '2026-06-16T09:00:00Z',
     location: [112.0, 16.5],
     impact_level: 'high',
@@ -28,7 +28,7 @@ export const CHINA_DISPUTE_EVENTS: EventDetail[] = [
   {
     id: 'cn-disp-scarborough',
     title: '黄岩岛 · 中菲争议核心区',
-    source: 'seed/争端监测',
+    source: '公开态势整理 · 争端监测',
     timestamp: '2026-06-16T11:00:00Z',
     location: [117.75, 15.13],
     impact_level: 'critical',
@@ -38,7 +38,7 @@ export const CHINA_DISPUTE_EVENTS: EventDetail[] = [
   {
     id: 'cn-disp-senkaku',
     title: '钓鱼岛 · 中日争议',
-    source: 'seed/争端监测',
+    source: '公开态势整理 · 争端监测',
     timestamp: '2026-06-16T08:00:00Z',
     location: [123.47, 25.75],
     impact_level: 'critical',
@@ -48,7 +48,7 @@ export const CHINA_DISPUTE_EVENTS: EventDetail[] = [
   {
     id: 'cn-disp-iturup',
     title: '北方四岛（南千岛群岛）· 日俄争议',
-    source: 'seed/争端监测',
+    source: '公开态势整理 · 争端监测',
     timestamp: '2026-06-15T14:00:00Z',
     location: [147.0, 45.0],
     impact_level: 'medium',
@@ -58,7 +58,7 @@ export const CHINA_DISPUTE_EVENTS: EventDetail[] = [
   {
     id: 'cn-disp-johnson-reef',
     title: '赤瓜礁 · 中方控制（1988）',
-    source: 'seed/争端监测',
+    source: '公开态势整理 · 争端监测',
     timestamp: '2026-06-14T12:00:00Z',
     location: [114.28, 9.92],
     impact_level: 'high',
@@ -68,7 +68,7 @@ export const CHINA_DISPUTE_EVENTS: EventDetail[] = [
   {
     id: 'cn-disp-thitu',
     title: '中业岛 · 菲律宾占领',
-    source: 'seed/争端监测',
+    source: '公开态势整理 · 争端监测',
     timestamp: '2026-06-16T07:00:00Z',
     location: [114.29, 11.05],
     impact_level: 'high',
@@ -78,7 +78,7 @@ export const CHINA_DISPUTE_EVENTS: EventDetail[] = [
   {
     id: 'cn-disp-spratly-vn',
     title: '南威岛 · 越南占领',
-    source: 'seed/争端监测',
+    source: '公开态势整理 · 争端监测',
     timestamp: '2026-06-15T16:00:00Z',
     location: [111.92, 8.64],
     impact_level: 'high',
@@ -88,7 +88,7 @@ export const CHINA_DISPUTE_EVENTS: EventDetail[] = [
   {
     id: 'cn-disp-spratly-my',
     title: '弹丸礁（燕子礁）· 马来西亚',
-    source: 'seed/争端监测',
+    source: '公开态势整理 · 争端监测',
     timestamp: '2026-06-14T10:00:00Z',
     location: [113.85, 7.37],
     impact_level: 'medium',
@@ -98,7 +98,7 @@ export const CHINA_DISPUTE_EVENTS: EventDetail[] = [
   {
     id: 'cn-disp-ecs-platform',
     title: '东海平台 · 中日油气争议',
-    source: 'seed/争端监测',
+    source: '公开态势整理 · 争端监测',
     timestamp: '2026-06-16T12:00:00Z',
     location: [125.0, 29.5],
     impact_level: 'high',

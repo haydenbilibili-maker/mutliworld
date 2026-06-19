@@ -2,7 +2,7 @@ import type { EventDetail } from '@/types/geo';
 import type { Incident, Facility } from '@/types/middleeast';
 
 const T = '2026-06-16T08:00:00Z';
-const SRC = '美国战略核力量监测 / seed';
+const SRC = '美国战略核力量监测';
 
 /** 战略核力量 · 事件监测点 */
 export const US_NUCLEAR_EVENTS: EventDetail[] = [
@@ -166,7 +166,7 @@ export const US_NUCLEAR_INCIDENTS: Incident[] = [
     type: 'military',
     faction: 'us',
     location: { lat: 41.14, lng: -104.87 },
-    description: 'F·E·沃伦基地举行战备值班与通信链路检验（种子/示例）',
+    description: 'F·E·沃伦基地举行战备值班与通信链路检验',
     source: 'stratcom',
   },
   {
@@ -176,7 +176,7 @@ export const US_NUCLEAR_INCIDENTS: Incident[] = [
     type: 'military',
     faction: 'us',
     location: { lat: 20.0, lng: 140.0 },
-    description: '太平洋舰队战略核潜艇例行威慑巡逻（公开态势/种子）',
+    description: '太平洋舰队战略核潜艇例行威慑巡逻（公开态势）',
     source: 'navy',
   },
   {

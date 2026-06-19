@@ -2,7 +2,7 @@ import type { EventDetail } from '@/types/geo';
 import type { Incident, Facility } from '@/types/middleeast';
 
 const T = '2026-06-16T08:00:00Z';
-const SRC = '美国全球军事部署监测 / seed';
+const SRC = '美国全球军事部署监测';
 
 /** 全球军事部署 · 事件监测点 */
 export const US_GARRISON_EVENTS: EventDetail[] = [

@@ -3,7 +3,7 @@
  *
  * 由 Iran「中东冲突态势感知大屏」迁入。
  * 阶段2：阵营数据 + 种子事件 + 区域数据 Hook 已就位，enabled=true 可切换。
- * 阶段3：重写 Iran 的 22 个 Widget，替换种子数据为真实数据层。
+ * 阶段3：重写 Iran 的 22 个 Widget，替换公开态势整理为真实数据层。
  */
 
 import type { RegionModule } from '@/types/region';

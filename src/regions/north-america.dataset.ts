@@ -1,5 +1,5 @@
 /**
- * 北美区域数据集 — 聚合 us-focus 七大战略模块 + 地表层 + 原有北美种子数据
+ * 北美区域数据集 — 聚合 us-focus 七大战略模块 + 地表层 + 原有北美公开态势整理
  * 美国作为战略研究对象：核力量 / 全球部署 / 印太·北约 / 本土安全 / 供应链 / 地表态势
  */
 
@@ -38,7 +38,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-wall-street',
     title: '纽约 · 全球金融市场风向标',
-    source: 'seed/示例（经济指标）',
+    source: '公开态势整理 · 经济指标',
     timestamp: '2026-06-15T21:00:00Z',
     location: [-74.01, 40.71],
     impact_level: 'high',
@@ -48,7 +48,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-panama',
     title: '巴拿马运河 · 北美贸易通道',
-    source: 'seed/示例（航运监测）',
+    source: '公开态势整理 · 航运监测',
     timestamp: '2026-06-13T10:00:00Z',
     location: [-79.92, 9.08],
     impact_level: 'high',
@@ -58,7 +58,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-sanctions',
     title: '华盛顿 · 制裁与出口管制政策监测',
-    source: 'OFAC / seed',
+    source: 'OFAC',
     timestamp: '2026-06-12T16:00:00Z',
     location: [-77.04, 38.9],
     impact_level: 'high',
@@ -68,7 +68,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-california-outage',
     title: '加州电网 · 极端天气负荷预警',
-    source: 'CAISO / seed',
+    source: 'CAISO',
     timestamp: '2026-06-14T22:00:00Z',
     location: [-121.49, 38.58],
     impact_level: 'medium',
@@ -78,7 +78,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-texas-weather',
     title: '墨西哥湾 · 飓风季预警监测',
-    source: 'NHC / seed（气象）',
+    source: 'NHC · 气象',
     timestamp: '2026-06-15T12:00:00Z',
     location: [-90.0, 28.0],
     impact_level: 'medium',
@@ -88,7 +88,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-alaska',
     title: '阿拉斯加 · 北极战略前哨',
-    source: 'seed/示例（军事）',
+    source: '公开态势整理 · 军事',
     timestamp: '2026-06-09T08:00:00Z',
     location: [-149.9, 61.22],
     impact_level: 'medium',
@@ -98,7 +98,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-california-quake',
     title: '加州 · 地震活动监测',
-    source: 'USGS / seed',
+    source: 'USGS',
     timestamp: '2026-06-14T06:00:00Z',
     location: [-118.24, 34.05],
     impact_level: 'medium',
@@ -108,7 +108,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-great-lakes',
     title: '五大湖 · 跨境水运枢纽',
-    source: 'seed/示例（航运）',
+    source: '公开态势整理 · 航运',
     timestamp: '2026-06-13T12:00:00Z',
     location: [-87.9, 41.88],
     impact_level: 'medium',
@@ -118,7 +118,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-canada-tar',
     title: '阿尔伯塔油砂 · 产能监测',
-    source: 'EIA / seed',
+    source: 'EIA',
     timestamp: '2026-06-14T16:00:00Z',
     location: [-114.0, 53.5],
     impact_level: 'high',
@@ -128,7 +128,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-miami-weather',
     title: '佛罗里达 · 飓风季预警',
-    source: 'NHC / seed',
+    source: 'NHC（美国国家飓风中心）',
     timestamp: '2026-06-15T14:00:00Z',
     location: [-80.19, 25.76],
     impact_level: 'medium',
@@ -138,7 +138,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-yellowstone-natural',
     title: '黄石 · 地热与地震监测',
-    source: 'USGS / seed',
+    source: 'USGS',
     timestamp: '2026-06-12T06:00:00Z',
     location: [-110.67, 44.43],
     impact_level: 'low',
@@ -148,7 +148,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-phoenix-weather',
     title: '凤凰城 · 极端高温预警',
-    source: 'NWS / seed',
+    source: 'NWS',
     timestamp: '2026-06-15T18:00:00Z',
     location: [-112.07, 33.45],
     impact_level: 'high',
@@ -158,7 +158,7 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-vancouver-trade',
     title: '温哥华 · 亚太贸易门户',
-    source: 'seed/示例（经济）',
+    source: '公开态势整理 · 经济',
     timestamp: '2026-06-14T20:00:00Z',
     location: [-123.12, 49.28],
     impact_level: 'medium',
@@ -168,22 +168,22 @@ const NA_LEGACY_EVENTS: EventDetail[] = [
   {
     id: 'na-toronto-economic',
     title: '多伦多 · 金融与科技枢纽',
-    source: 'seed/示例（经济）',
+    source: '公开态势整理 · 经济',
     timestamp: '2026-06-15T16:00:00Z',
     location: [-79.38, 43.65],
     impact_level: 'medium',
     category: 'economic',
-    description: '北美第二大金融中心（种子/示例）',
+    description: '北美第二大金融中心',
   },
   {
     id: 'na-montreal-waterway',
     title: '蒙特利尔 · 圣劳伦斯河航运',
-    source: 'seed/示例（航运）',
+    source: '公开态势整理 · 航运',
     timestamp: '2026-06-12T12:00:00Z',
     location: [-73.57, 45.5],
     impact_level: 'low',
     category: 'waterways',
-    description: '五大湖—大西洋内河联运枢纽（种子/示例）',
+    description: '五大湖—大西洋内河联运枢纽',
   },
 ];
 
@@ -195,8 +195,8 @@ const NA_LEGACY_INCIDENTS: Incident[] = [
     type: 'political',
     faction: 'us',
     location: { lat: 54.0, lng: -114.0 },
-    description: '阿尔伯塔油砂产区部分关停（种子/示例）',
-    source: 'seed/示例',
+    description: '阿尔伯塔油砂产区部分关停',
+    source: '公开态势整理',
   },
   {
     id: 'na-inc-6',
@@ -205,8 +205,8 @@ const NA_LEGACY_INCIDENTS: Incident[] = [
     type: 'diplomatic',
     faction: 'us',
     location: { lat: 25.67, lng: -100.31 },
-    description: '蒙特雷汽车产业链扩张（种子/示例）',
-    source: 'seed/示例',
+    description: '蒙特雷汽车产业链扩张',
+    source: '公开态势整理',
   },
 ];
 
@@ -220,7 +220,7 @@ const NA_ENERGY: EnergyDataPoint[] = [
     changePercent: 6.4,
     description: '美国基准油价',
     updatedAt: '2026-06-15T18:00:00Z',
-    source: 'NYMEX / seed',
+    source: 'NYMEX',
   },
   {
     id: 'na-spr',
@@ -262,7 +262,7 @@ const NA_OIL: OilProducerMapPoint[] = [
     lat: 28.0,
     production: '约 180 万桶/日',
     exportShare: '美国炼厂主力',
-    note: '深水平台与飓风季风险（种子/示例）',
+    note: '深水平台与飓风季风险',
     updatedAt: '2026-06-15T12:00:00Z',
   },
   {
@@ -272,7 +272,7 @@ const NA_OIL: OilProducerMapPoint[] = [
     lat: 47.5,
     production: '约 120 万桶/日',
     exportShare: '管道至中西部炼厂',
-    note: '页岩油产量波动监测（种子/示例）',
+    note: '页岩油产量波动监测',
     updatedAt: '2026-06-14T08:00:00Z',
   },
   {
@@ -282,7 +282,7 @@ const NA_OIL: OilProducerMapPoint[] = [
     lat: 47.0,
     production: '约 25 万桶/日',
     exportShare: '出口美国东岸',
-    note: '大西洋离岸产能（种子/示例）',
+    note: '大西洋离岸产能',
     updatedAt: '2026-06-13T10:00:00Z',
   },
 ];

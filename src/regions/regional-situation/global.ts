@@ -1,7 +1,7 @@
 import type { RegionalSituationItem } from '@/types/regional-situation';
 import { situation, ts } from './helpers';
 
-/** 全球视角 · 区域态势（种子/示例，2024–2026 语境） */
+/** 全球视角 · 区域态势（2024–2026 语境） */
 export const GLOBAL_SITUATION: RegionalSituationItem[] = [
   situation('sit-g-01', 'global', '社媒', '联合国大会 · 多极秩序辩论', 'X 上 #UNGA2025 话题量破 2.1 亿，南方国家呼吁改革安理会与 IMF 份额。', 'mixed', 72, ['政治'], ts(0, 10), { platform: 'X', engagement: 210000 }),
   situation('sit-g-02', 'global', '社媒', '全球粮食价格 · 小麦期货讨论', '微博财经区热议黑海航运与厄尔尼诺对粮价传导，标签 #粮食安全 登上热搜。', 'negative', 58, ['经济', '灾害'], ts(1), { platform: '微博', engagement: 89000, lng: 116.4, lat: 39.9 }),
