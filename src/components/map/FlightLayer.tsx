@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * 实时航班图层 — 地表层（OpenSky ADS-B）
+ * 实时航班图层 — 地表层（社区 ADS-B: adsb.lol / adsb.fi，OpenSky 兜底）
  * Symbol 图层：按航向旋转的飞机图标，点击弹出详情
  */
 
@@ -310,7 +310,7 @@ export function FlightLayer() {
       const detail: EventDetail = {
         id: `flight-${p.icao24}`,
         title: p.callsign,
-        source: 'OpenSky ADS-B（近实时）',
+        source: '社区 ADS-B（adsb.lol，近实时）',
         timestamp: new Date().toISOString(),
         location: coords,
         impact_level: 'low',
