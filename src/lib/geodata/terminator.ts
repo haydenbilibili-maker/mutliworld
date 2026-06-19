@@ -35,3 +35,53 @@ export function buildTerminatorSegments(now = new Date()): [number, number][][] 
   if (current.length > 1) segments.push(current);
   return segments;
 }
+
+/** 太阳赤纬（度）与直射经度（度）：用于昼夜分界与太阳直射点 */
+function solarParams(now: Date) {
+  const start = Date.UTC(now.getUTCFullYear(), 0, 0);
+  const dayOfYear = Math.floor((now.getTime() - start) / 86_400_000);
+  const declDeg = 23.44 * Math.sin(((2 * Math.PI) / 365) * (dayOfYear - 81));
+  const utcHours = now.getUTCHours() + now.getUTCMinutes() / 60;
+  const rawLng = (12 - utcHours) * 15;
+  const subsolarLng = ((rawLng + 540) % 360) - 180; // 归一化到 [-180,180)
+  return { declDeg, subsolarLng, rawLng };
+}
+
+/** 太阳直射点（subsolar point）：当前正午所在经度 + 太阳赤纬 */
+export function subsolarPoint(now = new Date()): { lng: number; lat: number } {
+  const { declDeg, subsolarLng } = solarParams(now);
+  return { lng: subsolarLng, lat: declDeg };
+}
+
+/** 连续晨昏线（不分段，纬度钳制避免极区发散），用于构造夜半球多边形 */
+export function buildTerminatorLine(now = new Date()): [number, number][] {
+  const { declDeg, rawLng } = solarParams(now);
+  const decl = declDeg * DEG;
+  const tanDecl = Math.tan(decl) || 1e-6;
+  const pts: [number, number][] = [];
+  for (let lng = -180; lng <= 180; lng += 1) {
+    const h = (lng - rawLng) * DEG;
+    let lat = (Math.atan(-Math.cos(h) / tanDecl) * 180) / Math.PI;
+    lat = Math.max(-89.5, Math.min(89.5, lat));
+    pts.push([lng, lat]);
+  }
+  return pts;
+}
+
+/**
+ * 夜半球多边形（外环坐标）。decl>0（北半球夏季向）时夜半球在晨昏线以南，反之以北。
+ * 近春/秋分（|赤纬|很小）时晨昏线近竖直、多边形退化 → 返回 null，仅画分界线。
+ */
+export function buildNightPolygon(now = new Date()): [number, number][][] | null {
+  const { declDeg } = solarParams(now);
+  if (Math.abs(declDeg) < 0.8) return null;
+  const line = buildTerminatorLine(now);
+  const darkPole = declDeg >= 0 ? -90 : 90;
+  const ring: [number, number][] = [
+    ...line,
+    [180, darkPole],
+    [-180, darkPole],
+    [line[0][0], line[0][1]],
+  ];
+  return [ring];
+}

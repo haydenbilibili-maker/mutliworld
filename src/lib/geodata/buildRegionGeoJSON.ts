@@ -1071,9 +1071,10 @@ function cableRoutesToFeatures(
   return getSubmarineCablesForRegion(regionId).map((c) => cableRouteToFeature(c, generatedAt));
 }
 
-function daynightToFeatures(active: Set<LayerId>, generatedAt: string): GeoJSONFeature[] {
-  if (!active.has('daynight')) return [];
-  return buildDaynightFeatures(generatedAt);
+function daynightToFeatures(_active: Set<LayerId>, _generatedAt: string): GeoJSONFeature[] {
+  // 晨昏线/夜半球改由专用 DaynightLayer 组件渲染（含夜半球阴影+太阳直射点），此处不再重复输出。
+  void buildDaynightFeatures;
+  return [];
 }
 
 /** 全球海洋空间信息图层 → feature；公开地理事实，不做时间窗过滤 */
