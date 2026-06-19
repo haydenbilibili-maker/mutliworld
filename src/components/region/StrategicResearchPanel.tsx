@@ -49,8 +49,7 @@ export function StrategicResearchPanel({
   parentPanelId,
   relatedPanels,
 }: StrategicResearchPanelProps) {
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
   const setTier = useMapStore((s) => s.setTier);
   const activeTier = useMapStore((s) => s.activeTier);
   const setActiveLayers = useMapStore((s) => s.setActiveLayers);
@@ -69,14 +68,13 @@ export function StrategicResearchPanel({
       setTier('surface');
     }
     if (module.mapView) {
-      setCenter(module.mapView.center);
-      setZoom(module.mapView.zoom);
+      setViewport(module.mapView.center, module.mapView.zoom);
     }
     if (layerIds.length) {
       const merged = Array.from(new Set([...activeLayers, ...layerIds])) as LayerId[];
       setActiveLayers(merged);
     }
-  }, [module, setCenter, setZoom, setTier, activeTier, setActiveLayers, activeLayers]);
+  }, [module, setViewport, setTier, activeTier, setActiveLayers, activeLayers]);
 
   useEffect(() => {
     if (!open) return;

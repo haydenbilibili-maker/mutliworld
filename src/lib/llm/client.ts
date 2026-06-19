@@ -29,20 +29,28 @@ export interface ChatMessage {
 export async function chat(messages: ChatMessage[], maxTokens = 600): Promise<string | null> {
   if (!hasLlm()) return null;
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
     const res = await fetch(`${BASE}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${KEY}`,
       },
+      signal: controller.signal,
       body: JSON.stringify({
         model: MODEL,
         messages,
         temperature: 0.3,
         max_tokens: maxTokens,
       }),
-    });
-    if (!res.ok) return null;
+    }).finally(() => clearTimeout(timeout));
+    if (!res.ok) {
+      if (res.status === 401) console.error('[LLM] 认证失败：请检查 LLM_API_KEY');
+      else if (res.status === 429) console.error('[LLM] 请求频率超限（429）');
+      else console.error('[LLM] HTTP', res.status, res.statusText);
+      return null;
+    }
     const json = (await res.json()) as { choices?: { message?: { content?: string } }[] };
     const text = json.choices?.[0]?.message?.content?.trim();
     return text && text.length > 0 ? text : null;

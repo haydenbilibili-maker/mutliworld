@@ -43,7 +43,15 @@ export async function GET() {
     }
   } catch {
     // 实时源不可用（网络超时/API 错误），回退模拟
-    body = computePizzaIndex();
+    try {
+      body = computePizzaIndex();
+    } catch {
+      // 模拟计算也失败时返回错误，不给 HTTP 200 falsehood
+      return Response.json(
+        { error: '披萨指数实时源不可用且模拟计算失败', source: 'error', index: null },
+        { status: 502, headers: { 'Cache-Control': 'no-store' } },
+      );
+    }
     body.disclaimer = `${body.disclaimer}${FALLBACK_NOTE}`;
     ttl = SIM_CACHE_TTL_MS;
   }

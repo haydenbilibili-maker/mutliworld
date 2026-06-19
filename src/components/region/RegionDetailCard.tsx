@@ -46,8 +46,7 @@ export function RegionDetailCard({ className = '' }: RegionDetailCardProps) {
   const regionId = useRegionDetailStore((s) => s.regionId);
   const close = useRegionDetailStore((s) => s.close);
   const selectEvent = useMapStore((s) => s.selectEvent);
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
 
   const mod = regionId ? getRegion(regionId) : undefined;
 
@@ -65,8 +64,7 @@ export function RegionDetailCard({ className = '' }: RegionDetailCardProps) {
   const ds = mod.dataset;
 
   const flyTo = (e: EventDetail) => {
-    setCenter([e.location[0], e.location[1]]);
-    setZoom(5.5);
+    setViewport([e.location[0], e.location[1]], 5.5);
     selectEvent(e);
   };
 

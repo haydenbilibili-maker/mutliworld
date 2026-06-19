@@ -34,6 +34,8 @@ export function MapTooltip() {
     const [lng, lat] = tooltip.location;
     if (!Number.isFinite(lng) || !Number.isFinite(lat)) return;
 
+    const avatar = tooltip.avatarUrl;
+
     // 延迟显示，让脉冲标记先渲染
     const showTimer = setTimeout(() => setVisible(true), 180);
 
@@ -41,13 +43,31 @@ export function MapTooltip() {
     const el = document.createElement('div');
     el.className = 'map-tooltip';
     el.style.opacity = '0';
-    el.style.transition = 'opacity 0.25s ease-out';
+    el.style.transform = 'scale(0.85) translateY(-6px)';
+    el.style.transition = 'opacity 0.2s ease-out, transform 0.25s ease-out';
 
-    // 标题行
-    const titleRow = document.createElement('div');
-    titleRow.className = 'map-tooltip-title';
-    titleRow.textContent = tooltip.title;
-    el.appendChild(titleRow);
+    // 头部行：头像（可选）+ 标题
+    const header = document.createElement('div');
+    header.className = 'map-tooltip-header';
+
+    if (avatar) {
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'map-tooltip-avatar-wrap';
+      const img = document.createElement('img');
+      img.className = 'map-tooltip-avatar';
+      img.src = avatar;
+      img.alt = '';
+      img.onerror = function () { this.style.display = 'none'; };
+      imgWrap.appendChild(img);
+      header.appendChild(imgWrap);
+    }
+
+    const titleText = document.createElement('div');
+    titleText.className = 'map-tooltip-title';
+    titleText.textContent = tooltip.title;
+    header.appendChild(titleText);
+
+    el.appendChild(header);
 
     // 分类标签
     if (tooltip.category) {
@@ -112,15 +132,18 @@ export function MapTooltip() {
       .addTo(map);
     markerRef.current = marker;
 
-    // 淡入动画
-    requestAnimationFrame(() => { el.style.opacity = '1'; });
+    // 淡入 + 缩放入场
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'scale(1) translateY(0)';
+    });
 
     return () => {
       clearTimeout(showTimer);
       marker.remove();
       if (markerRef.current === marker) markerRef.current = null;
     };
-  }, [map, tooltip?.id, tooltip?.location?.[0], tooltip?.location?.[1], tooltip?.title, tooltip?.description, tooltip?.category, tooltip?.impact_level, selectEvent, focusOnMap]);
+  }, [map, tooltip?.id, tooltip?.location?.[0], tooltip?.location?.[1], tooltip?.avatarUrl, tooltip?.title, tooltip?.description, tooltip?.category, tooltip?.impact_level, selectEvent, focusOnMap]);
 
   return (
     <style jsx global>{`
@@ -136,13 +159,35 @@ export function MapTooltip() {
         pointer-events: auto;
         cursor: default;
       }
+      .map-tooltip-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+      .map-tooltip-avatar-wrap {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 1.5px solid #f59e0b;
+        overflow: hidden;
+        background: rgba(245, 158, 11, 0.15);
+      }
+      .map-tooltip-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+      }
       .map-tooltip-title {
         font-size: 12px;
         font-weight: 600;
         color: #e6edf3;
         line-height: 1.4;
-        margin-bottom: 4px;
         word-break: break-word;
+        flex: 1;
       }
       .map-tooltip-category {
         font-size: 10px;

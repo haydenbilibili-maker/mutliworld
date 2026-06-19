@@ -107,7 +107,12 @@ export function OrbitRings() {
     return () => {
       map.off('style.load', ensure);
       try {
-        if (map.getLayer(LAYER)) map.setLayoutProperty(LAYER, 'visibility', 'none');
+        if (map.getLayer(LAYER)) {
+          map.removeLayer(LAYER);
+        }
+        if (map.getSource(SOURCE)) {
+          map.removeSource(SOURCE);
+        }
       } catch {
         /* */
       }

@@ -26,24 +26,32 @@ function isRegionId(value: string | null): value is RegionId {
  * 返回指定区域的统一态势 feed（社媒 + 趋势 + 态势）。
  */
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const raw = searchParams.get('region');
-  const region: RegionId = isRegionId(raw) ? raw : 'global';
-  const items = getSituationForRegion(region);
+  try {
+    const { searchParams } = new URL(request.url);
+    const raw = searchParams.get('region');
+    const region: RegionId = isRegionId(raw) ? raw : 'global';
+    const items = getSituationForRegion(region);
 
-  return Response.json(
-    {
-      region,
-      items,
-      count: items.length,
-      typeCounts: getSituationTypeCounts(region),
-      countsByRegion: getSituationCountsByRegion(),
-      generatedAt: new Date().toISOString(),
-    },
-    {
-      headers: {
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+    return Response.json(
+      {
+        region,
+        items,
+        count: items.length,
+        typeCounts: getSituationTypeCounts(region),
+        countsByRegion: getSituationCountsByRegion(),
+        generatedAt: new Date().toISOString(),
       },
-    },
-  );
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        },
+      },
+    );
+  } catch (err) {
+    const message = err instanceof Error ? err.message : '获取区域态势失败';
+    return Response.json(
+      { error: message, region: 'global', items: [], count: 0, generatedAt: new Date().toISOString() },
+      { status: 500, headers: { 'Cache-Control': 'no-store' } },
+    );
+  }
 }

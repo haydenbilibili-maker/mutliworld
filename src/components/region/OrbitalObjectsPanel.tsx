@@ -26,8 +26,7 @@ export function OrbitalObjectsPanel({ className = '' }: OrbitalObjectsPanelProps
   const setOpen = useOrbitalPanelStore((s) => s.setOpen);
   const inSpace = useMapStore((s) => s.activeTier === 'space');
   const activeLayers = useMapStore((s) => s.activeLayers);
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
   const selectEvent = useMapStore((s) => s.selectEvent);
 
   const stationsOn = activeLayers.includes('space_stations');
@@ -60,8 +59,7 @@ export function OrbitalObjectsPanel({ className = '' }: OrbitalObjectsPanelProps
     velocityKmh: number,
     operator?: string | null,
   ) => {
-    setCenter([lng, lat]);
-    setZoom(3.5);
+    setViewport([lng, lat], 3.5);
     const ev: EventDetail = {
       id: `orbital-${noradId}`,
       title: name,

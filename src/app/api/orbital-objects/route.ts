@@ -31,37 +31,45 @@ function parseLimit(raw: string | null, fallback: number): number {
  * Response: GeoJSON FeatureCollection + meta
  */
 export async function GET(req: NextRequest) {
-  const { searchParams } = req.nextUrl;
-  const categories = parseCategories(searchParams.get('category'));
-  const limit = parseLimit(searchParams.get('limit'), 200);
+  try {
+    const { searchParams } = req.nextUrl;
+    const categories = parseCategories(searchParams.get('category'));
+    const limit = parseLimit(searchParams.get('limit'), 200);
 
-  const { objects, meta } = propagateAll({
-    categories,
-    limits: {
-      station: parseLimit(searchParams.get('limit_station'), 20),
-      satellite: categories.includes('satellite') ? limit : 0,
-      debris: parseLimit(searchParams.get('limit_debris'), 300),
-    },
-  });
-
-  const geojson = toOrbitalGeoJSON(objects);
-  const total = objects.length;
-
-  return Response.json(
-    {
-      ...geojson,
-      meta: {
-        generatedAt: new Date().toISOString(),
-        tleFetchedAt: meta.tleFetchedAt,
-        source: meta.source,
-        counts: meta.counts,
-        total,
+    const { objects, meta } = propagateAll({
+      categories,
+      limits: {
+        station: parseLimit(searchParams.get('limit_station'), 20),
+        satellite: categories.includes('satellite') ? limit : 0,
+        debris: parseLimit(searchParams.get('limit_debris'), 300),
       },
-    },
-    {
-      headers: {
-        'Cache-Control': 'public, s-maxage=15, stale-while-revalidate=45',
+    });
+
+    const geojson = toOrbitalGeoJSON(objects);
+    const total = objects.length;
+
+    return Response.json(
+      {
+        ...geojson,
+        meta: {
+          generatedAt: new Date().toISOString(),
+          tleFetchedAt: meta.tleFetchedAt,
+          source: meta.source,
+          counts: meta.counts,
+          total,
+        },
       },
-    },
-  );
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=15, stale-while-revalidate=45',
+        },
+      },
+    );
+  } catch (err) {
+    const message = err instanceof Error ? err.message : '轨道目标计算失败';
+    return Response.json(
+      { type: 'FeatureCollection', features: [], meta: { generatedAt: new Date().toISOString(), tleFetchedAt: null, source: '', counts: null, total: 0, error: message } },
+      { status: 500, headers: { 'Cache-Control': 'no-store' } },
+    );
+  }
 }

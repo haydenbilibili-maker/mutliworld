@@ -63,7 +63,10 @@ export function BathymetryLayer() {
       map.off('style.load', ensure);
       try {
         if (map.getLayer(LAYER)) {
-          map.setLayoutProperty(LAYER, 'visibility', 'none');
+          map.removeLayer(LAYER);
+        }
+        if (map.getSource(SOURCE)) {
+          map.removeSource(SOURCE);
         }
       } catch {
         /* */

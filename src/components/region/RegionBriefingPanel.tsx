@@ -7,7 +7,7 @@
  * 诚实合成、不编造（与 WM 的 LLM 简报不同，此处为确定性聚合）。区域无关，8 区域通用。
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMapStore } from '@/store/useMapStore';
 import { useRegionData } from '@/hooks/useRegionData';
 import { getRegion } from '@/regions';
@@ -57,6 +57,8 @@ export function RegionBriefingPanel({ className = '' }: RegionBriefingPanelProps
 
   const [aiState, setAiState] = useState<AiState>('idle');
   const [aiText, setAiText] = useState('');
+  const mountedRef = useRef(true);
+  useEffect(() => () => { mountedRef.current = false; }, []);
 
   const generateAi = useCallback(async () => {
     setAiState('loading');
@@ -76,12 +78,21 @@ export function RegionBriefingPanel({ className = '' }: RegionBriefingPanelProps
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ regionName: mod?.name, stats, recent: recentPayload, situation }),
       });
+      if (!mountedRef.current) return;
+      if (!res.ok) {
+        console.error('[Briefing] API returned', res.status, res.statusText);
+        setAiState('error');
+        return;
+      }
       const json = await res.json();
+      if (!mountedRef.current) return;
       if (json.degraded === 'no_key') { setAiState('no_key'); return; }
       if (!json.briefing) { setAiState('error'); return; }
       setAiText(json.briefing);
       setAiState('done');
-    } catch {
+    } catch (err) {
+      console.error('[Briefing] generate failed', err);
+      if (!mountedRef.current) return;
       setAiState('error');
     }
   }, [data, mod, stats]);

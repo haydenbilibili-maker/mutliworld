@@ -223,17 +223,21 @@ export function FireLayer() {
       selectEventRef.current(detail);
     };
 
-    const attach = () => {
-      map.on('click', CORE, onClick);
-      map.on('mouseenter', CORE, () => { map.getCanvas().style.cursor = 'pointer'; });
-      map.on('mouseleave', CORE, () => { map.getCanvas().style.cursor = ''; });
-    };
-    if (map.isStyleLoaded()) attach();
-    map.on('style.load', attach);
-    return () => {
-      map.off('style.load', attach);
-      map.off('click', CORE, onClick);
-    };
+	    const onEnter = () => { map.getCanvas().style.cursor = 'pointer'; };
+	    const onLeave = () => { map.getCanvas().style.cursor = ''; };
+	    const attach = () => {
+	      map.on('click', CORE, onClick);
+	      map.on('mouseenter', CORE, onEnter);
+	      map.on('mouseleave', CORE, onLeave);
+	    };
+	    if (map.isStyleLoaded()) attach();
+	    map.on('style.load', attach);
+	    return () => {
+	      map.off('style.load', attach);
+	      map.off('click', CORE, onClick);
+	      map.off('mouseenter', CORE, onEnter);
+	      map.off('mouseleave', CORE, onLeave);
+	    };
   }, [map, styleEpoch]);
 
   useEffect(() => () => { popupRef.current?.remove(); }, []);

@@ -36,8 +36,7 @@ export function SearchBox({ className = '', embedded = false }: SearchBoxProps) 
   const [active, setActive] = useState(0);
 
   const setRegion = useMapStore((s) => s.setRegion);
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
   const selectEvent = useMapStore((s) => s.selectEvent);
   const focusOnMap = useMapStore((s) => s.focusOnMap);
   const openDetail = useRegionDetailStore((s) => s.open);
@@ -60,8 +59,7 @@ export function SearchBox({ className = '', embedded = false }: SearchBoxProps) 
         setRegion(e.regionId);
         openDetail(e.regionId);
       } else {
-        setCenter([e.lng, e.lat]);
-        setZoom(e.zoom);
+        setViewport([e.lng, e.lat], e.zoom);
         const ev: EventDetail = {
           id: e.id,
           title: e.label,
@@ -77,7 +75,7 @@ export function SearchBox({ className = '', embedded = false }: SearchBoxProps) 
       }
       close();
     },
-    [setRegion, openDetail, setCenter, setZoom, selectEvent, close],
+    [setRegion, openDetail, setViewport, selectEvent, focusOnMap, close],
   );
 
   useEffect(() => {

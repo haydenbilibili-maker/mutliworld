@@ -55,7 +55,6 @@ export function PersonsPanel({ className = '' }: PersonsPanelProps) {
   /** 人物-地图联动：飞行至驻地坐标并选中（与地图人物层共享选中事件） */
   const locateOnMap = useCallback(
     (p: Person) => {
-      focusOnMap(null);
       setViewport([p.lng, p.lat], 5);
       // 解析实际头像 URL（与 PersonAvatar 相同的兜底链）
       const avatar = p.avatar ?? undefined;

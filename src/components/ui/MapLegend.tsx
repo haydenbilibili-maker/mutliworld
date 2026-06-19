@@ -59,8 +59,7 @@ export function MapLegend({ className = '' }: MapLegendProps) {
 
   const activeLayers = useMapStore((s) => s.activeLayers);
   const toggleLayer = useMapStore((s) => s.toggleLayer);
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
   const { data } = useGeodataContext();
 
   const groups = useMemo(() => getLegendGroups(activeLayers), [activeLayers]);
@@ -100,8 +99,7 @@ export function MapLegend({ className = '' }: MapLegendProps) {
       maxLat = Math.max(maxLat, lat);
     }
     const span = Math.max(maxLng - minLng, maxLat - minLat);
-    setCenter([(minLng + maxLng) / 2, (minLat + maxLat) / 2]);
-    setZoom(pts.length === 1 ? 5.6 : zoomForSpan(span));
+    setViewport([(minLng + maxLng) / 2, (minLat + maxLat) / 2], pts.length === 1 ? 5.6 : zoomForSpan(span));
     setOpen(false);
   };
 

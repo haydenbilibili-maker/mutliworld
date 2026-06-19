@@ -39,6 +39,11 @@ export function MapSelectionPulse() {
     const el = document.createElement('div');
     el.className = 'pulse-container';
 
+    // 地面投影（深色半透明圆环，确保在浅色地图背景下清晰可见）
+    const groundShadow = document.createElement('div');
+    groundShadow.className = 'pulse-ground-shadow';
+    el.appendChild(groundShadow);
+
     // 脉冲环 × 2（交错延时产生连续波纹效果）
     for (let i = 0; i < 2; i++) {
       const ring = document.createElement('div');
@@ -46,6 +51,11 @@ export function MapSelectionPulse() {
       ring.style.animationDelay = `${i * 1.1}s`;
       el.appendChild(ring);
     }
+
+    // 白色对比环（内圈白环，确保橙色在任何背景上都有对比）
+    const contrastRing = document.createElement('div');
+    contrastRing.className = 'pulse-contrast-ring';
+    el.appendChild(contrastRing);
 
     // 中心内容：头像或圆点
     const inner = document.createElement('div');
@@ -87,6 +97,21 @@ export function MapSelectionPulse() {
         pointer-events: none;
         width: 0;
         height: 0;
+        z-index: 100;
+      }
+
+      /* 地面投影 — 深色半透明背景层，确保在浅色/沙漠地图上脉冲可见 */
+      .pulse-ground-shadow {
+        position: absolute;
+        top: -16px;
+        left: -16px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.35);
+        filter: blur(4px);
+        animation: pulse-glow 1.5s ease-in-out infinite;
+        pointer-events: none;
       }
 
       .pulse-ring {
@@ -100,18 +125,36 @@ export function MapSelectionPulse() {
         background: transparent;
         animation: pulse-expand 2.2s ease-out infinite;
         pointer-events: none;
-        box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+        /* 多层级 shadow 确保在任何背景上都有对比 */
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.3),
+          0 0 8px rgba(245, 158, 11, 0.5),
+          0 0 20px rgba(245, 158, 11, 0.2);
       }
 
       @keyframes pulse-expand {
         0% {
-          transform: scale(0.6);
-          opacity: 0.8;
+          transform: scale(0.5);
+          opacity: 1;
         }
         100% {
-          transform: scale(2.8);
+          transform: scale(3.2);
           opacity: 0;
         }
+      }
+
+      /* 白色对比环 — 始终在橙色环背后确保边界清晰 */
+      .pulse-contrast-ring {
+        position: absolute;
+        top: -15px;
+        left: -15px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        background: transparent;
+        pointer-events: none;
+        animation: pulse-glow 1.5s ease-in-out infinite;
       }
 
       .pulse-inner {
@@ -121,23 +164,31 @@ export function MapSelectionPulse() {
         width: 20px;
         height: 20px;
         border-radius: 50%;
-        background: rgba(245, 158, 11, 0.85);
-        border: 2px solid #f59e0b;
+        background: rgba(245, 158, 11, 0.9);
+        border: 2.5px solid #fbbf24;
         display: flex;
         align-items: center;
         justify-content: center;
         animation: pulse-glow 1.5s ease-in-out infinite;
         overflow: hidden;
+        /* 双层 shadow 提升对比度 */
+        box-shadow:
+          0 0 0 2px rgba(0, 0, 0, 0.3),
+          0 0 12px rgba(245, 158, 11, 0.6);
       }
 
       @keyframes pulse-glow {
         0%, 100% {
-          box-shadow: 0 0 6px rgba(245, 158, 11, 0.5),
-                      0 0 12px rgba(245, 158, 11, 0.2);
+          box-shadow:
+            0 0 0 2px rgba(0, 0, 0, 0.3),
+            0 0 6px rgba(245, 158, 11, 0.5),
+            0 0 14px rgba(245, 158, 11, 0.25);
         }
         50% {
-          box-shadow: 0 0 10px rgba(245, 158, 11, 0.7),
-                      0 0 22px rgba(245, 158, 11, 0.35);
+          box-shadow:
+            0 0 0 2px rgba(0, 0, 0, 0.3),
+            0 0 12px rgba(245, 158, 11, 0.75),
+            0 0 28px rgba(245, 158, 11, 0.4);
         }
       }
 
@@ -151,22 +202,25 @@ export function MapSelectionPulse() {
 
       .pulse-label {
         position: absolute;
-        top: 18px;
+        top: 20px;
         left: 50%;
         transform: translateX(-50%);
         white-space: nowrap;
-        font-size: 11px;
-        font-weight: 600;
+        font-size: 12px;
+        font-weight: 700;
         color: #fff;
-        text-shadow: 0 1px 4px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6);
-        background: rgba(10, 14, 23, 0.75);
-        padding: 1px 8px;
+        text-shadow:
+          0 0 6px rgba(0,0,0,0.95),
+          0 0 12px rgba(0,0,0,0.7);
+        background: rgba(10, 14, 23, 0.85);
+        padding: 2px 10px;
         border-radius: 999px;
-        border: 1px solid rgba(245, 158, 11, 0.45);
-        max-width: 200px;
+        border: 1px solid rgba(245, 158, 11, 0.5);
+        max-width: 220px;
         overflow: hidden;
         text-overflow: ellipsis;
         pointer-events: none;
+        backdrop-filter: blur(6px);
       }
     `}</style>
   );

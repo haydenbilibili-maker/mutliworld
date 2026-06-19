@@ -31,16 +31,14 @@ function matchesModule(id: string, prefixes: readonly string[]): boolean {
 export function ChinaBriefingPanel({ className = '' }: ChinaBriefingPanelProps) {
   const region = useMapStore((s) => s.activeRegion);
   const selectEvent = useMapStore((s) => s.selectEvent);
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
   const activeLayers = useMapStore((s) => s.activeLayers);
   const toggleLayer = useMapStore((s) => s.toggleLayer);
   const data = useRegionData();
 
   const focusActions = {
     selectEvent,
-    setCenter,
-    setZoom,
+    setViewport,
     activeLayers,
     toggleLayer,
   };

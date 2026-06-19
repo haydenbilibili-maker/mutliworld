@@ -19,7 +19,7 @@ export async function GET() {
     const message = err instanceof Error ? err.message : '获取卫星数据失败';
     return Response.json(
       { error: message, items: [], generatedAt: new Date().toISOString(), count: 0 },
-      { status: 502 },
+      { status: 502, headers: { 'Cache-Control': 'no-store' } },
     );
   }
 }

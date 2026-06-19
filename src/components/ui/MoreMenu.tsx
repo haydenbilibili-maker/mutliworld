@@ -29,8 +29,7 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
   const togglePizza = usePizzaIndexPanelStore((s) => s.toggle);
   const inSpace = useMapStore((s) => s.activeTier === 'space');
   const inSurface = useMapStore((s) => s.activeTier === 'surface');
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
   const toggleLayer = useMapStore((s) => s.toggleLayer);
   const activeLayers = useMapStore((s) => s.activeLayers);
   const { total } = useLaunchLog('1y');
@@ -80,8 +79,7 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
     const next = !pizzaOpen;
     togglePizza();
     if (next) {
-      setCenter(PENTAGON_CENTER);
-      setZoom(PENTAGON_FLY_ZOOM);
+      setViewport(PENTAGON_CENTER, PENTAGON_FLY_ZOOM);
       if (!activeLayers.includes('pizza_index')) toggleLayer('pizza_index');
     }
     setMenuOpen(false);

@@ -70,16 +70,14 @@ interface PentagonPizzaIndexPanelProps {
 export function PentagonPizzaIndexPanel({ className = '' }: PentagonPizzaIndexPanelProps) {
   const open = usePizzaIndexPanelStore((s) => s.open);
   const setOpen = usePizzaIndexPanelStore((s) => s.setOpen);
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
+  const setViewport = useMapStore((s) => s.setViewport);
   const toggleLayer = useMapStore((s) => s.toggleLayer);
   const activeLayers = useMapStore((s) => s.activeLayers);
 
   const { data, isValidating, error } = usePentagonPizzaIndex(open);
 
   const flyToPentagon = () => {
-    setCenter(PENTAGON_CENTER);
-    setZoom(PENTAGON_FLY_ZOOM);
+    setViewport(PENTAGON_CENTER, PENTAGON_FLY_ZOOM);
     if (!activeLayers.includes('pizza_index')) toggleLayer('pizza_index');
   };
 

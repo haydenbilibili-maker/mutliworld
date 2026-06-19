@@ -91,10 +91,13 @@ export async function batchTranslate(
 }
 
 /**
- * 调用 LLM 进行一次批量翻译
+ * 调用 LLM 进行一次批量翻译（带 4 秒超时，防止阻塞 API 响应）
  */
 async function callTranslateBatch(texts: string[]): Promise<string[]> {
   const prompt = `请将以下英文文本逐条翻译为简体中文。每条结果占一行，不要编号，不要解释，直接输出翻译。如果原文已经是中文则保留不变。\n\n${texts.map((t, i) => `[${i + 1}] ${t}`).join('\n')}`;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 4000);
 
   const res = await fetch(`${BASE}/chat/completions`, {
     method: 'POST',
@@ -102,6 +105,7 @@ async function callTranslateBatch(texts: string[]): Promise<string[]> {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${KEY}`,
     },
+    signal: controller.signal,
     body: JSON.stringify({
       model: MODEL,
       messages: [
@@ -111,7 +115,7 @@ async function callTranslateBatch(texts: string[]): Promise<string[]> {
       temperature: 0.1,
       max_tokens: texts.length * 60,
     }),
-  });
+  }).finally(() => clearTimeout(timeout));
 
   if (!res.ok) throw new Error(`Translation API error: ${res.status}`);
   const json = (await res.json()) as { choices?: { message?: { content?: string } }[] };

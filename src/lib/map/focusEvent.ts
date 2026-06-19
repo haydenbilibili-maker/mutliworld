@@ -4,8 +4,7 @@ import { ensureBriefingLayers } from '@/lib/map/briefingLayers';
 
 interface FocusActions {
   selectEvent: (event: EventDetail | null) => void;
-  setCenter: (center: [number, number]) => void;
-  setZoom: (zoom: number) => void;
+  setViewport: (center: [number, number], zoom: number) => void;
   activeLayers: LayerId[];
   toggleLayer: (layerId: LayerId) => void;
 }
@@ -29,8 +28,7 @@ export function focusEventOnMap(
   actions.selectEvent(event);
   const [lng, lat] = event.location;
   if (!Number.isFinite(lng) || !Number.isFinite(lat)) return;
-  actions.setCenter([lng, lat]);
-  actions.setZoom(zoom);
+  actions.setViewport([lng, lat], zoom);
 }
 
 /** 简报模块标题点击：仅开启相关图层（不移动视野） */

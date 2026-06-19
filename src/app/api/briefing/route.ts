@@ -32,7 +32,12 @@ export async function POST(req: Request) {
     return Response.json({ degraded: 'no_key' }, { headers: { 'Cache-Control': 'no-store' } });
   }
   try {
-    const body = (await req.json()) as BriefingRequest;
+    let body: BriefingRequest;
+    try {
+      body = (await req.json()) as BriefingRequest;
+    } catch {
+      return Response.json({ degraded: 'error', error: '请求体格式错误' }, { status: 400, headers: { 'Cache-Control': 'no-store' } });
+    }
     const lines: string[] = [];
     lines.push(`区域：${body.regionName ?? '未指定'}`);
     if (body.stats) {

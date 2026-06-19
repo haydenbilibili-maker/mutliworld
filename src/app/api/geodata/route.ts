@@ -124,87 +124,107 @@ function loadCachedFeatures(
  * 并合并 scripts/fetch-geodata.js 抓取的实时缓存（如存在）
  */
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const regionId = parseRegion(searchParams.get('region'));
-  const timeRange = parseTimeRange(searchParams.get('timeRange'));
-  const layers = parseLayers(searchParams.get('layers'));
+  try {
+    const { searchParams } = new URL(request.url);
+    const regionId = parseRegion(searchParams.get('region'));
+    const timeRange = parseTimeRange(searchParams.get('timeRange'));
+    const layers = parseLayers(searchParams.get('layers'));
 
-  // 种子数据（本地 dataset）
-  const seedData = buildRegionGeoJSON({ regionId, timeRange, layers });
+    // 种子数据（本地 dataset）
+    const seedData = buildRegionGeoJSON({ regionId, timeRange, layers });
 
-  // 实时缓存（由 npm run data:fetch 生成，可选）
-  const cachedFeatures = loadCachedFeatures(regionId, layers, timeRange);
+    // 实时缓存（由 npm run data:fetch 生成，可选）
+    const cachedFeatures = loadCachedFeatures(regionId, layers, timeRange);
 
-  // 合并：缓存数据追加在种子数据之后，去重（按 id）
-  let features = seedData.features;
-  if (cachedFeatures.length > 0) {
-    const existingIds = new Set(features.map((f) => String(f.properties?.id ?? '')));
-    const newFeatures = cachedFeatures.filter(
-      (f) => !existingIds.has(String(f.properties?.id ?? '')),
-    );
-    features = [...features, ...newFeatures];
-  }
-
-  // 实时源：USGS 地震 + GDACS 灾害（'natural' 图层激活时并行拉取、按区域 bounds 过滤、合并去重）
-  let liveQuakeCount = 0;
-  let liveDisasterCount = 0;
-  if (layers.includes('natural')) {
-    const bounds = getRegion(regionId)?.bounds ?? null;
-    const [quakes, disasters] = await Promise.all([
-      fetchUsgsEarthquakes(bounds),
-      fetchGdacsDisasters(bounds),
-    ]);
-    const live = [...quakes, ...disasters];
-    if (live.length > 0) {
-      const ids = new Set(features.map((f) => String(f.properties?.id ?? '')));
-      const fresh = live.filter(
-        (q) => !ids.has(String(q.properties?.id ?? '')),
+    // 合并：缓存数据追加在种子数据之后，去重（按 id）
+    let features = seedData.features;
+    if (cachedFeatures.length > 0) {
+      const existingIds = new Set(features.map((f) => String(f.properties?.id ?? '')));
+      const newFeatures = cachedFeatures.filter(
+        (f) => !existingIds.has(String(f.properties?.id ?? '')),
       );
-      features = [...features, ...fresh];
-      liveQuakeCount = quakes.length;
-      liveDisasterCount = disasters.length;
+      features = [...features, ...newFeatures];
     }
-  }
 
-  // 实时源：USGS 地震按震源深度（洋底/地下层 'quake_depth' 图层）
-  if (layers.includes('quake_depth')) {
-    const bounds = getRegion(regionId)?.bounds ?? null;
-    const byDepth = await fetchUsgsByDepth(bounds);
-    if (byDepth.length > 0) {
-      const ids = new Set(features.map((f) => String(f.properties?.id ?? '')));
-      features = [...features, ...byDepth.filter((q) => !ids.has(String(q.properties?.id ?? '')))];
+    // 实时源：USGS 地震 + GDACS 灾害（'natural' 图层激活时并行拉取、按区域 bounds 过滤、合并去重）
+    let liveQuakeCount = 0;
+    let liveDisasterCount = 0;
+    if (layers.includes('natural')) {
+      const bounds = getRegion(regionId)?.bounds ?? null;
+      const [quakes, disasters] = await Promise.all([
+        fetchUsgsEarthquakes(bounds).catch(() => [] as GeoJSONFeature[]),
+        fetchGdacsDisasters(bounds).catch(() => [] as GeoJSONFeature[]),
+      ]);
+      const live = [...quakes, ...disasters];
+      if (live.length > 0) {
+        const ids = new Set(features.map((f) => String(f.properties?.id ?? '')));
+        const fresh = live.filter(
+          (q) => !ids.has(String(q.properties?.id ?? '')),
+        );
+        features = [...features, ...fresh];
+        liveQuakeCount = quakes.length;
+        liveDisasterCount = disasters.length;
+      }
     }
+
+    // 实时源：USGS 地震按震源深度（洋底/地下层 'quake_depth' 图层）
+    if (layers.includes('quake_depth')) {
+      const bounds = getRegion(regionId)?.bounds ?? null;
+      const byDepth = await fetchUsgsByDepth(bounds).catch(() => [] as GeoJSONFeature[]);
+      if (byDepth.length > 0) {
+        const ids = new Set(features.map((f) => String(f.properties?.id ?? '')));
+        features = [...features, ...byDepth.filter((q) => !ids.has(String(q.properties?.id ?? '')))];
+      }
+    }
+
+    const featureCount = features.length;
+    const featureTimes = features
+      .map((f) => parseIsoMs(String(f.properties?.timestamp ?? '')))
+      .filter((ms): ms is number => ms != null);
+    const latestEventAt =
+      featureTimes.length > 0 ? new Date(Math.max(...featureTimes)).toISOString() : null;
+
+    const cacheSec = Math.max(10, Math.floor(REFRESH_INTERVAL_MS[timeRange] / 1000));
+
+    return Response.json(
+      {
+        type: 'FeatureCollection',
+        features,
+        meta: {
+          region: regionId,
+          timeRange,
+          layers,
+          generatedAt: new Date().toISOString(),
+          featureCount,
+          latestEventAt,
+          cachedFeaturesCount: cachedFeatures.length,
+          liveQuakeCount,
+          liveDisasterCount,
+        },
+      },
+      {
+        headers: {
+          'Cache-Control': `public, s-maxage=${cacheSec}, stale-while-revalidate=${cacheSec * 2}`,
+        },
+      },
+    );
+  } catch (err) {
+    const message = err instanceof Error ? err.message : '地理数据获取失败';
+    return Response.json(
+      {
+        type: 'FeatureCollection',
+        features: [],
+        meta: {
+          error: message,
+          generatedAt: new Date().toISOString(),
+          featureCount: 0,
+          latestEventAt: null,
+        },
+      },
+      {
+        status: 502,
+        headers: { 'Cache-Control': 'no-store' },
+      },
+    );
   }
-
-  const featureCount = features.length;
-  const featureTimes = features
-    .map((f) => parseIsoMs(String(f.properties?.timestamp ?? '')))
-    .filter((ms): ms is number => ms != null);
-  const latestEventAt =
-    featureTimes.length > 0 ? new Date(Math.max(...featureTimes)).toISOString() : null;
-
-  const cacheSec = Math.max(10, Math.floor(REFRESH_INTERVAL_MS[timeRange] / 1000));
-
-  return Response.json(
-    {
-      type: 'FeatureCollection',
-      features,
-      meta: {
-        region: regionId,
-        timeRange,
-        layers,
-        generatedAt: new Date().toISOString(),
-        featureCount,
-        latestEventAt,
-        cachedFeaturesCount: cachedFeatures.length,
-        liveQuakeCount,
-        liveDisasterCount,
-      },
-    },
-    {
-      headers: {
-        'Cache-Control': `public, s-maxage=${cacheSec}, stale-while-revalidate=${cacheSec * 2}`,
-      },
-    },
-  );
 }

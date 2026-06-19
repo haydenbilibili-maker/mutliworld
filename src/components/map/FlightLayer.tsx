@@ -310,17 +310,17 @@ export function FlightLayer() {
       selectEventRef.current(detail);
     };
 
+    const onEnter = () => { map.getCanvas().style.cursor = 'pointer'; };
+    const onLeave = () => { map.getCanvas().style.cursor = ''; };
     const attach = () => {
       map.on('click', LAYER, onClick);
-      map.on('mouseenter', LAYER, () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
-      map.on('mouseleave', LAYER, () => {
-        map.getCanvas().style.cursor = '';
-      });
+      map.on('mouseenter', LAYER, onEnter);
+      map.on('mouseleave', LAYER, onLeave);
     };
     const detach = () => {
       map.off('click', LAYER, onClick);
+      map.off('mouseenter', LAYER, onEnter);
+      map.off('mouseleave', LAYER, onLeave);
     };
 
     if (map.isStyleLoaded()) attach();

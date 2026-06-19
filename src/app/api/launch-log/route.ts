@@ -25,27 +25,37 @@ function parseSince(value: string | null): number {
  * }
  */
 export async function GET(request: NextRequest) {
-  const { searchParams } = request.nextUrl;
-  const sinceMs = parseSince(searchParams.get('since'));
-  const limit = Math.min(
-    Math.max(Number.parseInt(searchParams.get('limit') ?? '200', 10) || 200, 1),
-    1000,
-  );
-  const offset = Math.max(Number.parseInt(searchParams.get('offset') ?? '0', 10) || 0, 0);
-  const sinceLabel = searchParams.get('since') ?? '1y';
+  try {
+    const { searchParams } = request.nextUrl;
+    const sinceMs = parseSince(searchParams.get('since'));
+    const limit = Math.min(
+      Math.max(Number.parseInt(searchParams.get('limit') ?? '200', 10) || 200, 1),
+      1000,
+    );
+    const offset = Math.max(Number.parseInt(searchParams.get('offset') ?? '0', 10) || 0, 0);
+    const sinceLabel = searchParams.get('since') ?? '1y';
 
-  const { launches, total } = queryLaunchRecords({ sinceMs, limit, offset });
-  const entries: LaunchLogEntry[] = launches.map(recordToLogEntry);
+    const { launches, total } = queryLaunchRecords({ sinceMs, limit, offset });
+    const entries: LaunchLogEntry[] = launches.map(recordToLogEntry);
 
-  return NextResponse.json({
-    launches: entries,
-    meta: {
-      total,
-      limit,
-      offset,
-      since: sinceLabel,
-      sinceMs,
-      generatedAt: new Date().toISOString(),
-    },
-  });
+    return NextResponse.json({
+      launches: entries,
+      meta: {
+        total,
+        limit,
+        offset,
+        since: sinceLabel,
+        sinceMs,
+        generatedAt: new Date().toISOString(),
+      },
+    }, {
+      headers: { 'Cache-Control': 'no-store' },
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : '获取发射记录失败';
+    return NextResponse.json(
+      { error: message, launches: [], meta: { total: 0, limit: 0, offset: 0, since: '', sinceMs: 0, generatedAt: new Date().toISOString() } },
+      { status: 500, headers: { 'Cache-Control': 'no-store' } },
+    );
+  }
 }
