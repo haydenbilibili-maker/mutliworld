@@ -12,13 +12,14 @@ import type { EventDetail, GeodataResponse, GeoJSONFeature, ImpactLevel } from '
 const POINT_SOURCE = 'geodata-api';
 const LINE_SOURCE = 'geodata-api-lines';
 const HALO_LAYER = 'geodata-api-halo';
+const CORE_LAYER = 'geodata-api-core';
 const SYMBOL_LAYER = 'geodata-api-symbols';
 /** 实线（海缆/管线等）— line-dasharray 不支持 feature 表达式，须分图层 */
 const LINE_LAYER_SOLID = 'geodata-api-lines-solid';
 const LINE_LAYER_DAYNIGHT = 'geodata-api-lines-daynight';
 const LINE_LAYER_PLANNED = 'geodata-api-lines-planned';
 const LINE_LAYERS = [LINE_LAYER_SOLID, LINE_LAYER_DAYNIGHT, LINE_LAYER_PLANNED] as const;
-const POINT_INTERACTIVE_LAYERS = [SYMBOL_LAYER, HALO_LAYER] as const;
+const POINT_INTERACTIVE_LAYERS = [SYMBOL_LAYER, CORE_LAYER, HALO_LAYER] as const;
 const LINE_INTERACTIVE_LAYERS = LINE_LAYERS;
 
 /** line-dasharray 仅支持 zoom 常量，不能按 feature 分支 */
@@ -374,11 +375,36 @@ export function GeodataLayer() {
               ],
             ],
             'circle-color': ['get', 'haloColor'],
-            'circle-opacity': ['*', ['get', 'opacity'], 0.3],
-            'circle-blur': 0.35,
+            'circle-opacity': ['*', ['get', 'opacity'], 0.28],
+            'circle-blur': 0.65,
           },
         });
 
+        // 量级实色圆点（WorldMonitor 风格主视觉）：按 impact 缩放 + 深色描边
+        ensureLayer(CORE_LAYER, {
+          id: CORE_LAYER,
+          type: 'circle',
+          source: POINT_SOURCE,
+          layout: { visibility: 'none' },
+          paint: {
+            'circle-radius': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              3,
+              ['match', ['get', 'impact'], 'critical', 6, 'high', 5, 'medium', 4, 'low', 3, 4],
+              8,
+              ['match', ['get', 'impact'], 'critical', 11, 'high', 9, 'medium', 7, 'low', 5.5, 7],
+            ],
+            'circle-color': ['get', 'haloColor'],
+            'circle-opacity': ['*', ['get', 'opacity'], 0.96],
+            'circle-stroke-width': 1.2,
+            'circle-stroke-color': '#0A0E17',
+            'circle-stroke-opacity': 0.85,
+          },
+        });
+
+        // emoji 仅在放大后浮现（缩放门控）：低 zoom 呈纯色量级点，高 zoom 显语义图标
         ensureLayer(SYMBOL_LAYER, {
           id: SYMBOL_LAYER,
           type: 'symbol',
@@ -390,10 +416,10 @@ export function GeodataLayer() {
               'interpolate',
               ['linear'],
               ['zoom'],
-              2,
-              0.42,
-              5,
-              0.55,
+              4.5,
+              0,
+              5.5,
+              0.5,
               10,
               0.72,
               14,
@@ -403,7 +429,15 @@ export function GeodataLayer() {
             'icon-ignore-placement': true,
           },
           paint: {
-            'icon-opacity': ['get', 'opacity'],
+            'icon-opacity': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              4.5,
+              0,
+              5.5,
+              ['get', 'opacity'],
+            ],
           },
         });
 
@@ -452,6 +486,7 @@ export function GeodataLayer() {
           map.off('mouseleave', layerId, onLeave);
         }
         if (map.getLayer(SYMBOL_LAYER)) map.removeLayer(SYMBOL_LAYER);
+        if (map.getLayer(CORE_LAYER)) map.removeLayer(CORE_LAYER);
         if (map.getLayer(HALO_LAYER)) map.removeLayer(HALO_LAYER);
         for (const layerId of LINE_LAYERS) {
           if (map.getLayer(layerId)) map.removeLayer(layerId);
@@ -494,6 +529,9 @@ export function GeodataLayer() {
         }
         if (map.getLayer(HALO_LAYER)) {
           map.setLayoutProperty(HALO_LAYER, 'visibility', showPoints ? 'visible' : 'none');
+        }
+        if (map.getLayer(CORE_LAYER)) {
+          map.setLayoutProperty(CORE_LAYER, 'visibility', showPoints ? 'visible' : 'none');
         }
         for (const layerId of LINE_LAYERS) {
           if (map.getLayer(layerId)) {
