@@ -29,18 +29,25 @@ export function MapControlBar({ className = '' }: MapControlBarProps) {
       role="toolbar"
       aria-label="地图控制"
     >
+      {/* 第一次序：地表（空间层） · 图层 · 视图 */}
       <TierSelector />
-      <Divider />
-      <TimelineSlider embedded />
       <Divider />
       <LayerToggle embedded />
       <Divider />
-      <SearchBox embedded />
-      <Divider />
       <ViewMenu embedded />
+
+      <Divider />
+
+      {/* 第二次序：时间 · 研究 · 搜索 */}
+      <TimelineSlider embedded />
       <Divider />
       <StrategicResearchMenu embedded />
       <Divider />
+      <SearchBox embedded />
+
+      <Divider />
+
+      {/* 更多：单列 */}
       <MoreMenu embedded />
     </div>
   );
