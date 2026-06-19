@@ -23,12 +23,12 @@ export interface ViewBounds {
   lomax: number;
 }
 
-/** 由 store 中心/缩放估算 bbox（zoom ≥ 4 时启用区域过滤） */
+/** 由 store 中心/缩放估算 bbox（zoom ≥ 3 时按视野拉取 ADS-B，提升密度） */
 export function boundsFromView(
   center: [number, number],
   zoom: number,
 ): ViewBounds | null {
-  if (zoom < 4) return null;
+  if (zoom < 3) return null;
   const lngSpan = 360 / Math.pow(2, zoom);
   const latSpan = lngSpan * 0.55;
   const [lng, lat] = center;

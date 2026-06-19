@@ -1,9 +1,19 @@
 import { NextRequest } from 'next/server';
 import type { BboxFilter } from '@/lib/flights/opensky';
 import { fetchOpenSkyFlights, flightsToGeoJSON } from '@/lib/flights/opensky';
+import { fetchAdsbFlights } from '@/lib/flights/adsb';
 
-const GLOBAL_LIMIT = 800;
-const BBOX_LIMIT = 2000;
+const GLOBAL_LIMIT = 1500;
+const BBOX_LIMIT = 3000;
+
+/** 主源 adsb.lol（免鉴权高密度），失败回退 OpenSky */
+async function fetchFlights(opts: { bbox: BboxFilter | null; limit: number }) {
+  try {
+    return await fetchAdsbFlights({ ...opts, airborneOnly: true });
+  } catch {
+    return await fetchOpenSkyFlights({ ...opts, airborneOnly: true });
+  }
+}
 const CACHE_TTL_MS = 45_000;
 
 interface CacheEntry {
@@ -78,7 +88,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const { flights, source, total, capped } = await fetchOpenSkyFlights({ bbox, limit, airborneOnly: true });
+    const { flights, source, total, capped } = await fetchFlights({ bbox, limit });
     const geojson = flightsToGeoJSON(flights);
     const body = {
       ...geojson,
