@@ -38,7 +38,8 @@ export type SearchKind =
   | 'facility'
   | 'infra'
   | 'nuclear'
-  | 'person';
+  | 'person'
+  | 'place';
 
 export interface SearchEntry {
   id: string;
@@ -63,6 +64,7 @@ const KIND_LABEL: Record<SearchKind, string> = {
   infra: '基础设施',
   nuclear: '核设施',
   person: '人物',
+  place: '地点',
 };
 
 let INDEX: SearchEntry[] | null = null;

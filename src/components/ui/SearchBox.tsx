@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
 import { useRegionDetailStore } from '@/store/useRegionDetailStore';
 import { searchEntries, type SearchEntry, type SearchKind } from '@/lib/search/searchIndex';
+import { geocodePlaces } from '@/lib/search/geocode';
 import type { EventDetail } from '@/types/geo';
 
 interface SearchBoxProps {
@@ -26,6 +27,7 @@ const KIND_DOT: Record<SearchKind, string> = {
   infra: 'bg-teal-400',
   nuclear: 'bg-purple-400',
   person: 'bg-violet-400',
+  place: 'bg-emerald-400',
 };
 
 export function SearchBox({ className = '', embedded = false }: SearchBoxProps) {
@@ -41,10 +43,42 @@ export function SearchBox({ className = '', embedded = false }: SearchBoxProps) 
   const focusOnMap = useMapStore((s) => s.focusOnMap);
   const openDetail = useRegionDetailStore((s) => s.open);
 
-  const results = useMemo(() => searchEntries(q, 12), [q]);
+  const localResults = useMemo(() => searchEntries(q, 8), [q]);
+  const [geoResults, setGeoResults] = useState<SearchEntry[]>([]);
+  const [geoLoading, setGeoLoading] = useState(false);
+
+  /** 合并本地结果与地理编码地点结果（本地优先），供键盘导航与渲染统一使用 */
+  const results = useMemo(() => {
+    const seen = new Set(localResults.map((e) => `${e.lng.toFixed(3)},${e.lat.toFixed(3)}`));
+    const geo = geoResults.filter((e) => !seen.has(`${e.lng.toFixed(3)},${e.lat.toFixed(3)}`));
+    return [...localResults, ...geo];
+  }, [localResults, geoResults]);
 
   useEffect(() => {
     setActive(0);
+  }, [q]);
+
+  /** 地名地理编码：防抖 450ms + 取消上一请求，结果并入「地点」 */
+  useEffect(() => {
+    const query = q.trim();
+    if (query.length < 2) {
+      setGeoResults([]);
+      setGeoLoading(false);
+      return;
+    }
+    const ctrl = new AbortController();
+    setGeoLoading(true);
+    const t = window.setTimeout(async () => {
+      const places = await geocodePlaces(query, ctrl.signal);
+      if (!ctrl.signal.aborted) {
+        setGeoResults(places);
+        setGeoLoading(false);
+      }
+    }, 450);
+    return () => {
+      ctrl.abort();
+      window.clearTimeout(t);
+    };
   }, [q]);
 
   const close = useCallback(() => {
@@ -202,7 +236,7 @@ export function SearchBox({ className = '', embedded = false }: SearchBoxProps) 
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 onKeyDown={onInputKeyDown}
-                placeholder="区域 / 事件 / 设施…"
+                placeholder="区域 / 事件 / 设施 / 地名…"
                 aria-label="搜索关键词"
                 className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-dashboard-neutral/45 focus:outline-none"
               />
@@ -231,39 +265,50 @@ export function SearchBox({ className = '', embedded = false }: SearchBoxProps) 
 
             {showResults && (
               <div className="max-h-[min(40vh,18rem)] overflow-y-auto p-1">
-                {results.length === 0 ? (
+                {results.length === 0 && !geoLoading ? (
                   <div className="px-3 py-2 text-xs text-dashboard-neutral/50">无匹配结果</div>
                 ) : (
                   results.map((e, i) => (
-                    <button
-                      key={e.id}
-                      type="button"
-                      onClick={() => choose(e)}
-                      onMouseEnter={() => setActive(i)}
-                      className={[
-                        'flex w-full items-start gap-2 rounded-md px-2.5 py-1.5 text-left transition-colors',
-                        i === active ? 'bg-dashboard-military/20' : 'hover:bg-white/5',
-                      ].join(' ')}
-                    >
-                      <span
-                        className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${KIND_DOT[e.kind]}`}
-                        aria-hidden
-                      />
-                      <span className="min-w-0">
-                        <span className="block truncate text-[12px] text-white">{e.label}</span>
-                        <span className="block truncate text-[10px] text-dashboard-neutral/50">
-                          {e.sublabel}
+                    <div key={e.id}>
+                      {e.kind === 'place' && results[i - 1]?.kind !== 'place' && (
+                        <div className="px-2.5 pb-0.5 pt-1.5 text-[10px] uppercase tracking-wide text-dashboard-neutral/40">
+                          📍 地点 · OpenStreetMap
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => choose(e)}
+                        onMouseEnter={() => setActive(i)}
+                        className={[
+                          'flex w-full items-start gap-2 rounded-md px-2.5 py-1.5 text-left transition-colors',
+                          i === active ? 'bg-dashboard-military/20' : 'hover:bg-white/5',
+                        ].join(' ')}
+                      >
+                        <span
+                          className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${KIND_DOT[e.kind]}`}
+                          aria-hidden
+                        />
+                        <span className="min-w-0">
+                          <span className="block truncate text-[12px] text-white">{e.label}</span>
+                          <span className="block truncate text-[10px] text-dashboard-neutral/50">
+                            {e.sublabel}
+                          </span>
                         </span>
-                      </span>
-                    </button>
+                      </button>
+                    </div>
                   ))
+                )}
+                {geoLoading && (
+                  <div className="px-3 py-1.5 text-[11px] text-dashboard-neutral/45">
+                    正在检索地点…
+                  </div>
                 )}
               </div>
             )}
 
             {!showResults && (
               <p className="px-3 py-2 text-[11px] text-dashboard-neutral/50">
-                输入关键词搜索 · Esc 关闭{embedded ? ' · 点击空白处关闭' : ''}
+                搜区域/事件/设施，或任意地名（如「白泉镇」「艾菲尔铁塔」）· Esc 关闭{embedded ? ' · 点击空白处关闭' : ''}
               </p>
             )}
           </motion.div>
