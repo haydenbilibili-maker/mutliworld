@@ -56,8 +56,10 @@ export default function BodyTracesAdminPage() {
 
   const exportJson = () => {
     const text = JSON.stringify(customSites, null, 2);
-    navigator.clipboard?.writeText(text).catch(() => {});
-    setMsg(`已复制 ${customSites.length} 条 JSON 到剪贴板`);
+    navigator.clipboard?.writeText(text).then(
+      () => setMsg(`已复制 ${customSites.length} 条 JSON 到剪贴板`),
+      (e) => { console.error('[BodyTraces] 复制到剪贴板失败', e); setMsg('复制失败，请手动复制'); },
+    );
   };
 
   const importJson = () => {

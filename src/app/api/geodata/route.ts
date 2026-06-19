@@ -61,6 +61,14 @@ const ALL_LAYERS: LayerId[] = [
   'monsoon',
   'atmospheric_circulation',
   'deep_exploration',
+  'coral_reefs',
+  'marine_life',
+  'undersea_wonders',
+  'migration_routes',
+  'world_heritage',
+  'china_heritage',
+  'pizza_index',
+  'persons',
 ];
 
 function parseRegion(value: string | null): RegionId {
@@ -152,8 +160,8 @@ export async function GET(request: NextRequest) {
     if (layers.includes('natural')) {
       const bounds = getRegion(regionId)?.bounds ?? null;
       const [quakes, disasters] = await Promise.all([
-        fetchUsgsEarthquakes(bounds).catch(() => [] as GeoJSONFeature[]),
-        fetchGdacsDisasters(bounds).catch(() => [] as GeoJSONFeature[]),
+        fetchUsgsEarthquakes(bounds).catch((e) => { console.error('[Geodata] USGS earthquakes fetch failed', e); return [] as GeoJSONFeature[]; }),
+        fetchGdacsDisasters(bounds).catch((e) => { console.error('[Geodata] GDACS disasters fetch failed', e); return [] as GeoJSONFeature[]; }),
       ]);
       const live = [...quakes, ...disasters];
       if (live.length > 0) {
@@ -170,7 +178,7 @@ export async function GET(request: NextRequest) {
     // 实时源：USGS 地震按震源深度（洋底/地下层 'quake_depth' 图层）
     if (layers.includes('quake_depth')) {
       const bounds = getRegion(regionId)?.bounds ?? null;
-      const byDepth = await fetchUsgsByDepth(bounds).catch(() => [] as GeoJSONFeature[]);
+      const byDepth = await fetchUsgsByDepth(bounds).catch((e) => { console.error('[Geodata] USGS depth fetch failed', e); return [] as GeoJSONFeature[]; });
       if (byDepth.length > 0) {
         const ids = new Set(features.map((f) => String(f.properties?.id ?? '')));
         features = [...features, ...byDepth.filter((q) => !ids.has(String(q.properties?.id ?? '')))];
