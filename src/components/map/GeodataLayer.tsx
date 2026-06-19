@@ -429,9 +429,15 @@ export function GeodataLayer() {
 
     if (map.isStyleLoaded()) setup();
     map.on('style.load', setup);
+    // 兜底重试：底图 setStyle（如切换洋底/宇宙层）后样式异步加载，
+    // styleEpoch 触发的重建可能赶在样式就绪前被跳过，且 style.load 已触发过不会再响应 → 图层永不重建。
+    const tSetup1 = window.setTimeout(setup, 120);
+    const tSetup2 = window.setTimeout(setup, 500);
 
     return () => {
       map.off('style.load', setup);
+      window.clearTimeout(tSetup1);
+      window.clearTimeout(tSetup2);
       popupRef.current?.remove();
       popupRef.current = null;
       try {
@@ -501,9 +507,14 @@ export function GeodataLayer() {
 
     if (map.isStyleLoaded()) apply();
     map.on('style.load', apply);
+    // 兜底重试：与 setup 同理，确保底图切换后数据/显隐被重新应用
+    const tApply1 = window.setTimeout(apply, 160);
+    const tApply2 = window.setTimeout(apply, 560);
 
     return () => {
       map.off('style.load', apply);
+      window.clearTimeout(tApply1);
+      window.clearTimeout(tApply2);
     };
   }, [map, data, styleEpoch]);
 
