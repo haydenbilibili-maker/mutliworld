@@ -99,6 +99,8 @@ export type LayerId =
   | 'monsoon'
   | 'atmospheric_circulation'
   | 'deep_exploration'
+  | 'world_heritage'
+  | 'china_heritage'
   | 'pizza_index'
   | 'persons';
 

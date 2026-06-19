@@ -63,6 +63,8 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   monsoon: '季风气候带',
   atmospheric_circulation: '大气环流',
   deep_exploration: '深海探索',
+  world_heritage: '世界遗产',
+  china_heritage: '国保单位',
   pizza_index: '披萨指数',
   persons: '人物分布',
 };
@@ -91,4 +93,6 @@ export const LAYER_HINTS: Partial<Record<LayerId, string>> = {
   marine_life: '标志性海洋物种聚集与保护区（鲸/鲨/海龟/磷虾等）· 示意分布',
   undersea_wonders: '海底奇观地貌（蓝洞/海沟/热液喷口/海底火山等）· 公开资料',
   migration_routes: '海洋动物洄游/迁徙通道（灰鲸/座头鲸/棱皮龟/金枪鱼等）· 示意路径',
+  world_heritage: 'UNESCO 世界遗产名录（文化/自然/双重）· 全球精选真实子集',
+  china_heritage: '中国全国重点文物保护单位（国保）· 精选真实子集',
 };

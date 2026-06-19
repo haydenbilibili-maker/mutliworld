@@ -38,6 +38,10 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
     ids: ['natural', 'weather', 'climate', 'daynight'],
   },
   {
+    title: '文化与遗产',
+    ids: ['world_heritage', 'china_heritage'],
+  },
+  {
     title: '海洋与洋底空间',
     ids: [
       'cables',
@@ -103,6 +107,8 @@ const ALWAYS_ON: LayerId[] = [
   'monsoon',
   'atmospheric_circulation',
   'deep_exploration',
+  'world_heritage',
+  'china_heritage',
   'hydrocarbon_reserves',
   'ground_stations',
   'sat_constellations',
