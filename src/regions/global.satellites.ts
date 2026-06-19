@@ -37,4 +37,18 @@ export const GLOBAL_SATELLITES: SatellitePoint[] = [
   { id: 'sat-bds-g1', name: '北斗 GEO（约 80°E）', operator: '中国北斗', kind: 'navigation', lng: 80.0, note: '北斗地球静止轨道卫星', impact: 'high' },
   { id: 'sat-bds-g2', name: '北斗 GEO（约 110.5°E）', operator: '中国北斗', kind: 'navigation', lng: 110.5, note: '北斗地球静止轨道卫星', impact: 'high' },
   { id: 'sat-bds-g3', name: '北斗 GEO（约 140°E）', operator: '中国北斗', kind: 'navigation', lng: 140.0, note: '北斗地球静止轨道卫星', impact: 'high' },
+  // 通信 GEO 增密（各运营商公开定点经度）
+  { id: 'sat-ses-astra19', name: 'ASTRA 19.2°E', operator: 'SES', kind: 'comms', lng: 19.2, note: '欧洲主力直播电视卫星位', impact: 'high' },
+  { id: 'sat-eutelsat-hb13', name: 'HOTBIRD 13°E', operator: 'Eutelsat', kind: 'comms', lng: 13.0, note: '欧洲—中东广播卫星热点位', impact: 'high' },
+  { id: 'sat-nilesat-7w', name: 'Nilesat/Eutelsat 7°W', operator: 'Nilesat', kind: 'comms', lng: -7.0, note: '中东—北非广播卫星位', impact: 'medium' },
+  { id: 'sat-arabsat-badr26', name: 'Badr 26°E', operator: 'Arabsat', kind: 'comms', lng: 26.0, note: '阿拉伯世界广播卫星位', impact: 'medium' },
+  { id: 'sat-yamal-90e', name: 'Yamal 90°E', operator: 'Gazprom SC', kind: 'comms', lng: 90.0, note: '俄罗斯—欧亚通信卫星位', impact: 'medium' },
+  { id: 'sat-chinasat-125e', name: '中星 125°E', operator: '中国卫通', kind: 'comms', lng: 125.0, note: '中国广播与数据通信卫星位', impact: 'high' },
+  { id: 'sat-apstar-134e', name: 'Apstar 134°E', operator: 'APT', kind: 'comms', lng: 134.0, note: '亚太通信与广播卫星位', impact: 'medium' },
+  { id: 'sat-optus-160e', name: 'Optus 160°E', operator: 'Optus', kind: 'comms', lng: 160.0, note: '澳大利亚—大洋洲通信卫星位', impact: 'medium' },
+  { id: 'sat-echostar-95w', name: 'EchoStar/Jupiter 95°W', operator: 'Hughes', kind: 'comms', lng: -95.0, note: '北美宽带卫星位', impact: 'medium' },
+  { id: 'sat-inmarsat-meas-64e', name: 'Inmarsat-4 中东亚洲 64°E', operator: 'Inmarsat', kind: 'comms', lng: 64.0, note: '海事/航空卫星通信（印度洋）', impact: 'medium' },
+  // 气象 / 导航 GEO 增密
+  { id: 'sat-fy2h-79e', name: '风云二号 H 79°E', operator: '中国气象局', kind: 'weather', lng: 79.0, note: '"一带一路"区域静止气象覆盖', impact: 'medium' },
+  { id: 'sat-navic-32e', name: 'NavIC GEO 32.5°E', operator: 'ISRO', kind: 'navigation', lng: 32.5, note: '印度区域导航地球静止星', impact: 'medium' },
 ];
