@@ -11,6 +11,12 @@ import {
   type OceanPoint,
   type OceanCurrentRoute,
 } from '@/regions/global.ocean';
+import {
+  GLOBAL_CORAL_REEFS,
+  GLOBAL_MARINE_LIFE,
+  GLOBAL_UNDERSEA_WONDERS,
+  GLOBAL_MIGRATION_ROUTES,
+} from '@/regions/global.ocean-life';
 import { LAYER_HALO_COLORS, resolveMarkerStyle } from '@/lib/geodata/markerStyle';
 
 function inBounds(
@@ -65,6 +71,22 @@ export function getMonsoonForRegion(regionId: RegionId): OceanPoint[] {
 
 export function getAtmosphericCirculationForRegion(regionId: RegionId): OceanPoint[] {
   return filterPointsForRegion(GLOBAL_ATMOSPHERIC_CIRCULATION, regionId);
+}
+
+export function getCoralReefsForRegion(regionId: RegionId): OceanPoint[] {
+  return filterPointsForRegion(GLOBAL_CORAL_REEFS, regionId);
+}
+
+export function getMarineLifeForRegion(regionId: RegionId): OceanPoint[] {
+  return filterPointsForRegion(GLOBAL_MARINE_LIFE, regionId);
+}
+
+export function getUnderseaWondersForRegion(regionId: RegionId): OceanPoint[] {
+  return filterPointsForRegion(GLOBAL_UNDERSEA_WONDERS, regionId);
+}
+
+export function getMigrationRoutesForRegion(regionId: RegionId): OceanCurrentRoute[] {
+  return filterCurrentsForRegion(GLOBAL_MIGRATION_ROUTES, regionId);
 }
 
 export function getDeepExplorationForRegion(regionId: RegionId): OceanPoint[] {
@@ -129,11 +151,17 @@ function oceanPointToFeature(p: OceanPoint, generatedAt: string): GeoJSONFeature
   };
 }
 
-export function oceanCurrentToFeature(route: OceanCurrentRoute, generatedAt: string): GeoJSONFeature {
+export function oceanCurrentToFeature(
+  route: OceanCurrentRoute,
+  generatedAt: string,
+  layerId: LayerId = 'ocean_currents',
+  lineColor = '#06b6d4',
+): GeoJSONFeature {
   const [lng, lat] = lineMidpoint(route.coordinates);
-  const marker = resolveMarkerStyle({ layerId: 'ocean_currents', impact: route.impact });
-  const direction = route.direction ? `流向：${route.direction} · ` : '';
-  const description = `${direction}${route.note}`;
+  const marker = resolveMarkerStyle({ layerId, impact: route.impact });
+  const isMigration = layerId === 'migration_routes';
+  const prefix = route.direction ? `${isMigration ? '方向' : '流向'}：${route.direction} · ` : '';
+  const description = `${prefix}${route.note}`;
 
   return {
     type: 'Feature',
@@ -141,18 +169,18 @@ export function oceanCurrentToFeature(route: OceanCurrentRoute, generatedAt: str
     properties: {
       id: route.id,
       title: route.name,
-      source: '公开海洋学资料',
+      source: isMigration ? '公开海洋生态资料' : '公开海洋学资料',
       timestamp: generatedAt,
       impact: route.impact,
-      category: 'ocean_currents',
-      layerId: 'ocean_currents',
+      category: layerId,
+      layerId,
       geomType: 'line',
       description,
       opacity: 0.78,
       direction: route.direction ?? '',
       lng,
       lat,
-      lineColor: '#06b6d4',
+      lineColor,
       ...marker,
     },
   };
@@ -175,6 +203,18 @@ export function oceanCurrentsToFeatures(
 ): GeoJSONFeature[] {
   if (!active.has('ocean_currents')) return [];
   return routes.map((r) => oceanCurrentToFeature(r, generatedAt));
+}
+
+/** 通用洋底线要素（迁徙路线等）：按给定 layerId 渲染 */
+export function oceanRoutesToFeatures(
+  routes: OceanCurrentRoute[],
+  layerId: LayerId,
+  active: Set<LayerId>,
+  generatedAt: string,
+  lineColor = '#34d399',
+): GeoJSONFeature[] {
+  if (!active.has(layerId)) return [];
+  return routes.map((r) => oceanCurrentToFeature(r, generatedAt, layerId, lineColor));
 }
 
 export const OCEAN_LAYER_HALO_COLOR = LAYER_HALO_COLORS.ocean_currents ?? '#06b6d4';

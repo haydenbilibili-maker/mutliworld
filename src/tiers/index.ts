@@ -36,8 +36,8 @@ const subsurfaceTier: TierModule = {
   icon: '🌊',
   tagline: '海缆 · 海底管线 · 震源深度 · 海床 · 深海争夺',
   // Phase 1 完整：海缆/海底管线/深海采矿/板块断层/震源深度/断缆事件 + 复用 maritime/natural（海床栅格随本层自动铺开）
-  layers: ['cables', 'pipelines', 'deep_sea_mining', 'tectonics', 'quake_depth', 'cable_incidents', 'maritime', 'natural', 'marine_archaeology', 'ocean_currents', 'fisheries', 'monsoon', 'atmospheric_circulation', 'deep_exploration'],
-  defaultLayers: ['cables', 'deep_sea_mining', 'tectonics', 'cable_incidents', 'ocean_currents'],
+  layers: ['cables', 'pipelines', 'deep_sea_mining', 'tectonics', 'quake_depth', 'cable_incidents', 'maritime', 'natural', 'marine_archaeology', 'ocean_currents', 'fisheries', 'coral_reefs', 'marine_life', 'undersea_wonders', 'migration_routes', 'monsoon', 'atmospheric_circulation', 'deep_exploration'],
+  defaultLayers: ['cables', 'deep_sea_mining', 'coral_reefs', 'undersea_wonders', 'cable_incidents'],
   basemap: 'geographic',
   renderMode: 'depth',
   altitudeBand: [-11, 0], // 海平面至马里亚纳海沟约 -11km
@@ -83,6 +83,10 @@ export const LAYER_TIER: Partial<Record<LayerId, SpatialTier>> = {
   marine_archaeology: 'subsurface',
   ocean_currents: 'subsurface',
   fisheries: 'subsurface',
+  coral_reefs: 'subsurface',
+  marine_life: 'subsurface',
+  undersea_wonders: 'subsurface',
+  migration_routes: 'subsurface',
   monsoon: 'subsurface',
   atmospheric_circulation: 'subsurface',
   deep_exploration: 'subsurface',

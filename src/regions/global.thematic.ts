@@ -184,6 +184,27 @@ export const GLOBAL_PIPELINES: PipelineRoute[] = [
     note: '尼日尔三角洲至 Bonny 岛液化终端',
     impact: 'medium',
   },
+  {
+    id: 'pipe-nordstream2',
+    name: '北溪二号（Nord Stream 2）海底气管',
+    coordinates: [[28.0, 60.0], [22.0, 59.0], [18.0, 56.5], [15.0, 55.2], [12.5, 54.6]],
+    note: '俄罗斯经波罗的海海底至德国，2022 年遭爆炸破坏后未投运',
+    impact: 'critical',
+  },
+  {
+    id: 'pipe-turkstream',
+    name: '土耳其溪（TurkStream）海底气管',
+    coordinates: [[37.8, 44.8], [35.0, 43.5], [32.0, 42.5], [28.5, 41.5]],
+    note: '俄罗斯经黑海海底至土耳其与南欧',
+    impact: 'high',
+  },
+  {
+    id: 'pipe-baltic-pipe',
+    name: '波罗的海管道（Baltic Pipe）',
+    coordinates: [[6.5, 56.5], [10.0, 55.6], [14.0, 55.3], [16.0, 54.6]],
+    note: '挪威经丹麦至波兰海底气管，2022 年通气',
+    impact: 'high',
+  },
   ...DENSIFY_PIPELINES,
 ];
 

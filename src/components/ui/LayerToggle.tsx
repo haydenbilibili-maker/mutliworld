@@ -27,7 +27,7 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   },
   {
     title: '基础设施与通道',
-    ids: ['aviation', 'maritime', 'cables', 'pipelines', 'waterways', 'outages'],
+    ids: ['aviation', 'maritime', 'waterways', 'outages'],
   },
   {
     title: '经济',
@@ -40,11 +40,17 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   {
     title: '海洋与洋底空间',
     ids: [
+      'cables',
+      'pipelines',
       'deep_sea_mining',
       'tectonics',
       'cable_incidents',
       'quake_depth',
       'marine_archaeology',
+      'coral_reefs',
+      'marine_life',
+      'undersea_wonders',
+      'migration_routes',
       'ocean_currents',
       'fisheries',
       'monsoon',
@@ -90,6 +96,10 @@ const ALWAYS_ON: LayerId[] = [
   'marine_archaeology',
   'ocean_currents',
   'fisheries',
+  'coral_reefs',
+  'marine_life',
+  'undersea_wonders',
+  'migration_routes',
   'monsoon',
   'atmospheric_circulation',
   'deep_exploration',
