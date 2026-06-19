@@ -31,6 +31,7 @@ import { BasemapController } from '@/components/map/BasemapController';
 import { GeodataLayer } from '@/components/map/GeodataLayer';
 import { DaynightLayer } from '@/components/map/DaynightLayer';
 import { LivePulseLayer } from '@/components/map/LivePulseLayer';
+import { FlightTrailLayer } from '@/components/map/FlightTrailLayer';
 import { BathymetryLayer } from '@/components/map/BathymetryLayer';
 import { GlobeController } from '@/components/map/GlobeController';
 import { CosmicGlobeAnimator } from '@/components/map/CosmicGlobeAnimator';
@@ -349,6 +350,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <LiveWeatherLayer />
             <ConflictZonesLayer />
             <OrbitalObjectsLayer />
+            <FlightTrailLayer />
             <FlightLayer />
             <FireLayer />
             <MaritimeLayer />
