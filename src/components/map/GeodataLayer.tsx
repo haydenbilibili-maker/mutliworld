@@ -14,6 +14,10 @@ const LINE_SOURCE = 'geodata-api-lines';
 const HALO_LAYER = 'geodata-api-halo';
 const CORE_LAYER = 'geodata-api-core';
 const SYMBOL_LAYER = 'geodata-api-symbols';
+const CLUSTER_CIRCLE = 'geodata-api-cluster';
+const CLUSTER_COUNT = 'geodata-api-cluster-count';
+/** 未聚合单点过滤（避免簇点进入单点图层） */
+const NOT_CLUSTER: maplibregl.FilterSpecification = ['!', ['has', 'point_count']];
 /** 实线（海缆/管线等）— line-dasharray 不支持 feature 表达式，须分图层 */
 const LINE_LAYER_SOLID = 'geodata-api-lines-solid';
 const LINE_LAYER_DAYNIGHT = 'geodata-api-lines-daynight';
@@ -265,6 +269,10 @@ export function GeodataLayer() {
           map.addSource(POINT_SOURCE, {
             type: 'geojson',
             data: { type: 'FeatureCollection', features: [] },
+            // 低 zoom 聚合为带计数的簇（WorldMonitor 数字圆），zoom>6 拆为单点
+            cluster: true,
+            clusterMaxZoom: 6,
+            clusterRadius: 46,
           });
         }
 
@@ -339,6 +347,7 @@ export function GeodataLayer() {
           id: HALO_LAYER,
           type: 'circle',
           source: POINT_SOURCE,
+          filter: NOT_CLUSTER,
           layout: { visibility: 'none' },
           paint: {
             'circle-radius': [
@@ -385,6 +394,7 @@ export function GeodataLayer() {
           id: CORE_LAYER,
           type: 'circle',
           source: POINT_SOURCE,
+          filter: NOT_CLUSTER,
           layout: { visibility: 'none' },
           paint: {
             'circle-radius': [
@@ -409,6 +419,7 @@ export function GeodataLayer() {
           id: SYMBOL_LAYER,
           type: 'symbol',
           source: POINT_SOURCE,
+          filter: NOT_CLUSTER,
           layout: {
             visibility: 'none',
             'icon-image': ['get', 'markerImageId'],
@@ -441,10 +452,63 @@ export function GeodataLayer() {
           },
         });
 
+        // 聚合簇圆（WorldMonitor 数字圆）：按簇内点数缩放/配色
+        ensureLayer(CLUSTER_CIRCLE, {
+          id: CLUSTER_CIRCLE,
+          type: 'circle',
+          source: POINT_SOURCE,
+          filter: ['has', 'point_count'],
+          layout: { visibility: 'none' },
+          paint: {
+            'circle-radius': ['step', ['get', 'point_count'], 13, 10, 17, 30, 22, 100, 28],
+            'circle-color': ['step', ['get', 'point_count'], '#0ea5e9', 10, '#22d3ee', 30, '#f59e0b', 100, '#ef4444'],
+            'circle-opacity': 0.82,
+            'circle-stroke-width': 1.5,
+            'circle-stroke-color': '#0A0E17',
+            'circle-blur': 0.15,
+          },
+        });
+        ensureLayer(CLUSTER_COUNT, {
+          id: CLUSTER_COUNT,
+          type: 'symbol',
+          source: POINT_SOURCE,
+          filter: ['has', 'point_count'],
+          layout: {
+            visibility: 'none',
+            'text-field': ['get', 'point_count_abbreviated'],
+            'text-size': ['step', ['get', 'point_count'], 11, 30, 13, 100, 15],
+            'text-allow-overlap': true,
+            'text-ignore-placement': true,
+          },
+          paint: {
+            'text-color': '#ffffff',
+            'text-halo-color': '#0A0E17',
+            'text-halo-width': 1.2,
+          },
+        });
+
         type MapWithListeners = maplibregl.Map & { __geodataListeners?: boolean };
         const mapWithListeners = map as MapWithListeners;
         if (mapWithListeners.__geodataListeners) return;
         mapWithListeners.__geodataListeners = true;
+
+        // 点击簇：展开到合适缩放
+        const onClusterClick = (
+          e: maplibregl.MapMouseEvent & { features?: maplibregl.MapGeoJSONFeature[] },
+        ) => {
+          const f = e.features?.[0];
+          const clusterId = f?.properties?.cluster_id;
+          const src = map.getSource(POINT_SOURCE) as maplibregl.GeoJSONSource | undefined;
+          if (clusterId == null || !src) return;
+          const coords = (f!.geometry as unknown as { coordinates: [number, number] }).coordinates;
+          src
+            .getClusterExpansionZoom(clusterId)
+            .then((z) => map.easeTo({ center: coords, zoom: Math.min((z ?? map.getZoom()) + 0.3, 9) }))
+            .catch(() => {});
+        };
+        map.on('click', CLUSTER_CIRCLE, onClusterClick);
+        map.on('mouseenter', CLUSTER_CIRCLE, onEnter);
+        map.on('mouseleave', CLUSTER_CIRCLE, onLeave);
 
         for (const layerId of POINT_INTERACTIVE_LAYERS) {
           map.on('click', layerId, onPointClick);
@@ -485,6 +549,8 @@ export function GeodataLayer() {
           map.off('mouseenter', layerId, onEnter);
           map.off('mouseleave', layerId, onLeave);
         }
+        if (map.getLayer(CLUSTER_COUNT)) map.removeLayer(CLUSTER_COUNT);
+        if (map.getLayer(CLUSTER_CIRCLE)) map.removeLayer(CLUSTER_CIRCLE);
         if (map.getLayer(SYMBOL_LAYER)) map.removeLayer(SYMBOL_LAYER);
         if (map.getLayer(CORE_LAYER)) map.removeLayer(CORE_LAYER);
         if (map.getLayer(HALO_LAYER)) map.removeLayer(HALO_LAYER);
@@ -532,6 +598,12 @@ export function GeodataLayer() {
         }
         if (map.getLayer(CORE_LAYER)) {
           map.setLayoutProperty(CORE_LAYER, 'visibility', showPoints ? 'visible' : 'none');
+        }
+        if (map.getLayer(CLUSTER_CIRCLE)) {
+          map.setLayoutProperty(CLUSTER_CIRCLE, 'visibility', showPoints ? 'visible' : 'none');
+        }
+        if (map.getLayer(CLUSTER_COUNT)) {
+          map.setLayoutProperty(CLUSTER_COUNT, 'visibility', showPoints ? 'visible' : 'none');
         }
         for (const layerId of LINE_LAYERS) {
           if (map.getLayer(layerId)) {
