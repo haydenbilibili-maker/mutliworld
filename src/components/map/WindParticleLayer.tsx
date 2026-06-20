@@ -138,14 +138,12 @@ function ParticleFlowLayer({ cfg }: { cfg: FlowConfig }) {
     // 按 zoom 自适应密度：放大时减少（视口小）、缩小时铺满
     const count = Math.round(cfg.baseCount * (map.getZoom() < 2 ? 1.1 : map.getZoom() > 5 ? 0.6 : 0.85));
     const particles: P[] = [];
+    // 屏幕空间播种：在画布像素内随机取点反投影为经纬度，确保任意缩放/投影(含球面)下铺满整个视口
     const spawn = (p: P) => {
-      const b = map.getBounds();
-      let w = b.getWest(), e = b.getEast();
-      const s = Math.max(b.getSouth(), -78), n = Math.min(b.getNorth(), 78);
-      if (e < w) e += 360;
-      p.lng = w + Math.random() * (e - w);
-      p.lat = s + Math.random() * (n - s);
-      if (p.lng > 180) p.lng -= 360;
+      const x = Math.random() * cssW;
+      const y = Math.random() * cssH;
+      const ll = map.unproject([x, y]);
+      p.lng = ll.lng; p.lat = ll.lat;
       p.age = Math.floor(Math.random() * MAX_AGE);
     };
     for (let i = 0; i < count; i++) { const p: P = { lng: 0, lat: 0, age: 0 }; spawn(p); particles.push(p); }

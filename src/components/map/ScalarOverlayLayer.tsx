@@ -14,7 +14,8 @@ import useSWR from 'swr';
 import type maplibregl from 'maplibre-gl';
 import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
-import { useNearEarthStore, SCALAR_META, type ScalarRamp } from '@/store/useNearEarthStore';
+import { useNearEarthStore, SCALAR_META } from '@/store/useNearEarthStore';
+import { colorFor } from '@/lib/map/scalarColor';
 
 const SOURCE = 'near-earth-scalar';
 const LAYER = 'near-earth-scalar-raster';
@@ -30,33 +31,6 @@ interface ScalarGrid {
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-type RGB = [number, number, number];
-function lerpStops(stops: [number, number[]][], x: number): RGB {
-  const t = Math.max(0, Math.min(1, x));
-  for (let i = 1; i < stops.length; i++) {
-    if (t <= stops[i][0]) {
-      const [t0, c0] = stops[i - 1], [t1, c1] = stops[i];
-      const f = (t - t0) / (t1 - t0 || 1);
-      return [0, 1, 2].map((k) => Math.round(c0[k] + (c1[k] - c0[k]) * f)) as RGB;
-    }
-  }
-  return stops[stops.length - 1][1] as RGB;
-}
-
-/** 各色阶：t∈[0,1] → rgb（diverging 的 t=0.5 为中性） */
-function colorFor(ramp: ScalarRamp, t: number): RGB {
-  switch (ramp) {
-    case 'aqi':
-      return lerpStops([[0, [56, 189, 248]], [0.25, [74, 222, 128]], [0.5, [250, 204, 21]], [0.7, [251, 146, 60]], [0.85, [248, 113, 113]], [1, [167, 71, 254]]], t);
-    case 'thermal':
-      return lerpStops([[0, [37, 99, 235]], [0.3, [56, 189, 248]], [0.5, [45, 212, 191]], [0.65, [250, 204, 21]], [0.82, [251, 146, 60]], [1, [239, 68, 68]]], t);
-    case 'diverging': // 海温偏差：冷蓝 ← 白 → 暖红
-      return lerpStops([[0, [37, 99, 235]], [0.3, [96, 165, 250]], [0.5, [241, 245, 249]], [0.7, [248, 113, 113]], [1, [185, 28, 28]]], t);
-    case 'baa':
-      return lerpStops([[0, [203, 213, 225]], [0.25, [250, 204, 21]], [0.5, [251, 146, 60]], [0.75, [239, 68, 68]], [1, [127, 29, 29]]], t);
-  }
-}
-
 export function ScalarOverlayLayer() {
   const map = useMapContext();
   const styleEpoch = useMapStyleEpoch();
@@ -65,6 +39,7 @@ export function ScalarOverlayLayer() {
   const enabled = useMapStore(
     (s) => s.activeBody === 'earth' && s.activeTier === 'near_earth' && s.activeLayers.includes(meta.layer),
   );
+  const scheme = useMapStore((s) => s.overlayScheme);
   const { data } = useSWR<ScalarGrid>(enabled ? meta.endpoint : null, fetcher, {
     refreshInterval: 60 * 60 * 1000,
     revalidateOnFocus: false,
@@ -78,7 +53,7 @@ export function ScalarOverlayLayer() {
     const { min, max, ramp } = meta;
     const span = max - min || 1;
 
-    // 双线性插值；任一角缺测(NaN)则该点判为缺测
+    // 双线性插值，缺测(NaN)容忍：按可用角加权，仅四角全缺才判缺测（海陆边界平滑、不再块状）
     const sample = (lng: number, lat: number): number => {
       const yf = Math.max(0, Math.min(ny - 1, (lat - lat0) / dLat));
       let xf = (lng - lon0) / dLon; xf = ((xf % nx) + nx) % nx;
@@ -86,10 +61,17 @@ export function ScalarOverlayLayer() {
       const i1 = (i0 + 1) % nx, j1 = Math.min(j0 + 1, ny - 1);
       const fx = xf - i0, fy = yf - j0;
       const at = (j: number, i: number) => j * nx + i;
-      const a = field[at(j0, i0)], b = field[at(j0, i1)], c = field[at(j1, i0)], d = field[at(j1, i1)];
-      if (![a, b, c, d].every(Number.isFinite)) return NaN;
-      const lp = (x: number, y: number, t: number) => x + (y - x) * t;
-      return lp(lp(a, b, fx), lp(c, d, fx), fy);
+      const corners: [number, number][] = [
+        [field[at(j0, i0)], (1 - fx) * (1 - fy)],
+        [field[at(j0, i1)], fx * (1 - fy)],
+        [field[at(j1, i0)], (1 - fx) * fy],
+        [field[at(j1, i1)], fx * fy],
+      ];
+      let acc = 0, wsum = 0;
+      for (const [val, w] of corners) {
+        if (Number.isFinite(val) && w > 0) { acc += val * w; wsum += w; }
+      }
+      return wsum > 0 ? acc / wsum : NaN;
     };
 
     const cv = document.createElement('canvas');
@@ -107,7 +89,7 @@ export function ScalarOverlayLayer() {
           img.data[o + 3] = 0; continue; // 缺测 / BAA 无预警 → 透明
         }
         const t = (val - min) / span;
-        const [r, g, b] = colorFor(ramp, t);
+        const [r, g, b] = colorFor(ramp, scheme, t);
         // 强度→不透明度：diverging 取偏离中性的程度，其余取归一值
         const intensity = ramp === 'diverging' ? Math.min(1, Math.abs(t - 0.5) * 2) : Math.max(0, Math.min(1, t));
         img.data[o] = r; img.data[o + 1] = g; img.data[o + 2] = b;
@@ -152,7 +134,7 @@ export function ScalarOverlayLayer() {
         /* */
       }
     };
-  }, [map, enabled, data, param, meta, styleEpoch]);
+  }, [map, enabled, data, param, meta, scheme, styleEpoch]);
 
   return null;
 }

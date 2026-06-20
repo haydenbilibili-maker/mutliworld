@@ -6,6 +6,7 @@ import type { EventDetail } from '@/types/geo';
 import type { RegionId } from '@/types/region';
 import type { SpatialTier } from '@/types/tier';
 import type { BasemapMode } from '@/types/tier';
+import type { ColorScheme } from '@/lib/map/scalarColor';
 import type { CelestialBody } from '@/types/body';
 import { getRegion, DEFAULT_REGION_ID } from '@/regions';
 import { getTier, DEFAULT_TIER_ID } from '@/tiers';
@@ -38,6 +39,8 @@ export interface MapState {
   globeViewResetNonce: number;
   /** 视图：近地流场粒子动画速度倍率（0.3慢/0.55中/0.9快），由空间层 view 配置级联派生 */
   flowSpeed: number;
+  /** 视图：近地标量叠加配色方案（经典/Turbo/Viridis/灰度） */
+  overlayScheme: ColorScheme;
   center: [number, number];
   zoom: number;
   view: ViewPreset;
@@ -66,6 +69,8 @@ export interface MapActions {
   setGlobeMotionSpeed: (speed: GlobeMotionSpeed) => void;
   /** 设置近地流场动画速度倍率（视图模块控件） */
   setFlowSpeed: (speed: number) => void;
+  /** 设置近地标量叠加配色方案 */
+  setOverlayScheme: (scheme: ColorScheme) => void;
   /** 一键回正：正视图居中中国，bearing/pitch 归零 */
   resetGlobeToChinaView: () => void;
   setCenter: (center: [number, number]) => void;
@@ -93,6 +98,7 @@ const initialState: MapState = {
   globeMotionSpeed: 1,
   globeViewResetNonce: 0,
   flowSpeed: 0.5,
+  overlayScheme: 'default',
   center: [105, 28],
   zoom: 3.5,
   view: 'global',
@@ -179,6 +185,7 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setGlobeMotionPlaying: (globeMotionPlaying) => set({ globeMotionPlaying }),
   setGlobeMotionSpeed: (globeMotionSpeed) => set({ globeMotionSpeed }),
   setFlowSpeed: (flowSpeed) => set({ flowSpeed }),
+  setOverlayScheme: (overlayScheme) => set({ overlayScheme }),
   resetGlobeToChinaView: () =>
     set((s) => ({
       center: CHINA_GLOBE_VIEW.center,

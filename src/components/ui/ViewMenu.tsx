@@ -14,6 +14,7 @@ import { usePanelStore } from '@/store/usePanelStore';
 import type { PanelId } from '@/store/usePanelStore';
 import { BasemapModeSwitcher } from '@/components/ui/BasemapModeSwitcher';
 import { CosmicMotionControls } from '@/components/ui/CosmicMotionControls';
+import { COLOR_SCHEME_LABELS, type ColorScheme } from '@/lib/map/scalarColor';
 
 interface ViewMenuProps {
   className?: string;
@@ -74,6 +75,8 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
   const setFlowSpeed = useMapStore((s) => s.setFlowSpeed);
   const activeLayers = useMapStore((s) => s.activeLayers);
   const toggleLayer = useMapStore((s) => s.toggleLayer);
+  const overlayScheme = useMapStore((s) => s.overlayScheme);
+  const setOverlayScheme = useMapStore((s) => s.setOverlayScheme);
   const profileActive = useProfileStore((s) => s.active);
   const setProfileActive = useProfileStore((s) => s.setActive);
 
@@ -139,14 +142,34 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
             className="absolute bottom-full right-0 z-50 mb-1.5 w-[13rem] overflow-hidden rounded-lg border border-dashboard-neutral/25 bg-dashboard-bg/95 p-1.5 shadow-xl backdrop-blur-md"
           >
             <BasemapModeSwitcher className="mb-1" />
-            <MenuToggle
-              active={globeActive}
-              onClick={() => setGlobe(!globe)}
-              icon="🌐"
-              tone="sky"
-              label={globeActive ? '3D 地球：开' : '3D 地球：平面'}
-              title="3D 地球（球面投影）· 宇宙层自动球面"
-            />
+            {/* 投影选择器（maplibre 引擎实际支持：平面墨卡托 / 球面正射） */}
+            <div className="px-2.5 py-1.5">
+              <div className="mb-1 flex items-center gap-2 text-[12px] text-dashboard-neutral">
+                <span aria-hidden className="shrink-0 text-sm">🌐</span>
+                <span className="font-medium">投影</span>
+              </div>
+              <div className="flex gap-1" role="group" aria-label="地图投影">
+                {([['平面', false], ['球面', true]] as const).map(([label, g]) => {
+                  const on = globeActive === g;
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => setGlobe(g)}
+                      aria-pressed={on}
+                      disabled={activeTier === 'space' && !g}
+                      className={[
+                        'flex-1 rounded-md px-2 py-1 text-[12px] transition-colors disabled:opacity-40',
+                        on ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
+                      ].join(' ')}
+                    >
+                      {label === '平面' ? '平面墨卡托' : '球面正射'}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="mt-1 text-[9px] leading-snug text-dashboard-neutral/40">更多投影(等距方位/温克尔三重等)需 D3 自绘引擎，可按需扩展</p>
+            </div>
             {activeTier === 'near_earth' && (
               <div className="px-2.5 py-1.5">
                 <div className="mb-1 flex items-center gap-2 text-[12px] text-dashboard-neutral">
@@ -195,6 +218,33 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
                         ].join(' ')}
                       >
                         {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            {activeTier === 'near_earth' && (
+              <div className="px-2.5 py-1.5">
+                <div className="mb-1 flex items-center gap-2 text-[12px] text-dashboard-neutral">
+                  <span aria-hidden className="shrink-0 text-sm">🎨</span>
+                  <span className="font-medium">叠加配色</span>
+                </div>
+                <div className="grid grid-cols-2 gap-1" role="group" aria-label="叠加配色方案">
+                  {(Object.keys(COLOR_SCHEME_LABELS) as ColorScheme[]).map((s) => {
+                    const on = overlayScheme === s;
+                    return (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setOverlayScheme(s)}
+                        aria-pressed={on}
+                        className={[
+                          'rounded-md px-2 py-1 text-[12px] transition-colors',
+                          on ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
+                        ].join(' ')}
+                      >
+                        {COLOR_SCHEME_LABELS[s]}
                       </button>
                     );
                   })}

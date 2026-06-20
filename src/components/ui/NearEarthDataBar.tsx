@@ -11,18 +11,12 @@ import useSWR from 'swr';
 import type maplibregl from 'maplibre-gl';
 import { useMapContext } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
-import { useNearEarthStore, SCALAR_META, type ScalarRamp } from '@/store/useNearEarthStore';
+import { useNearEarthStore, SCALAR_META } from '@/store/useNearEarthStore';
+import { rampCss } from '@/lib/map/scalarColor';
 
 interface VecGrid { nx: number; ny: number; lon0: number; lat0: number; dLon: number; dLat: number; u: number[]; v: number[]; }
 interface ScalarGrid { nx: number; ny: number; lon0: number; lat0: number; dLon: number; dLat: number; params: Record<string, number[]>; }
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
-
-const RAMP_CSS: Record<ScalarRamp, string> = {
-  aqi: 'linear-gradient(90deg,#38bdf8,#4ade80,#facc15,#fb923c,#f87171,#a747fe)',
-  thermal: 'linear-gradient(90deg,#2563eb,#38bdf8,#2dd4bf,#facc15,#fb923c,#ef4444)',
-  diverging: 'linear-gradient(90deg,#2563eb,#60a5fa,#f1f5f9,#f87171,#b91c1c)',
-  baa: 'linear-gradient(90deg,#cbd5e1,#facc15,#fb923c,#ef4444,#7f1d1d)',
-};
 
 function bilerp(field: number[], g: { nx: number; ny: number; lon0: number; lat0: number; dLon: number; dLat: number }, lng: number, lat: number): number | null {
   const yf = (lat - g.lat0) / g.dLat;
@@ -41,6 +35,7 @@ export function NearEarthDataBar() {
   const inNearEarth = useMapStore((s) => s.activeBody === 'earth' && s.activeTier === 'near_earth');
   const layers = useMapStore((s) => s.activeLayers);
   const param = useNearEarthStore((s) => s.param);
+  const scheme = useMapStore((s) => s.overlayScheme);
   const meta = SCALAR_META[param];
 
   const windOn = inNearEarth && layers.includes('wind_flow');
@@ -84,7 +79,7 @@ export function NearEarthDataBar() {
           <div className="flex min-w-[14rem] flex-1 items-center gap-2">
             <span className="shrink-0 text-[12px] font-medium text-white">{meta.label}</span>
             <div className="flex flex-1 flex-col gap-0.5">
-              <div className="h-2.5 w-full rounded" style={{ background: RAMP_CSS[meta.ramp] }} />
+              <div className="h-2.5 w-full rounded" style={{ background: rampCss(meta.ramp, scheme) }} />
               <div className="flex justify-between text-[9px] text-dashboard-neutral/55">
                 <span>{meta.min}</span>
                 <span>{meta.unit}</span>
