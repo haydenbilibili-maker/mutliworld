@@ -1,18 +1,24 @@
 /**
  * LLM 客户端 — DeepSeek Chat Completions（默认）+ 兼容 OpenAI（可切换）
  *
- * 环境变量（服务端）：
- *  - LLM_API_KEY   ：API 密钥（必填，缺失则功能优雅降级）
- *                     DeepSeek 密钥可在 platform.deepseek.com/api_keys 获取
- *  - LLM_BASE_URL  ：兼容端点基址，默认 https://api.deepseek.com
+ * 环境变量（服务端 · 在 Vercel → Project → Settings → Environment Variables 配置）：
+ *  - API 密钥（必填，缺失则简报优雅降级为规则化）。按以下顺序取首个非空：
+ *      LLM_API_KEY → DEEPSEEK_API_KEY → OPENAI_API_KEY
+ *      DeepSeek 密钥可在 platform.deepseek.com/api_keys 获取，直接设 DEEPSEEK_API_KEY 即可。
+ *  - LLM_BASE_URL  ：兼容端点基址，默认 https://api.deepseek.com（DeepSeek）
  *                     切回 OpenAI 设为 https://api.openai.com/v1
- *  - LLM_MODEL     ：模型名，默认 deepseek-chat
- *                     切回 GPT 设为 gpt-4o-mini 等
+ *  - LLM_MODEL     ：模型名，默认 deepseek-chat（切回 GPT 设为 gpt-4o-mini 等）
  *
  * 仅用于「在给定真实数据上合成中立简报」，不引入模型自身的世界知识（RAG 式约束在提示词中声明）。
  */
 
-const KEY = (process.env.LLM_API_KEY ?? '').trim();
+/** 依次回退多种常见命名，方便在 Vercel 直接配置 DeepSeek 密钥 */
+const KEY = (
+  process.env.LLM_API_KEY ||
+  process.env.DEEPSEEK_API_KEY ||
+  process.env.OPENAI_API_KEY ||
+  ''
+).trim();
 const BASE = (process.env.LLM_BASE_URL ?? 'https://api.deepseek.com').trim().replace(/\/$/, '');
 const MODEL = (process.env.LLM_MODEL ?? 'deepseek-chat').trim();
 
@@ -46,7 +52,7 @@ export async function chat(messages: ChatMessage[], maxTokens = 600): Promise<st
       }),
     }).finally(() => clearTimeout(timeout));
     if (!res.ok) {
-      if (res.status === 401) console.error('[LLM] 认证失败：请检查 LLM_API_KEY');
+      if (res.status === 401) console.error('[LLM] 认证失败：请检查 LLM_API_KEY / DEEPSEEK_API_KEY');
       else if (res.status === 429) console.error('[LLM] 请求频率超限（429）');
       else console.error('[LLM] HTTP', res.status, res.statusText);
       return null;
