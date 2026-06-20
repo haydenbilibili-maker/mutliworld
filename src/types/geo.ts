@@ -111,6 +111,9 @@ export type LayerId =
   | 'sig_wave_height'
   | 'sst_anomaly'
   | 'coral_baa'
+  | 'dhw'
+  | 'air_temp'
+  | 'precip'
   | 'pizza_index'
   | 'persons';
 

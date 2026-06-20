@@ -15,7 +15,9 @@ export type ScalarParam =
   // 海洋标量
   | 'sea_surface_temperature' | 'wave_height'
   // NOAA 珊瑚礁观察
-  | 'sst_anomaly' | 'bleaching_alert_area';
+  | 'sst_anomaly' | 'bleaching_alert_area' | 'degree_heating_week'
+  // 大气
+  | 'air_temperature' | 'precipitation';
 
 /** 向后兼容别名（旧引用） */
 export type AqParam = ScalarParam;
@@ -50,6 +52,9 @@ export const SCALAR_META: Record<ScalarParam, ScalarMeta> = {
   wave_height: { label: '有效波高', unit: 'm', min: 0, max: 10, endpoint: '/api/marine-scalar-grid', key: 'wave_height', ramp: 'thermal', layer: 'sig_wave_height' },
   sst_anomaly: { label: '海温偏差', unit: '°C', min: -5, max: 5, endpoint: '/api/noaa-crw-grid', key: 'sst_anomaly', ramp: 'diverging', layer: 'sst_anomaly' },
   bleaching_alert_area: { label: '白化预警 BAA', unit: '级', min: 0, max: 4, endpoint: '/api/noaa-crw-grid', key: 'bleaching_alert_area', ramp: 'baa', layer: 'coral_baa' },
+  degree_heating_week: { label: '度日热 DHW', unit: '°C·周', min: 0, max: 16, endpoint: '/api/noaa-crw-grid', key: 'degree_heating_week', ramp: 'thermal', layer: 'dhw' },
+  air_temperature: { label: '2米气温', unit: '°C', min: -30, max: 45, endpoint: '/api/atmo-grid', key: 'temperature_2m', ramp: 'thermal', layer: 'air_temp' },
+  precipitation: { label: '降水', unit: 'mm', min: 0, max: 30, endpoint: '/api/atmo-grid', key: 'precipitation', ramp: 'aqi', layer: 'precip' },
 };
 
 /** 向后兼容别名（旧引用 AQ_META） */
@@ -63,6 +68,9 @@ export const LAYER_DEFAULT_PARAM: Partial<Record<LayerId, ScalarParam>> = {
   sig_wave_height: 'wave_height',
   sst_anomaly: 'sst_anomaly',
   coral_baa: 'bleaching_alert_area',
+  dhw: 'degree_heating_week',
+  air_temp: 'air_temperature',
+  precip: 'precipitation',
 };
 
 interface NearEarthStore {

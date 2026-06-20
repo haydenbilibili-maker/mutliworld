@@ -15,9 +15,10 @@ const NEAR_EARTH_OVERLAY_GROUPS: { title: string; params: ScalarParam[] }[] = [
   { title: '化学污染物', params: ['carbon_monoxide', 'sulphur_dioxide', 'nitrogen_dioxide', 'ozone'] },
   { title: '颗粒物', params: ['pm2_5', 'pm10'] },
   { title: '海洋', params: ['sea_surface_temperature', 'wave_height'] },
-  { title: '珊瑚礁观察', params: ['sst_anomaly', 'bleaching_alert_area'] },
+  { title: '珊瑚礁观察', params: ['sst_anomaly', 'bleaching_alert_area', 'degree_heating_week'] },
+  { title: '大气', params: ['air_temperature', 'precipitation'] },
 ];
-const NEAR_EARTH_OVERLAY_LAYERS: LayerId[] = ['air_pollutants', 'particulates', 'sea_temp', 'sig_wave_height', 'sst_anomaly', 'coral_baa'];
+const NEAR_EARTH_OVERLAY_LAYERS: LayerId[] = ['air_pollutants', 'particulates', 'sea_temp', 'sig_wave_height', 'sst_anomaly', 'coral_baa', 'dhw', 'air_temp', 'precip'];
 
 interface LayerToggleProps {
   className?: string;
@@ -53,7 +54,7 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   },
   {
     title: '近地空间（流场/叠加）',
-    ids: ['wind_flow', 'ocean_flow', 'wave_flow', 'air_pollutants', 'particulates', 'sea_temp', 'sig_wave_height', 'sst_anomaly', 'coral_baa'],
+    ids: ['wind_flow', 'ocean_flow', 'wave_flow', 'air_pollutants', 'particulates', 'sea_temp', 'sig_wave_height', 'sst_anomaly', 'coral_baa', 'dhw', 'air_temp', 'precip'],
   },
   {
     title: '海洋与洋底空间',
@@ -132,6 +133,9 @@ const ALWAYS_ON: LayerId[] = [
   'sig_wave_height',
   'sst_anomaly',
   'coral_baa',
+  'dhw',
+  'air_temp',
+  'precip',
   'hydrocarbon_reserves',
   'ground_stations',
   'sat_constellations',

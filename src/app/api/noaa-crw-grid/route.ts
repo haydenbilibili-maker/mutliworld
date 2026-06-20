@@ -18,8 +18,9 @@ const STRIDE = 200; // 0.05° × 200 = 10° 取样间隔，覆盖全球约 36×1
 // 缺测填充值（ERDDAP info 核验）：SSTANOMALY=-327.68(物理范围 ±15)，BAA=251(有效 0–4)
 const SSTA_VALID = (v: number) => (Number.isFinite(v) && v > -90 && v < 90 ? v : NaN);
 const BAA_VALID = (v: number) => (Number.isFinite(v) && v >= 0 && v <= 4 ? v : NaN);
+const DHW_VALID = (v: number) => (Number.isFinite(v) && v >= 0 && v <= 100 ? v : NaN); // 度日热 fill -327.68
 
-type Param = 'sst_anomaly' | 'bleaching_alert_area';
+type Param = 'sst_anomaly' | 'bleaching_alert_area' | 'degree_heating_week';
 
 interface ScalarGrid {
   nx: number; ny: number; lon0: number; lat0: number; dLon: number; dLat: number;
@@ -52,7 +53,7 @@ export async function GET() {
   }
 
   const range = `[(last)][(89.975):${STRIDE}:(-89.975)][(-179.975):${STRIDE}:(179.975)]`;
-  const url = `${ERDDAP}?CRW_SSTANOMALY${range},CRW_BAA${range}`;
+  const url = `${ERDDAP}?CRW_SSTANOMALY${range},CRW_BAA${range},CRW_DHW${range}`;
 
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(20000), next: { revalidate: 0 } });
@@ -64,14 +65,17 @@ export async function GET() {
     const lonI = cols.indexOf('longitude');
     const sstaI = cols.indexOf('CRW_SSTANOMALY');
     const baaI = cols.indexOf('CRW_BAA');
-    if (latI < 0 || lonI < 0 || (sstaI < 0 && baaI < 0) || rows.length === 0) {
+    const dhwI = cols.indexOf('CRW_DHW');
+    if (latI < 0 || lonI < 0 || (sstaI < 0 && baaI < 0 && dhwI < 0) || rows.length === 0) {
       throw new Error('ERDDAP 返回列结构不符');
     }
     const sstaSamples = sstaI >= 0 ? rows.map((r) => ({ lat: Number(r[latI]), lon: Number(r[lonI]), val: SSTA_VALID(Number(r[sstaI])) })) : [];
     const baaSamples = baaI >= 0 ? rows.map((r) => ({ lat: Number(r[latI]), lon: Number(r[lonI]), val: BAA_VALID(Number(r[baaI])) })) : [];
+    const dhwSamples = dhwI >= 0 ? rows.map((r) => ({ lat: Number(r[latI]), lon: Number(r[lonI]), val: DHW_VALID(Number(r[dhwI])) })) : [];
     const params: Record<Param, number[]> = {
       sst_anomaly: sstaI >= 0 ? binToGrid(sstaSamples) : new Array(NX * NY).fill(NaN),
       bleaching_alert_area: baaI >= 0 ? binToGrid(baaSamples) : new Array(NX * NY).fill(NaN),
+      degree_heating_week: dhwI >= 0 ? binToGrid(dhwSamples) : new Array(NX * NY).fill(NaN),
     };
     const body: ScalarGrid = { nx: NX, ny: NY, lon0: LON0, lat0: LAT0, dLon: DLON, dLat: DLAT, params, generatedAt: new Date().toISOString(), source: 'NOAA Coral Reef Watch 5km（PacIOOS ERDDAP）' };
     cache = { expires: now + CACHE_TTL_MS, body };

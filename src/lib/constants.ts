@@ -75,6 +75,9 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   sig_wave_height: '有效波高',
   sst_anomaly: '海温异常',
   coral_baa: '珊瑚脆弱性',
+  dhw: '度日热 DHW',
+  air_temp: '2米气温',
+  precip: '降水',
   persons: '人物分布',
 };
 
