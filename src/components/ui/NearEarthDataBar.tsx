@@ -74,10 +74,12 @@ export function NearEarthDataBar() {
   const waveOn = inNearEarth && layers.includes('wave_flow');
   const overlayOn = inNearEarth && layers.includes(meta.layer);
 
-  const { data: wind } = useSWR<VecGrid>(windOn ? '/api/wind-grid' : null, fetcher, { revalidateOnFocus: false });
-  const { data: ocean } = useSWR<VecGrid>(oceanOn ? '/api/ocean-grid' : null, fetcher, { revalidateOnFocus: false });
-  const { data: wave } = useSWR<VecGrid>(waveOn ? '/api/wave-grid' : null, fetcher, { revalidateOnFocus: false });
-  const { data: scalar } = useSWR<ScalarGrid>(overlayOn ? meta.endpoint : null, fetcher, { revalidateOnFocus: false });
+  // 时效性：30 分钟自动刷新(对齐服务端缓存)，dedupe 防重复请求，保证读数与「更新时刻」持续新鲜
+  const swrOpts = { revalidateOnFocus: false, refreshInterval: 30 * 60 * 1000, dedupingInterval: 5 * 60 * 1000 };
+  const { data: wind } = useSWR<VecGrid>(windOn ? '/api/wind-grid' : null, fetcher, swrOpts);
+  const { data: ocean } = useSWR<VecGrid>(oceanOn ? '/api/ocean-grid' : null, fetcher, swrOpts);
+  const { data: wave } = useSWR<VecGrid>(waveOn ? '/api/wave-grid' : null, fetcher, swrOpts);
+  const { data: scalar } = useSWR<ScalarGrid>(overlayOn ? meta.endpoint : null, fetcher, swrOpts);
 
   const [readout, setReadout] = useState<Readout | null>(null);
   const lastTs = useRef(0);
