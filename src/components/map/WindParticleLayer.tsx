@@ -14,6 +14,7 @@ import useSWR from 'swr';
 import type { LayerId } from '@/types/geo';
 import { useMapContext } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
+import { flowColor } from '@/lib/map/scalarColor';
 
 interface VectorGrid {
   nx: number; ny: number; lon0: number; lat0: number; dLon: number; dLat: number;
@@ -27,8 +28,10 @@ interface FlowConfig {
   endpoint: string;
   /** 屏幕空间平流增益：每 1 m/s 每帧位移的像素数（与 zoom 无关，保证各尺度都可见） */
   gainPx: number;
-  /** 速度→颜色 */
+  /** 速度→颜色（默认配色方案专用，各层自带审美） */
   color: (spd: number) => string;
+  /** 归一化用的速度上界（非默认配色方案下 speed/maxSpeed→[0,1] 取色） */
+  maxSpeed: number;
   /** 基准粒子数（zoom 自适应在此之上调整） */
   baseCount: number;
 }
@@ -37,6 +40,7 @@ const WIND_CONFIG: FlowConfig = {
   layerId: 'wind_flow',
   endpoint: '/api/wind-grid',
   gainPx: 0.5, // 风 ~0–30 m/s → 每帧 0–15px
+  maxSpeed: 28,
   baseCount: 4200,
   color: (spd) =>
     spd < 4 ? 'rgba(120,210,255,0.6)'
@@ -50,6 +54,7 @@ const OCEAN_CONFIG: FlowConfig = {
   layerId: 'ocean_flow',
   endpoint: '/api/ocean-grid',
   gainPx: 7, // 洋流 ~0–2 m/s → 每帧 0–14px
+  maxSpeed: 2,
   baseCount: 2200,
   color: (spd) =>
     spd < 0.2 ? 'rgba(56,189,248,0.55)'
@@ -62,6 +67,7 @@ const WAVE_CONFIG: FlowConfig = {
   layerId: 'wave_flow',
   endpoint: '/api/wave-grid',
   gainPx: 1.6, // 有效波高 ~0–8 m → 每帧 0–13px
+  maxSpeed: 9,
   baseCount: 2000,
   color: (h) =>
     h < 1 ? 'rgba(96,165,250,0.5)'
@@ -84,10 +90,13 @@ function ParticleFlowLayer({ cfg }: { cfg: FlowConfig }) {
     revalidateOnFocus: false,
   });
 
-  // 视图模块的动画速度倍率（级联自空间层 view 配置）；用 ref 让运行中的帧循环热更新、无需重建画布
+  // 视图模块的动画速度倍率 + 配色方案（级联自空间层 view 配置）；用 ref 让运行中的帧循环热更新、无需重建画布
   const flowSpeed = useMapStore((s) => s.flowSpeed);
+  const scheme = useMapStore((s) => s.overlayScheme);
   const speedRef = useRef(flowSpeed);
+  const schemeRef = useRef(scheme);
   useEffect(() => { speedRef.current = flowSpeed; }, [flowSpeed]);
+  useEffect(() => { schemeRef.current = scheme; }, [scheme]);
 
   useEffect(() => {
     if (!map || !enabled || !data || !data.nx) return;
@@ -167,7 +176,10 @@ function ParticleFlowLayer({ cfg }: { cfg: FlowConfig }) {
         const bx = a.x + wind.u * g;
         const by = a.y - wind.v * g;
         if (bx >= -10 && bx <= cssW + 10 && by >= -10 && by <= cssH + 10) {
-          ctx.strokeStyle = cfg.color(Math.hypot(wind.u, wind.v));
+          const spd = Math.hypot(wind.u, wind.v);
+          ctx.strokeStyle = schemeRef.current === 'default'
+            ? cfg.color(spd)
+            : flowColor(schemeRef.current, Math.max(0, Math.min(1, spd / cfg.maxSpeed)), 0.82);
           ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(bx, by); ctx.stroke();
           const ll = map.unproject([bx, by]);
           p.lng = ll.lng; p.lat = ll.lat; p.age++;

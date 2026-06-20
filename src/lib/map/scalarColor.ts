@@ -64,3 +64,9 @@ export function rampCss(ramp: ScalarRamp, scheme: ColorScheme): string {
   const parts = stops.map(([pos, c]) => `rgb(${c[0]},${c[1]},${c[2]}) ${Math.round(pos * 100)}%`);
   return `linear-gradient(90deg,${parts.join(',')})`;
 }
+
+/** 流场粒子按归一速度 t∈[0,1] + 配色方案取色（rgba 字符串）；'default' 由各层自带配色，故此处仅服务非默认方案 */
+export function flowColor(scheme: ColorScheme, t: number, alpha: number): string {
+  const [r, g, b] = colorFor('aqi', scheme, t);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
