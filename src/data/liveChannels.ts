@@ -16,6 +16,15 @@ export interface LiveChannel {
 }
 
 export const LIVE_CHANNELS: LiveChannel[] = [
+  // 中日韩媒体（频道 ID 均取自各官方 YouTube 频道页 canonical，真实核验）
+  { id: 'cgtn', name: 'CGTN（中国国际电视台）', channelId: 'UCgrNz-aDmcr2uuto8_DL2jg', lang: 'EN', region: '中国/全球' },
+  { id: 'cctv4', name: 'CCTV-4 中文国际', channelId: 'UC1bhf6KSwvlwH5-sGuodNQQ', lang: 'ZH', region: '中国/全球' },
+  { id: 'nhkworld', name: 'NHK WORLD-JAPAN', channelId: 'UCSPEjw8F2nQDtmUKPFNF7_A', lang: 'EN', region: '日本/全球' },
+  { id: 'anntvasahi', name: 'ANN/テレビ朝日 News', channelId: 'UCGCZAYq5Xxojl_tSXcVJhiQ', lang: 'JA', region: '日本' },
+  { id: 'kbsworld', name: 'KBS WORLD TV（韩国）', channelId: 'UC5BMQOsAB8hKUyHu9KI6yig', lang: 'KO', region: '韩国/全球' },
+  { id: 'ytn', name: 'YTN（韩国24小时新闻）', channelId: 'UChlgI3UHCOnwUGzWzbJ3H5w', lang: 'KO', region: '韩国' },
+  { id: 'arirang', name: 'Arirang TV（韩国·英语）', channelId: 'UCCW7Z4RTTQoFix1dvn0D3LA', lang: 'EN', region: '韩国/全球' },
+
   { id: 'aljazeera', name: '半岛电视台 Al Jazeera English', channelId: 'UCNye-wNBqNL5ZzHSJj3l8Bg', lang: 'EN', region: '中东/全球' },
   { id: 'dw', name: 'DW News（德国之声）', channelId: 'UCknLrEdhRCp1aegoMqRaCZg', lang: 'EN', region: '欧洲/全球' },
   { id: 'france24', name: 'FRANCE 24 English', channelId: 'UCQfwfsi5VrQ8yKZ-UWmAEFg', lang: 'EN', region: '欧洲/全球' },
