@@ -46,9 +46,11 @@ export function DaynightLayer() {
   const [tick, setTick] = useState(0);
   const sunRef = useRef<maplibregl.Marker | null>(null);
 
-  // 每分钟刷新（地球自转 → 晨昏线移动）
+  // 每分钟刷新（地球自转 → 晨昏线移动）；页面不可见时不更新（避免无谓重绘）
   useEffect(() => {
-    const id = window.setInterval(() => setTick((t) => t + 1), 60_000);
+    const id = window.setInterval(() => {
+      if (document.visibilityState === 'visible') setTick((t) => t + 1);
+    }, 60_000);
     return () => window.clearInterval(id);
   }, []);
 

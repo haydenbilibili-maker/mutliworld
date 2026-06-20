@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "next build && tsc --noEmit",
+    "check:antijitter": "node scripts/check-antijitter.mjs",
+    "precommit": "tsc --noEmit && node scripts/check-antijitter.mjs",
     "data:fetch": "node scripts/fetch-geodata.js",
     "data:fetch:dry": "node scripts/fetch-geodata.js --dry-run",
     "data:launches": "node scripts/fetch-launches.js",
