@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * 天体切换器 — 多天体探索 v2.0（地球 / 月球 / 火星）
+ * 天体切换器 — 多天体探索（地球 / 月球 / 火星 / 水星 / 金星 / 泰坦 / 欧罗巴 / 冥王星 / 谷神星）
  * 顶栏「世界」选择，切换即换天体底图与默认视野。默认地球，零回归。
  */
 
@@ -47,7 +47,7 @@ export function BodySwitcher({ className = '' }: BodySwitcherProps) {
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label={`天体：${current.name}`}
-        title="切换天体（地球 / 月球 / 火星）"
+        title="切换天体（地球 / 月球 / 火星 / 水星 / 金星 / 泰坦 / 欧罗巴 / 冥王星 / 谷神星）"
         className={[
           'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs transition-colors sm:text-sm',
           activeBody !== 'earth'
@@ -73,7 +73,7 @@ export function BodySwitcher({ className = '' }: BodySwitcherProps) {
             transition={{ duration: 0.15 }}
             role="listbox"
             aria-label="天体"
-            className="absolute left-0 top-full z-50 mt-1.5 w-44 overflow-hidden rounded-lg border border-dashboard-neutral/25 bg-dashboard-bg/95 p-1 shadow-xl backdrop-blur-md"
+            className="absolute left-0 top-full z-50 mt-1.5 max-h-[min(70vh,28rem)] w-48 overflow-y-auto rounded-lg border border-dashboard-neutral/25 bg-dashboard-bg/95 p-1 shadow-xl backdrop-blur-md"
           >
             {bodies.map((b) => {
               const active = b.id === activeBody;
