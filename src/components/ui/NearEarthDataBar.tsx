@@ -30,6 +30,16 @@ function bilerp(field: number[], g: { nx: number; ny: number; lon0: number; lat0
 
 interface Readout { lat: number; lng: number; wind?: number; ocean?: number; wave?: number; scalar?: number }
 
+/** NOAA CRW 白化预警分级（BAA 0–4） */
+const BAA_LEVELS: { label: string; color: string }[] = [
+  { label: '无', color: '#cbd5e1' },
+  { label: '关注', color: '#facc15' },
+  { label: '警告', color: '#fb923c' },
+  { label: 'I级警报', color: '#ef4444' },
+  { label: 'II级警报', color: '#7f1d1d' },
+];
+const baaLabel = (v: number) => BAA_LEVELS[Math.max(0, Math.min(4, Math.round(v)))]?.label ?? '—';
+
 export function NearEarthDataBar() {
   const map = useMapContext();
   const inNearEarth = useMapStore((s) => s.activeBody === 'earth' && s.activeTier === 'near_earth');
@@ -74,8 +84,20 @@ export function NearEarthDataBar() {
   return (
     <div className="pointer-events-none fixed bottom-[6.25rem] left-1/2 z-20 w-[min(44rem,calc(100vw-1.5rem))] -translate-x-1/2 max-sm:bottom-[7rem]">
       <div className="pointer-events-auto flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-lg border border-dashboard-neutral/25 bg-dashboard-bg/92 px-3 py-2 shadow-xl backdrop-blur-md">
-        {/* 浓度色阶图例（醒目） */}
-        {overlayOn ? (
+        {/* 图例（醒目）：BAA 离散分级 / 其余连续浓度色阶 */}
+        {overlayOn && meta.ramp === 'baa' ? (
+          <div className="flex min-w-[14rem] flex-1 items-center gap-2">
+            <span className="shrink-0 text-[12px] font-medium text-white">{meta.label}</span>
+            <div className="flex flex-1 flex-wrap gap-x-2 gap-y-0.5">
+              {BAA_LEVELS.map((lv) => (
+                <span key={lv.label} className="flex items-center gap-1 text-[9px] text-dashboard-neutral/70">
+                  <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: lv.color }} />
+                  {lv.label}
+                </span>
+              ))}
+            </div>
+          </div>
+        ) : overlayOn ? (
           <div className="flex min-w-[14rem] flex-1 items-center gap-2">
             <span className="shrink-0 text-[12px] font-medium text-white">{meta.label}</span>
             <div className="flex flex-1 flex-col gap-0.5">
@@ -99,7 +121,11 @@ export function NearEarthDataBar() {
               {readout.wind != null && <span>风 <span className="text-white">{readout.wind.toFixed(1)}</span> m/s</span>}
               {readout.ocean != null && <span>洋流 <span className="text-white">{readout.ocean.toFixed(2)}</span> m/s</span>}
               {readout.wave != null && <span>浪 <span className="text-white">{readout.wave.toFixed(1)}</span> m</span>}
-              {readout.scalar != null && <span>{meta.label} <span className="text-white">{readout.scalar.toFixed(1)}</span> {meta.unit}</span>}
+              {readout.scalar != null && (
+                meta.ramp === 'baa'
+                  ? <span>{meta.label} <span className="text-white">{baaLabel(readout.scalar)}</span></span>
+                  : <span>{meta.label} <span className="text-white">{readout.scalar.toFixed(1)}</span> {meta.unit}</span>
+              )}
             </>
           ) : (
             <span className="text-dashboard-neutral/45">移动鼠标查看该处实时数值</span>

@@ -31,6 +31,7 @@ import { OrbitalListHost } from '@/components/ui/OrbitalListHost';
 import { PizzaIndexHost } from '@/components/ui/PizzaIndexHost';
 import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
 import { useGlobalEscape } from '@/hooks/useGlobalEscape';
+import { useViewPrefsPersistence } from '@/hooks/useViewPrefsPersistence';
 import { LiveLayerPerformanceGuard } from '@/components/ui/LiveLayerPerformanceGuard';
 import { BodyTimelinePanel } from '@/components/ui/BodyTimelinePanel';
 import { BodyOverviewPanel } from '@/components/ui/BodyOverviewPanel';
@@ -51,6 +52,7 @@ const StrategicResearchHost = dynamic(
 
 export function HomeDashboard() {
   useGlobalEscape();
+  useViewPrefsPersistence();
   const isEarth = useMapStore((s) => s.activeBody === 'earth');
 
   return (
