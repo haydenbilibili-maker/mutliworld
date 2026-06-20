@@ -99,6 +99,13 @@ export default function AdminDashboardPage() {
           icon="🎚️"
         />
         <StatCard
+          title="天体探索"
+          description={`${stats.summary.bodyCount} 天体 · ${stats.summary.bodySiteCount} 处探索痕迹`}
+          value={stats.summary.bodyCount}
+          href="/admin/features/body-traces"
+          icon="🪐"
+        />
+        <StatCard
           title="在轨物体 TLE"
           description={`新鲜度 ${stats.summary.tleAgeLabel}`}
           value={stats.orbital.total}

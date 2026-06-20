@@ -10,7 +10,11 @@ import { useMemo, useState } from 'react';
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { useBodyOverridesStore } from '@/store/useBodyOverridesStore';
 import { bodyLayersFor } from '@/bodies/sites';
+import { listBodies, getBody } from '@/bodies';
 import type { BodySite, BodySiteStatus, CelestialBody } from '@/types/body';
+
+/** 可编辑天体（地球除外） */
+const EDITABLE_BODIES = listBodies().filter((b) => b.id !== 'earth');
 
 const STATUS: BodySiteStatus[] = ['active', 'completed', 'lost'];
 const STATUS_LABEL: Record<BodySiteStatus, string> = { active: '在役', completed: '已完成', lost: '失联' };
@@ -51,7 +55,7 @@ export default function BodyTracesAdminPage() {
     };
     upsertSite(site);
     setForm(EMPTY());
-    setMsg(`已保存「${site.name}」，切到「${site.body === 'moon' ? '月球' : '火星'}」查看地图标记`);
+    setMsg(`已保存「${site.name}」，切到「${getBody(site.body)?.name ?? site.body}」查看地图标记`);
   };
 
   const exportJson = () => {
@@ -78,7 +82,7 @@ export default function BodyTracesAdminPage() {
     <div className="mx-auto max-w-6xl">
       <AdminPageHeader
         title="天体痕迹在线编辑"
-        description="浏览器内新增/编辑月球·火星探索痕迹（localStorage 持久化 + 地图实时预览）。支持 JSON 导出/导入，定稿后可固化进仓库。"
+        description="浏览器内新增/编辑各天体（月球/火星/水星/金星/泰坦/欧罗巴/冥王星/谷神星）探索痕迹（localStorage 持久化 + 地图实时预览）。支持 JSON 导出/导入，定稿后可固化进仓库。"
         breadcrumbs={[{ label: '管理后台', href: '/admin' }, { label: '数据管理' }, { label: '天体痕迹' }]}
       />
 
@@ -88,7 +92,7 @@ export default function BodyTracesAdminPage() {
           <div className="mb-3 text-sm font-medium text-white">新增 / 编辑痕迹</div>
           <div className="grid grid-cols-2 gap-2">
             <label className="text-[11px] text-dashboard-neutral/70">id（唯一）<input className={inputCls} value={form.id ?? ''} onChange={(e) => set('id', e.target.value)} placeholder="custom-xxx" /></label>
-            <label className="text-[11px] text-dashboard-neutral/70">天体<select className={inputCls} value={form.body} onChange={(e) => set('body', e.target.value)}><option value="moon">月球</option><option value="mars">火星</option></select></label>
+            <label className="text-[11px] text-dashboard-neutral/70">天体<select className={inputCls} value={form.body} onChange={(e) => set('body', e.target.value)}>{EDITABLE_BODIES.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></label>
             <label className="text-[11px] text-dashboard-neutral/70">图层<select className={inputCls} value={form.layer} onChange={(e) => set('layer', e.target.value)}>{layerOptions.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}</select></label>
             <label className="text-[11px] text-dashboard-neutral/70">状态<select className={inputCls} value={form.status} onChange={(e) => set('status', e.target.value)}>{STATUS.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}</select></label>
             <label className="text-[11px] text-dashboard-neutral/70">名称<input className={inputCls} value={form.name ?? ''} onChange={(e) => set('name', e.target.value)} /></label>
@@ -123,7 +127,7 @@ export default function BodyTracesAdminPage() {
             <ul className="max-h-[28rem] space-y-1.5 overflow-y-auto">
               {customSites.map((s) => (
                 <li key={s.id} className="flex items-center gap-2 rounded-md border border-dashboard-neutral/12 px-2.5 py-1.5">
-                  <span className="text-xs">{s.body === 'moon' ? '🌙' : '🔴'}</span>
+                  <span className="text-xs">{getBody(s.body)?.icon ?? '🪐'}</span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-xs text-white">{s.name}</span>
                     <span className="block truncate text-[10px] text-dashboard-neutral/55">{s.agency} · {s.lat}, {s.lng} · {s.date}</span>

@@ -11,6 +11,8 @@ import { loadLaunchRecords, queryLaunchRecords } from '@/lib/launch-log/store';
 import { loadTleDatabase } from '@/lib/orbital/tleStore';
 import { ALL_REGION_IDS } from '@/lib/regions/ids';
 import { listRegions } from '@/regions';
+import { listBodies } from '@/bodies';
+import { ALL_BODY_SITES } from '@/bodies/sites';
 import { listStrategicResearchPanels } from '@/regions/strategic-research/registry';
 import { GLOBAL_CONFLICT_ZONES } from '@/regions/global.conflict-zones';
 import { PIZZA_VENUES } from '@/lib/pizza-index/venues';
@@ -540,7 +542,7 @@ export function getAdminStats() {
         conflict_zones: GLOBAL_CONFLICT_ZONES.length,
         pizza_index: PIZZA_VENUES.length,
         live_weather: 'Open-Meteo + RainViewer',
-        live_flights: 'OpenSky ADS-B',
+        live_flights: '社区 ADS-B（adsb.lol / adsb.fi，OpenSky 兜底）',
         live_maritime: 'AISStream / 航运通道模拟',
       },
     },
@@ -563,6 +565,9 @@ export function getAdminStats() {
       newsFeedSeedCount: newsFeed.total,
       regionalSituationCount: regionalSituation.total,
       stockIndexCount: markets.stockIndexCount,
+      // 多天体探索维度
+      bodyCount: listBodies().length,
+      bodySiteCount: ALL_BODY_SITES.length,
     },
   };
 }
