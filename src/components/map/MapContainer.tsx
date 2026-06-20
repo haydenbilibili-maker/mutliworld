@@ -352,7 +352,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
           <>
             <BathymetryLayer />
             <LiveWeatherLayer />
-            <ConflictZonesLayer />
+            {activeTier !== 'near_earth' && <ConflictZonesLayer />}
             <OrbitalObjectsLayer />
             <FlightTrailLayer />
             <FlightLayer />
@@ -366,9 +366,9 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <WindParticleLayer />
             <OceanFlowLayer />
             <NearEarthHud />
-            <GeodataLayer />
+            {activeTier !== 'near_earth' && <GeodataLayer />}
             <FlowLayer />
-            <LivePulseLayer />
+            {activeTier !== 'near_earth' && <LivePulseLayer />}
             <GeodataFetchIndicator />
             <MapSelectionPulse />
             <MapTooltip />

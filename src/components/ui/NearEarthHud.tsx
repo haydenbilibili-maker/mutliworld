@@ -30,6 +30,9 @@ export function NearEarthHud() {
   const map = useMapContext();
   const inNearEarth = useMapStore((s) => s.activeBody === 'earth' && s.activeTier === 'near_earth');
   const layers = useMapStore((s) => s.activeLayers);
+  const toggleLayer = useMapStore((s) => s.toggleLayer);
+  const globe = useMapStore((s) => s.globe);
+  const setGlobe = useMapStore((s) => s.setGlobe);
   const param = useNearEarthStore((s) => s.param);
   const setParam = useNearEarthStore((s) => s.setParam);
 
@@ -66,11 +69,70 @@ export function NearEarthHud() {
   const GASES: AqParam[] = ['carbon_monoxide', 'sulphur_dioxide', 'nitrogen_dioxide', 'ozone'];
   const PMS: AqParam[] = ['pm2_5', 'pm10'];
 
+  // 模式（对标 nullschool 底部 Mode 行）：动画流场 / 标量叠加 一键切换
+  const MODES: { id: 'wind_flow' | 'ocean_flow' | 'air_pollutants' | 'particulates'; label: string; kind: '动画' | '叠加' }[] = [
+    { id: 'wind_flow', label: '大气', kind: '动画' },
+    { id: 'ocean_flow', label: '海洋', kind: '动画' },
+    { id: 'air_pollutants', label: '化学污染物', kind: '叠加' },
+    { id: 'particulates', label: '颗粒物', kind: '叠加' },
+  ];
+
   return (
     <div className="pointer-events-auto fixed bottom-16 left-3 z-30 w-[min(17rem,calc(100vw-1.5rem))] rounded-lg border border-dashboard-neutral/25 bg-dashboard-bg/92 p-2.5 text-[11px] shadow-xl backdrop-blur-md">
       <div className="mb-1.5 flex items-center gap-1.5">
         <span className="text-sm" aria-hidden>🌀</span>
         <span className="font-medium text-white">近地空间 · 流场/叠加</span>
+      </div>
+
+      {/* 模式行（对标 nullschool）：动画流场 + 标量叠加 一键切换 */}
+      <div className="mb-2">
+        <div className="mb-1 text-[10px] text-dashboard-neutral/60">模式</div>
+        <div className="flex flex-wrap gap-1">
+          {MODES.map((m) => {
+            const on = layers.includes(m.id);
+            return (
+              <button
+                key={m.id}
+                type="button"
+                onClick={() => toggleLayer(m.id)}
+                title={`${m.label} · ${m.kind}`}
+                className={[
+                  'rounded px-1.5 py-0.5 text-[10px] transition-colors',
+                  on ? 'bg-brand-cyan/20 text-brand-cyan ring-1 ring-brand-cyan/40' : 'text-dashboard-neutral hover:bg-white/5',
+                ].join(' ')}
+              >
+                {m.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 投影行（maplibre v5 支持 平面/球面）：对标 nullschool 投影切换 */}
+      <div className="mb-2 flex items-center gap-1.5">
+        <span className="text-[10px] text-dashboard-neutral/60">投影</span>
+        <div className="flex gap-1">
+          <button
+            type="button"
+            onClick={() => setGlobe(false)}
+            className={[
+              'rounded px-1.5 py-0.5 text-[10px] transition-colors',
+              !globe ? 'bg-brand-cyan/20 text-brand-cyan' : 'text-dashboard-neutral hover:bg-white/5',
+            ].join(' ')}
+          >
+            平面
+          </button>
+          <button
+            type="button"
+            onClick={() => setGlobe(true)}
+            className={[
+              'rounded px-1.5 py-0.5 text-[10px] transition-colors',
+              globe ? 'bg-brand-cyan/20 text-brand-cyan' : 'text-dashboard-neutral hover:bg-white/5',
+            ].join(' ')}
+          >
+            球面
+          </button>
+        </div>
       </div>
 
       {overlayOn && (

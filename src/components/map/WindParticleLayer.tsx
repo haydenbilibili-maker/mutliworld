@@ -85,7 +85,10 @@ function ParticleFlowLayer({ cfg }: { cfg: FlowConfig }) {
 
     let cssW = 0, cssH = 0;
     const resize = () => {
-      const w = container.clientWidth, h = container.clientHeight;
+      // 用地图画布的显示尺寸（canvasContainer 的 clientHeight 可能为 0 致零高画布）
+      const mc = map.getCanvas();
+      const w = mc.clientWidth || mc.width / dpr || container.clientWidth;
+      const h = mc.clientHeight || mc.height / dpr || container.clientHeight;
       if (cssW !== w || cssH !== h) {
         cssW = w; cssH = h;
         canvas.width = Math.round(w * dpr);
