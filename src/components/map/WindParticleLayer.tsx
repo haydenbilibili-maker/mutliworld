@@ -25,8 +25,8 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json());
 interface FlowConfig {
   layerId: LayerId;
   endpoint: string;
-  /** 视觉平流增益（洋流慢，需更大增益） */
-  gain: number;
+  /** 屏幕空间平流增益：每 1 m/s 每帧位移的像素数（与 zoom 无关，保证各尺度都可见） */
+  gainPx: number;
   /** 速度→颜色 */
   color: (spd: number) => string;
   /** 基准粒子数（zoom 自适应在此之上调整） */
@@ -36,26 +36,26 @@ interface FlowConfig {
 const WIND_CONFIG: FlowConfig = {
   layerId: 'wind_flow',
   endpoint: '/api/wind-grid',
-  gain: 0.18,
-  baseCount: 3200,
+  gainPx: 0.5, // 风 ~0–30 m/s → 每帧 0–15px
+  baseCount: 3000,
   color: (spd) =>
-    spd < 4 ? 'rgba(90,200,250,0.55)'
-      : spd < 9 ? 'rgba(125,211,252,0.65)'
-        : spd < 16 ? 'rgba(220,240,255,0.75)'
-          : spd < 25 ? 'rgba(250,230,170,0.8)'
-            : 'rgba(252,180,120,0.85)',
+    spd < 4 ? 'rgba(120,210,255,0.6)'
+      : spd < 9 ? 'rgba(150,225,255,0.72)'
+        : spd < 16 ? 'rgba(225,242,255,0.82)'
+          : spd < 25 ? 'rgba(252,232,170,0.88)'
+            : 'rgba(252,170,110,0.92)',
 };
 
 const OCEAN_CONFIG: FlowConfig = {
   layerId: 'ocean_flow',
   endpoint: '/api/ocean-grid',
-  gain: 2.2, // 洋流流速量级远小于风（~0–2 m/s）
-  baseCount: 2400,
+  gainPx: 7, // 洋流 ~0–2 m/s → 每帧 0–14px
+  baseCount: 2200,
   color: (spd) =>
-    spd < 0.2 ? 'rgba(56,189,248,0.5)'
-      : spd < 0.5 ? 'rgba(45,212,191,0.65)'
-        : spd < 1 ? 'rgba(110,231,183,0.75)'
-          : 'rgba(167,243,208,0.85)',
+    spd < 0.2 ? 'rgba(56,189,248,0.55)'
+      : spd < 0.5 ? 'rgba(45,212,191,0.7)'
+        : spd < 1 ? 'rgba(110,231,183,0.8)'
+          : 'rgba(190,250,215,0.9)',
 };
 
 const MAX_AGE = 90;
@@ -137,21 +137,23 @@ function ParticleFlowLayer({ cfg }: { cfg: FlowConfig }) {
       ctx.fillStyle = `rgba(0,0,0,${FADE})`;
       ctx.fillRect(0, 0, cssW, cssH);
       ctx.globalCompositeOperation = 'source-over';
-      ctx.lineWidth = 1.1;
+      ctx.lineWidth = 1.3;
       for (const p of particles) {
+        if (p.age > MAX_AGE) { spawn(p); continue; }
         const wind = sample(p.lng, p.lat);
-        if (!wind || p.age > MAX_AGE) { spawn(p); continue; }
-        const cosLat = Math.max(0.2, Math.cos((p.lat * Math.PI) / 180));
-        const nLng = p.lng + (wind.u / (111320 * cosLat)) * cfg.gain * 1000;
-        const nLat = p.lat + (wind.v / 111320) * cfg.gain * 1000;
+        if (!wind) { spawn(p); continue; }
+        // 屏幕空间平流：东=+x，北=-y（近似，球面下亦可接受）
         const a = map.project([p.lng, p.lat]);
-        const b = map.project([nLng, nLat]);
-        if (Math.abs(a.x - b.x) < 120 && Math.abs(a.y - b.y) < 120 && b.x >= -50 && b.x <= cssW + 50 && b.y >= -50 && b.y <= cssH + 50) {
+        const bx = a.x + wind.u * cfg.gainPx;
+        const by = a.y - wind.v * cfg.gainPx;
+        if (bx >= -10 && bx <= cssW + 10 && by >= -10 && by <= cssH + 10) {
           ctx.strokeStyle = cfg.color(Math.hypot(wind.u, wind.v));
-          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(bx, by); ctx.stroke();
+          const ll = map.unproject([bx, by]);
+          p.lng = ll.lng; p.lat = ll.lat; p.age++;
+        } else {
+          spawn(p); // 出屏即在视口内重生
         }
-        p.lng = nLng > 180 ? nLng - 360 : nLng < -180 ? nLng + 360 : nLng;
-        p.lat = nLat; p.age++;
       }
       raf = requestAnimationFrame(frame);
     };
