@@ -21,6 +21,10 @@ const TERRAIN_TILES: Partial<Record<CelestialBody, string>> = {
   mars:
     (process.env.NEXT_PUBLIC_MARS_TILE_URL ?? '').trim() ||
     'https://cartocdn-gusc.global.ssl.fastly.net/opmbuilder/api/v1/map/named/opm-mars-basemap-v0-2/all/{z}/{x}/{y}.png',
+  mercury:
+    (process.env.NEXT_PUBLIC_MERCURY_TILE_URL ?? '').trim() ||
+    'https://cartocdn-gusc.global.ssl.fastly.net/opmbuilder/api/v1/map/named/opm-mercury-basemap-v0-1/all/{z}/{x}/{y}.png',
+  // 金星/泰坦/欧罗巴/冥王星/谷神星：暂无开箱即用的 Web Mercator 瓦片源 → 主色球面兜底 + 探索标记
 };
 
 /** 卫星实拍瓦片（写实影像；需配置已确认可用的 Web Mercator XYZ 源） */
@@ -32,6 +36,12 @@ const IMAGERY_TILES: Partial<Record<CelestialBody, string>> = {
 const ATTRIBUTION: Partial<Record<CelestialBody, string>> = {
   moon: 'NASA / USGS / OpenPlanetaryMap',
   mars: 'NASA / USGS / OpenPlanetaryMap',
+  mercury: 'NASA / USGS / OpenPlanetaryMap',
+  venus: 'NASA / USGS（Magellan）',
+  titan: 'NASA / ESA（Cassini-Huygens）',
+  europa: 'NASA / JPL（Galileo）',
+  pluto: 'NASA / JHUAPL（New Horizons）',
+  ceres: 'NASA / JPL（Dawn）',
 };
 
 export function isEarthBody(body: CelestialBody): boolean {

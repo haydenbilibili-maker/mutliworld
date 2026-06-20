@@ -5,6 +5,9 @@
  * 内容力求真实、中立并陈各国航天成果；后续轮次持续增密。
  */
 
+import type { CelestialBody } from '@/types/body';
+import { OTHER_BODY_KNOWLEDGE } from '@/bodies/knowledge.others';
+
 export interface BodyFact { label: string; value: string }
 export interface GeoFeature { name: string; nameEn: string; type: string; desc: string }
 export interface KItem { title: string; desc: string }
@@ -22,7 +25,7 @@ export interface BodyKnowledge {
   extension: KItem[];
 }
 
-export const BODY_KNOWLEDGE: Record<'moon' | 'mars', BodyKnowledge> = {
+const CORE_BODY_KNOWLEDGE: Record<'moon' | 'mars', BodyKnowledge> = {
   moon: {
     facts: [
       { label: '平均半径', value: '1,737.4 km（地球的约 0.27 倍）' },
@@ -139,4 +142,10 @@ export const BODY_KNOWLEDGE: Record<'moon' | 'mars', BodyKnowledge> = {
       { title: '低气压与辐射', desc: '气压仅地球约 0.6%，液态水难以稳定存在；缺全球磁场使表面辐射偏高，是载人探索的关键挑战。' },
     ],
   },
+};
+
+/** 全部天体知识库（核心 月/火 + 其他 6 天体） */
+export const BODY_KNOWLEDGE: Partial<Record<CelestialBody, BodyKnowledge>> = {
+  ...CORE_BODY_KNOWLEDGE,
+  ...OTHER_BODY_KNOWLEDGE,
 };

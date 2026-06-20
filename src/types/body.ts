@@ -6,7 +6,16 @@
  * 详见 docs/PRD-多天体探索-月球与火星.md
  */
 
-export type CelestialBody = 'earth' | 'moon' | 'mars';
+export type CelestialBody =
+  | 'earth'
+  | 'moon'
+  | 'mars'
+  | 'mercury'
+  | 'venus'
+  | 'titan'
+  | 'europa'
+  | 'pluto'
+  | 'ceres';
 
 /** 天体探索图层 id */
 export type BodyLayerId =
@@ -19,7 +28,28 @@ export type BodyLayerId =
   | 'mars_landers'
   | 'mars_traverse'
   | 'mars_orbiters'
-  | 'mars_features';
+  | 'mars_features'
+  // 水星
+  | 'mercury_orbiters'
+  | 'mercury_flyby'
+  | 'mercury_features'
+  // 金星
+  | 'venus_landers'
+  | 'venus_orbiters'
+  | 'venus_features'
+  // 土卫六 泰坦
+  | 'titan_landers'
+  | 'titan_flyby'
+  | 'titan_features'
+  // 木卫二 欧罗巴
+  | 'europa_flyby'
+  | 'europa_features'
+  // 冥王星
+  | 'pluto_flyby'
+  | 'pluto_features'
+  // 谷神星
+  | 'ceres_orbiters'
+  | 'ceres_features';
 
 /** 天体地貌要素（月海/撞击坑/火山/峡谷等） */
 export interface BodyFeature {

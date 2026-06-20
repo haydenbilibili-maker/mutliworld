@@ -36,6 +36,32 @@ const MILESTONES: Record<CelestialBody, Milestone[]> = {
     { year: '2021', label: '中国首次火星着陆与巡视（天问一号/祝融号）', agency: 'CNSA' },
     { year: '2021', label: '采集样本待取回、首架地外动力飞行（毅力号/机智号）', agency: 'NASA' },
   ],
+  mercury: [
+    { year: '1974', label: '首次飞掠水星（水手 10 号）', agency: 'NASA' },
+    { year: '2011', label: '首次环绕水星（MESSENGER）', agency: 'NASA' },
+    { year: '2026', label: '计划入轨水星（BepiColombo）', agency: 'ESA' },
+  ],
+  venus: [
+    { year: '1970', label: '首次从他行星表面传回数据（金星 7 号）', agency: 'USSR' },
+    { year: '1975', label: '首次传回金星表面照片（金星 9 号）', agency: 'USSR' },
+    { year: '1990', label: '雷达测绘近全球表面（麦哲伦号）', agency: 'NASA' },
+  ],
+  titan: [
+    { year: '2004', label: '土星系统轨道器抵达（卡西尼号）', agency: 'NASA' },
+    { year: '2005', label: '外太阳系唯一表面着陆（惠更斯号）', agency: 'ESA' },
+    { year: '2034', label: '计划旋翼飞行器抵达（蜻蜓号）', agency: 'NASA' },
+  ],
+  europa: [
+    { year: '1995', label: '木星轨道器多次飞掠（伽利略号）', agency: 'NASA' },
+    { year: '2024', label: '专项探测器发射（欧罗巴快船）', agency: 'NASA' },
+    { year: '2031', label: '计划探测木星冰卫星（JUICE）', agency: 'ESA' },
+  ],
+  pluto: [
+    { year: '2015', label: '人类首次飞掠冥王星（新视野号）', agency: 'NASA' },
+  ],
+  ceres: [
+    { year: '2015', label: '首个环绕矮行星的探测器（黎明号）', agency: 'NASA' },
+  ],
 };
 
 const AGENCY_COLOR: Record<string, string> = { NASA: '#60a5fa', CNSA: '#f87171', ISRO: '#fb923c', JAXA: '#f4d08a', ESA: '#a78bfa', USSR: '#94a3b8' };

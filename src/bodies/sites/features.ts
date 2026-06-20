@@ -33,4 +33,6 @@ export const MARS_FEATURES: BodyFeature[] = [
   { id: 'f-southpole', body: 'mars', layer: 'mars_features', name: '南极冠', nameEn: 'Planum Australe', type: '极地冰盖', lng: 0, lat: -85, desc: '南极永久冰盖，含厚层水冰与干冰。' },
 ];
 
-export const ALL_BODY_FEATURES: BodyFeature[] = [...MOON_FEATURES, ...MARS_FEATURES];
+import { OTHER_BODY_FEATURES } from './otherBodies';
+
+export const ALL_BODY_FEATURES: BodyFeature[] = [...MOON_FEATURES, ...MARS_FEATURES, ...OTHER_BODY_FEATURES];
