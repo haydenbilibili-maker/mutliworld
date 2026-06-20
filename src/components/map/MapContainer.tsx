@@ -33,7 +33,9 @@ import { DaynightLayer } from '@/components/map/DaynightLayer';
 import { LivePulseLayer } from '@/components/map/LivePulseLayer';
 import { FlightTrailLayer } from '@/components/map/FlightTrailLayer';
 import { FlowLayer } from '@/components/map/FlowLayer';
-import { WindParticleLayer } from '@/components/map/WindParticleLayer';
+import { WindParticleLayer, OceanFlowLayer } from '@/components/map/WindParticleLayer';
+import { ScalarOverlayLayer } from '@/components/map/ScalarOverlayLayer';
+import { NearEarthHud } from '@/components/ui/NearEarthHud';
 import { BathymetryLayer } from '@/components/map/BathymetryLayer';
 import { GlobeController } from '@/components/map/GlobeController';
 import { CosmicGlobeAnimator } from '@/components/map/CosmicGlobeAnimator';
@@ -360,7 +362,10 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <ProfilePicker />
             <CrossLayerLinks />
             <DaynightLayer />
+            <ScalarOverlayLayer />
             <WindParticleLayer />
+            <OceanFlowLayer />
+            <NearEarthHud />
             <GeodataLayer />
             <FlowLayer />
             <LivePulseLayer />

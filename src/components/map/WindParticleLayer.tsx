@@ -1,45 +1,72 @@
 'use client';
 
 /**
- * 大气风场粒子流 — 对标 earth.nullschool 的招牌能力。
+ * 粒子流场引擎 — 对标 earth.nullschool 的招牌能力（大气风场 / 海洋洋流复用）。
  *
- * canvas 叠加层：数千粒子在真实 10m 风矢量场（/api/wind-grid，Open-Meteo/GFS）中平流，
- * 拖尾淡出、按风速配色；粒子在当前视口内重生（缩放自适应密度），随地图平移/缩放实时投影。
- * 仅在「近地」层 + 大气风场图层开启时运行；页面不可见暂停；尊重 prefers-reduced-motion。
+ * canvas 叠加层：数千粒子在真实矢量场中双线性插值平流，拖尾淡出、按速配色；
+ * 粒子在当前视口内重生（缩放自适应密度），随地图平移/缩放实时投影。
+ * 仅在「近地」层 + 对应图层开启时运行；页面不可见暂停；尊重 prefers-reduced-motion。
+ * R4 优化：devicePixelRatio 清晰度 + 按 zoom 调粒子密度。
  */
 
 import { useEffect } from 'react';
 import useSWR from 'swr';
+import type { LayerId } from '@/types/geo';
 import { useMapContext } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 
-interface WindGrid {
+interface VectorGrid {
   nx: number; ny: number; lon0: number; lat0: number; dLon: number; dLat: number;
   u: number[]; v: number[];
 }
 
-const PARTICLE_COUNT = 3200;
-const MAX_AGE = 90; // 帧
-const SPEED_FACTOR = 0.18; // 视觉平流增益
-const FADE = 0.94; // 拖尾保留率（越大尾越长）
-
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-/** 按风速着色（慢→快：青→白→暖），半透明 */
-function speedColor(spd: number): string {
-  if (spd < 4) return 'rgba(90,200,250,0.55)';
-  if (spd < 9) return 'rgba(125,211,252,0.65)';
-  if (spd < 16) return 'rgba(220,240,255,0.75)';
-  if (spd < 25) return 'rgba(250,230,170,0.8)';
-  return 'rgba(252,180,120,0.85)';
+interface FlowConfig {
+  layerId: LayerId;
+  endpoint: string;
+  /** 视觉平流增益（洋流慢，需更大增益） */
+  gain: number;
+  /** 速度→颜色 */
+  color: (spd: number) => string;
+  /** 基准粒子数（zoom 自适应在此之上调整） */
+  baseCount: number;
 }
 
-export function WindParticleLayer() {
+const WIND_CONFIG: FlowConfig = {
+  layerId: 'wind_flow',
+  endpoint: '/api/wind-grid',
+  gain: 0.18,
+  baseCount: 3200,
+  color: (spd) =>
+    spd < 4 ? 'rgba(90,200,250,0.55)'
+      : spd < 9 ? 'rgba(125,211,252,0.65)'
+        : spd < 16 ? 'rgba(220,240,255,0.75)'
+          : spd < 25 ? 'rgba(250,230,170,0.8)'
+            : 'rgba(252,180,120,0.85)',
+};
+
+const OCEAN_CONFIG: FlowConfig = {
+  layerId: 'ocean_flow',
+  endpoint: '/api/ocean-grid',
+  gain: 2.2, // 洋流流速量级远小于风（~0–2 m/s）
+  baseCount: 2400,
+  color: (spd) =>
+    spd < 0.2 ? 'rgba(56,189,248,0.5)'
+      : spd < 0.5 ? 'rgba(45,212,191,0.65)'
+        : spd < 1 ? 'rgba(110,231,183,0.75)'
+          : 'rgba(167,243,208,0.85)',
+};
+
+const MAX_AGE = 90;
+const FADE = 0.94;
+
+function ParticleFlowLayer({ cfg }: { cfg: FlowConfig }) {
   const map = useMapContext();
   const enabled = useMapStore(
-    (s) => s.activeBody === 'earth' && s.activeTier === 'near_earth' && s.activeLayers.includes('wind_flow'),
+    (s) => s.activeBody === 'earth' && s.activeTier === 'near_earth' && s.activeLayers.includes(cfg.layerId),
   );
-  const { data } = useSWR<WindGrid>(enabled ? '/api/wind-grid' : null, fetcher, {
+  const { data } = useSWR<VectorGrid>(enabled ? cfg.endpoint : null, fetcher, {
     refreshInterval: 30 * 60 * 1000,
     revalidateOnFocus: false,
   });
@@ -47,6 +74,7 @@ export function WindParticleLayer() {
   useEffect(() => {
     if (!map || !enabled || !data || !data.nx) return;
     const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const dpr = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2);
 
     const container = map.getCanvasContainer();
     const canvas = document.createElement('canvas');
@@ -55,19 +83,21 @@ export function WindParticleLayer() {
     const ctx = canvas.getContext('2d');
     if (!ctx) { canvas.remove(); return; }
 
+    let cssW = 0, cssH = 0;
     const resize = () => {
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      // 仅在尺寸真正变化时重置（重置 width 会清空画布；避免平移时反复清空致闪烁）
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
+      const w = container.clientWidth, h = container.clientHeight;
+      if (cssW !== w || cssH !== h) {
+        cssW = w; cssH = h;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = `${w}px`;
+        canvas.style.height = `${h}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // 以 CSS 像素绘制（map.project 返回 CSS px）
       }
     };
     resize();
 
     const { nx, ny, lon0, lat0, dLon, dLat, u: U, v: V } = data;
-
     const sample = (lng: number, lat: number): { u: number; v: number } | null => {
       const yf = (lat - lat0) / dLat;
       if (yf < 0 || yf > ny - 1) return null;
@@ -77,70 +107,58 @@ export function WindParticleLayer() {
       const i1 = (i0 + 1) % nx, j1 = Math.min(j0 + 1, ny - 1);
       const fx = xf - i0, fy = yf - j0;
       const at = (j: number, i: number) => j * nx + i;
-      const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-      const u = lerp(lerp(U[at(j0, i0)], U[at(j0, i1)], fx), lerp(U[at(j1, i0)], U[at(j1, i1)], fx), fy);
-      const v = lerp(lerp(V[at(j0, i0)], V[at(j0, i1)], fx), lerp(V[at(j1, i0)], V[at(j1, i1)], fx), fy);
+      const lp = (a: number, b: number, t: number) => a + (b - a) * t;
+      const u = lp(lp(U[at(j0, i0)], U[at(j0, i1)], fx), lp(U[at(j1, i0)], U[at(j1, i1)], fx), fy);
+      const v = lp(lp(V[at(j0, i0)], V[at(j0, i1)], fx), lp(V[at(j1, i0)], V[at(j1, i1)], fx), fy);
       return { u, v };
     };
 
     interface P { lng: number; lat: number; age: number; }
+    // 按 zoom 自适应密度：放大时减少（视口小）、缩小时铺满
+    const count = Math.round(cfg.baseCount * (map.getZoom() < 2 ? 1.1 : map.getZoom() > 5 ? 0.6 : 0.85));
     const particles: P[] = [];
     const spawn = (p: P) => {
       const b = map.getBounds();
       let w = b.getWest(), e = b.getEast();
       const s = Math.max(b.getSouth(), -78), n = Math.min(b.getNorth(), 78);
-      if (e < w) e += 360; // 跨越反子午线
+      if (e < w) e += 360;
       p.lng = w + Math.random() * (e - w);
       p.lat = s + Math.random() * (n - s);
       if (p.lng > 180) p.lng -= 360;
       p.age = Math.floor(Math.random() * MAX_AGE);
     };
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      const p: P = { lng: 0, lat: 0, age: 0 };
-      spawn(p);
-      particles.push(p);
-    }
+    for (let i = 0; i < count; i++) { const p: P = { lng: 0, lat: 0, age: 0 }; spawn(p); particles.push(p); }
 
     let raf = 0;
     let running = true;
-
     const frame = () => {
       if (!running) return;
-      const w = canvas.width, h = canvas.height;
-      // 拖尾淡出
       ctx.globalCompositeOperation = 'destination-in';
       ctx.fillStyle = `rgba(0,0,0,${FADE})`;
-      ctx.fillRect(0, 0, w, h);
+      ctx.fillRect(0, 0, cssW, cssH);
       ctx.globalCompositeOperation = 'source-over';
       ctx.lineWidth = 1.1;
-
       for (const p of particles) {
         const wind = sample(p.lng, p.lat);
         if (!wind || p.age > MAX_AGE) { spawn(p); continue; }
         const cosLat = Math.max(0.2, Math.cos((p.lat * Math.PI) / 180));
-        const nLng = p.lng + (wind.u / (111320 * cosLat)) * SPEED_FACTOR * 1000;
-        const nLat = p.lat + (wind.v / 111320) * SPEED_FACTOR * 1000;
+        const nLng = p.lng + (wind.u / (111320 * cosLat)) * cfg.gain * 1000;
+        const nLat = p.lat + (wind.v / 111320) * cfg.gain * 1000;
         const a = map.project([p.lng, p.lat]);
         const b = map.project([nLng, nLat]);
-        // 跳过屏幕外 / 异常长线（投影跳变）
-        if (Math.abs(a.x - b.x) < 120 && Math.abs(a.y - b.y) < 120 && b.x >= -50 && b.x <= w + 50 && b.y >= -50 && b.y <= h + 50) {
-          const spd = Math.hypot(wind.u, wind.v);
-          ctx.strokeStyle = speedColor(spd);
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
+        if (Math.abs(a.x - b.x) < 120 && Math.abs(a.y - b.y) < 120 && b.x >= -50 && b.x <= cssW + 50 && b.y >= -50 && b.y <= cssH + 50) {
+          ctx.strokeStyle = cfg.color(Math.hypot(wind.u, wind.v));
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
         }
         p.lng = nLng > 180 ? nLng - 360 : nLng < -180 ? nLng + 360 : nLng;
-        p.lat = nLat;
-        p.age++;
+        p.lat = nLat; p.age++;
       }
       raf = requestAnimationFrame(frame);
     };
 
     const onResize = () => resize();
     const onVisibility = () => {
-      if (document.visibilityState === 'visible') { if (!raf && running) raf = requestAnimationFrame(frame); }
+      if (document.visibilityState === 'visible') { if (!raf && running && !reduce) raf = requestAnimationFrame(frame); }
       else { cancelAnimationFrame(raf); raf = 0; }
     };
     map.on('resize', onResize);
@@ -148,13 +166,11 @@ export function WindParticleLayer() {
 
     if (!reduce) raf = requestAnimationFrame(frame);
     else {
-      // 减少动态：画一帧静态短线示意
-      ctx.lineWidth = 1;
       for (const p of particles) {
         const wind = sample(p.lng, p.lat);
         if (!wind) continue;
         const a = map.project([p.lng, p.lat]);
-        ctx.strokeStyle = speedColor(Math.hypot(wind.u, wind.v));
+        ctx.strokeStyle = cfg.color(Math.hypot(wind.u, wind.v));
         ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(a.x + wind.u * 0.3, a.y - wind.v * 0.3); ctx.stroke();
       }
     }
@@ -166,7 +182,15 @@ export function WindParticleLayer() {
       document.removeEventListener('visibilitychange', onVisibility);
       canvas.remove();
     };
-  }, [map, enabled, data]);
+  }, [map, enabled, data, cfg]);
 
   return null;
+}
+
+export function WindParticleLayer() {
+  return <ParticleFlowLayer cfg={WIND_CONFIG} />;
+}
+
+export function OceanFlowLayer() {
+  return <ParticleFlowLayer cfg={OCEAN_CONFIG} />;
 }

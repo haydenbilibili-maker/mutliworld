@@ -15,7 +15,7 @@ export function getTier(id: SpatialTier): TierModule | undefined {
 }
 
 /** 按"宇宙→地表→洋底"的垂直顺序列出（上到下） */
-const TIER_ORDER: SpatialTier[] = ['space', 'surface', 'subsurface'];
+const TIER_ORDER: SpatialTier[] = ['space', 'near_earth', 'surface', 'subsurface'];
 
 export function listTiers(): TierModule[] {
   return TIER_ORDER.map((id) => registry.get(id)).filter(
