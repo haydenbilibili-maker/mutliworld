@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useLaunchLogStore } from '@/store/useLaunchLogStore';
 import { useOrbitalPanelStore } from '@/store/useOrbitalPanelStore';
 import { usePizzaIndexPanelStore } from '@/store/usePizzaIndexPanelStore';
+import { useLiveStreamStore } from '@/store/useLiveStreamStore';
 import { useLaunchLog } from '@/hooks/useLaunchLog';
 import { useMapStore } from '@/store/useMapStore';
 import { useOrbitalObjects } from '@/hooks/useOrbitalObjects';
@@ -27,6 +28,8 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
   const toggleOrbital = useOrbitalPanelStore((s) => s.toggle);
   const pizzaOpen = usePizzaIndexPanelStore((s) => s.open);
   const togglePizza = usePizzaIndexPanelStore((s) => s.toggle);
+  const liveOpen = useLiveStreamStore((s) => s.open);
+  const toggleLive = useLiveStreamStore((s) => s.toggle);
   const inSpace = useMapStore((s) => s.activeTier === 'space');
   const inSurface = useMapStore((s) => s.activeTier === 'surface');
   const setViewport = useMapStore((s) => s.setViewport);
@@ -148,6 +151,23 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
               扩展功能
             </div>
             <ul className="py-1">
+              <li>
+                <button
+                  type="button"
+                  role="menuitemcheckbox"
+                  aria-checked={liveOpen}
+                  title="全球主流媒体 24/7 实时直播"
+                  onClick={() => { toggleLive(); setMenuOpen(false); }}
+                  className={[
+                    'flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] transition-colors',
+                    liveOpen ? 'bg-dashboard-military/15 text-white' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
+                  ].join(' ')}
+                >
+                  <span aria-hidden className="shrink-0 text-sm">🔴</span>
+                  <span className="min-w-0 flex-1 font-medium">全球直播</span>
+                  <span className="shrink-0 text-[9px] text-red-400">LIVE</span>
+                </button>
+              </li>
               <li>
                 <button
                   type="button"

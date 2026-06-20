@@ -22,6 +22,13 @@ export const TRACKED_SATS: TrackedSat[] = [
   { norad: 43013, name: 'NOAA-20 气象卫星', kind: 'sat', operator: 'NOAA' },
   { norad: 49260, name: 'Landsat-9 对地观测', kind: 'sat', operator: 'NASA/USGS' },
   { norad: 25994, name: 'Terra 对地观测', kind: 'sat', operator: 'NASA' },
+  // ── 星座代表性卫星（实时星下点；按 NORAD 取，wheretheiss 无数据则优雅跳过）──
+  { norad: 44713, name: 'Starlink-1007（星链）', kind: 'sat', operator: 'SpaceX · Starlink' },
+  { norad: 45657, name: 'Starlink-1130（星链）', kind: 'sat', operator: 'SpaceX · Starlink' },
+  { norad: 44057, name: 'OneWeb-0012', kind: 'sat', operator: 'OneWeb' },
+  { norad: 43249, name: 'Iridium NEXT 154', kind: 'sat', operator: 'Iridium' },
+  { norad: 40697, name: '哨兵 2A（Sentinel-2A）', kind: 'sat', operator: 'ESA / 哥白尼计划' },
+  { norad: 33591, name: 'NOAA-19 气象卫星', kind: 'sat', operator: 'NOAA' },
 ];
 
 export interface LiveSat extends TrackedSat {

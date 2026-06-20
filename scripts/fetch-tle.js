@@ -22,8 +22,11 @@ const ROOT = join(__dirname, '..');
 const OUT_DIR = join(ROOT, 'data', 'orbital');
 const OUT_FILE = join(OUT_DIR, 'tle.json');
 
-const SAT_LIMIT = 400;
+const SAT_LIMIT = 520;
 const DEBRIS_LIMIT = 250;
+
+/** 大型星座单组配额（防止单一星座占满 SAT_LIMIT，保证多样性 + 星链必入库） */
+const SAT_GROUP_CAPS = { starlink: 140, oneweb: 50, 'iridium-NEXT': 40, globalstar: 30, planet: 40, spire: 30, cubesat: 40, active: 80 };
 
 /**
  * 按优先级尝试多组并合并去重，凑满 SAT_LIMIT。
@@ -33,9 +36,10 @@ const DEBRIS_LIMIT = 250;
 const SAT_GROUPS = [
   'visual', 'science', 'resource', 'weather', 'noaa', 'goes',
   'gnss', 'gps-ops', 'galileo', 'beidou-3', 'glo-ops',
+  'starlink', // 前置 + 配额，确保星链入库（此前置于末尾常被限额挤掉）
   'oneweb', 'iridium-NEXT', 'globalstar', 'orbcomm',
   'planet', 'spire', 'cubesat', 'amateur', 'engineering',
-  'starlink', 'active',
+  'active',
 ];
 
 const args = process.argv.slice(2);
@@ -68,9 +72,14 @@ async function fetchSatellites(stationNorads) {
       const items = parseTleBlock(text, 'satellite').filter((o) => !stationNorads.has(o.noradId));
       if (!items.length) continue;
       if (!usedGroup) usedGroup = group;
+      const cap = SAT_GROUP_CAPS[group] ?? Infinity;
+      let added = 0;
       for (const o of items) {
-        if (byNorad.size >= SAT_LIMIT) break;
-        if (!byNorad.has(o.noradId)) byNorad.set(o.noradId, o);
+        if (byNorad.size >= SAT_LIMIT || added >= cap) break;
+        if (!byNorad.has(o.noradId)) {
+          byNorad.set(o.noradId, o);
+          added++;
+        }
       }
     } catch (err) {
       console.warn(`  ⚠ ${group} 失败: ${err.message}`);

@@ -38,6 +38,7 @@ import { BodyViewControls } from '@/components/ui/BodyViewControls';
 import { BodyKnowledgePanel } from '@/components/ui/BodyKnowledgePanel';
 import { BriefingToast } from '@/components/ui/BriefingToast';
 import { BriefingDetailPanel } from '@/components/ui/BriefingDetailPanel';
+import { GlobalLivePanel } from '@/components/ui/GlobalLivePanel';
 import { useMapStore } from '@/store/useMapStore';
 
 const StrategicResearchHost = dynamic(
@@ -104,10 +105,12 @@ export function HomeDashboard() {
           <SidePanel />
           <StrategicResearchHost />
           <LiveLayerPerformanceGuard />
-          <BriefingDetailPanel />
-          <BriefingToast />
           </>
           )}
+          {/* 全局浮层（不限天体）：直播 / 简报通知与详情 */}
+          <BriefingDetailPanel />
+          <BriefingToast />
+          <GlobalLivePanel />
         </div>
       </main>
     </GeodataProvider>
