@@ -6,7 +6,7 @@
  * 复用 useLiveFlights（与 FlightLayer 同 key，SWR 去重，无额外请求）；随数据 45s 更新，不逐帧重绘。
  */
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import type { FeatureCollection, Feature } from 'geojson';
 import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
@@ -60,10 +60,17 @@ export function FlightTrailLayer() {
   const { geojson } = useLiveFlights(enabled, center, zoom);
 
   const trails = useMemo(() => buildTrails(geojson), [geojson]);
+  const lastTrailKeyRef = useRef('');
+  const lastEnabledRef = useRef<boolean | null>(null);
 
   useEffect(() => {
     if (!map) return;
     let cancelled = false;
+    // styleEpoch 刷新时重置守卫，确保数据/显隐被重新应用
+    lastTrailKeyRef.current = '';
+    lastEnabledRef.current = null;
+
+    const trailKey = `${trails.features.length}`;
 
     const ensure = () => {
       if (cancelled || !map.isStyleLoaded()) return;
@@ -96,9 +103,17 @@ export function FlightTrailLayer() {
             beforeId,
           );
         }
-        (map.getSource(SOURCE) as maplibregl.GeoJSONSource | undefined)?.setData(trails);
-        if (map.getLayer(LAYER)) {
-          map.setLayoutProperty(LAYER, 'visibility', enabled ? 'visible' : 'none');
+        // 仅当尾迹数据实际变化时才 setData
+        if (trailKey !== lastTrailKeyRef.current) {
+          (map.getSource(SOURCE) as maplibregl.GeoJSONSource | undefined)?.setData(trails);
+          lastTrailKeyRef.current = trailKey;
+        }
+        // 仅当 enabled 状态变化时才改显隐
+        if (enabled !== lastEnabledRef.current) {
+          lastEnabledRef.current = enabled;
+          if (map.getLayer(LAYER)) {
+            map.setLayoutProperty(LAYER, 'visibility', enabled ? 'visible' : 'none');
+          }
         }
       } catch {
         /* 样式未就绪 */

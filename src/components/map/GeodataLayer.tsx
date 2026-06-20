@@ -142,6 +142,9 @@ export function GeodataLayer() {
   const selectEvent = useMapStore((s) => s.selectEvent);
   const popupRef = useRef<maplibregl.Popup | null>(null);
   const lastFeaturesKeyRef = useRef('');
+  // 避免每次 SWR 重校验都无条件调用 setLayoutProperty 触发地图重排
+  const lastShowPointsRef = useRef<boolean | null>(null);
+  const lastShowLinesRef = useRef<boolean | null>(null);
 
   useEffect(() => {
     if (!map) return;
@@ -568,6 +571,8 @@ export function GeodataLayer() {
 
   useEffect(() => {
     lastFeaturesKeyRef.current = '';
+    lastShowPointsRef.current = null;
+    lastShowLinesRef.current = null;
   }, [styleEpoch]);
 
   useEffect(() => {
@@ -590,24 +595,33 @@ export function GeodataLayer() {
           lastFeaturesKeyRef.current = featuresKey;
         }
 
-        if (map.getLayer(SYMBOL_LAYER)) {
-          map.setLayoutProperty(SYMBOL_LAYER, 'visibility', showPoints ? 'visible' : 'none');
+        // 仅在显隐状态确实变化时才调用 setLayoutProperty，避免每次 SWR 重校验都触发地图重排
+        if (showPoints !== lastShowPointsRef.current) {
+          lastShowPointsRef.current = showPoints;
+          const vis = showPoints ? 'visible' : 'none';
+          if (map.getLayer(SYMBOL_LAYER)) {
+            map.setLayoutProperty(SYMBOL_LAYER, 'visibility', vis);
+          }
+          if (map.getLayer(HALO_LAYER)) {
+            map.setLayoutProperty(HALO_LAYER, 'visibility', vis);
+          }
+          if (map.getLayer(CORE_LAYER)) {
+            map.setLayoutProperty(CORE_LAYER, 'visibility', vis);
+          }
+          if (map.getLayer(CLUSTER_CIRCLE)) {
+            map.setLayoutProperty(CLUSTER_CIRCLE, 'visibility', vis);
+          }
+          if (map.getLayer(CLUSTER_COUNT)) {
+            map.setLayoutProperty(CLUSTER_COUNT, 'visibility', vis);
+          }
         }
-        if (map.getLayer(HALO_LAYER)) {
-          map.setLayoutProperty(HALO_LAYER, 'visibility', showPoints ? 'visible' : 'none');
-        }
-        if (map.getLayer(CORE_LAYER)) {
-          map.setLayoutProperty(CORE_LAYER, 'visibility', showPoints ? 'visible' : 'none');
-        }
-        if (map.getLayer(CLUSTER_CIRCLE)) {
-          map.setLayoutProperty(CLUSTER_CIRCLE, 'visibility', showPoints ? 'visible' : 'none');
-        }
-        if (map.getLayer(CLUSTER_COUNT)) {
-          map.setLayoutProperty(CLUSTER_COUNT, 'visibility', showPoints ? 'visible' : 'none');
-        }
-        for (const layerId of LINE_LAYERS) {
-          if (map.getLayer(layerId)) {
-            map.setLayoutProperty(layerId, 'visibility', showLines ? 'visible' : 'none');
+        if (showLines !== lastShowLinesRef.current) {
+          lastShowLinesRef.current = showLines;
+          const vis = showLines ? 'visible' : 'none';
+          for (const layerId of LINE_LAYERS) {
+            if (map.getLayer(layerId)) {
+              map.setLayoutProperty(layerId, 'visibility', vis);
+            }
           }
         }
       } catch {

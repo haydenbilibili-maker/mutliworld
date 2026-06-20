@@ -71,6 +71,8 @@ export function ConflictZonesLayer() {
   );
 
   const popupRef = useRef<maplibregl.Popup | null>(null);
+  const lastConflictKeyRef = useRef('');
+  const lastConflictVisibleRef = useRef<boolean | null>(null);
 
   useEffect(() => {
     if (!map) return;
@@ -265,17 +267,31 @@ export function ConflictZonesLayer() {
 
   useEffect(() => {
     if (!map) return;
+    // styleEpoch 刷新时重置守卫
+    lastConflictKeyRef.current = '';
+    lastConflictVisibleRef.current = null;
+
+    const conflictKey = `${geojson.features.length}:${enabled}`;
 
     const apply = () => {
       try {
         const src = map.getSource(SOURCE) as maplibregl.GeoJSONSource | undefined;
         if (!src) return;
 
-        src.setData(geojson);
-        const visible = enabled && geojson.features.length > 0 ? 'visible' : 'none';
-        for (const id of [FILL_LAYER, LINE_SOLID, LINE_DASHED, LABEL_LAYER]) {
-          if (map.getLayer(id)) {
-            map.setLayoutProperty(id, 'visibility', visible);
+        // 仅在数据实际变化时 setData
+        if (conflictKey !== lastConflictKeyRef.current) {
+          src.setData(geojson);
+          lastConflictKeyRef.current = conflictKey;
+        }
+
+        const visible = enabled && geojson.features.length > 0;
+        if (visible !== lastConflictVisibleRef.current) {
+          lastConflictVisibleRef.current = visible;
+          const vis = visible ? 'visible' : 'none';
+          for (const id of [FILL_LAYER, LINE_SOLID, LINE_DASHED, LABEL_LAYER]) {
+            if (map.getLayer(id)) {
+              map.setLayoutProperty(id, 'visibility', vis);
+            }
           }
         }
       } catch {

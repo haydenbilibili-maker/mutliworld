@@ -70,6 +70,11 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   air_pollutants: '化学污染物',
   particulates: '颗粒物',
   pizza_index: '披萨指数',
+  wave_flow: '海浪流场',
+  sea_temp: '海表温度',
+  sig_wave_height: '有效波高',
+  sst_anomaly: '海温异常',
+  coral_baa: '珊瑚脆弱性',
   persons: '人物分布',
 };
 

@@ -99,6 +99,9 @@ export function PizzaIndexLayer() {
   const { data } = usePentagonPizzaIndex(enabled);
 
   const popupRef = useRef<maplibregl.Popup | null>(null);
+  const lastPizzaKeyRef = useRef('');
+  const lastPizzaEnabledRef = useRef<boolean | null>(null);
+  const lastPizzaStyleEpochRef = useRef(0);
   const geojson = useMemo(
     () => venuesToGeoJSON(data?.venues ?? []),
     [data?.venues],
@@ -202,12 +205,25 @@ export function PizzaIndexLayer() {
 
   useEffect(() => {
     if (!map || !enabled) return;
+    if (styleEpoch !== lastPizzaStyleEpochRef.current) {
+      lastPizzaStyleEpochRef.current = styleEpoch;
+      lastPizzaKeyRef.current = '';
+    }
+    const pizzaKey = `${geojson.features.length}`;
+    if (pizzaKey === lastPizzaKeyRef.current) return;
+    lastPizzaKeyRef.current = pizzaKey;
     const src = map.getSource(SOURCE) as maplibregl.GeoJSONSource | undefined;
     if (src) src.setData(geojson);
-  }, [map, geojson, enabled]);
+  }, [map, geojson, enabled, styleEpoch]);
 
   useEffect(() => {
     if (!map) return;
+    if (styleEpoch !== lastPizzaStyleEpochRef.current) {
+      lastPizzaStyleEpochRef.current = styleEpoch;
+      lastPizzaEnabledRef.current = null;
+    }
+    if (enabled === lastPizzaEnabledRef.current) return;
+    lastPizzaEnabledRef.current = enabled;
     const vis = enabled ? 'visible' : 'none';
     try {
       if (map.getLayer(LAYER_CIRCLES)) map.setLayoutProperty(LAYER_CIRCLES, 'visibility', vis);
@@ -216,7 +232,7 @@ export function PizzaIndexLayer() {
       /* */
     }
     if (!enabled) popupRef.current?.remove();
-  }, [map, enabled]);
+  }, [map, enabled, styleEpoch]);
 
   return null;
 }

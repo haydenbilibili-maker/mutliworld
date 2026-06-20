@@ -37,15 +37,19 @@ export function LiveSatellitesLayer() {
   const styleEpoch = useMapStyleEpoch();
   const inSpace = useMapStore((s) => s.activeTier === 'space');
   const selectEvent = useMapStore((s) => s.selectEvent);
-  const setCenter = useMapStore((s) => s.setCenter);
+  const setViewport = useMapStore((s) => s.setViewport);
+  const zoom = useMapStore((s) => s.zoom);
   const selectEventRef = useRef(selectEvent);
-  const setCenterRef = useRef(setCenter);
+  const setViewportRef = useRef(setViewport);
+  const zoomRef = useRef(zoom);
   selectEventRef.current = selectEvent;
-  setCenterRef.current = setCenter;
+  setViewportRef.current = setViewport;
+  zoomRef.current = zoom;
 
   const { items } = useLiveSatellites(inSpace);
   const markersRef = useRef<Map<number, maplibregl.Marker>>(new Map());
   const lastDotsKeyRef = useRef('');
+  const lastSatsVisibleRef = useRef<boolean | null>(null);
 
   const itemsKey = useMemo(
     () =>
@@ -126,9 +130,11 @@ export function LiveSatellitesLayer() {
           src.setData(toFC(items));
           lastDotsKeyRef.current = dotsKey;
         }
-        const vis = inSpace ? 'visible' : 'none';
-        if (map.getLayer(DOT)) map.setLayoutProperty(DOT, 'visibility', vis);
-        if (map.getLayer(GLOW)) map.setLayoutProperty(GLOW, 'visibility', vis);
+        if (inSpace !== lastSatsVisibleRef.current) {
+          lastSatsVisibleRef.current = inSpace;
+          if (map.getLayer(DOT)) map.setLayoutProperty(DOT, 'visibility', inSpace ? 'visible' : 'none');
+          if (map.getLayer(GLOW)) map.setLayoutProperty(GLOW, 'visibility', inSpace ? 'visible' : 'none');
+        }
       } catch {
         /* */
       }
@@ -162,7 +168,7 @@ export function LiveSatellitesLayer() {
         `;
         el.style.cursor = 'pointer';
         el.addEventListener('click', () => {
-          setCenterRef.current([s.lng, s.lat]);
+          setViewportRef.current([s.lng, s.lat], zoomRef.current);
           selectEventRef.current({
             id: `live-${s.norad}`,
             title: s.name,

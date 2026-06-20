@@ -33,7 +33,8 @@ export function VerticalProfilePanel({ className = '' }: VerticalProfilePanelPro
   const close = useProfileStore((s) => s.close);
   const center = useMapStore((s) => s.center);
   const selectEvent = useMapStore((s) => s.selectEvent);
-  const setCenter = useMapStore((s) => s.setCenter);
+  const setViewport = useMapStore((s) => s.setViewport);
+  const zoom = useMapStore((s) => s.zoom);
   const { data } = useGeodataContext();
   const { items: liveSats } = useLiveSatellites(active);
 
@@ -47,7 +48,7 @@ export function VerticalProfilePanel({ className = '' }: VerticalProfilePanelPro
   if (!active) return null;
 
   const fly = (it: ProfileItem) => {
-    setCenter([it.lng, it.lat]);
+    setViewport([it.lng, it.lat], zoom);
     const ev: EventDetail = {
       id: it.id,
       title: it.title,
