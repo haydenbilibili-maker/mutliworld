@@ -35,7 +35,6 @@ import { FlightTrailLayer } from '@/components/map/FlightTrailLayer';
 import { FlowLayer } from '@/components/map/FlowLayer';
 import { WindParticleLayer, OceanFlowLayer } from '@/components/map/WindParticleLayer';
 import { ScalarOverlayLayer } from '@/components/map/ScalarOverlayLayer';
-import { NearEarthBackdrop } from '@/components/map/NearEarthBackdrop';
 import { NearEarthHud } from '@/components/ui/NearEarthHud';
 import { BathymetryLayer } from '@/components/map/BathymetryLayer';
 import { GlobeController } from '@/components/map/GlobeController';
@@ -363,7 +362,6 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <ProfilePicker />
             <CrossLayerLinks />
             <DaynightLayer />
-            <NearEarthBackdrop />
             <ScalarOverlayLayer />
             <WindParticleLayer />
             <OceanFlowLayer />

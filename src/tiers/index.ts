@@ -73,7 +73,7 @@ const nearEarthTier: TierModule = {
   tagline: '大气环流 · 洋流 · 化学污染物 · 颗粒物（粒子流场 + 标量叠加）',
   layers: ['wind_flow', 'ocean_flow', 'air_pollutants', 'particulates', 'daynight'],
   defaultLayers: ['wind_flow'],
-  basemap: 'imagery',
+  basemap: 'flow',
   renderMode: 'flow',
   altitudeBand: [0, 12], // 近地大气层（对流层尺度，示意）
   note: 'Round 1：大气风场粒子流（真实 GFS/Open-Meteo）；后续轮次增补洋流/污染物/颗粒物标量叠加与投影',

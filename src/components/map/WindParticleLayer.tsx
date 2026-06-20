@@ -37,7 +37,7 @@ const WIND_CONFIG: FlowConfig = {
   layerId: 'wind_flow',
   endpoint: '/api/wind-grid',
   gainPx: 0.5, // 风 ~0–30 m/s → 每帧 0–15px
-  baseCount: 3000,
+  baseCount: 4200,
   color: (spd) =>
     spd < 4 ? 'rgba(120,210,255,0.6)'
       : spd < 9 ? 'rgba(150,225,255,0.72)'
@@ -58,8 +58,8 @@ const OCEAN_CONFIG: FlowConfig = {
           : 'rgba(190,250,215,0.9)',
 };
 
-const MAX_AGE = 90;
-const FADE = 0.94;
+const MAX_AGE = 100;
+const FADE = 0.96; // 拖尾更长更顺滑（对标 nullschool）
 
 function ParticleFlowLayer({ cfg }: { cfg: FlowConfig }) {
   const map = useMapContext();

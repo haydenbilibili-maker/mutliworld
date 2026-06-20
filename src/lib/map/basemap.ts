@@ -269,6 +269,41 @@ export function buildDarkBasemapStyle(): StyleSpecification {
   };
 }
 
+/** 近地「流场」底图（对标 earth.nullschool）：近黑海面 + 微亮陆地 + 细海岸/国界 + 淡经纬网，
+ *  无卫星无标注，让大气/海洋粒子流与标量叠加最大化凸显。 */
+export function buildFlowBasemapStyle(): StyleSpecification {
+  return {
+    version: 8,
+    sources: {
+      countries: { type: 'vector', url: 'https://demotiles.maplibre.org/tiles/tiles.json' },
+      graticule: { type: 'geojson', data: buildGraticule(20) },
+    },
+    layers: [
+      { id: 'background', type: 'background', paint: { 'background-color': '#04060e' } },
+      {
+        id: 'country-fill',
+        type: 'fill',
+        source: 'countries',
+        'source-layer': 'countries',
+        paint: { 'fill-color': '#0c1422', 'fill-opacity': 0.92 },
+      },
+      {
+        id: 'country-line',
+        type: 'line',
+        source: 'countries',
+        'source-layer': 'countries',
+        paint: { 'line-color': '#24426b', 'line-width': 0.6, 'line-opacity': 0.85 },
+      },
+      {
+        id: 'graticule-lines',
+        type: 'line',
+        source: 'graticule',
+        paint: { 'line-color': '#1e3354', 'line-width': 0.5, 'line-opacity': 0.3 },
+      },
+    ],
+  };
+}
+
 /** 解析地表/宇宙 imagery 样式 */
 export function resolveImageryStyle(mode: BasemapMode): string | StyleSpecification {
   switch (mode) {
@@ -294,12 +329,15 @@ export function resolveBasemapStyle(
   if (isImageryPreset(preset)) {
     return resolveImageryStyle(mode);
   }
+  if (preset === 'flow') {
+    return buildFlowBasemapStyle();
+  }
   return buildDarkBasemapStyle();
 }
 
 /** 洋底 ↔ 宇宙旧深色底图共用（遗留） */
 export function isDarkBasemapPreset(preset: BasemapPreset): boolean {
-  return preset === 'graticule' || preset === 'starfield' || preset === 'seabed';
+  return preset === 'graticule' || preset === 'starfield' || preset === 'seabed' || preset === 'flow';
 }
 
 /** 地表 ↔ 宇宙同为 imagery 且模式相同时可跳过 setStyle */

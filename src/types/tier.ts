@@ -19,7 +19,8 @@ export type BasemapPreset =
   | 'imagery' // 地表/宇宙：卫星·政区·混合（由 BasemapMode 决定）
   | 'graticule'
   | 'starfield'
-  | 'seabed';
+  | 'seabed'
+  | 'flow'; // 近地：暗色极简流场底图（对标 earth.nullschool）
 
 /** 地表/宇宙层底图显示模式 */
 export type BasemapMode = 'satellite' | 'political' | 'hybrid';
