@@ -61,6 +61,8 @@ const spaceTier: TierModule = {
   ],
   basemap: 'imagery',
   renderMode: 'orbit',
+  // 视图（级联）：宇宙层默认球面投影
+  view: { projection: 'globe' },
   altitudeBand: [200, 36000], // LEO 至 GEO
   note: 'Phase 2 将增补 星座/在轨星下点/测控站/空天事件，并上 3D 地球',
 };
@@ -75,6 +77,8 @@ const nearEarthTier: TierModule = {
   defaultLayers: ['wind_flow'],
   basemap: 'flow',
   renderMode: 'flow',
+  // 视图（级联）：近地默认平面投影 + 较慢流场动画（对标 nullschool 顺滑观感）
+  view: { projection: 'mercator', flowSpeed: 0.5 },
   altitudeBand: [0, 12], // 近地大气层（对流层尺度，示意）
   note: 'Round 1：大气风场粒子流（真实 GFS/Open-Meteo）；后续轮次增补洋流/污染物/颗粒物标量叠加与投影',
 };

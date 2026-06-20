@@ -36,6 +36,8 @@ export interface MapState {
   globeMotionSpeed: GlobeMotionSpeed;
   /** 递增以触发 CosmicGlobeAnimator 回正中国视角 */
   globeViewResetNonce: number;
+  /** 视图：近地流场粒子动画速度倍率（0.3慢/0.55中/0.9快），由空间层 view 配置级联派生 */
+  flowSpeed: number;
   center: [number, number];
   zoom: number;
   view: ViewPreset;
@@ -62,6 +64,8 @@ export interface MapActions {
   setGlobe: (globe: boolean) => void;
   setGlobeMotionPlaying: (playing: boolean) => void;
   setGlobeMotionSpeed: (speed: GlobeMotionSpeed) => void;
+  /** 设置近地流场动画速度倍率（视图模块控件） */
+  setFlowSpeed: (speed: number) => void;
   /** 一键回正：正视图居中中国，bearing/pitch 归零 */
   resetGlobeToChinaView: () => void;
   setCenter: (center: [number, number]) => void;
@@ -88,6 +92,7 @@ const initialState: MapState = {
   globeMotionPlaying: true,
   globeMotionSpeed: 1,
   globeViewResetNonce: 0,
+  flowSpeed: 0.5,
   center: [105, 28],
   zoom: 3.5,
   view: 'global',
@@ -148,9 +153,17 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
     set((s) => {
       const tier = getTier(tierId);
       if (!tier) return { activeTier: tierId };
+      // 级联：空间(Tier) → 视图(View)。切层时应用该层的视图默认，使视图由空间派生而非全局通用。
+      const v = tier.view;
+      const viewPatch: Partial<MapState> = {};
+      if (v?.projection === 'globe') viewPatch.globe = true;
+      else if (v?.projection === 'mercator') viewPatch.globe = false;
+      // projection 'auto' 或缺省：保持当前 globe（由 wantGlobeProjection 等层规则决定）
+      if (typeof v?.flowSpeed === 'number') viewPatch.flowSpeed = v.flowSpeed;
       return {
         activeTier: tierId,
         activeLayers: filterSensitive(tier.defaultLayers, s.hideSensitive),
+        ...viewPatch,
         selectedEvent: null,
         mapTooltip: null,
         sidePanelOpen: false,
@@ -165,6 +178,7 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setGlobe: (globe) => set({ globe }),
   setGlobeMotionPlaying: (globeMotionPlaying) => set({ globeMotionPlaying }),
   setGlobeMotionSpeed: (globeMotionSpeed) => set({ globeMotionSpeed }),
+  setFlowSpeed: (flowSpeed) => set({ flowSpeed }),
   resetGlobeToChinaView: () =>
     set((s) => ({
       center: CHINA_GLOBE_VIEW.center,

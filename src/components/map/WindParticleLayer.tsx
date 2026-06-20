@@ -9,7 +9,7 @@
  * R4 优化：devicePixelRatio 清晰度 + 按 zoom 调粒子密度。
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import useSWR from 'swr';
 import type { LayerId } from '@/types/geo';
 import { useMapContext } from '@/context/MapContext';
@@ -70,6 +70,11 @@ function ParticleFlowLayer({ cfg }: { cfg: FlowConfig }) {
     refreshInterval: 30 * 60 * 1000,
     revalidateOnFocus: false,
   });
+
+  // 视图模块的动画速度倍率（级联自空间层 view 配置）；用 ref 让运行中的帧循环热更新、无需重建画布
+  const flowSpeed = useMapStore((s) => s.flowSpeed);
+  const speedRef = useRef(flowSpeed);
+  useEffect(() => { speedRef.current = flowSpeed; }, [flowSpeed]);
 
   useEffect(() => {
     if (!map || !enabled || !data || !data.nx) return;
@@ -145,10 +150,11 @@ function ParticleFlowLayer({ cfg }: { cfg: FlowConfig }) {
         if (p.age > MAX_AGE) { spawn(p); continue; }
         const wind = sample(p.lng, p.lat);
         if (!wind) { spawn(p); continue; }
-        // 屏幕空间平流：东=+x，北=-y（近似，球面下亦可接受）
+        // 屏幕空间平流：东=+x，北=-y（近似，球面下亦可接受）；gainPx × 视图动画速度倍率
         const a = map.project([p.lng, p.lat]);
-        const bx = a.x + wind.u * cfg.gainPx;
-        const by = a.y - wind.v * cfg.gainPx;
+        const g = cfg.gainPx * speedRef.current;
+        const bx = a.x + wind.u * g;
+        const by = a.y - wind.v * g;
         if (bx >= -10 && bx <= cssW + 10 && by >= -10 && by <= cssH + 10) {
           ctx.strokeStyle = cfg.color(Math.hypot(wind.u, wind.v));
           ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(bx, by); ctx.stroke();

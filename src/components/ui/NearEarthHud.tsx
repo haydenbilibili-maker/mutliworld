@@ -31,8 +31,6 @@ export function NearEarthHud() {
   const inNearEarth = useMapStore((s) => s.activeBody === 'earth' && s.activeTier === 'near_earth');
   const layers = useMapStore((s) => s.activeLayers);
   const toggleLayer = useMapStore((s) => s.toggleLayer);
-  const globe = useMapStore((s) => s.globe);
-  const setGlobe = useMapStore((s) => s.setGlobe);
   const param = useNearEarthStore((s) => s.param);
   const setParam = useNearEarthStore((s) => s.setParam);
 
@@ -108,32 +106,7 @@ export function NearEarthHud() {
         </div>
       </div>
 
-      {/* 投影行（maplibre v5 支持 平面/球面）：对标 nullschool 投影切换 */}
-      <div className="mb-2 flex items-center gap-1.5">
-        <span className="text-[10px] text-dashboard-neutral/60">投影</span>
-        <div className="flex gap-1">
-          <button
-            type="button"
-            onClick={() => setGlobe(false)}
-            className={[
-              'rounded px-1.5 py-0.5 text-[10px] transition-colors',
-              !globe ? 'bg-brand-cyan/20 text-brand-cyan' : 'text-dashboard-neutral hover:bg-white/5',
-            ].join(' ')}
-          >
-            平面
-          </button>
-          <button
-            type="button"
-            onClick={() => setGlobe(true)}
-            className={[
-              'rounded px-1.5 py-0.5 text-[10px] transition-colors',
-              globe ? 'bg-brand-cyan/20 text-brand-cyan' : 'text-dashboard-neutral hover:bg-white/5',
-            ].join(' ')}
-          >
-            球面
-          </button>
-        </div>
-      </div>
+      {/* 投影 / 动画速度等「视图」控件已移至底部「视图」菜单（解耦：HUD 仅管图层与数据） */}
 
       {overlayOn && (
         <div className="mb-2">

@@ -70,6 +70,8 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
   const setHideSensitive = useMapStore((s) => s.setHideSensitive);
   const globe = useMapStore((s) => s.globe);
   const setGlobe = useMapStore((s) => s.setGlobe);
+  const flowSpeed = useMapStore((s) => s.flowSpeed);
+  const setFlowSpeed = useMapStore((s) => s.setFlowSpeed);
   const profileActive = useProfileStore((s) => s.active);
   const setProfileActive = useProfileStore((s) => s.setActive);
 
@@ -143,6 +145,33 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
               label={globeActive ? '3D 地球：开' : '3D 地球：平面'}
               title="3D 地球（球面投影）· 宇宙层自动球面"
             />
+            {activeTier === 'near_earth' && (
+              <div className="px-2.5 py-1.5">
+                <div className="mb-1 flex items-center gap-2 text-[12px] text-dashboard-neutral">
+                  <span aria-hidden className="shrink-0 text-sm">💨</span>
+                  <span className="font-medium">动画速度</span>
+                </div>
+                <div className="flex gap-1" role="group" aria-label="流场动画速度">
+                  {([['慢', 0.3], ['中', 0.55], ['快', 0.9]] as const).map(([label, val]) => {
+                    const active = Math.abs(flowSpeed - val) < 0.08;
+                    return (
+                      <button
+                        key={label}
+                        type="button"
+                        onClick={() => setFlowSpeed(val)}
+                        aria-pressed={active}
+                        className={[
+                          'flex-1 rounded-md px-2 py-1 text-[12px] transition-colors',
+                          active ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
+                        ].join(' ')}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
             <MenuToggle
               active={profileActive}
               onClick={() => setProfileActive(!profileActive)}
