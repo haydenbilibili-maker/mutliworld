@@ -362,11 +362,16 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <ProfilePicker />
             <CrossLayerLinks />
             <DaynightLayer />
-            <ScalarOverlayLayer />
-            <WindParticleLayer />
-            <OceanFlowLayer />
-            <WaveFlowLayer />
-            <NearEarthDataBar />
+            {/* 近地专属：仅近地层挂载，非近地层不创建 canvas/不监听 mousemove/不发起网格请求/不跑 RAF（性能专项） */}
+            {activeTier === 'near_earth' && (
+              <>
+                <ScalarOverlayLayer />
+                <WindParticleLayer />
+                <OceanFlowLayer />
+                <WaveFlowLayer />
+                <NearEarthDataBar />
+              </>
+            )}
             {activeTier !== 'near_earth' && <GeodataLayer />}
             <FlowLayer />
             {activeTier !== 'near_earth' && <LivePulseLayer />}
