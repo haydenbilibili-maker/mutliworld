@@ -36,6 +36,8 @@ import { BodyTimelinePanel } from '@/components/ui/BodyTimelinePanel';
 import { BodyOverviewPanel } from '@/components/ui/BodyOverviewPanel';
 import { BodyViewControls } from '@/components/ui/BodyViewControls';
 import { BodyKnowledgePanel } from '@/components/ui/BodyKnowledgePanel';
+import { BriefingToast } from '@/components/ui/BriefingToast';
+import { BriefingDetailPanel } from '@/components/ui/BriefingDetailPanel';
 import { useMapStore } from '@/store/useMapStore';
 
 const StrategicResearchHost = dynamic(
@@ -102,6 +104,8 @@ export function HomeDashboard() {
           <SidePanel />
           <StrategicResearchHost />
           <LiveLayerPerformanceGuard />
+          <BriefingDetailPanel />
+          <BriefingToast />
           </>
           )}
         </div>

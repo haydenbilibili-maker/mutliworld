@@ -7,13 +7,12 @@
  * 诚实合成、不编造（与 WM 的 LLM 简报不同，此处为确定性聚合）。区域无关，8 区域通用。
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useMapStore } from '@/store/useMapStore';
 import { useRegionData } from '@/hooks/useRegionData';
 import { getRegion } from '@/regions';
 import { DockPanel } from '@/components/region/DockPanel';
-
-type AiState = 'idle' | 'loading' | 'done' | 'no_key' | 'error';
+import { useBriefingStore, type BriefingStatus } from '@/store/useBriefingStore';
 
 interface RegionBriefingPanelProps {
   className?: string;
@@ -55,47 +54,27 @@ export function RegionBriefingPanel({ className = '' }: RegionBriefingPanelProps
     [data],
   );
 
-  const [aiState, setAiState] = useState<AiState>('idle');
-  const [aiText, setAiText] = useState('');
-  const mountedRef = useRef(true);
-  useEffect(() => () => { mountedRef.current = false; }, []);
+  // 后台生成：脱离本组件生命周期，切换区域/天体/页面不中断；完成后 toast 通知 + 详情弹窗查看
+  const briefKey = `region:${region}`;
+  const briefLabel = `${mod?.name ?? '区域'} · AI 态势简报`;
+  const generate = useBriefingStore((s) => s.generate);
+  const openDetail = useBriefingStore((s) => s.openDetail);
+  const task = useBriefingStore((s) => s.tasks[briefKey]);
+  const aiState: BriefingStatus | 'idle' = task?.status ?? 'idle';
+  const aiText = task?.text ?? '';
 
-  const generateAi = useCallback(async () => {
-    setAiState('loading');
-    setAiText('');
-    try {
-      const situation = (data.situation ?? [])
-        .map((s) => (typeof s === 'string' ? s : (s as { title?: string; summary?: string }).title ?? (s as { summary?: string }).summary ?? ''))
-        .filter(Boolean)
-        .slice(0, 8);
-      const recentPayload = [...(data.events ?? [])]
-        .filter((e) => e.timestamp)
-        .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
-        .slice(0, 8)
-        .map((e) => ({ title: e.title, source: e.source, timestamp: e.timestamp }));
-      const res = await fetch('/api/briefing', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ regionName: mod?.name, stats, recent: recentPayload, situation }),
-      });
-      if (!mountedRef.current) return;
-      if (!res.ok) {
-        console.error('[Briefing] API returned', res.status, res.statusText);
-        setAiState('error');
-        return;
-      }
-      const json = await res.json();
-      if (!mountedRef.current) return;
-      if (json.degraded === 'no_key') { setAiState('no_key'); return; }
-      if (!json.briefing) { setAiState('error'); return; }
-      setAiText(json.briefing);
-      setAiState('done');
-    } catch (err) {
-      console.error('[Briefing] generate failed', err);
-      if (!mountedRef.current) return;
-      setAiState('error');
-    }
-  }, [data, mod, stats]);
+  const generateAi = useCallback(() => {
+    const situation = (data.situation ?? [])
+      .map((s) => (typeof s === 'string' ? s : (s as { title?: string; summary?: string }).title ?? (s as { summary?: string }).summary ?? ''))
+      .filter(Boolean)
+      .slice(0, 8);
+    const recentPayload = [...(data.events ?? [])]
+      .filter((e) => e.timestamp)
+      .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
+      .slice(0, 8)
+      .map((e) => ({ title: e.title, source: e.source, timestamp: e.timestamp }));
+    generate(briefKey, briefLabel, { regionName: mod?.name, stats, recent: recentPayload, situation });
+  }, [data, mod, stats, generate, briefKey, briefLabel]);
 
   const total =
     stats.events +
@@ -133,17 +112,29 @@ export function RegionBriefingPanel({ className = '' }: RegionBriefingPanelProps
         <div className="rounded-md border border-brand-cyan/20 bg-brand-cyan/[0.04] p-2">
           <div className="mb-1 flex items-center gap-2">
             <span className="text-[10px] font-medium text-brand-cyan">✨ AI 态势简报</span>
+            {(aiState === 'done' || aiState === 'no_key') && (
+              <button
+                type="button"
+                onClick={() => openDetail(briefKey)}
+                className="rounded px-1.5 py-0.5 text-[10px] text-brand-cyan transition-colors hover:bg-brand-cyan/15"
+              >
+                查看详情
+              </button>
+            )}
             <button
               type="button"
               onClick={generateAi}
               disabled={aiState === 'loading'}
               className="ml-auto rounded px-1.5 py-0.5 text-[10px] text-brand-cyan transition-colors hover:bg-brand-cyan/15 disabled:opacity-50"
             >
-              {aiState === 'loading' ? '生成中…' : aiState === 'done' ? '重新生成' : '生成'}
+              {aiState === 'loading' ? '后台生成中…' : aiState === 'done' ? '重新生成' : '生成'}
             </button>
           </div>
+          {aiState === 'loading' && (
+            <p className="text-[10px] leading-snug text-brand-cyan/70">已在后台生成，可继续浏览其他页面；完成后将弹窗通知。</p>
+          )}
           {aiState === 'done' && (
-            <p className="text-[11px] leading-relaxed text-dashboard-neutral/90">{aiText}</p>
+            <p className="text-[11px] leading-relaxed text-dashboard-neutral/90 line-clamp-4">{aiText}</p>
           )}
           {aiState === 'no_key' && (
             <p className="text-[10px] leading-snug text-amber-300/80">未配置 LLM（设 LLM_API_KEY 即可启用）；当前展示下方规则化简报。</p>
@@ -151,8 +142,8 @@ export function RegionBriefingPanel({ className = '' }: RegionBriefingPanelProps
           {aiState === 'error' && (
             <p className="text-[10px] text-dashboard-conflict/80">生成失败，请稍后重试。</p>
           )}
-          {aiState === 'idle' && (
-            <p className="text-[10px] leading-snug text-dashboard-neutral/55">基于本区域真实监测数据合成、保留来源、不编造。点击「生成」。</p>
+          {!task && (
+            <p className="text-[10px] leading-snug text-dashboard-neutral/55">基于本区域真实监测数据合成、保留来源、不编造。点击「生成」（后台进行，可继续浏览）。</p>
           )}
           {aiState === 'done' && (
             <div className="mt-1.5 text-[9px] text-dashboard-neutral/45">来源见下方「近期动态」· AI 合成仅供研判</div>
