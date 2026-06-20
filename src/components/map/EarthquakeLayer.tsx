@@ -1,0 +1,171 @@
+'use client';
+
+/**
+ * 实时地震图层 — 地表层（USGS 地震灾害项目，近实时 M2.5+/24h）。
+ * 圆点：按震级着色与定径；点击弹出详情（震级/地点/深度/时刻）。真实数据·中立并陈。
+ */
+
+import { useEffect, useMemo, useRef } from 'react';
+import maplibregl from 'maplibre-gl';
+import useSWR from 'swr';
+import type { FeatureCollection } from 'geojson';
+import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
+import { useMapStore } from '@/store/useMapStore';
+import { findLiveOverlayBeforeId } from '@/lib/map/basemap';
+import type { EventDetail } from '@/types/geo';
+
+const SOURCE = 'live-quakes';
+const GLOW = 'live-quakes-glow';
+const CORE = 'live-quakes-core';
+const POPUP_BG = '#0A0E17';
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
+type QuakeProps = { mag: number; place: string; depth: number; time: number };
+
+/** 震级 → 颜色 */
+const COLOR_EXPR: maplibregl.ExpressionSpecification = [
+  'interpolate', ['linear'], ['get', 'mag'],
+  2.5, '#fbbf24', 4, '#f97316', 5, '#ef4444', 6.5, '#991b1b',
+];
+/** 震级 → 半径（指数感知：每级能量约 32 倍） */
+const RADIUS_EXPR: maplibregl.ExpressionSpecification = [
+  'interpolate', ['exponential', 1.6], ['get', 'mag'],
+  2.5, 3, 4.5, 6, 6, 10, 8, 18,
+];
+
+function applyPopupTheme(popup: maplibregl.Popup) {
+  const content = popup.getElement()?.querySelector('.maplibregl-popup-content');
+  if (content instanceof HTMLElement) {
+    content.style.setProperty('background', POPUP_BG, 'important');
+    content.style.setProperty('color', '#e6edf3', 'important');
+    content.style.setProperty('border', '1px solid rgba(255,255,255,0.12)', 'important');
+    content.style.setProperty('border-radius', '8px', 'important');
+  }
+}
+
+function popupHtml(p: QuakeProps): string {
+  const t = new Date(p.time).toLocaleString('zh-CN', { hour12: false });
+  return `
+    <div style="font-size:13px;line-height:1.5;min-width:12rem">
+      <div style="font-weight:600;margin-bottom:4px">🌐 M${p.mag.toFixed(1)} 地震</div>
+      <div style="font-size:11px;color:#94a3b8;margin-bottom:6px">${t}</div>
+      <div>${p.place}</div>
+      <div>震源深度：${Math.round(p.depth)} km</div>
+    </div>`;
+}
+
+export function EarthquakeLayer() {
+  const map = useMapContext();
+  const styleEpoch = useMapStyleEpoch();
+  const activeTier = useMapStore((s) => s.activeTier);
+  const activeLayers = useMapStore((s) => s.activeLayers);
+  const selectEvent = useMapStore((s) => s.selectEvent);
+
+  const enabled = activeTier === 'surface' && activeLayers.includes('earthquakes');
+  const { data } = useSWR<FeatureCollection>(enabled ? '/api/earthquakes' : null, fetcher, {
+    revalidateOnFocus: false, refreshInterval: 5 * 60 * 1000, dedupingInterval: 60 * 1000,
+  });
+  const geojson: FeatureCollection = data?.type === 'FeatureCollection' ? data : { type: 'FeatureCollection', features: [] };
+
+  const selectEventRef = useRef(selectEvent);
+  selectEventRef.current = selectEvent;
+  const popupRef = useRef<maplibregl.Popup | null>(null);
+  const lastKey = useRef('');
+  const dataKey = useMemo(() => `${enabled}:${geojson.features.length}`, [geojson, enabled]);
+
+  useEffect(() => {
+    if (!map) return;
+    const setup = () => {
+      try {
+        if (!map.getSource(SOURCE)) map.addSource(SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+        if (!map.getLayer(GLOW)) {
+          map.addLayer({
+            id: GLOW, type: 'circle', source: SOURCE, layout: { visibility: 'none' },
+            paint: { 'circle-radius': ['*', RADIUS_EXPR, 2.3], 'circle-color': COLOR_EXPR, 'circle-opacity': 0.2, 'circle-blur': 0.8 },
+          }, findLiveOverlayBeforeId(map));
+        }
+        if (!map.getLayer(CORE)) {
+          map.addLayer({
+            id: CORE, type: 'circle', source: SOURCE, layout: { visibility: 'none' },
+            paint: { 'circle-radius': RADIUS_EXPR, 'circle-color': COLOR_EXPR, 'circle-opacity': 0.9, 'circle-stroke-width': 0.6, 'circle-stroke-color': '#1a0500' },
+          }, findLiveOverlayBeforeId(map));
+        }
+      } catch { /* 样式未就绪 */ }
+    };
+    if (map.isStyleLoaded()) setup();
+    map.on('style.load', setup);
+    return () => {
+      map.off('style.load', setup);
+      popupRef.current?.remove();
+      try {
+        if (map.getLayer(CORE)) map.removeLayer(CORE);
+        if (map.getLayer(GLOW)) map.removeLayer(GLOW);
+        if (map.getSource(SOURCE)) map.removeSource(SOURCE);
+      } catch { /* */ }
+    };
+  }, [map, styleEpoch]);
+
+  useEffect(() => { lastKey.current = ''; }, [styleEpoch]);
+
+  useEffect(() => {
+    if (!map) return;
+    const apply = () => {
+      try {
+        const src = map.getSource(SOURCE) as maplibregl.GeoJSONSource | undefined;
+        if (!src || !map.getLayer(CORE) || !map.getLayer(GLOW)) return;
+        if (dataKey !== lastKey.current) { src.setData(geojson); lastKey.current = dataKey; }
+        const vis = enabled ? 'visible' : 'none';
+        map.setLayoutProperty(CORE, 'visibility', vis);
+        map.setLayoutProperty(GLOW, 'visibility', vis);
+      } catch { /* */ }
+    };
+    if (map.isStyleLoaded()) apply();
+    map.on('style.load', apply);
+    return () => { map.off('style.load', apply); };
+  }, [map, enabled, geojson, dataKey, styleEpoch]);
+
+  useEffect(() => {
+    if (!map) return;
+    const onClick = (e: maplibregl.MapMouseEvent & { features?: maplibregl.MapGeoJSONFeature[] }) => {
+      const f = e.features?.[0];
+      if (!f?.properties) return;
+      const p = f.properties as unknown as QuakeProps;
+      const coords = (f.geometry as { coordinates: [number, number] }).coordinates;
+      popupRef.current?.remove();
+      const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, offset: 10, className: 'geodata-popup' })
+        .setLngLat(coords).setHTML(popupHtml(p)).addTo(map);
+      applyPopupTheme(popup);
+      popupRef.current = popup;
+      const detail: EventDetail = {
+        id: `quake-${p.time}-${coords[0]},${coords[1]}`,
+        title: `🌐 M${p.mag.toFixed(1)} 地震`,
+        source: 'USGS 地震灾害项目（近实时）',
+        timestamp: new Date(p.time).toISOString(),
+        location: coords,
+        impact_level: p.mag >= 6 ? 'high' : p.mag >= 4.5 ? 'medium' : 'low',
+        category: 'earthquakes',
+        description: `${p.place} · 震源深度 ${Math.round(p.depth)} km`,
+      };
+      selectEventRef.current(detail);
+    };
+    const onEnter = () => { map.getCanvas().style.cursor = 'pointer'; };
+    const onLeave = () => { map.getCanvas().style.cursor = ''; };
+    const attach = () => {
+      map.on('click', CORE, onClick);
+      map.on('mouseenter', CORE, onEnter);
+      map.on('mouseleave', CORE, onLeave);
+    };
+    if (map.isStyleLoaded()) attach();
+    map.on('style.load', attach);
+    return () => {
+      map.off('style.load', attach);
+      map.off('click', CORE, onClick);
+      map.off('mouseenter', CORE, onEnter);
+      map.off('mouseleave', CORE, onLeave);
+    };
+  }, [map, styleEpoch]);
+
+  useEffect(() => () => { popupRef.current?.remove(); }, []);
+
+  return null;
+}

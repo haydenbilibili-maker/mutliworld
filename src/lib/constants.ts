@@ -78,6 +78,7 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   dhw: '度日热 DHW',
   air_temp: '2米气温',
   precip: '降水',
+  earthquakes: '实时地震',
   persons: '人物分布',
 };
 

@@ -114,7 +114,7 @@ export function NearEarthDataBar() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
-      className="pointer-events-none fixed bottom-[6.25rem] left-1/2 z-20 w-[min(44rem,calc(100vw-1.5rem))] -translate-x-1/2 max-sm:bottom-[7rem]"
+      className="pointer-events-none fixed bottom-[6.25rem] left-1/2 z-30 w-[min(44rem,calc(100vw-1.5rem))] -translate-x-1/2 max-sm:bottom-[7rem]"
     >
       <div className="pointer-events-auto flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-lg border border-dashboard-neutral/25 bg-dashboard-bg/92 px-3 py-2 shadow-xl backdrop-blur-md transition-colors">
         {/* 图例（醒目）：BAA 离散分级 / 其余连续浓度色阶 */}
