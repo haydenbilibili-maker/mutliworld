@@ -35,7 +35,7 @@ import { FlightTrailLayer } from '@/components/map/FlightTrailLayer';
 import { FlowLayer } from '@/components/map/FlowLayer';
 import { WindParticleLayer, OceanFlowLayer, WaveFlowLayer } from '@/components/map/WindParticleLayer';
 import { ScalarOverlayLayer } from '@/components/map/ScalarOverlayLayer';
-import { NearEarthHud } from '@/components/ui/NearEarthHud';
+import { NearEarthDataBar } from '@/components/ui/NearEarthDataBar';
 import { BathymetryLayer } from '@/components/map/BathymetryLayer';
 import { GlobeController } from '@/components/map/GlobeController';
 import { CosmicGlobeAnimator } from '@/components/map/CosmicGlobeAnimator';
@@ -366,7 +366,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <WindParticleLayer />
             <OceanFlowLayer />
             <WaveFlowLayer />
-            <NearEarthHud />
+            <NearEarthDataBar />
             {activeTier !== 'near_earth' && <GeodataLayer />}
             <FlowLayer />
             {activeTier !== 'near_earth' && <LivePulseLayer />}

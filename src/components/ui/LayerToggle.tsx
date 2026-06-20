@@ -8,6 +8,16 @@ import { LAYER_HINTS, LAYER_LABELS } from '@/lib/constants';
 import { getRegion } from '@/regions';
 import { tierForLayer } from '@/tiers';
 import type { LayerId } from '@/types/geo';
+import { useNearEarthStore, SCALAR_META, type ScalarParam } from '@/store/useNearEarthStore';
+
+/** 近地标量叠加（图层模块单选；与「动画」流场分离，后者在视图菜单） */
+const NEAR_EARTH_OVERLAY_GROUPS: { title: string; params: ScalarParam[] }[] = [
+  { title: '化学污染物', params: ['carbon_monoxide', 'sulphur_dioxide', 'nitrogen_dioxide', 'ozone'] },
+  { title: '颗粒物', params: ['pm2_5', 'pm10'] },
+  { title: '海洋', params: ['sea_surface_temperature', 'wave_height'] },
+  { title: '珊瑚礁观察', params: ['sst_anomaly', 'bleaching_alert_area'] },
+];
+const NEAR_EARTH_OVERLAY_LAYERS: LayerId[] = ['air_pollutants', 'particulates', 'sea_temp', 'sig_wave_height', 'sst_anomaly', 'coral_baa'];
 
 interface LayerToggleProps {
   className?: string;
@@ -43,7 +53,7 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   },
   {
     title: '近地空间（流场/叠加）',
-    ids: ['wind_flow', 'ocean_flow', 'air_pollutants', 'particulates'],
+    ids: ['wind_flow', 'ocean_flow', 'wave_flow', 'air_pollutants', 'particulates', 'sea_temp', 'sig_wave_height', 'sst_anomaly', 'coral_baa'],
   },
   {
     title: '海洋与洋底空间',
@@ -115,8 +125,13 @@ const ALWAYS_ON: LayerId[] = [
   'china_heritage',
   'wind_flow',
   'ocean_flow',
+  'wave_flow',
   'air_pollutants',
   'particulates',
+  'sea_temp',
+  'sig_wave_height',
+  'sst_anomaly',
+  'coral_baa',
   'hydrocarbon_reserves',
   'ground_stations',
   'sat_constellations',
@@ -136,6 +151,23 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
   const activeLayers = useMapStore((s) => s.activeLayers);
   const toggleLayer = useMapStore((s) => s.toggleLayer);
   const setActiveLayers = useMapStore((s) => s.setActiveLayers);
+  const overlayParam = useNearEarthStore((s) => s.param);
+  const setOverlayParam = useNearEarthStore((s) => s.setParam);
+
+  const isNearEarth = activeTier === 'near_earth';
+  /** 近地叠加单选：设当前参数 + 仅开启其对应叠加层（互斥其它叠加层） */
+  const pickOverlay = useCallback((p: ScalarParam) => {
+    setOverlayParam(p);
+    const target = SCALAR_META[p].layer;
+    setActiveLayers([
+      ...activeLayers.filter((id) => !NEAR_EARTH_OVERLAY_LAYERS.includes(id)),
+      target,
+    ]);
+  }, [activeLayers, setActiveLayers, setOverlayParam]);
+  const clearOverlay = useCallback(() => {
+    setActiveLayers(activeLayers.filter((id) => !NEAR_EARTH_OVERLAY_LAYERS.includes(id)));
+  }, [activeLayers, setActiveLayers]);
+  const overlayActive = activeLayers.some((id) => NEAR_EARTH_OVERLAY_LAYERS.includes(id));
 
   /**
    * 区域可用 + 与当前空间筛选级联：仅保留所属空间层 === 当前 tier 的图层。
@@ -280,40 +312,90 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
             </div>
 
             <div className="max-h-[40vh] space-y-2.5 overflow-y-auto pr-0.5">
-              {groups.map((g) => (
-                <div key={g.title}>
-                  <div className="mb-1 text-[10px] uppercase tracking-wide text-dashboard-neutral/40">
-                    {g.title}
+              {isNearEarth ? (
+                <div>
+                  <div className="mb-1.5 flex items-center justify-between">
+                    <span className="text-[10px] uppercase tracking-wide text-dashboard-neutral/40">标量叠加（单选）</span>
+                    <button
+                      type="button"
+                      onClick={clearOverlay}
+                      className={['rounded px-2 py-0.5 text-xs', overlayActive ? 'text-dashboard-neutral hover:bg-white/5 hover:text-white' : 'text-dashboard-neutral/30'].join(' ')}
+                    >
+                      无叠加
+                    </button>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {g.ids.map((id) => {
-                      const active = activeLayers.includes(id);
-                      return (
-                        <button
-                          key={id}
-                          type="button"
-                          aria-pressed={active}
-                          title={LAYER_HINTS[id] ?? LAYER_LABELS[id]}
-                          onClick={() => toggleLayer(id)}
-                          className={[
-                            'rounded-md border px-2.5 py-1 text-xs transition-colors',
-                            active
-                              ? 'border-dashboard-military/60 bg-dashboard-military/20 text-white'
-                              : 'border-dashboard-neutral/20 bg-dashboard-neutral/5 text-dashboard-neutral hover:border-dashboard-neutral/35 hover:text-white',
-                          ].join(' ')}
-                        >
-                          {LAYER_LABELS[id]}
-                        </button>
-                      );
-                    })}
+                  <div className="space-y-2">
+                    {NEAR_EARTH_OVERLAY_GROUPS.map((grp) => (
+                      <div key={grp.title}>
+                        <div className="mb-1 text-[10px] text-dashboard-neutral/40">{grp.title}</div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {grp.params.map((p) => {
+                            const active = overlayActive && p === overlayParam && activeLayers.includes(SCALAR_META[p].layer);
+                            return (
+                              <button
+                                key={p}
+                                type="button"
+                                aria-pressed={active}
+                                onClick={() => pickOverlay(p)}
+                                className={[
+                                  'rounded-md border px-2.5 py-1 text-xs transition-colors',
+                                  active
+                                    ? 'border-dashboard-military/60 bg-dashboard-military/20 text-white'
+                                    : 'border-dashboard-neutral/20 bg-dashboard-neutral/5 text-dashboard-neutral hover:border-dashboard-neutral/35 hover:text-white',
+                                ].join(' ')}
+                              >
+                                {SCALAR_META[p].label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
                   </div>
+                  <p className="mt-2 text-[11px] leading-snug text-dashboard-neutral/50">
+                    动画流场（风/洋流/波浪）在「视图」菜单 · 浓度图例见底栏上方
+                  </p>
                 </div>
-              ))}
+              ) : (
+                <>
+                  {groups.map((g) => (
+                    <div key={g.title}>
+                      <div className="mb-1 text-[10px] uppercase tracking-wide text-dashboard-neutral/40">
+                        {g.title}
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {g.ids.map((id) => {
+                          const active = activeLayers.includes(id);
+                          return (
+                            <button
+                              key={id}
+                              type="button"
+                              aria-pressed={active}
+                              title={LAYER_HINTS[id] ?? LAYER_LABELS[id]}
+                              onClick={() => toggleLayer(id)}
+                              className={[
+                                'rounded-md border px-2.5 py-1 text-xs transition-colors',
+                                active
+                                  ? 'border-dashboard-military/60 bg-dashboard-military/20 text-white'
+                                  : 'border-dashboard-neutral/20 bg-dashboard-neutral/5 text-dashboard-neutral hover:border-dashboard-neutral/35 hover:text-white',
+                              ].join(' ')}
+                            >
+                              {LAYER_LABELS[id]}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
 
-            <p className="mt-2 text-[11px] leading-snug text-dashboard-neutral/50">
-              已开启 {activeCount}/{regionLayers.length} 层 · 点击地图空白处关闭
-            </p>
+            {!isNearEarth && (
+              <p className="mt-2 text-[11px] leading-snug text-dashboard-neutral/50">
+                已开启 {activeCount}/{regionLayers.length} 层 · 点击地图空白处关闭
+              </p>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
