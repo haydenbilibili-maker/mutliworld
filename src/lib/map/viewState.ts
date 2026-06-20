@@ -25,18 +25,42 @@ export function layersEqual(a: LayerId[], b: LayerId[]): boolean {
   return true;
 }
 
-/** moveend 回写 store 后为 true，供 MapContainer 跳过 flyTo 反馈环 */
-let viewportSyncFromMap = false;
+/**
+ * moveend → setViewport 的配对防抖
+ *
+ * 原来的单 boolean 存在竞态：当 setViewport 因容差返回 {}（center/zoom 未实质变化）
+ * 时标记残留，下一次合法 flyTo 被误吞。
+ *
+ * 改用 center/zoom 配对：mark 时记录坐标，consume 时只在与记录的坐标匹配时才返回 true，
+ * 不匹配则说明 flyTo 由外部触发，应正常执行。
+ */
 
-export function markViewportSyncFromMap(): void {
-  viewportSyncFromMap = true;
+interface ViewportSnapshot {
+  center: [number, number];
+  zoom: number;
 }
 
-/** 若为 map→store 同步则消费标记并返回 true */
-export function consumeViewportSyncFromMap(): boolean {
-  if (!viewportSyncFromMap) return false;
-  viewportSyncFromMap = false;
-  return true;
+let lastSyncFromMap: ViewportSnapshot | null = null;
+
+/** moveend 回写 store 前调用——记录本次地图操作的目标视野 */
+export function markViewportSyncFromMap(center: [number, number], zoom: number): void {
+  lastSyncFromMap = { center, zoom };
+}
+
+/**
+ * flyTo effect 中调用——若当前 center/zoom 与 moveend 记录的匹配，说明此 effect
+ * 由 map→store 同步触发，跳过 flyTo；否则说明由外部触发（点击事件/URL恢复等），允许 flyTo。
+ */
+export function consumeViewportSyncFromMap(
+  center: [number, number],
+  zoom: number,
+): boolean {
+  if (!lastSyncFromMap) return false;
+  const match =
+    centersEqual(lastSyncFromMap.center, center) &&
+    zoomsEqual(lastSyncFromMap.zoom, zoom);
+  if (match) lastSyncFromMap = null; // 配对成功，消费
+  return match;
 }
 
 /** CosmicGlobeAnimator 程序化 setBearing 期间为 true，避免 moveend 回写 store */

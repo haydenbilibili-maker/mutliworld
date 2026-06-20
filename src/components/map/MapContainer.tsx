@@ -144,7 +144,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
       const nextCenter: [number, number] = [c.lng, c.lat];
       if (centersEqual(state.center, nextCenter) && zoomsEqual(state.zoom, z)) return;
 
-      markViewportSyncFromMap();
+      markViewportSyncFromMap(nextCenter, z);
       state.setViewport(nextCenter, z);
     });
     map.on('load', () => {
@@ -227,7 +227,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
       lastGlobeResetNonce.current = globeViewResetNonce;
       return;
     }
-    if (consumeViewportSyncFromMap()) return;
+    if (consumeViewportSyncFromMap(center, zoom)) return;
     const c = map.getCenter();
     const z = map.getZoom();
     if (
