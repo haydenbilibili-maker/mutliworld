@@ -104,8 +104,13 @@ export type LayerId =
   // 近地空间（对标 earth.nullschool：粒子流场 + 标量叠加）
   | 'wind_flow'
   | 'ocean_flow'
+  | 'wave_flow'
   | 'air_pollutants'
   | 'particulates'
+  | 'sea_temp'
+  | 'sig_wave_height'
+  | 'sst_anomaly'
+  | 'coral_baa'
   | 'pizza_index'
   | 'persons';
 

@@ -33,7 +33,7 @@ import { DaynightLayer } from '@/components/map/DaynightLayer';
 import { LivePulseLayer } from '@/components/map/LivePulseLayer';
 import { FlightTrailLayer } from '@/components/map/FlightTrailLayer';
 import { FlowLayer } from '@/components/map/FlowLayer';
-import { WindParticleLayer, OceanFlowLayer } from '@/components/map/WindParticleLayer';
+import { WindParticleLayer, OceanFlowLayer, WaveFlowLayer } from '@/components/map/WindParticleLayer';
 import { ScalarOverlayLayer } from '@/components/map/ScalarOverlayLayer';
 import { NearEarthHud } from '@/components/ui/NearEarthHud';
 import { BathymetryLayer } from '@/components/map/BathymetryLayer';
@@ -365,6 +365,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <ScalarOverlayLayer />
             <WindParticleLayer />
             <OceanFlowLayer />
+            <WaveFlowLayer />
             <NearEarthHud />
             {activeTier !== 'near_earth' && <GeodataLayer />}
             <FlowLayer />

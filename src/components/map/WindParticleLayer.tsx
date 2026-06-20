@@ -58,6 +58,19 @@ const OCEAN_CONFIG: FlowConfig = {
           : 'rgba(190,250,215,0.9)',
 };
 
+const WAVE_CONFIG: FlowConfig = {
+  layerId: 'wave_flow',
+  endpoint: '/api/wave-grid',
+  gainPx: 1.6, // 有效波高 ~0–8 m → 每帧 0–13px
+  baseCount: 2000,
+  color: (h) =>
+    h < 1 ? 'rgba(96,165,250,0.5)'
+      : h < 2.5 ? 'rgba(56,189,248,0.66)'
+        : h < 4 ? 'rgba(45,212,191,0.78)'
+          : h < 6 ? 'rgba(167,243,208,0.86)'
+            : 'rgba(240,253,250,0.92)',
+};
+
 const MAX_AGE = 100;
 const FADE = 0.96; // 拖尾更长更顺滑（对标 nullschool）
 
@@ -204,4 +217,8 @@ export function WindParticleLayer() {
 
 export function OceanFlowLayer() {
   return <ParticleFlowLayer cfg={OCEAN_CONFIG} />;
+}
+
+export function WaveFlowLayer() {
+  return <ParticleFlowLayer cfg={WAVE_CONFIG} />;
 }
