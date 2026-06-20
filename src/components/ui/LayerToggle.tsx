@@ -338,7 +338,7 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
                                 aria-pressed={active}
                                 onClick={() => pickOverlay(p)}
                                 className={[
-                                  'rounded-md border px-2.5 py-1 text-xs transition-colors',
+                                  'rounded-md border px-2.5 py-1 text-xs transition active:scale-95',
                                   active
                                     ? 'border-dashboard-military/60 bg-dashboard-military/20 text-white'
                                     : 'border-dashboard-neutral/20 bg-dashboard-neutral/5 text-dashboard-neutral hover:border-dashboard-neutral/35 hover:text-white',

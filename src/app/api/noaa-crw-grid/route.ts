@@ -12,8 +12,12 @@ import { NextResponse } from 'next/server';
 
 const DLON = 15, DLAT = 15, LON0 = -180, LAT0 = -75, NX = 24, NY = 11;
 const CACHE_TTL_MS = 3 * 60 * 60 * 1000;
-const ERDDAP = 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/NOAA_DHW.json';
+// PacIOOS dhw_5km：NOAA CRW v3.1 综合产品，同时含 CRW_SSTANOMALY + CRW_BAA（经核验，0.05° 全球每日）
+const ERDDAP = 'https://pae-paha.pacioos.hawaii.edu/erddap/griddap/dhw_5km.json';
 const STRIDE = 200; // 0.05° × 200 = 10° 取样间隔，覆盖全球约 36×18 点
+// 缺测填充值（ERDDAP info 核验）：SSTANOMALY=-327.68(物理范围 ±15)，BAA=251(有效 0–4)
+const SSTA_VALID = (v: number) => (Number.isFinite(v) && v > -90 && v < 90 ? v : NaN);
+const BAA_VALID = (v: number) => (Number.isFinite(v) && v >= 0 && v <= 4 ? v : NaN);
 
 type Param = 'sst_anomaly' | 'bleaching_alert_area';
 
@@ -63,13 +67,13 @@ export async function GET() {
     if (latI < 0 || lonI < 0 || (sstaI < 0 && baaI < 0) || rows.length === 0) {
       throw new Error('ERDDAP 返回列结构不符');
     }
-    const sstaSamples = sstaI >= 0 ? rows.map((r) => ({ lat: Number(r[latI]), lon: Number(r[lonI]), val: Number(r[sstaI]) })) : [];
-    const baaSamples = baaI >= 0 ? rows.map((r) => ({ lat: Number(r[latI]), lon: Number(r[lonI]), val: Number(r[baaI]) })) : [];
+    const sstaSamples = sstaI >= 0 ? rows.map((r) => ({ lat: Number(r[latI]), lon: Number(r[lonI]), val: SSTA_VALID(Number(r[sstaI])) })) : [];
+    const baaSamples = baaI >= 0 ? rows.map((r) => ({ lat: Number(r[latI]), lon: Number(r[lonI]), val: BAA_VALID(Number(r[baaI])) })) : [];
     const params: Record<Param, number[]> = {
       sst_anomaly: sstaI >= 0 ? binToGrid(sstaSamples) : new Array(NX * NY).fill(NaN),
       bleaching_alert_area: baaI >= 0 ? binToGrid(baaSamples) : new Array(NX * NY).fill(NaN),
     };
-    const body: ScalarGrid = { nx: NX, ny: NY, lon0: LON0, lat0: LAT0, dLon: DLON, dLat: DLAT, params, generatedAt: new Date().toISOString(), source: 'NOAA Coral Reef Watch（CoastWatch ERDDAP）' };
+    const body: ScalarGrid = { nx: NX, ny: NY, lon0: LON0, lat0: LAT0, dLon: DLON, dLat: DLAT, params, generatedAt: new Date().toISOString(), source: 'NOAA Coral Reef Watch 5km（PacIOOS ERDDAP）' };
     cache = { expires: now + CACHE_TTL_MS, body };
     return NextResponse.json(body, { headers: { 'Cache-Control': 'public, s-maxage=10800, stale-while-revalidate=21600' } });
   } catch (err) {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useState, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import maplibregl from 'maplibre-gl';
 import { useMapStore } from '@/store/useMapStore';
 import { useOrbitalPanelStore } from '@/store/useOrbitalPanelStore';
@@ -33,9 +34,7 @@ import { DaynightLayer } from '@/components/map/DaynightLayer';
 import { LivePulseLayer } from '@/components/map/LivePulseLayer';
 import { FlightTrailLayer } from '@/components/map/FlightTrailLayer';
 import { FlowLayer } from '@/components/map/FlowLayer';
-import { WindParticleLayer, OceanFlowLayer, WaveFlowLayer } from '@/components/map/WindParticleLayer';
-import { ScalarOverlayLayer } from '@/components/map/ScalarOverlayLayer';
-import { NearEarthDataBar } from '@/components/ui/NearEarthDataBar';
+// 近地专属组件改为下方 dynamic 懒加载（不进首屏 bundle）
 import { BathymetryLayer } from '@/components/map/BathymetryLayer';
 import { GlobeController } from '@/components/map/GlobeController';
 import { CosmicGlobeAnimator } from '@/components/map/CosmicGlobeAnimator';
@@ -56,6 +55,13 @@ import { ConflictZonesLayer } from '@/components/map/ConflictZonesLayer';
 import { MapSelectionPulse } from '@/components/map/MapSelectionPulse';
 import { MapTooltip } from '@/components/map/MapTooltip';
 import { GeodataFetchIndicator } from '@/components/map/GeodataFetchIndicator';
+
+// 近地专属渲染组件按需懒加载：仅进入近地层时拉取分包，压缩首屏 JS（加载速度专项）
+const ScalarOverlayLayer = dynamic(() => import('@/components/map/ScalarOverlayLayer').then((m) => m.ScalarOverlayLayer), { ssr: false });
+const WindParticleLayer = dynamic(() => import('@/components/map/WindParticleLayer').then((m) => m.WindParticleLayer), { ssr: false });
+const OceanFlowLayer = dynamic(() => import('@/components/map/WindParticleLayer').then((m) => m.OceanFlowLayer), { ssr: false });
+const WaveFlowLayer = dynamic(() => import('@/components/map/WindParticleLayer').then((m) => m.WaveFlowLayer), { ssr: false });
+const NearEarthDataBar = dynamic(() => import('@/components/ui/NearEarthDataBar').then((m) => m.NearEarthDataBar), { ssr: false });
 
 interface MapContainerProps {
   className?: string;
