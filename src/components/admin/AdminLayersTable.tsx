@@ -10,6 +10,7 @@ const TIER_LABELS: Record<SpatialTier, string> = {
   surface: '地表',
   subsurface: '洋底',
   space: '宇宙',
+  near_earth: '近地',
 };
 
 interface LayerRow {

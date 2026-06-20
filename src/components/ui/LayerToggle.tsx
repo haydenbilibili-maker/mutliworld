@@ -42,6 +42,10 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
     ids: ['world_heritage', 'china_heritage'],
   },
   {
+    title: '近地空间（流场/叠加）',
+    ids: ['wind_flow', 'ocean_flow', 'air_pollutants', 'particulates'],
+  },
+  {
     title: '海洋与洋底空间',
     ids: [
       'cables',
@@ -109,6 +113,10 @@ const ALWAYS_ON: LayerId[] = [
   'deep_exploration',
   'world_heritage',
   'china_heritage',
+  'wind_flow',
+  'ocean_flow',
+  'air_pollutants',
+  'particulates',
   'hydrocarbon_reserves',
   'ground_stations',
   'sat_constellations',

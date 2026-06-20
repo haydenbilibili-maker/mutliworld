@@ -65,6 +65,10 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   deep_exploration: '深海探索',
   world_heritage: '世界遗产',
   china_heritage: '国保单位',
+  wind_flow: '大气风场',
+  ocean_flow: '洋流流场',
+  air_pollutants: '化学污染物',
+  particulates: '颗粒物',
   pizza_index: '披萨指数',
   persons: '人物分布',
 };
@@ -95,4 +99,8 @@ export const LAYER_HINTS: Partial<Record<LayerId, string>> = {
   migration_routes: '海洋动物洄游/迁徙通道（灰鲸/座头鲸/棱皮龟/金枪鱼等）· 示意路径',
   world_heritage: 'UNESCO 世界遗产名录（文化/自然/双重）· 全球精选真实子集',
   china_heritage: '中国全国重点文物保护单位（国保）· 精选真实子集',
+  wind_flow: '近地大气风场粒子流（真实 GFS/Open-Meteo 10m 风）· 对标 earth.nullschool',
+  ocean_flow: '海洋表层洋流流场（粒子动画）· 后续轮次接入',
+  air_pollutants: '化学污染物标量叠加（CO/SO₂/NO₂ 等）· 后续轮次接入',
+  particulates: '颗粒物浓度叠加（PM2.5/PM10）· 后续轮次接入',
 };

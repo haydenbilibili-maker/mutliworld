@@ -101,6 +101,11 @@ export type LayerId =
   | 'deep_exploration'
   | 'world_heritage'
   | 'china_heritage'
+  // 近地空间（对标 earth.nullschool：粒子流场 + 标量叠加）
+  | 'wind_flow'
+  | 'ocean_flow'
+  | 'air_pollutants'
+  | 'particulates'
   | 'pizza_index'
   | 'persons';
 

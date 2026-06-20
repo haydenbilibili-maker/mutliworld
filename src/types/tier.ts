@@ -7,11 +7,11 @@
 
 import type { LayerId } from '@/types/geo';
 
-/** 三层空间：宇宙 / 地表 / 洋底 */
-export type SpatialTier = 'space' | 'surface' | 'subsurface';
+/** 空间层：宇宙 / 近地 / 地表 / 洋底 */
+export type SpatialTier = 'space' | 'near_earth' | 'surface' | 'subsurface';
 
-/** 渲染范式：平面 / 轨道（宇宙）/ 深度（洋底） */
-export type TierRenderMode = 'flat' | 'orbit' | 'depth';
+/** 渲染范式：平面 / 轨道（宇宙）/ 深度（洋底）/ 流场（近地：粒子流 + 标量叠加，对标 earth.nullschool） */
+export type TierRenderMode = 'flat' | 'orbit' | 'depth' | 'flow';
 
 /** 底图预设（MapContainer / BasemapController 按层切换） */
 export type BasemapPreset =

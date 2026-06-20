@@ -85,7 +85,7 @@ export function computeProfileBuckets(
   point: [number, number],
   perTier = 5,
 ): ProfileBuckets {
-  const out: ProfileBuckets = { space: [], surface: [], subsurface: [] };
+  const out: ProfileBuckets = { space: [], near_earth: [], surface: [], subsurface: [] };
 
   for (const f of features ?? []) {
     const lid = String(f.properties?.layerId ?? '') as LayerId;

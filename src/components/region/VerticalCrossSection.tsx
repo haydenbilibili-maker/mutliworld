@@ -23,6 +23,7 @@ const SURFACE_Y = 108;
 
 const TIER_COLOR: Record<SpatialTier, string> = {
   space: '#38bdf8',
+  near_earth: '#22d3ee',
   surface: '#facc15',
   subsurface: '#2dd4bf',
 };

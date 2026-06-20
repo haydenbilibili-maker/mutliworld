@@ -192,6 +192,7 @@ export function getLayerTierGroups(): Record<SpatialTier, LayerId[]> {
   const allLayerIds = Object.keys(LAYER_LABELS) as LayerId[];
   const groups: Record<SpatialTier, LayerId[]> = {
     space: [],
+    near_earth: [],
     surface: [],
     subsurface: [],
   };
