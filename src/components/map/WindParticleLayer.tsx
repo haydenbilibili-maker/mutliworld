@@ -144,8 +144,10 @@ function ParticleFlowLayer({ cfg }: { cfg: FlowConfig }) {
     };
 
     interface P { lng: number; lat: number; age: number; }
-    // 按 zoom 自适应密度：放大时减少（视口小）、缩小时铺满
-    const count = Math.round(cfg.baseCount * (map.getZoom() < 2 ? 1.1 : map.getZoom() > 5 ? 0.6 : 0.85));
+    // 自适应密度：按画布面积缩放(小屏少粒子降功耗、大屏够密)，叠加 zoom 因子；上限防超大屏过载
+    const zoomF = map.getZoom() < 2 ? 1.1 : map.getZoom() > 5 ? 0.6 : 0.85;
+    const areaF = Math.min(1.25, Math.max(0.35, (cssW * cssH) / (1920 * 1080)));
+    const count = Math.round(cfg.baseCount * zoomF * areaF);
     const particles: P[] = [];
     // 屏幕空间播种：在画布像素内随机取点反投影为经纬度，确保任意缩放/投影(含球面)下铺满整个视口
     const spawn = (p: P) => {
