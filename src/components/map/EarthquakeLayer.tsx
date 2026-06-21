@@ -131,7 +131,7 @@ export function EarthquakeLayer() {
       const f = e.features?.[0];
       if (!f?.properties) return;
       const p = f.properties as unknown as QuakeProps;
-      const coords = (f.geometry as { coordinates: [number, number] }).coordinates;
+      const coords = (f.geometry as unknown as { coordinates: [number, number] }).coordinates;
       popupRef.current?.remove();
       const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, offset: 10, className: 'geodata-popup' })
         .setLngLat(coords).setHTML(popupHtml(p)).addTo(map);
