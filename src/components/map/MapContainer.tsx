@@ -48,6 +48,7 @@ import { AuroraLayer } from '@/components/map/AuroraLayer';
 import { VolcanoLayer } from '@/components/map/VolcanoLayer';
 import { GibsImageryLayer } from '@/components/map/GibsImageryLayer';
 import { TiangongLayer } from '@/components/map/TiangongLayer';
+import { StormLayer } from '@/components/map/StormLayer';
 import { BodySiteLayer } from '@/components/map/BodySiteLayer';
 import { BodyOrbiterLayer } from '@/components/map/BodyOrbiterLayer';
 import { BodyTraverseLayer } from '@/components/map/BodyTraverseLayer';
@@ -375,6 +376,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <VolcanoLayer />
             <GibsImageryLayer />
             <TiangongLayer />
+            <StormLayer />
             <MaritimeLayer />
             <PizzaIndexLayer />
             <ProfilePicker />

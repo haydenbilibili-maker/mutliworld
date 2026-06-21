@@ -84,6 +84,7 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   earthquakes: '实时地震',
   aurora: '极光带(实时)',
   volcanoes: '活跃火山',
+  storms: '风暴气旋',
   satellite_imagery: '真彩卫星云图',
   iss: '国际空间站(实时)',
   tiangong: '天宫空间站(实时)',
