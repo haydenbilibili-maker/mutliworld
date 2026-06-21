@@ -50,6 +50,8 @@ import { GibsImageryLayer } from '@/components/map/GibsImageryLayer';
 import { TiangongLayer } from '@/components/map/TiangongLayer';
 import { StormLayer } from '@/components/map/StormLayer';
 import { FloodLayer } from '@/components/map/FloodLayer';
+import { DustHazeLayer } from '@/components/map/DustHazeLayer';
+import { SeaIceLayer } from '@/components/map/SeaIceLayer';
 import { BodySiteLayer } from '@/components/map/BodySiteLayer';
 import { BodyOrbiterLayer } from '@/components/map/BodyOrbiterLayer';
 import { BodyTraverseLayer } from '@/components/map/BodyTraverseLayer';
@@ -379,6 +381,8 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <TiangongLayer />
             <StormLayer />
             <FloodLayer />
+            <DustHazeLayer />
+            <SeaIceLayer />
             <MaritimeLayer />
             <PizzaIndexLayer />
             <ProfilePicker />

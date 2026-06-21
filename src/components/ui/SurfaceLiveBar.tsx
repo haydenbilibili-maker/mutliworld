@@ -19,6 +19,8 @@ const CHIPS: ChipDef[] = [
   { layer: 'volcanoes', endpoint: '/api/volcanoes', icon: '🌋', label: '火山', color: 'text-orange-300' },
   { layer: 'storms', endpoint: '/api/storms', icon: '🌀', label: '风暴', color: 'text-sky-300' },
   { layer: 'floods', endpoint: '/api/floods', icon: '🌊', label: '洪水', color: 'text-blue-300' },
+  { layer: 'dusthaze', endpoint: '/api/dusthaze', icon: '🌫️', label: '沙尘', color: 'text-amber-300' },
+  { layer: 'seaice', endpoint: '/api/seaice', icon: '🧊', label: '海冰', color: 'text-cyan-200' },
 ];
 
 function Chip({ def }: { def: ChipDef }) {

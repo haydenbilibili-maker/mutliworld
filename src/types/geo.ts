@@ -122,6 +122,8 @@ export type LayerId =
   | 'volcanoes'
   | 'storms'
   | 'floods'
+  | 'dusthaze'
+  | 'seaice'
   | 'satellite_imagery'
   | 'iss'
   | 'tiangong'

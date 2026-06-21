@@ -86,6 +86,8 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   volcanoes: '活跃火山',
   storms: '风暴气旋',
   floods: '洪水事件',
+  dusthaze: '沙尘/霾',
+  seaice: '海冰',
   satellite_imagery: '真彩卫星云图',
   iss: '国际空间站(实时)',
   tiangong: '天宫空间站(实时)',
