@@ -8,10 +8,13 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import useSWR from 'swr';
+import type { FeatureCollection } from 'geojson';
 import { useMapStore } from '@/store/useMapStore';
 import { PROJECTION_LIST, PROJECTIONS, graticule, type ProjectionId } from '@/lib/projection/projections';
 
 const GRAT = graticule(30, 2);
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export function ProjectionLab() {
   const inNearEarth = useMapStore((s) => s.activeBody === 'earth' && s.activeTier === 'near_earth');
@@ -22,6 +25,11 @@ export function ProjectionLab() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const lon0Ref = useRef(lon0);
   lon0Ref.current = lon0;
+
+  // 真实数据叠加：实时地震（USGS），证明引擎在任意投影下渲染真实地理内容
+  const { data: quakes } = useSWR<FeatureCollection>(open ? '/api/earthquakes' : null, fetcher, {
+    revalidateOnFocus: false, refreshInterval: 5 * 60 * 1000, dedupingInterval: 60 * 1000,
+  });
 
   // 自旋（独立画布、非地图重绘；仅打开时运行）
   useEffect(() => {
@@ -79,7 +87,23 @@ export function ProjectionLab() {
     // 强调赤道与本初子午线
     drawLine(GRAT.find((g) => g.type === 'parallel' && g.pts[0][1] === 0)?.pts ?? [], 'rgba(232,181,99,0.8)', 1.3);
     drawLine(GRAT.find((g) => g.type === 'meridian' && g.pts[0][0] === 0)?.pts ?? [], 'rgba(232,181,99,0.55)', 1);
-  }, [open, proj, lon0]);
+
+    // 实时地震散点（真实 USGS 数据，按震级定径，背面自动裁剪）
+    if (quakes?.type === 'FeatureCollection') {
+      for (const f of quakes.features) {
+        const g = f.geometry as { type?: string; coordinates?: number[] } | null;
+        if (!g || g.type !== 'Point' || !g.coordinates) continue;
+        const mag = Number((f.properties as { mag?: number } | null)?.mag ?? 0);
+        const r = def.project(g.coordinates[0], g.coordinates[1], params);
+        if (!r) continue;
+        const x = cx + r[0] * scale, y = cy + r[1] * scale;
+        const rad = 1.2 + Math.max(0, mag) * 0.7;
+        ctx.beginPath(); ctx.arc(x, y, rad, 0, Math.PI * 2);
+        ctx.fillStyle = mag >= 6 ? 'rgba(185,28,28,0.95)' : mag >= 5 ? 'rgba(239,68,68,0.9)' : 'rgba(248,113,113,0.85)';
+        ctx.fill();
+      }
+    }
+  }, [open, proj, lon0, quakes]);
 
   if (!inNearEarth) return null;
 
@@ -121,7 +145,7 @@ export function ProjectionLab() {
             <span className="shrink-0">经度</span>
             <input type="range" min={-180} max={180} value={lon0} onChange={(e) => { setSpin(false); setLon0(Number(e.target.value)); }} className="h-1 flex-1 accent-sky-400" aria-label="中心经度" />
           </div>
-          <p className="mt-1 text-[9px] leading-snug text-dashboard-neutral/40">原创投影数学·零依赖·与 maplibre 并存；后续叠加海岸线与地图内容（A 引擎演进中）。</p>
+          <p className="mt-1 text-[9px] leading-snug text-dashboard-neutral/40">原创投影数学·零依赖·已叠加实时地震(USGS)真实数据；后续叠加海岸线与流场内容（A 引擎演进中）。</p>
         </div>
       )}
     </>
