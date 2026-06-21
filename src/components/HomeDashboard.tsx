@@ -34,8 +34,10 @@ import { PizzaIndexHost } from '@/components/ui/PizzaIndexHost';
 import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
 import { useGlobalEscape } from '@/hooks/useGlobalEscape';
 import { useViewPrefsPersistence } from '@/hooks/useViewPrefsPersistence';
+import { useWatchlistPersistence } from '@/hooks/useWatchlistPersistence';
 import { LiveLayerPerformanceGuard } from '@/components/ui/LiveLayerPerformanceGuard';
 import { BriefingToast } from '@/components/ui/BriefingToast';
+import { WatchlistAlertToast } from '@/components/ui/WatchlistAlertToast';
 import { BriefingDetailPanel } from '@/components/ui/BriefingDetailPanel';
 import { GlobalLivePanel } from '@/components/ui/GlobalLivePanel';
 import { useMapStore } from '@/store/useMapStore';
@@ -70,6 +72,7 @@ const StrategicResearchHost = dynamic(
 export function HomeDashboard() {
   useGlobalEscape();
   useViewPrefsPersistence();
+  useWatchlistPersistence();
   const isEarth = useMapStore((s) => s.activeBody === 'earth');
 
   return (
@@ -131,6 +134,7 @@ export function HomeDashboard() {
           {/* 全局浮层（不限天体）：直播 / 简报通知与详情 */}
           <BriefingDetailPanel />
           <BriefingToast />
+          <WatchlistAlertToast />
           <GlobalLivePanel />
         </div>
       </main>

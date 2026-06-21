@@ -9,10 +9,11 @@
  * 诚实合成、不编造，缺时间不伪造。
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import type { FeatureCollection, Feature } from 'geojson';
 import { useMapStore } from '@/store/useMapStore';
+import { useWatchlistStore } from '@/store/useWatchlistStore';
 import { DockPanel } from '@/components/region/DockPanel';
 import { timeAgo } from '@/lib/format/time';
 import type { EventDetail } from '@/types/geo';
@@ -85,6 +86,15 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
   const setViewport = useMapStore((s) => s.setViewport);
   const selectEvent = useMapStore((s) => s.selectEvent);
   const [filter, setFilter] = useState<string>('全部');
+  const [onlyWatched, setOnlyWatched] = useState(false);
+
+  // 关注清单 / 阈值告警
+  const watchedKinds = useWatchlistStore((s) => s.kinds);
+  const threshold = useWatchlistStore((s) => s.threshold);
+  const alertsEnabled = useWatchlistStore((s) => s.alertsEnabled);
+  const toggleKind = useWatchlistStore((s) => s.toggleKind);
+  const setThreshold = useWatchlistStore((s) => s.setThreshold);
+  const setAlertsEnabled = useWatchlistStore((s) => s.setAlertsEnabled);
 
   const { data: quakes } = useSWR<FeatureCollection>(enabled ? '/api/earthquakes' : null, fetcher, swrOpts);
   const { data: volcanoes } = useSWR<FeatureCollection>(enabled ? '/api/volcanoes' : null, fetcher, swrOpts);
@@ -92,8 +102,6 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
   const { data: floods } = useSWR<FeatureCollection>(enabled ? '/api/floods' : null, fetcher, swrOpts);
   const { data: crw } = useSWR<ScalarGrid>(enabled ? '/api/noaa-crw-grid' : null, fetcher, swrOpts);
   const { data: aq } = useSWR<ScalarGrid>(enabled ? '/api/airquality-grid' : null, fetcher, swrOpts);
-
-  if (!enabled) return null;
 
   const items: Anomaly[] = [];
 
@@ -134,9 +142,22 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
 
   items.sort((a, b) => b.score - a.score);
 
-  // 类别过滤
+  // 关注阈值告警：每轮数据刷新后上送候选项，越阈且未告警过则推 toast（去重在 store 内）
+  const ingestSig = items.map((i) => `${i.key}:${i.score}`).join('|');
+  useEffect(() => {
+    if (!enabled) return;
+    useWatchlistStore.getState().ingest(
+      items.map((i) => ({ key: i.key, icon: i.icon, kind: i.kind, label: i.label, score: i.score, coords: i.coords, time: i.time })),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ingestSig, enabled, watchedKinds, threshold, alertsEnabled]);
+
+  if (!enabled) return null;
+
+  // 类别过滤（+ 仅看关注）
   const kinds = Array.from(new Set(items.map((i) => i.kind)));
-  const filtered = filter === '全部' ? items : items.filter((i) => i.kind === filter);
+  const byFilter = filter === '全部' ? items : items.filter((i) => i.kind === filter);
+  const filtered = onlyWatched ? byFilter.filter((i) => watchedKinds.includes(i.kind)) : byFilter;
   const top = filtered.slice(0, 14);
 
   // 自动态势简报
@@ -178,6 +199,31 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
             <span className="mr-1" aria-hidden>📡</span>{summary}
           </div>
         )}
+        {/* 关注与阈值告警 */}
+        <div className="flex items-center gap-1.5 rounded-md border border-amber-500/15 bg-amber-500/[0.04] px-2 py-1 text-[10px]">
+          <button
+            type="button"
+            onClick={() => setAlertsEnabled(!alertsEnabled)}
+            title={alertsEnabled ? '告警已开启（点击关闭）' : '告警已关闭（点击开启）'}
+            aria-pressed={alertsEnabled}
+            className={['shrink-0 rounded px-1 py-0.5 transition-colors', alertsEnabled ? 'text-amber-300' : 'text-dashboard-neutral/40 hover:text-dashboard-neutral/70'].join(' ')}
+          >
+            {alertsEnabled ? '🔔' : '🔕'}
+          </button>
+          <span className="text-dashboard-neutral/55">阈值</span>
+          <button type="button" onClick={() => setThreshold(threshold - 5)} aria-label="降低阈值" className="rounded px-1 text-dashboard-neutral/55 hover:bg-white/5 hover:text-white">−</button>
+          <span className="w-5 text-center tabular-nums font-semibold text-amber-200">{threshold}</span>
+          <button type="button" onClick={() => setThreshold(threshold + 5)} aria-label="提高阈值" className="rounded px-1 text-dashboard-neutral/55 hover:bg-white/5 hover:text-white">＋</button>
+          <button
+            type="button"
+            onClick={() => setOnlyWatched((v) => !v)}
+            aria-pressed={onlyWatched}
+            title="仅显示已关注类别"
+            className={['ml-auto shrink-0 rounded px-1.5 py-0.5 transition-colors', onlyWatched ? 'bg-amber-500/25 text-amber-200' : 'text-dashboard-neutral/55 hover:bg-white/5'].join(' ')}
+          >
+            {onlyWatched ? '★ 仅关注' : '☆ 仅关注'}
+          </button>
+        </div>
         {/* 类别过滤 */}
         <div className="flex flex-wrap gap-1">
           {['全部', ...kinds].map((k) => (
@@ -196,21 +242,34 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
         ) : (
           <div className="max-h-[42vh] space-y-1 overflow-y-auto pr-0.5">
             {top.map((a) => (
-              <button
+              <div
                 key={a.key}
-                type="button"
-                onClick={() => focus(a)}
-                className="flex w-full items-center gap-2 rounded-md bg-white/5 px-2 py-1.5 text-left transition-colors hover:bg-white/10 active:scale-[0.99]"
+                className="flex w-full items-center gap-1 rounded-md bg-white/5 pr-1 transition-colors hover:bg-white/10"
               >
-                <span aria-hidden className="shrink-0 text-sm">{a.icon}</span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-dashboard-neutral/85">{a.label}</span>
-                  <span className="block truncate text-[9px] text-dashboard-neutral/45">
-                    {a.kind}{a.time ? ` · ${timeAgo(a.time)}` : ''} · {impactDomains(a.kind, !!a.tsunami).slice(0, 2).join('/')}
+                <button
+                  type="button"
+                  onClick={() => focus(a)}
+                  className="flex min-w-0 flex-1 items-center gap-2 px-2 py-1.5 text-left active:scale-[0.99]"
+                >
+                  <span aria-hidden className="shrink-0 text-sm">{a.icon}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-dashboard-neutral/85">{a.label}</span>
+                    <span className="block truncate text-[9px] text-dashboard-neutral/45">
+                      {a.kind}{a.time ? ` · ${timeAgo(a.time)}` : ''} · {impactDomains(a.kind, !!a.tsunami).slice(0, 2).join('/')}
+                    </span>
                   </span>
-                </span>
-                <span className={`shrink-0 tabular-nums text-[10px] font-semibold ${severityClass(a.score)}`}>{a.score}</span>
-              </button>
+                  <span className={`shrink-0 tabular-nums text-[10px] font-semibold ${severityClass(a.score)}`}>{a.score}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => toggleKind(a.kind)}
+                  aria-pressed={watchedKinds.includes(a.kind)}
+                  title={watchedKinds.includes(a.kind) ? `取消关注「${a.kind}」类` : `关注「${a.kind}」类（越阈告警）`}
+                  className={['shrink-0 rounded px-1 text-sm transition-colors', watchedKinds.includes(a.kind) ? 'text-amber-300' : 'text-dashboard-neutral/35 hover:text-amber-200'].join(' ')}
+                >
+                  {watchedKinds.includes(a.kind) ? '★' : '☆'}
+                </button>
+              </div>
             ))}
           </div>
         )}
