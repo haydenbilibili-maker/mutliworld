@@ -5,7 +5,6 @@ import { MapContainer } from '@/components/map/MapContainer';
 import { StarfieldBackdrop } from '@/components/map/StarfieldBackdrop';
 import { SidePanel } from '@/components/ui/SidePanel';
 import { MapHudStack } from '@/components/ui/MapHudStack';
-import { MapControlBar } from '@/components/ui/MapControlBar';
 import { AppHeader } from '@/components/ui/AppHeader';
 import { MideastPanel } from '@/components/region/MideastPanel';
 import { MideastMilitaryPanel } from '@/components/region/MideastMilitaryPanel';
@@ -27,6 +26,7 @@ import { AboutPanel } from '@/components/ui/AboutPanel';
 import { RegionDetailCard } from '@/components/region/RegionDetailCard';
 import { SeabedBriefingPanel } from '@/components/region/SeabedBriefingPanel';
 import { SpaceBriefingPanel } from '@/components/region/SpaceBriefingPanel';
+import { NeoPanel } from '@/components/region/NeoPanel';
 import { OrbitalListHost } from '@/components/ui/OrbitalListHost';
 import { PizzaIndexHost } from '@/components/ui/PizzaIndexHost';
 import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
@@ -97,11 +97,11 @@ export function HomeDashboard() {
             <MideastMilitaryPanel className="!w-full !max-h-[46vh]" />
             <SeabedBriefingPanel className="!w-full !max-h-[46vh]" />
             <SpaceBriefingPanel className="!w-full !max-h-[46vh]" />
+            <NeoPanel className="!w-full !max-h-[46vh]" />
             <LaunchLogPanel className="!w-full !max-h-[46vh]" />
           </div>
 
           <OrbitalListHost />
-          <MapControlBar className="absolute bottom-14 left-1/2 z-20 -translate-x-1/2 max-sm:bottom-16 max-sm:max-w-[calc(100vw-1rem)]" />
           <MapHudStack className="absolute bottom-[4.75rem] left-4 z-20 max-sm:bottom-[5.25rem] max-sm:left-2" />
           <MarqueeTicker className="absolute bottom-0 left-0 right-0 z-20" />
           <SidePanel />
