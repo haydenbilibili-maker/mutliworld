@@ -30,6 +30,14 @@ export const EASTERN_EUROPE_PERSONS = [
   person('per-ee-28', '罗曼·阿布拉莫维奇', '俄商界寡头', '经济', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '前切尔西老板，俄乌谈判中间人，受到西方制裁。', { status: 'restricted', birthYear: 1966, nationality: '俄罗斯', wikipedia: 'https://zh.wikipedia.org/wiki/罗曼·阿布拉莫维奇' }),
   person('per-ee-34', '阿列克谢·莫尔达绍夫', '谢韦尔钢铁 CEO', '经济', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '俄罗斯钢铁大亨。', { since: 1996, nationality: '俄罗斯' }),
   person('per-ee-35', '米哈伊尔·弗里德曼', '阿尔法集团创始人', '经济', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '俄罗斯金融与能源寡头。', { since: 1990, nationality: '俄罗斯/以色列' }),
+  person('per-ee-59', '弗拉基米尔·波塔宁', '诺里尔斯克镍业 CEO', '经济', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '俄罗斯首富之一，镍业与金融巨头。', { since: 1990, birthYear: 1961, nationality: '俄罗斯', wikipedia: 'https://zh.wikipedia.org/wiki/弗拉基米尔·波塔宁' }),
+  person('per-ee-60', '阿利舍尔·乌斯马诺夫', 'USM 控股创始人', '经济', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '乌兹别克裔俄罗斯寡头，电信与矿业。', { since: 1990, birthYear: 1953, nationality: '俄罗斯/乌兹别克斯坦', wikipedia: 'https://zh.wikipedia.org/wiki/阿利舍尔·乌斯马诺夫' }),
+  person('per-ee-61', '瓦吉特·阿列克佩罗夫', '卢克石油前 CEO', '经济', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '俄罗斯石油巨头卢克石油前掌门。', { since: 1993, birthYear: 1950, nationality: '俄罗斯' }),
+  person('per-ee-62', '根纳季·季姆琴科', '伏尔加集团创始人', '经济', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '能源与铁路运输寡头，普京密友。', { since: 1990, birthYear: 1952, nationality: '俄罗斯' }),
+  person('per-ee-63', '彼得·阿文', '阿尔法集团联合创始人', '经济', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '俄罗斯金融寡头。', { status: 'restricted', nationality: '俄罗斯' }),
+  person('per-ee-64', '鲍里斯·罗滕贝格', 'Stroygazmontazh 创始人', '经济', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '普京密友家族，基建与天然气管道。', { since: 1990, birthYear: 1957, nationality: '俄罗斯' }),
+  person('per-ee-65', '伊戈尔·谢钦', '俄罗斯石油公司 CEO', '经济', ['eastern_europe'], MOSCOW[0], MOSCOW[1], 'Rosneft 总裁，普京核心能源幕僚。', { since: 2012, birthYear: 1960, nationality: '俄罗斯', wikipedia: 'https://zh.wikipedia.org/wiki/伊戈尔·谢钦' }),
+  person('per-ee-66', '米哈伊尔·普罗霍罗夫', '前俄罗斯总统候选人', '经济', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '镍业大亨转政治人物。', { status: 'restricted', birthYear: 1965, nationality: '俄罗斯' }),
 
   // ── 乌克兰 ──
   person('per-ee-4', '弗拉基米尔·泽连斯基', '乌克兰总统', '政治', ['eastern_europe'], KYIV[0], KYIV[1], '乌克兰战时领导人，争取西方军援与国际支持。', { since: 2019, birthYear: 1978, nationality: '乌克兰', wikipedia: 'https://zh.wikipedia.org/wiki/弗拉基米尔·泽连斯基' }),
@@ -85,4 +93,31 @@ export const EASTERN_EUROPE_PERSONS = [
 
   // ── 瓦格纳与安全 ──
   person('per-ee-15', '叶夫根尼·普里戈任', '瓦格纳创始人', '军事', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '私营军事公司领导人，2023 年发动兵变后身亡。', { birthYear: 1961, deathYear: 2023, status: 'deceased', nationality: '俄罗斯', wikipedia: 'https://zh.wikipedia.org/wiki/叶夫根尼·普里戈任' }),
+  person('per-ee-67', '德米特里·乌特金', '瓦格纳联合创始人', '军事', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '前 GRU 军官，瓦格纳军事指挥官，2023 年坠机身亡。', { birthYear: 1970, deathYear: 2023, status: 'deceased', nationality: '俄罗斯' }),
+  person('per-ee-68', '尼古拉·帕特鲁舍夫', '俄联邦安全会议秘书', '政治', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '前 FSB 局长，普京核心安全幕僚。', { since: 2008, birthYear: 1951, nationality: '俄罗斯', wikipedia: 'https://zh.wikipedia.org/wiki/尼古拉·帕特鲁舍夫' }),
+  person('per-ee-69', '维克托·佐洛托夫', '俄联邦近卫军总司令', '军事', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '近卫军（Rosgvardiya）总司令。', { since: 2016, birthYear: 1954, nationality: '俄罗斯' }),
+  person('per-ee-70', '谢尔盖·苏罗维金', '俄罗斯空天军总司令', '军事', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '「末日将军」，曾任驻乌俄军总指挥。', { since: 2017, birthYear: 1966, nationality: '俄罗斯', wikipedia: 'https://zh.wikipedia.org/wiki/谢尔盖·苏罗维金' }),
+
+  // ── 乌克兰军政扩展 ──
+  person('per-ee-71', '奥莱克西·丹尼洛夫', '乌克兰国家安全与国防委员会前秘书', '政治', ['eastern_europe'], KYIV[0], KYIV[1], '前国安与国防委员会秘书。', { since: 2019, nationality: '乌克兰' }),
+  person('per-ee-72', '瓦列里·扎卢日内', '乌克兰前武装部队总司令', '军事', ['eastern_europe'], KYIV[0], KYIV[1], '前乌军总司令，现驻英大使。', { since: 2021, birthYear: 1973, nationality: '乌克兰', wikipedia: 'https://zh.wikipedia.org/wiki/瓦列里·扎卢日内' }),
+  person('per-ee-73', '奥莱克桑德尔·瑟尔斯基', '乌克兰武装部队总司令', '军事', ['eastern_europe'], KYIV[0], KYIV[1], '现任乌军总司令，接替扎卢日内。（合并条目）', { since: 2024, nationality: '乌克兰' }),
+  person('per-ee-74', '奥克萨娜·马尔哈尔', '乌克兰第一夫人', '社会', ['eastern_europe'], KYIV[0], KYIV[1], '泽连斯基夫人，作家。', { since: 2019, nationality: '乌克兰' }),
+  person('per-ee-75', '杰尼斯·什米加尔', '乌克兰总理', '政治', ['eastern_europe'], KYIV[0], KYIV[1], '乌克兰政府首脑。', { since: 2020, birthYear: 1975, nationality: '乌克兰', wikipedia: 'https://zh.wikipedia.org/wiki/杰尼斯·什米加尔' }),
+  person('per-ee-76', '安德里·叶尔马克', '乌总统办公室主任（备注）', '政治', ['eastern_europe'], KYIV[0], KYIV[1], '泽连斯基核心幕僚。（合并条目）', { nationality: '乌克兰' }),
+  person('per-ee-77', '奥莱娜·泽连斯卡', '乌克兰第一夫人（备注）', '社会', ['eastern_europe'], KYIV[0], KYIV[1], '泽连斯基夫人（合并条目）。', { nationality: '乌克兰' }),
+
+  // ── 俄罗斯反对派与异见 ──
+  person('per-ee-78', '阿列克谢·纳瓦尔尼', '俄罗斯反对派领袖', '社会', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '普京主要反对者，2024 年在狱中死亡。', { birthYear: 1976, deathYear: 2024, status: 'deceased', nationality: '俄罗斯', wikipedia: 'https://zh.wikipedia.org/wiki/阿列克谢·纳瓦尔尼' }),
+  person('per-ee-79', '尤利娅·纳瓦尔纳亚', '俄罗斯反对派领袖', '政治', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '纳瓦尔尼遗孀，现领导俄罗斯反对派。', { since: 2024, birthYear: 1976, nationality: '俄罗斯' }),
+  person('per-ee-80', '加里·卡斯帕罗夫', '前国际象棋世界冠军、反对派活动家', '社会', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '棋王转政治活动家，现流亡。', { since: 2005, birthYear: 1963, nationality: '俄罗斯', wikipedia: 'https://zh.wikipedia.org/wiki/加里·卡斯帕罗夫' }),
+  person('per-ee-81', '米哈伊尔·霍多尔科夫斯基', '尤科斯前 CEO、反对派', '政治', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '前俄首富，被普京投入监狱后流亡。', { status: 'restricted', birthYear: 1963, nationality: '俄罗斯' }),
+  person('per-ee-82', '弗拉基米尔·卡拉-穆尔扎', '俄罗斯反对派政治家', '社会', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '两度遭下毒，因反对战争被判刑。', { since: 2022, birthYear: 1981, nationality: '俄罗斯' }),
+  person('per-ee-83', '柳德米拉·乌利茨卡娅', '作家、异见人士', '文化', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '俄罗斯当代重要作家，批评普京政权。', { since: 1990, birthYear: 1943, nationality: '俄罗斯' }),
+
+  // ── 苏联历史人物 ──
+  person('per-ee-84', '米哈伊尔·戈尔巴乔夫', '前苏联总统', '政治', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '苏联末代领导人，推动改革开放，诺贝尔和平奖，2022 年逝世。', { since: 1985, birthYear: 1931, deathYear: 2022, status: 'deceased', nationality: '俄罗斯', wikipedia: 'https://zh.wikipedia.org/wiki/米哈伊尔·谢尔盖耶维奇·戈尔巴乔夫' }),
+  person('per-ee-85', '鲍里斯·叶利钦', '前俄罗斯总统', '政治', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '俄罗斯首任总统（1991-1999），2007 年逝世。', { since: 1991, birthYear: 1931, deathYear: 2007, status: 'deceased', nationality: '俄罗斯', wikipedia: 'https://zh.wikipedia.org/wiki/鲍里斯·叶利钦' }),
+  person('per-ee-86', '约瑟夫·斯大林', '前苏联领导人', '政治', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '苏联最高领导人（1924-1953），1953 年逝世。', { since: 1924, birthYear: 1878, deathYear: 1953, status: 'deceased', nationality: '苏联/格鲁吉亚', wikipedia: 'https://zh.wikipedia.org/wiki/约瑟夫·斯大林' }),
+  person('per-ee-87', '弗拉基米尔·列宁', '前苏联缔造者', '政治', ['eastern_europe'], MOSCOW[0], MOSCOW[1], '布尔什维克革命领袖，苏联缔造者，1924 年逝世。', { since: 1917, birthYear: 1870, deathYear: 1924, status: 'deceased', nationality: '苏联/俄罗斯', wikipedia: 'https://zh.wikipedia.org/wiki/弗拉基米尔·列宁' }),
 ];

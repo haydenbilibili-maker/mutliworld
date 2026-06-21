@@ -91,4 +91,44 @@ export const WESTERN_EUROPE_PERSONS = [
 
   // ── 奥地利 ──
   person('per-we-64', '卡尔·内哈默', '奥地利总理', '政治', ['western_europe'], VIENNA[0], VIENNA[1], '奥地利总理。', { since: 2021, nationality: '奥地利' }),
+  person('per-we-65', '亚历山大·范德贝伦', '奥地利总统', '政治', ['western_europe'], VIENNA[0], VIENNA[1], '奥地利联邦总统。', { since: 2017, birthYear: 1944, nationality: '奥地利' }),
+
+  // ── 欧洲商界与金融（扩展）──
+  person('per-we-66', '詹姆斯·戴森', '戴森公司创始人', '经济', ['western_europe'], -2.24, 51.45, '英国发明家与家电巨头。', { since: 1991, birthYear: 1947, nationality: '英国', wikipedia: 'https://zh.wikipedia.org/wiki/詹姆斯·戴森' }),
+  person('per-we-67', '理查德·布兰森', '维珍集团创始人', '经济', ['western_europe'], LONDON[0], LONDON[1], '英国企业家，维珍集团与商业航天创始人。', { since: 1970, birthYear: 1950, nationality: '英国', wikipedia: 'https://zh.wikipedia.org/wiki/理查德·布兰森' }),
+  person('per-we-68', '阿拉斯泰尔·布鲁斯', '英国石油公司（BP）CEO', '经济', ['western_europe'], LONDON[0], LONDON[1], '英国石油公司 CEO。', { since: 2020, nationality: '英国' }),
+  person('per-we-69', '默里·豪威尔', '劳斯莱斯 CEO', '经济', ['western_europe'], 52.45, -1.93, '英国航空发动机与动力系统巨头。', { since: 2023, nationality: '英国' }),
+  person('per-we-70', '卢卡斯·庞德', '阿斯利康 CEO', '经济', ['western_europe'], 0.12, 51.50, '英国-瑞典制药巨头 CEO。', { since: 2012, nationality: '法国' }),
+  person('per-we-71', '埃马纽埃尔·法贝', '赛诺菲前 CEO', '经济', ['western_europe'], 2.35, 48.86, '法国制药巨头前 CEO。', { since: 2019, nationality: '法国' }),
+  person('per-we-72', '弗洛朗·梅纳尔', '欧莱雅 CEO', '经济', ['western_europe'], 2.35, 48.86, '法国欧莱雅 CEO。', { since: 2021, nationality: '法国' }),
+  person('per-we-73', '让-保罗·阿贡', '欧莱雅前 CEO', '经济', ['western_europe'], 2.35, 48.86, '欧莱雅前 CEO。', { status: 'restricted', nationality: '法国' }),
+  person('per-we-74', '塞巴斯蒂安·巴赞', '保时捷 SE CEO', '经济', ['western_europe'], 9.18, 48.78, '欧洲投资与汽车控股。', { since: 2014, nationality: '法国' }),
+  person('per-we-75', '马里奥·德拉吉', '前意大利总理、前欧央行行长', '政治', ['western_europe'], 12.50, 41.90, '前 ECB 行长、前意大利总理，欧洲金融稳定核心人物。', { since: 2011, birthYear: 1947, nationality: '意大利', wikipedia: 'https://zh.wikipedia.org/wiki/马里奥·德拉吉' }),
+  person('per-we-76', '马可·戈贝蒂', '博柏利 CEO', '经济', ['western_europe'], LONDON[0], LONDON[1], '英国奢侈品牌博柏利 CEO。', { since: 2024, nationality: '意大利' }),
+  person('per-we-77', '安舒·贾因', '德意志银行前 CEO', '经济', ['western_europe'], FRANKFURT[0], FRANKFURT[1], '印度裔，前德意志银行联席 CEO。', { status: 'restricted', nationality: '德国/印度' }),
+  person('per-we-78', '斯特凡·西蒙', '德意志银行联席 CEO', '经济', ['western_europe'], FRANKFURT[0], FRANKFURT[1], '德意志银行联席 CEO。', { since: 2024, nationality: '德国' }),
+
+  // ── 欧洲科学与技术（扩展）──
+  person('per-we-79', '德米斯·哈萨比斯', 'Google DeepMind CEO', '文化', ['western_europe'], LONDON[0], LONDON[1], 'AlphaGo 与 Gemini 背后的 AI 先驱，诺贝尔化学奖。（合并条目）', { since: 2010, birthYear: 1976, nationality: '英国', wikipedia: 'https://zh.wikipedia.org/wiki/戴密斯·哈萨比斯' }),
+  person('per-we-80', '穆斯塔法·苏莱曼', '微软 AI CEO', '文化', ['western_europe'], LONDON[0], LONDON[1], 'DeepMind 联合创始人，Inflection AI 创始人，现微软 AI CEO。', { since: 2024, birthYear: 1984, nationality: '英国' }),
+  person('per-we-81', '托马斯·苏德霍夫', '生物化学家', '文化', ['western_europe'], 52.45, -1.93, '神经传递机制研究，诺贝尔生理学或医学奖。', { since: 2013, nationality: '德国/美国' }),
+  person('per-we-82', '斯特凡·赫尔', '物理学家', '文化', ['western_europe'], 11.59, 50.93, '超分辨率荧光显微术，诺贝尔化学奖。', { since: 2014, nationality: '德国' }),
+  person('per-we-83', '米歇尔·马约尔', '天体物理学家', '文化', ['western_europe'], 6.14, 46.20, '首颗系外行星发现者，诺贝尔物理学奖。（合并条目）', { since: 1995, nationality: '瑞士' }),
+  person('per-we-84', '迪迪埃·奎洛兹', '天体物理学家', '文化', ['western_europe'], 6.14, 46.20, '系外行星共同发现者，诺贝尔物理学奖。（合并条目）', { since: 1995, nationality: '瑞士' }),
+  person('per-we-85', '安东·蔡林格', '量子物理学家', '文化', ['western_europe'], 16.37, 48.21, '量子纠缠实验，诺贝尔物理学奖。', { since: 2022, birthYear: 1945, nationality: '奥地利', wikipedia: 'https://zh.wikipedia.org/wiki/安东·蔡林格' }),
+
+  // ── 欧洲文化与体育（扩展）──
+  person('per-we-86', '埃尔林·哈兰德', '足球运动员', '文化', ['western_europe'], 10.75, 59.91, '曼城前锋，挪威人，新生代神锋。', { since: 2019, birthYear: 2000, nationality: '挪威', wikipedia: 'https://zh.wikipedia.org/wiki/埃尔林·哈兰德' }),
+  person('per-we-87', '基利安·姆巴佩（欧洲）', '法国足球运动员', '文化', ['western_europe'], 2.35, 48.86, '法国球星，新生代标杆。（合并条目）', { since: 2015, birthYear: 1998, nationality: '法国' }),
+  person('per-we-88', '卡洛·安切洛蒂', '足球教练', '文化', ['western_europe'], 12.50, 41.90, '皇马主帅，欧冠历史最佳教练。', { since: 1995, birthYear: 1959, nationality: '意大利' }),
+  person('per-we-89', '罗杰·费德勒', '前网球运动员', '文化', ['western_europe'], 8.54, 47.37, '20 座大满贯得主，网球绅士的代表。', { since: 1998, birthYear: 1981, nationality: '瑞士', wikipedia: 'https://zh.wikipedia.org/wiki/罗杰·费德勒' }),
+  person('per-we-90', '诺瓦克·德约科维奇', '网球运动员', '文化', ['western_europe'], 20.47, 44.81, '24 座大满贯得主，史上最伟大网球运动员之一。（跨区备注）', { since: 2003, birthYear: 1987, nationality: '塞尔维亚', wikipedia: 'https://zh.wikipedia.org/wiki/诺瓦克·德约科维奇' }),
+  person('per-we-91', '拉斐尔·纳达尔', '前网球运动员', '文化', ['western_europe'], 2.65, 39.57, '「红土之王」，22 座大满贯得主。', { since: 2001, birthYear: 1986, nationality: '西班牙', wikipedia: 'https://zh.wikipedia.org/wiki/拉斐尔·纳达尔' }),
+  person('per-we-92', '马克斯·维斯塔潘', 'F1 赛车手', '文化', ['western_europe'], 4.90, 52.37, '红牛车队，三连冠 F1 世界冠军。', { since: 2015, birthYear: 1997, nationality: '荷兰/比利时', wikipedia: 'https://zh.wikipedia.org/wiki/马克斯·维斯塔潘' }),
+  person('per-we-93', '刘易斯·汉密尔顿', 'F1 赛车手', '文化', ['western_europe'], -0.13, 51.51, 'F1 七冠王，与舒马赫并列。', { since: 2007, birthYear: 1985, nationality: '英国', wikipedia: 'https://zh.wikipedia.org/wiki/刘易斯·汉密尔顿' }),
+  person('per-we-94', '阿黛尔', '歌手', '文化', ['western_europe'], LONDON[0], LONDON[1], '英国天后，多座格莱美奖。', { since: 2008, birthYear: 1988, nationality: '英国', wikipedia: 'https://zh.wikipedia.org/wiki/爱黛儿' }),
+  person('per-we-95', '酷玩乐队', '摇滚乐队', '文化', ['western_europe'], LONDON[0], LONDON[1], '英国摇滚天团。', { since: 1998, nationality: '英国' }),
+  person('per-we-96', '埃迪·雷德梅恩', '演员', '文化', ['western_europe'], LONDON[0], LONDON[1], '奥斯卡最佳男主角。', { since: 1996, birthYear: 1982, nationality: '英国' }),
+  person('per-we-97', '托尼·布莱尔', '英国前首相', '政治', ['western_europe'], LONDON[0], LONDON[1], '工党前首相（1997-2007）。', { since: 1997, birthYear: 1953, status: 'restricted', nationality: '英国', wikipedia: 'https://zh.wikipedia.org/wiki/托尼·布莱尔' }),
+  person('per-we-98', '特蕾莎·梅', '英国前首相', '政治', ['western_europe'], LONDON[0], LONDON[1], '前首相，脱欧谈判主导者。', { since: 2016, birthYear: 1956, status: 'restricted', nationality: '英国' }),
 ];
