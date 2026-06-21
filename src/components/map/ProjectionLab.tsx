@@ -30,6 +30,10 @@ export function ProjectionLab() {
   const { data: quakes } = useSWR<FeatureCollection>(open ? '/api/earthquakes' : null, fetcher, {
     revalidateOnFocus: false, refreshInterval: 5 * 60 * 1000, dedupingInterval: 60 * 1000,
   });
+  // 海岸线（公共领域 Natural Earth，静态，长缓存）
+  const { data: coastline } = useSWR<FeatureCollection>(open ? '/api/coastline' : null, fetcher, {
+    revalidateOnFocus: false, revalidateIfStale: false, dedupingInterval: 24 * 3600 * 1000,
+  });
 
   // 自旋（独立画布、非地图重绘；仅打开时运行）
   useEffect(() => {
@@ -77,13 +81,40 @@ export function ProjectionLab() {
       ctx.stroke();
     };
 
-    // 球体底盘（正射/方位类用圆）
-    if (proj !== 'equirectangular') {
+    // 球体底盘（仅正射等方位类用圆）
+    if (proj === 'orthographic') {
       ctx.beginPath();
-      ctx.arc(cx, cy, scale * (proj === 'orthographic' ? 1 : def.xHalf * 0.999), 0, Math.PI * 2);
+      ctx.arc(cx, cy, scale, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(10,18,34,0.6)'; ctx.fill();
     }
-    for (const g of GRAT) drawLine(g.pts, 'rgba(63,200,224,0.28)', 0.7);
+
+    // 海岸线/陆地（真实 Natural Earth 110m；环裁剪时断笔）
+    const drawRing = (ring: number[][], color: string, width: number) => {
+      ctx.strokeStyle = color; ctx.lineWidth = width;
+      ctx.beginPath();
+      let pen = false;
+      for (const pt of ring) {
+        const r = def.project(pt[0], pt[1], params);
+        if (!r) { pen = false; continue; }
+        const x = cx + r[0] * scale, y = cy + r[1] * scale;
+        if (!pen) { ctx.moveTo(x, y); pen = true; } else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    };
+    const landFeatures = (coastline as { features?: { geometry?: { type?: string; coordinates?: unknown } }[] } | undefined)?.features;
+    if (Array.isArray(landFeatures)) {
+      for (const f of landFeatures) {
+        const g = f.geometry;
+        if (!g?.coordinates) continue;
+        if (g.type === 'Polygon') {
+          for (const ring of g.coordinates as number[][][]) drawRing(ring, 'rgba(122,180,140,0.55)', 0.7);
+        } else if (g.type === 'MultiPolygon') {
+          for (const poly of g.coordinates as number[][][][]) for (const ring of poly) drawRing(ring, 'rgba(122,180,140,0.55)', 0.7);
+        }
+      }
+    }
+
+    for (const g of GRAT) drawLine(g.pts, 'rgba(63,200,224,0.22)', 0.6);
     // 强调赤道与本初子午线
     drawLine(GRAT.find((g) => g.type === 'parallel' && g.pts[0][1] === 0)?.pts ?? [], 'rgba(232,181,99,0.8)', 1.3);
     drawLine(GRAT.find((g) => g.type === 'meridian' && g.pts[0][0] === 0)?.pts ?? [], 'rgba(232,181,99,0.55)', 1);
@@ -103,7 +134,7 @@ export function ProjectionLab() {
         ctx.fill();
       }
     }
-  }, [open, proj, lon0, quakes]);
+  }, [open, proj, lon0, quakes, coastline]);
 
   if (!inNearEarth) return null;
 
@@ -145,7 +176,7 @@ export function ProjectionLab() {
             <span className="shrink-0">经度</span>
             <input type="range" min={-180} max={180} value={lon0} onChange={(e) => { setSpin(false); setLon0(Number(e.target.value)); }} className="h-1 flex-1 accent-sky-400" aria-label="中心经度" />
           </div>
-          <p className="mt-1 text-[9px] leading-snug text-dashboard-neutral/40">原创投影数学·零依赖·已叠加实时地震(USGS)真实数据；后续叠加海岸线与流场内容（A 引擎演进中）。</p>
+          <p className="mt-1 text-[9px] leading-snug text-dashboard-neutral/40">原创投影数学 · 真实海岸线(Natural Earth 公共领域) + 实时地震(USGS) · 6 投影；后续可适配流场/标量并接入主视图（A 引擎演进中）。</p>
         </div>
       )}
     </>
