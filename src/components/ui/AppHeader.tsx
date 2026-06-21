@@ -2,10 +2,11 @@
 
 /**
  * 应用功能顶栏 — 方案 A：地图上方固定功能区
- * 三区：左（品牌 + 区域）· 中（面板 tab 停靠，单行横滚不溢出）· 右（实时仪表盘，常驻可开关）。
+ * 三区：左（品牌 + 区域）· 中（面板 tab 停靠，单行横滚不溢出）· 右（人物库 + 实时仪表盘，常驻可开关）。
  * 适当加高，为后续精美设计预留空间。地图坐落其下，顶部不再被浮层堆叠遮挡。
  */
 
+import Link from 'next/link';
 import { BrandMark } from '@/components/ui/BrandMark';
 import { BodySwitcher } from '@/components/ui/BodySwitcher';
 import { RegionSwitcher } from '@/components/ui/RegionSwitcher';
@@ -41,8 +42,18 @@ export function AppHeader({ className = '' }: AppHeaderProps) {
         {isEarth ? <PanelDock className="min-w-0 max-w-full" /> : <BodyLayerToggle />}
       </div>
 
-      {/* 右：实时仪表盘（仅地球） */}
-      <div className="flex shrink-0 items-center">
+      {/* 右：人物库入口 + 实时仪表盘（仅地球） */}
+      <div className="flex shrink-0 items-center gap-2">
+        {isEarth && (
+          <Link
+            href="/persons"
+            title="全球政经人物资料库"
+            className="flex items-center gap-1.5 rounded-lg border border-dashboard-neutral/20 bg-dashboard-bg/85 px-3 py-2 text-sm text-dashboard-neutral transition-colors hover:border-dashboard-neutral/40 hover:text-white"
+          >
+            <span aria-hidden>👥</span>
+            <span className="hidden sm:inline">人物库</span>
+          </Link>
+        )}
         {isEarth && <RealtimeDashboard />}
       </div>
     </header>

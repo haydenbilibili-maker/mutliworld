@@ -3,27 +3,20 @@
 /**
  * 实时新闻面板 — 对标 World Monitor Round 4
  * 聚合 BBC/半岛/UN News 公开 RSS；二级筛选按当前区域过滤。
+ *
+ * 时效性提升专项：相对时间收敛到统一工具，并接入自动 tick（停留时「X分钟前」持续更新）。
  */
 
 import { useMapStore } from '@/store/useMapStore';
 import { getRegion } from '@/regions';
 import { useNews } from '@/hooks/useNews';
 import { EMPTY_REGION_MESSAGE } from '@/lib/region/contentFilter';
+import { timeAgo } from '@/lib/format/time';
+import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
 import { DockPanel } from '@/components/region/DockPanel';
 
 interface NewsPanelProps {
   className?: string;
-}
-
-function timeAgo(iso: string): string {
-  const ms = Date.now() - new Date(iso).getTime();
-  if (isNaN(ms)) return '';
-  const m = Math.floor(ms / 60000);
-  if (m < 1) return '刚刚';
-  if (m < 60) return `${m}分钟前`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}小时前`;
-  return `${Math.floor(h / 24)}天前`;
 }
 
 export function NewsPanel({ className = '' }: NewsPanelProps) {
@@ -31,6 +24,8 @@ export function NewsPanel({ className = '' }: NewsPanelProps) {
   const { items, isLoading } = useNews();
   const regionName = getRegion(region)?.name ?? '全球';
   const isEmpty = !isLoading && items.length === 0;
+  // 相对时间自动刷新：列表项「X分钟前」随停留持续更新，页面不可见时暂停省电
+  useRelativeTimeTick(30_000);
 
   return (
     <DockPanel

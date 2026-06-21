@@ -9,6 +9,8 @@
 import { useMemo, useState } from 'react';
 import { DockPanel } from '@/components/region/DockPanel';
 import { useEcon } from '@/hooks/useEcon';
+import { ageLabel } from '@/lib/format/time';
+import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
 import type { EconCategory, EconSeries } from '@/types/econ';
 
 interface EnergyEconPanelProps {
@@ -106,6 +108,8 @@ function SeriesRow({ s }: { s: EconSeries }) {
 export function EnergyEconPanel({ className = '' }: EnergyEconPanelProps) {
   const { byCategory, degraded, generatedAt, isLoading } = useEcon(true);
   const [tab, setTab] = useState<EconCategory>('commodity');
+  // 相对时间自动刷新：底部龄期随停留更新
+  useRelativeTimeTick(30_000);
 
   const tabs = useMemo(
     () => TAB_ORDER.filter((c) => (byCategory.get(c)?.length ?? 0) > 0),
@@ -118,6 +122,7 @@ export function EnergyEconPanel({ className = '' }: EnergyEconPanelProps) {
     () => TAB_ORDER.reduce((n, c) => n + (byCategory.get(c)?.length ?? 0), 0),
     [byCategory],
   );
+  const dataAge = generatedAt ? ageLabel(generatedAt) : '';
 
   return (
     <DockPanel
@@ -137,6 +142,7 @@ export function EnergyEconPanel({ className = '' }: EnergyEconPanelProps) {
               className={`rounded px-2 py-0.5 transition-colors ${activeTab === c ? 'bg-brand-cyan/20 text-brand-cyan' : 'text-dashboard-neutral hover:bg-white/5'}`}
             >
               {CAT_LABEL[c]}
+              <span className="ml-0.5 tabular-nums opacity-60">{byCategory.get(c)?.length ?? 0}</span>
             </button>
           ))}
         </div>
@@ -167,7 +173,7 @@ export function EnergyEconPanel({ className = '' }: EnergyEconPanelProps) {
 
       <div className="mt-2 border-t border-dashboard-neutral/10 pt-2 text-[10px] text-dashboard-neutral/50">
         真实公开数据 · 仅供研究，非投资建议
-        {generatedAt ? ` · ${new Date(generatedAt).toLocaleTimeString('zh-CN')}` : ''}
+        {dataAge && <span title={generatedAt ?? ''}> · {dataAge}更新</span>}
       </div>
     </DockPanel>
   );

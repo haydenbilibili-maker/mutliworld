@@ -11,6 +11,8 @@ import { useMapStore } from '@/store/useMapStore';
 import { DockPanel } from '@/components/region/DockPanel';
 import { EChart } from '@/components/charts/EChart';
 import { situationToEvent } from '@/lib/regional-situation/toEvent';
+import { timeAgo } from '@/lib/format/time';
+import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
 import type {
   RegionalSituationItem,
   SituationItemType,
@@ -61,17 +63,6 @@ const AXIS = {
   splitLine: { lineStyle: { color: '#1c2330' } },
 };
 
-function timeAgo(iso: string): string {
-  const ms = Date.now() - new Date(iso).getTime();
-  if (Number.isNaN(ms)) return '';
-  const m = Math.floor(ms / 60000);
-  if (m < 1) return '刚刚';
-  if (m < 60) return `${m}分钟前`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}小时前`;
-  return `${Math.floor(h / 24)}天前`;
-}
-
 function fmtEngagement(n?: number): string {
   if (n == null) return '';
   if (n >= 10000) return (n / 10000).toFixed(1) + 'w';
@@ -84,6 +75,8 @@ export function RegionalSituationPanel({ className = '' }: RegionalSituationPane
   const selectEvent = useMapStore((s) => s.selectEvent);
   const openSidePanel = useMapStore((s) => s.openSidePanel);
   const [tab, setTab] = useState<TabKey>('all');
+  // 相对时间自动刷新：列表项「X分钟前」随停留持续更新
+  useRelativeTimeTick(30_000);
 
   const list = useMemo(() => {
     const arr = (situation ?? []).filter((item) => tab === 'all' || item.type === tab);

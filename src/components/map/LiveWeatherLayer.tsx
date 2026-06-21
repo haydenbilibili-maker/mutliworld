@@ -13,6 +13,7 @@ import { useMapStore } from '@/store/useMapStore';
 import { findRadarOverlayBeforeId } from '@/lib/map/basemap';
 import { useLiveWeather, useWeatherRadar } from '@/hooks/useLiveWeather';
 import { windDirectionLabel } from '@/lib/weather/wmoCode';
+import { timeAgo } from '@/lib/format/time';
 import type { LiveWeatherPoint } from '@/types/weather';
 
 const RADAR_SOURCE = 'live-weather-radar';
@@ -39,13 +40,15 @@ function applyPopupTheme(popup: maplibregl.Popup) {
 function popupHtml(p: LiveWeatherPoint): string {
   const humidity = p.humidity != null ? `<div>湿度：${p.humidity}%</div>` : '';
   const wind = `<div>风速：${p.windSpeed} km/h · ${windDirectionLabel(p.windDirection)}风</div>`;
+  const obsAbs = p.observedAt.replace('T', ' ').slice(0, 16);
+  const obsRel = timeAgo(p.observedAt);
   return `
     <div style="font-size:13px;line-height:1.5;min-width:10rem">
       <div style="font-weight:600;margin-bottom:4px">${p.emoji} ${p.name}</div>
       <div style="font-size:18px;font-weight:700;color:#22d3ee;margin-bottom:6px">${p.temperature}°C · ${p.condition}</div>
       ${humidity}
       ${wind}
-      <div style="margin-top:6px;font-size:11px;color:#94a3b8">观测：${p.observedAt.replace('T', ' ').slice(0, 16)}</div>
+      <div style="margin-top:6px;font-size:11px;color:#94a3b8">观测：${obsAbs}${obsRel ? ` <span style="color:#64748b">· ${obsRel}</span>` : ''}</div>
     </div>`;
 }
 

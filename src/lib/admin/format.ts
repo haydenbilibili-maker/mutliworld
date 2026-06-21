@@ -13,13 +13,8 @@ export function formatBytes(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 }
 
-/** 格式化 TLE / 数据抓取时间为相对年龄 */
-export function formatTleAgeHours(fetchedAt: string | null): string {
-  if (!fetchedAt) return '—';
-  const ms = Date.parse(fetchedAt);
-  if (Number.isNaN(ms)) return '—';
-  const hours = (Date.now() - ms) / (1000 * 60 * 60);
-  if (hours < 1) return `${Math.round(hours * 60)} 分钟前`;
-  if (hours < 48) return `${hours.toFixed(1)} 小时前`;
-  return `${(hours / 24).toFixed(1)} 天前`;
-}
+/**
+ * 格式化 TLE / 数据抓取时间为相对年龄。
+ * 收敛到统一时效工具 src/lib/format/time.ts 的 ageLabel，保持 admin 模块导出签名不变。
+ */
+export { ageLabel as formatTleAgeHours } from '@/lib/format/time';

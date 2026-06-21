@@ -15,6 +15,48 @@ body {
   color: var(--color-neutral);
 }
 
+/* ── 可达性（a11y）· PRD H 模块 P0 ─────────────────────────── */
+
+/**
+ * 键盘焦点环：仅键盘导航（:focus-visible）显示明确焦点轮廓，鼠标点击不触发，
+ * 兼顾可达性与视觉洁净。覆盖所有可聚焦元素，避免逐组件遗漏。
+ * 轮廓色用品牌青（与现有 hover 高亮一致），offset 保证与元素间距清晰。
+ */
+:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* 部分元素已有圆角，焦点环跟随圆角更自然 */
+a:focus-visible,
+button:focus-visible,
+[role='button']:focus-visible,
+[role='tab']:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline-offset: 1px;
+}
+
+/**
+ * 减弱动态（reduced-motion）全局兜底 —— PRD 要求「reduced-motion 全覆盖」。
+ * 用户系统启用「减弱动态效果」时，关闭所有 CSS transition/animation/keyframe 动画。
+ * 与 layout.tsx 的 <MotionConfig reducedMotion="user"> 配合：
+ *  · 此处覆盖 CSS 动画（Tailwind animate-*、自定义 transition、地图图层 CSS 动画）
+ *  · MotionConfig 覆盖 framer-motion 的 23 个组件动画
+ * 例外：maplibre 地图容器保留必要过渡，避免底图加载期闪烁。
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* MapLibre 容器占满且不遮挡 UI */
 .maplibregl-map {
   font-family: inherit;

@@ -12,6 +12,7 @@ import type { FeatureCollection } from 'geojson';
 import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import { findLiveOverlayBeforeId } from '@/lib/map/basemap';
+import { timeAgo } from '@/lib/format/time';
 import type { EventDetail, LayerId } from '@/types/geo';
 
 export interface EonetLayerConfig {
@@ -121,9 +122,13 @@ export function EonetEventLayer({ config }: { config: EonetLayerConfig }) {
       const coords = (f.geometry as unknown as { coordinates: [number, number] }).coordinates;
       popupRef.current?.remove();
       const date = p.date ? new Date(p.date).toLocaleString('zh-CN', { hour12: false }) : '';
+      const rel = p.date ? timeAgo(p.date) : '';
+      const dateLine = date
+        ? `${dateLabel} ${date}${rel ? ` <span style="color:#64748b">· ${rel}</span>` : ''}`
+        : '';
       const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, offset: 10, className: 'geodata-popup' })
         .setLngLat(coords)
-        .setHTML(`<div style="font-size:13px;line-height:1.5;min-width:11rem"><div style="font-weight:600;margin-bottom:4px">${icon} ${p.title}</div><div style="font-size:11px;color:#94a3b8">${dateLabel} ${date}</div></div>`)
+        .setHTML(`<div style="font-size:13px;line-height:1.5;min-width:11rem"><div style="font-weight:600;margin-bottom:4px">${icon} ${p.title}</div>${dateLine ? `<div style="font-size:11px;color:#94a3b8">${dateLine}</div>` : ''}</div>`)
         .addTo(map);
       applyPopupTheme(popup);
       popupRef.current = popup;
@@ -131,11 +136,12 @@ export function EonetEventLayer({ config }: { config: EonetLayerConfig }) {
         id: `${srcKey}-${coords[0]},${coords[1]}`,
         title: `${icon} ${p.title}`,
         source: 'NASA EONET（近实时）',
-        timestamp: p.date ? new Date(p.date).toISOString() : new Date().toISOString(),
+        // 缺 date 时不伪造当前时刻（避免污染详情面板时间），用空串由面板回落到「—」
+        timestamp: p.date ? new Date(p.date).toISOString() : '',
         location: coords,
         impact_level: 'medium',
         category: layerId,
-        description: `${dateLabel} ${date}`,
+        description: dateLine ? `${dateLabel} ${date}` : dateLabel,
       };
       selectEventRef.current(detail);
     };

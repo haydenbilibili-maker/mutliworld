@@ -12,6 +12,7 @@ import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import { findLiveOverlayBeforeId } from '@/lib/map/basemap';
 import { useLiveFires } from '@/hooks/useLiveFires';
+import { timeAgo } from '@/lib/format/time';
 import type { EventDetail } from '@/types/geo';
 
 const SOURCE = 'live-fires';
@@ -65,13 +66,22 @@ function applyPopupTheme(popup: maplibregl.Popup) {
 
 const CONF_LABEL: Record<string, string> = { h: '高', n: '名义', l: '低' };
 
+/** FIRMS acqTime「HHMM」→「HH:MM」 */
+function fmtAcqTime(hhmm: string): string {
+  if (hhmm.length === 4) return `${hhmm.slice(0, 2)}:${hhmm.slice(2)}`;
+  return hhmm;
+}
+
 function popupHtml(p: FireProps): string {
   const conf = CONF_LABEL[p.confidence] ?? p.confidence ?? '—';
   const dn = p.daynight === 'D' ? '日' : p.daynight === 'N' ? '夜' : p.daynight;
+  const timeStr = `${p.acqDate} ${fmtAcqTime(p.acqTime)}`;
+  // FIRMS 时刻为 UTC；按 UTC 解析求相对龄期（粗略感知「多久前」即可）
+  const rel = timeAgo(`${p.acqDate}T${fmtAcqTime(p.acqTime)}:00Z`);
   return `
     <div style="font-size:13px;line-height:1.5;min-width:11rem">
       <div style="font-weight:600;margin-bottom:4px">🔥 活跃火点</div>
-      <div style="font-size:11px;color:#94a3b8;margin-bottom:6px">${p.acqDate} ${p.acqTime} · ${p.satellite} · ${dn}</div>
+      <div style="font-size:11px;color:#94a3b8;margin-bottom:6px">${timeStr} (UTC)${rel ? ` <span style="color:#64748b">· ${rel}</span>` : ''} · ${p.satellite} · ${dn}</div>
       <div>火辐射功率：${Math.round(p.frp)} MW</div>
       <div>亮温：${Math.round(p.brightness)} K</div>
       <div>置信度：${conf}</div>

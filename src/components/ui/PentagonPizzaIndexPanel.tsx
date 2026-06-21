@@ -7,6 +7,7 @@ import { usePentagonPizzaIndex } from '@/hooks/usePentagonPizzaIndex';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { levelLabelZh } from '@/lib/pizza-index/simulate';
 import { PENTAGON_CENTER, PENTAGON_FLY_ZOOM } from '@/lib/pizza-index/venues';
+import { ageLabel, formatClock } from '@/lib/format/time';
 import type { PizzaIndexLevel, PizzaIndexTrend } from '@/types/pizza-index';
 
 const LEVEL_STYLES: Record<PizzaIndexLevel, string> = {
@@ -21,16 +22,6 @@ const TREND_ICON: Record<PizzaIndexTrend, string> = {
   down: '↓',
   flat: '→',
 };
-
-function formatTime(iso: string | undefined): string {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  const HH = String(d.getHours()).padStart(2, '0');
-  const MM = String(d.getMinutes()).padStart(2, '0');
-  const SS = String(d.getSeconds()).padStart(2, '0');
-  return `${HH}:${MM}:${SS}`;
-}
 
 function Sparkline({ values }: { values: number[] }) {
   if (values.length < 2) return null;
@@ -230,9 +221,14 @@ export function PentagonPizzaIndexPanel({ className = '' }: PentagonPizzaIndexPa
             <span>
               更新：
               <span className="tabular-nums text-dashboard-neutral">
-                {formatTime(data?.updatedAt)}
+                {formatClock(data?.updatedAt)}
                 {isValidating ? ' …' : ''}
               </span>
+              {data?.updatedAt && !isValidating && (
+                <span className="ml-1 text-dashboard-neutral/45">
+                  （{ageLabel(data.updatedAt)}）
+                </span>
+              )}
             </span>
             <span>
               来源：

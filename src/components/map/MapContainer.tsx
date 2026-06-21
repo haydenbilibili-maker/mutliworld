@@ -52,10 +52,6 @@ import { StormLayer } from '@/components/map/StormLayer';
 import { FloodLayer } from '@/components/map/FloodLayer';
 import { DustHazeLayer } from '@/components/map/DustHazeLayer';
 import { SeaIceLayer } from '@/components/map/SeaIceLayer';
-import { BodySiteLayer } from '@/components/map/BodySiteLayer';
-import { BodyOrbiterLayer } from '@/components/map/BodyOrbiterLayer';
-import { BodyTraverseLayer } from '@/components/map/BodyTraverseLayer';
-import { BodyFeatureLayer } from '@/components/map/BodyFeatureLayer';
 import { MaritimeLayer } from '@/components/map/MaritimeLayer';
 import { PizzaIndexLayer } from '@/components/map/PizzaIndexLayer';
 import { ProfilePicker } from '@/components/map/ProfilePicker';
@@ -72,6 +68,11 @@ const WindParticleLayer = dynamic(() => import('@/components/map/WindParticleLay
 const OceanFlowLayer = dynamic(() => import('@/components/map/WindParticleLayer').then((m) => m.OceanFlowLayer), { ssr: false });
 const WaveFlowLayer = dynamic(() => import('@/components/map/WindParticleLayer').then((m) => m.WaveFlowLayer), { ssr: false });
 const NearEarthBackdrop = dynamic(() => import('@/components/map/NearEarthBackdrop').then((m) => m.NearEarthBackdrop), { ssr: false });
+// 天体探索地图层（月/火）：仅切离地球后才需要，懒加载压缩首屏 JS（含 @/bodies 数据分包）
+const BodySiteLayer = dynamic(() => import('@/components/map/BodySiteLayer').then((m) => m.BodySiteLayer), { ssr: false });
+const BodyFeatureLayer = dynamic(() => import('@/components/map/BodyFeatureLayer').then((m) => m.BodyFeatureLayer), { ssr: false });
+const BodyOrbiterLayer = dynamic(() => import('@/components/map/BodyOrbiterLayer').then((m) => m.BodyOrbiterLayer), { ssr: false });
+const BodyTraverseLayer = dynamic(() => import('@/components/map/BodyTraverseLayer').then((m) => m.BodyTraverseLayer), { ssr: false });
 const BottomDock = dynamic(() => import('@/components/ui/BottomDock').then((m) => m.BottomDock), { ssr: false });
 
 interface MapContainerProps {

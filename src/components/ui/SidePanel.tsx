@@ -3,24 +3,14 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
 import { LAYER_LABELS } from '@/lib/constants';
+import { formatDate, timeAgo } from '@/lib/format/time';
+import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { NEWS_CATEGORY_COLORS } from '@/data/news-feed';
 import type { LayerId } from '@/types/geo';
 
 interface SidePanelProps {
   className?: string;
-}
-
-function formatTimestamp(iso: string) {
-  if (!iso) return '';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  const HH = String(d.getHours()).padStart(2, '0');
-  const MM = String(d.getMinutes()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd} ${HH}:${MM}`;
 }
 
 const IMPACT_LABELS: Record<string, string> = {
@@ -36,10 +26,13 @@ export function SidePanel({ className = '' }: SidePanelProps) {
   const sidePanelOpen = useMapStore((s) => s.sidePanelOpen);
   const selectedEvent = useMapStore((s) => s.selectedEvent);
   const openSidePanel = useMapStore((s) => s.openSidePanel);
+  // 相对龄期自动刷新：面板打开停留时「X分钟前」持续更新，关闭时不挂载
+  useRelativeTimeTick(30_000, sidePanelOpen);
 
-  const formattedTimestamp = selectedEvent
-    ? formatTimestamp(selectedEvent.timestamp)
+  const formattedTimestamp = selectedEvent?.timestamp
+    ? formatDate(selectedEvent.timestamp)
     : '';
+  const relativeAge = selectedEvent?.timestamp ? timeAgo(selectedEvent.timestamp) : '';
   const impactLabel = selectedEvent
     ? IMPACT_LABELS[selectedEvent.impact_level] ?? selectedEvent.impact_level
     : '';
@@ -85,7 +78,15 @@ export function SidePanel({ className = '' }: SidePanelProps) {
                 </h2>
                 <p className="text-sm text-dashboard-neutral">
                   来源：{selectedEvent.source}
-                  {formattedTimestamp ? ` · ${formattedTimestamp}` : ''}
+                  {formattedTimestamp ? (
+                    <>
+                      {' · '}
+                      <span className="tabular-nums">{formattedTimestamp}</span>
+                      {relativeAge && (
+                        <span className="text-dashboard-neutral/55"> （{relativeAge}）</span>
+                      )}
+                    </>
+                  ) : ''}
                 </p>
                 <p className="text-sm text-dashboard-neutral">
                   影响：{impactLabel}

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { formatDateTime } from '@/lib/admin/format';
+import { ageLabel, isStale } from '@/lib/format/time';
+import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
 import { formatTleSource } from '@/lib/orbital/tleMeta';
 import { useTleMeta } from '@/hooks/useTleMeta';
 import type { TleRefreshResponse } from '@/types/orbital';
@@ -14,6 +16,9 @@ interface TleStatusBarProps {
   onRefreshSuccess?: () => void | Promise<void>;
 }
 
+/** TLE 数据「陈旧」阈值：超过 72 小时（与 admin/stats.ts TLE_STALE_HOURS 一致） */
+const TLE_STALE_MS = 72 * 60 * 60 * 1000;
+
 export function TleStatusBar({
   enabled = true,
   compact = false,
@@ -24,6 +29,8 @@ export function TleStatusBar({
   const [refreshing, setRefreshing] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [statusError, setStatusError] = useState(false);
+  // 相对龄期自动刷新：TLE 抓取时刻的「X小时前」随停留持续更新
+  useRelativeTimeTick(60_000, enabled);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -56,11 +63,14 @@ export function TleStatusBar({
   const counts = meta?.counts ?? { station: 0, satellite: 0, debris: 0 };
   const sourceLabel = formatTleSource(meta?.source ?? 'seed-fallback');
   const fetchedLabel = meta?.fetchedAt ? formatDateTime(meta.fetchedAt) : '—';
+  const fetchedAge = meta?.fetchedAt ? ageLabel(meta.fetchedAt) : '';
+  const tleStale = meta?.fetchedAt ? isStale(meta.fetchedAt, TLE_STALE_MS) : true;
 
   return (
     <div
       className={[
-        'rounded-md border border-violet-500/15 bg-violet-500/5',
+        'rounded-md border bg-violet-500/5',
+        tleStale ? 'border-amber-500/30' : 'border-violet-500/15',
         compact ? 'px-2 py-1.5' : 'px-2.5 py-2',
         className,
       ].join(' ')}
@@ -70,11 +80,21 @@ export function TleStatusBar({
           <span>
             数据源：<span className="text-dashboard-neutral">{sourceLabel}</span>
           </span>
-          <span>
+          <span title={fetchedLabel}>
             上次更新：
             <span className="tabular-nums text-dashboard-neutral">
               {isLoading && !meta ? '…' : fetchedLabel}
             </span>
+            {fetchedAge && (
+              <span
+                className={[
+                  'ml-1 tabular-nums',
+                  tleStale ? 'text-amber-400' : 'text-emerald-400/80',
+                ].join(' ')}
+              >
+                ({fetchedAge}{tleStale ? ' · 建议刷新' : ''})
+              </span>
+            )}
           </span>
         </div>
         <div>

@@ -64,3 +64,16 @@ export function getPersonCountsByRegion(): Record<RegionId, number> {
 }
 
 export { UNIQUE_POOL as ALL_PERSONS };
+
+import { getUniquePersons as buildUniquePersons } from '@/lib/persons/dedup';
+
+/**
+ * 去重后的唯一人物列表（按 name 去重，合并 regionIds，信息择优保留）。
+ * 资料库列表页/详情页基于此视图，避免 256 条中"同人不同 id"重复。
+ */
+export const UNIQUE_PERSONS = buildUniquePersons(UNIQUE_POOL);
+
+/** 按 id 查找人物（在去重池中检索） */
+export function getPersonById(id: string): Person | undefined {
+  return UNIQUE_PERSONS.find((p) => p.id === id);
+}

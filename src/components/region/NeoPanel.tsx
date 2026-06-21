@@ -4,11 +4,16 @@
  * 近地天体(NEO)接近事件面板 — 仅宇宙层显示。
  * 真实数据：NASA/JPL CNEOS 近地天体接近 API（免密钥）。未来 7 天、≤0.05au 的接近事件。
  * NEO 无地表经纬度，故以面板而非地图层呈现；诚实合成、不编造。
+ *
+ * 时效性提升专项：接近事件显示相对倒计时（「3 天后」「2 小时后」「即将」），
+ * 并对 <1 天即将接近的事件做距离倒计时强调（用户最关心的「马上接近」感知）。
  */
 
 import { useState } from 'react';
 import useSWR from 'swr';
 import { useMapStore } from '@/store/useMapStore';
+import { countdown, ageLabel } from '@/lib/format/time';
+import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
 import { DockPanel } from '@/components/region/DockPanel';
 
 interface NeoItem { name: string; date: string; distLD: number; velocityKms: number; diameterKm: number | null; }
@@ -29,6 +34,8 @@ export function NeoPanel({ className = '' }: NeoPanelProps) {
   const { data } = useSWR<NeoBody>(enabled ? '/api/neo' : null, fetcher, {
     revalidateOnFocus: false, refreshInterval: 60 * 60 * 1000, dedupingInterval: 10 * 60 * 1000,
   });
+  // 相对倒计时自动刷新：接近事件的「N 天后」随时间推移持续更新（宇宙层省电，60s 粒度）
+  useRelativeTimeTick(60_000, enabled);
 
   const [sortBy, setSortBy] = useState<'dist' | 'date'>('dist');
 
@@ -36,6 +43,8 @@ export function NeoPanel({ className = '' }: NeoPanelProps) {
   const items = [...(data?.items ?? [])].sort((a, b) =>
     sortBy === 'dist' ? a.distLD - b.distLD : a.date.localeCompare(b.date),
   );
+
+  const dataAge = data?.generatedAt ? ageLabel(data.generatedAt) : '';
 
   return (
     <DockPanel
@@ -65,25 +74,43 @@ export function NeoPanel({ className = '' }: NeoPanelProps) {
           <div className="py-2 text-center text-dashboard-neutral/45">暂无符合条件的接近事件</div>
         ) : (
           <div className="max-h-[40vh] space-y-1 overflow-y-auto pr-0.5">
-            {items.map((it, i) => (
-              <div key={`${it.name}-${it.date}-${i}`} className="rounded-md bg-white/5 px-2 py-1.5">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-medium text-white">{it.name}</span>
-                  <span className={['tabular-nums', it.distLD < 1 ? 'text-rose-300' : it.distLD < 5 ? 'text-amber-300' : 'text-dashboard-neutral/70'].join(' ')}>
-                    {it.distLD.toFixed(1)} LD
-                  </span>
+            {items.map((it, i) => {
+              const cd = countdown(it.date);
+              // <1 天即将接近的事件强调（距最近接近时刻倒计时）
+              const imminent = cd !== '' && !cd.includes('天') && !cd.includes('年');
+              return (
+                <div key={`${it.name}-${it.date}-${i}`} className="rounded-md bg-white/5 px-2 py-1.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-medium text-white">{it.name}</span>
+                    <span className={['tabular-nums', it.distLD < 1 ? 'text-rose-300' : it.distLD < 5 ? 'text-amber-300' : 'text-dashboard-neutral/70'].join(' ')}>
+                      {it.distLD.toFixed(1)} LD
+                    </span>
+                  </div>
+                  <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[10px] text-dashboard-neutral/55">
+                    <span>{it.date}</span>
+                    {cd && (
+                      <span
+                        className={[
+                          'tabular-nums',
+                          imminent ? 'font-medium text-amber-300' : 'text-dashboard-neutral/45',
+                        ].join(' ')}
+                        title="距最近接近时刻"
+                      >
+                        · {cd}
+                      </span>
+                    )}
+                    <span>径 {sizeLabel(it.diameterKm)}</span>
+                    <span>速 {it.velocityKms.toFixed(1)} km/s</span>
+                  </div>
                 </div>
-                <div className="mt-0.5 flex flex-wrap gap-x-2 text-[10px] text-dashboard-neutral/55">
-                  <span>{it.date}</span>
-                  <span>径 {sizeLabel(it.diameterKm)}</span>
-                  <span>速 {it.velocityKms.toFixed(1)} km/s</span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
         {data?.source && (
-          <div className="border-t border-dashboard-neutral/10 pt-1 text-[9px] text-dashboard-neutral/40">源：{data.source} · LD=月球距离</div>
+          <div className="border-t border-dashboard-neutral/10 pt-1 text-[9px] text-dashboard-neutral/40">
+            源：{data.source} · LD=月球距离{dataAge && ` · ${dataAge}更新`}
+          </div>
         )}
       </div>
     </DockPanel>

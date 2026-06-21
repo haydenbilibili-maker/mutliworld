@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import { useMapContext } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
+import { formatShort, timeAgo } from '@/lib/format/time';
 
 export function MapTooltip() {
   const map = useMapContext();
@@ -85,6 +86,16 @@ export function MapTooltip() {
       el.appendChild(desc);
     }
 
+    // 事件时刻（绝对时刻 + 相对龄期，浮窗为临时弹窗故相对时间静态计算一次）
+    if (tooltip.timestamp) {
+      const meta = document.createElement('div');
+      meta.className = 'map-tooltip-meta';
+      const abs = formatShort(tooltip.timestamp);
+      const rel = timeAgo(tooltip.timestamp);
+      meta.textContent = rel ? `${abs} · ${rel}` : abs;
+      el.appendChild(meta);
+    }
+
     // 影响等级（有 impact_level 时）
     if (tooltip.impact_level && tooltip.impact_level !== 'medium') {
       const impact = document.createElement('div');
@@ -143,7 +154,7 @@ export function MapTooltip() {
       marker.remove();
       if (markerRef.current === marker) markerRef.current = null;
     };
-  }, [map, tooltip?.id, tooltip?.location?.[0], tooltip?.location?.[1], tooltip?.avatarUrl, tooltip?.title, tooltip?.description, tooltip?.category, tooltip?.impact_level, selectEvent, focusOnMap]);
+  }, [map, tooltip?.id, tooltip?.location?.[0], tooltip?.location?.[1], tooltip?.avatarUrl, tooltip?.title, tooltip?.description, tooltip?.category, tooltip?.impact_level, tooltip?.timestamp, selectEvent, focusOnMap]);
 
   return (
     <style jsx global>{`
@@ -203,6 +214,13 @@ export function MapTooltip() {
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+      }
+      .map-tooltip-meta {
+        font-size: 10px;
+        color: rgba(230, 237, 243, 0.45);
+        line-height: 1.3;
+        margin-bottom: 6px;
+        font-variant-numeric: tabular-nums;
       }
       .map-tooltip-impact {
         font-size: 10px;

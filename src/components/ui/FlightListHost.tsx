@@ -6,19 +6,10 @@
 
 import { useMapStore } from '@/store/useMapStore';
 import { useLiveFlights } from '@/hooks/useLiveFlights';
+import { ageLabel, formatClock } from '@/lib/format/time';
 
 interface FlightListHostProps {
   className?: string;
-}
-
-function formatTime(iso: string | null | undefined): string {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  const HH = String(d.getHours()).padStart(2, '0');
-  const MM = String(d.getMinutes()).padStart(2, '0');
-  const SS = String(d.getSeconds()).padStart(2, '0');
-  return `${HH}:${MM}:${SS}`;
 }
 
 export function FlightListHost({ className = '' }: FlightListHostProps) {
@@ -38,6 +29,8 @@ export function FlightListHost({ className = '' }: FlightListHostProps) {
     : isValidating
       ? 'bg-amber-400'
       : 'bg-emerald-400';
+  const clock = formatClock(meta?.generatedAt);
+  const age = meta?.generatedAt ? ageLabel(meta?.generatedAt) : '';
 
   return (
     <div
@@ -53,7 +46,7 @@ export function FlightListHost({ className = '' }: FlightListHostProps) {
         title={
           meta?.error || error
             ? String(meta?.error ?? error)
-            : `数据来源：${meta?.source ?? 'OpenSky'} · 更新 ${formatTime(meta?.generatedAt)}`
+            : `数据来源：${meta?.source ?? 'OpenSky'} · 更新 ${clock}${age ? `（${age}）` : ''}`
         }
       >
         <span aria-hidden>✈️</span>
@@ -63,7 +56,7 @@ export function FlightListHost({ className = '' }: FlightListHostProps) {
         </span>
         <span className={`h-2 w-2 shrink-0 rounded-full ${statusClass}`} />
         <span className="hidden text-[10px] text-dashboard-neutral/60 sm:inline">
-          {formatTime(meta?.generatedAt)}
+          {clock}
         </span>
       </div>
     </div>

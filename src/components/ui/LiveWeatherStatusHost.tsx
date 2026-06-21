@@ -6,18 +6,15 @@
 
 import { useMapStore } from '@/store/useMapStore';
 import { useLiveWeather, useWeatherRadar } from '@/hooks/useLiveWeather';
+import { ageLabel, formatClock } from '@/lib/format/time';
 
 interface LiveWeatherStatusHostProps {
   className?: string;
 }
 
-function formatTime(iso: string | null | undefined): string {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  const HH = String(d.getHours()).padStart(2, '0');
-  const MM = String(d.getMinutes()).padStart(2, '0');
-  return `${HH}:${MM}`;
+/** HH:MM（天气数据 15 分钟刷新，秒级精度无意义） */
+function hm(iso: string | null | undefined): string {
+  return formatClock(iso).slice(0, 5);
 }
 
 export function LiveWeatherStatusHost({ className = '' }: LiveWeatherStatusHostProps) {
@@ -45,6 +42,8 @@ export function LiveWeatherStatusHost({ className = '' }: LiveWeatherStatusHostP
       : radarError instanceof Error
         ? radarError.message
         : '天气数据暂不可用';
+  const clock = hm(generatedAt);
+  const age = generatedAt ? ageLabel(generatedAt) : '';
 
   return (
     <div
@@ -60,7 +59,7 @@ export function LiveWeatherStatusHost({ className = '' }: LiveWeatherStatusHostP
         title={
           hasError
             ? errorMsg
-            : `城市实况 ${points.length} 处 · 雷达 ${radar ? '已加载' : '等待中'} · 更新 ${formatTime(generatedAt)}`
+            : `城市实况 ${points.length} 处 · 雷达 ${radar ? '已加载' : '等待中'} · 更新 ${clock}${age ? `（${age}）` : ''}`
         }
       >
         <span aria-hidden>🌧️</span>
@@ -87,7 +86,7 @@ export function LiveWeatherStatusHost({ className = '' }: LiveWeatherStatusHostP
           </>
         ) : (
           <span className="hidden text-[10px] text-dashboard-neutral/60 sm:inline">
-            {formatTime(generatedAt)}
+            {clock}
           </span>
         )}
       </div>

@@ -70,13 +70,19 @@ export async function fetchGdacsEvents(): Promise<LiveEvent[]> {
     const lng = Number(pickTag(it, 'geo:long') || '');
     const alert = (pickTag(it, 'gdacs:alertlevel') || '').toLowerCase();
     const severity: LiveEventSeverity = alert === 'red' ? 'critical' : alert === 'orange' ? 'high' : 'medium';
-    const d = pub ? new Date(pub) : new Date();
+    // pubDate 缺失或解析失败时，回退到 1 小时前（而非当前时刻）：
+    // 灾害预警不应丢弃，但用「当前时刻」会让它冒充最新事件污染时间排序顶部。
+    // 1 小时前仍在事件窗口内，且不会盖过真正刚发生的事件。
+    const pubMs = pub ? Date.parse(pub) : NaN;
+    const timeIso = Number.isFinite(pubMs)
+      ? new Date(pubMs).toISOString()
+      : new Date(Date.now() - 3600_000).toISOString();
     out.push({
       id: `gdacs-${link}`,
       title,
       category: 'disaster',
       severity,
-      time: isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString(),
+      time: timeIso,
       provider: 'GDACS',
       source: 'GDACS 全球灾害预警',
       sourceUrl: link,
@@ -103,13 +109,18 @@ export async function fetchReliefWebEvents(): Promise<LiveEvent[]> {
   for (const d of json.data ?? []) {
     const f = d.fields ?? {};
     if (!f.name) continue;
-    const created = f.date?.created ?? new Date().toISOString();
+    // date.created 缺失时回退到 1 小时前（而非当前时刻），避免冒充最新污染时间排序
+    const createdRaw = f.date?.created;
+    const createdMs = createdRaw ? Date.parse(createdRaw) : NaN;
+    const createdIso = Number.isFinite(createdMs)
+      ? new Date(createdMs).toISOString()
+      : new Date(Date.now() - 3600_000).toISOString();
     out.push({
       id: `reliefweb-${d.id}`,
       title: f.name,
       category: 'humanitarian',
       severity: f.status === 'ongoing' || f.status === 'current' ? 'high' : 'medium',
-      time: new Date(created).toISOString(),
+      time: createdIso,
       provider: 'ReliefWeb',
       source: 'ReliefWeb（OCHA）',
       sourceUrl: f.url_alias ?? `https://reliefweb.int/disaster/${d.id}`,
@@ -119,11 +130,17 @@ export async function fetchReliefWebEvents(): Promise<LiveEvent[]> {
 }
 
 /* ── GDELT 2.0 DOC：地缘/冲突新闻 ────────────────────────── */
-function gdeltDate(s: string): string {
-  // "20240614T123000Z" → ISO
+/**
+ * 解析 GDELT seendate（"20240614T123000Z"）为 ISO 字符串。
+ * 解析失败返回 null —— 调用方据此丢弃该条目，而非伪造当前时刻，
+ * 否则旧文会被当作「刚刚发生」污染事件流的时间排序（违背真实数据原则）。
+ */
+function gdeltDate(s: string): string | null {
   const m = s.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/);
-  if (!m) return new Date().toISOString();
-  return `${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}Z`;
+  if (!m) return null;
+  const iso = `${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}Z`;
+  // 双重校验：确保解析出的日期合法（如 20240631 会被 Date.parse 拒绝）
+  return Number.isFinite(Date.parse(iso)) ? iso : null;
 }
 
 export async function fetchGdeltEvents(): Promise<LiveEvent[]> {
@@ -140,12 +157,14 @@ export async function fetchGdeltEvents(): Promise<LiveEvent[]> {
   const out: LiveEvent[] = [];
   for (const a of json.articles ?? []) {
     if (!a.url || !a.title) continue;
+    const time = gdeltDate(a.seendate);
+    if (!time) continue; // 日期解析失败 → 丢弃，避免伪造「当前时刻」污染时间排序
     out.push({
       id: `gdelt-${a.url}`,
       title: a.title,
       category: 'geopolitics',
       severity: 'medium',
-      time: gdeltDate(a.seendate),
+      time,
       provider: 'GDELT',
       source: a.domain ?? 'GDELT',
       sourceUrl: a.url,
