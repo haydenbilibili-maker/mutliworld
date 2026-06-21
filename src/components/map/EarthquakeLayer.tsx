@@ -12,6 +12,7 @@ import type { FeatureCollection } from 'geojson';
 import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import { findLiveOverlayBeforeId } from '@/lib/map/basemap';
+import { timeAgo } from '@/lib/format/time';
 import type { EventDetail } from '@/types/geo';
 
 const SOURCE = 'live-quakes';
@@ -45,10 +46,11 @@ function applyPopupTheme(popup: maplibregl.Popup) {
 
 function popupHtml(p: QuakeProps): string {
   const t = new Date(p.time).toLocaleString('zh-CN', { hour12: false });
+  const rel = timeAgo(p.time);
   return `
     <div style="font-size:13px;line-height:1.5;min-width:12rem">
       <div style="font-weight:600;margin-bottom:4px">📳 M${p.mag.toFixed(1)} 地震</div>
-      <div style="font-size:11px;color:#94a3b8;margin-bottom:6px">${t}</div>
+      <div style="font-size:11px;color:#94a3b8;margin-bottom:6px">${t}${rel ? ` <span style="color:#64748b">· ${rel}</span>` : ''}</div>
       <div>${p.place}</div>
       <div>震源深度：${Math.round(p.depth)} km</div>
       ${p.tsunami ? '<div style="color:#38bdf8;font-weight:600">🌊 可能引发海啸（USGS 标记）</div>' : ''}
@@ -62,17 +64,28 @@ export function EarthquakeLayer() {
   const activeLayers = useMapStore((s) => s.activeLayers);
   const selectEvent = useMapStore((s) => s.selectEvent);
 
+  const tmActive = useMapStore((s) => s.tmActive);
+  const tmPlayhead = useMapStore((s) => s.tmPlayhead);
+
   const enabled = activeTier === 'surface' && activeLayers.includes('earthquakes');
   const { data } = useSWR<FeatureCollection>(enabled ? '/api/earthquakes' : null, fetcher, {
     revalidateOnFocus: false, refreshInterval: 5 * 60 * 1000, dedupingInterval: 60 * 1000,
   });
-  const geojson: FeatureCollection = data?.type === 'FeatureCollection' ? data : { type: 'FeatureCollection', features: [] };
+  const raw: FeatureCollection = data?.type === 'FeatureCollection' ? data : { type: 'FeatureCollection', features: [] };
+  // 时间机器：仅显示发生时刻 ≤ 播放头的地震（按真实时间戳过滤，不预测）
+  const geojson: FeatureCollection = useMemo(() => {
+    if (!tmActive) return raw;
+    return { type: 'FeatureCollection', features: raw.features.filter((f) => {
+      const t = (f.properties as { time?: number } | null)?.time;
+      return typeof t === 'number' ? t <= tmPlayhead : true;
+    }) };
+  }, [raw, tmActive, tmPlayhead]);
 
   const selectEventRef = useRef(selectEvent);
   selectEventRef.current = selectEvent;
   const popupRef = useRef<maplibregl.Popup | null>(null);
   const lastKey = useRef('');
-  const dataKey = useMemo(() => `${enabled}:${geojson.features.length}`, [geojson, enabled]);
+  const dataKey = useMemo(() => `${enabled}:${geojson.features.length}:${tmActive ? tmPlayhead : 0}`, [enabled, geojson.features.length, tmActive, tmPlayhead]);
 
   useEffect(() => {
     if (!map) return;

@@ -41,6 +41,11 @@ export interface MapState {
   flowSpeed: number;
   /** 视图：近地标量叠加配色方案（经典/Turbo/Viridis/灰度） */
   overlayScheme: ColorScheme;
+  /** 时间机器（3.0 B · 事件层回放）：开关 / 播放 / 时间窗(小时) / 播放头(ms epoch) */
+  tmActive: boolean;
+  tmPlaying: boolean;
+  tmWindowH: number;
+  tmPlayhead: number;
   center: [number, number];
   zoom: number;
   view: ViewPreset;
@@ -71,6 +76,8 @@ export interface MapActions {
   setFlowSpeed: (speed: number) => void;
   /** 设置近地标量叠加配色方案 */
   setOverlayScheme: (scheme: ColorScheme) => void;
+  /** 时间机器：合并更新（开关/播放/时间窗/播放头） */
+  setTimeMachine: (patch: Partial<Pick<MapState, 'tmActive' | 'tmPlaying' | 'tmWindowH' | 'tmPlayhead'>>) => void;
   /** 一键回正：正视图居中中国，bearing/pitch 归零 */
   resetGlobeToChinaView: () => void;
   setCenter: (center: [number, number]) => void;
@@ -99,6 +106,10 @@ const initialState: MapState = {
   globeViewResetNonce: 0,
   flowSpeed: 0.5,
   overlayScheme: 'default',
+  tmActive: false,
+  tmPlaying: false,
+  tmWindowH: 72,
+  tmPlayhead: Date.now(),
   center: [105, 28],
   zoom: 3.5,
   view: 'global',
@@ -186,6 +197,7 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setGlobeMotionSpeed: (globeMotionSpeed) => set({ globeMotionSpeed }),
   setFlowSpeed: (flowSpeed) => set({ flowSpeed }),
   setOverlayScheme: (overlayScheme) => set({ overlayScheme }),
+  setTimeMachine: (patch) => set(patch),
   resetGlobeToChinaView: () =>
     set((s) => ({
       center: CHINA_GLOBE_VIEW.center,

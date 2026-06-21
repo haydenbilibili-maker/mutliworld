@@ -28,20 +28,36 @@ import { SeabedBriefingPanel } from '@/components/region/SeabedBriefingPanel';
 import { SpaceBriefingPanel } from '@/components/region/SpaceBriefingPanel';
 import { NeoPanel } from '@/components/region/NeoPanel';
 import { AnomalyBoard } from '@/components/region/AnomalyBoard';
+import { TimeMachineBar } from '@/components/ui/TimeMachineBar';
 import { OrbitalListHost } from '@/components/ui/OrbitalListHost';
 import { PizzaIndexHost } from '@/components/ui/PizzaIndexHost';
 import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
 import { useGlobalEscape } from '@/hooks/useGlobalEscape';
 import { useViewPrefsPersistence } from '@/hooks/useViewPrefsPersistence';
 import { LiveLayerPerformanceGuard } from '@/components/ui/LiveLayerPerformanceGuard';
-import { BodyTimelinePanel } from '@/components/ui/BodyTimelinePanel';
-import { BodyOverviewPanel } from '@/components/ui/BodyOverviewPanel';
-import { BodyViewControls } from '@/components/ui/BodyViewControls';
-import { BodyKnowledgePanel } from '@/components/ui/BodyKnowledgePanel';
 import { BriefingToast } from '@/components/ui/BriefingToast';
 import { BriefingDetailPanel } from '@/components/ui/BriefingDetailPanel';
 import { GlobalLivePanel } from '@/components/ui/GlobalLivePanel';
 import { useMapStore } from '@/store/useMapStore';
+
+// 多天体探索（月/火等）面板：仅切离地球后才需要，懒加载压缩首屏 JS。
+// 这些面板用 useMapStore 全局 store（不依赖 MapContext），ssr:false 安全。
+const BodyTimelinePanel = dynamic(
+  () => import('@/components/ui/BodyTimelinePanel').then((m) => ({ default: m.BodyTimelinePanel })),
+  { ssr: false },
+);
+const BodyOverviewPanel = dynamic(
+  () => import('@/components/ui/BodyOverviewPanel').then((m) => ({ default: m.BodyOverviewPanel })),
+  { ssr: false },
+);
+const BodyViewControls = dynamic(
+  () => import('@/components/ui/BodyViewControls').then((m) => ({ default: m.BodyViewControls })),
+  { ssr: false },
+);
+const BodyKnowledgePanel = dynamic(
+  () => import('@/components/ui/BodyKnowledgePanel').then((m) => ({ default: m.BodyKnowledgePanel })),
+  { ssr: false },
+);
 
 const StrategicResearchHost = dynamic(
   () =>
@@ -104,6 +120,7 @@ export function HomeDashboard() {
           </div>
 
           <OrbitalListHost />
+          <TimeMachineBar />
           <MapHudStack className="absolute bottom-[4.75rem] left-4 z-20 max-sm:bottom-[5.25rem] max-sm:left-2" />
           <MarqueeTicker className="absolute bottom-0 left-0 right-0 z-20" />
           <SidePanel />
