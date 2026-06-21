@@ -1,15 +1,18 @@
 'use client';
 
 /**
- * 底部 Dock 协调器 — 把「近地数值数据条」与「底部控制栏」收入同一居中 flex 列，
+ * 底部 Dock 协调器 — 把「空间层数据条」与「底部控制栏」收入同一居中 flex 列，
  * 形成「窄数据层叠在宽控制层之上」的级联台阶，共享玻璃语言与高级原生质感。
  *
  * 形态：级联分层 Dock
- *   ┌── 数据层(窄 40rem, 青色顶辉光) ──┐   仅近地空间层挂载，弹簧抬升级联
+ *   ┌── 数据层(窄 40rem, 青色顶辉光) ──┐   按当前空间层选择渲染
  *   └──────────────┬───────────────────┘   gap 6px
  *   ┌──────────────┴───────────────────┐
  *   │  控制层(宽 48rem, 始终在地球层渲染)  │
  *   └────────────────────────────────────┘
+ *
+ * 数据条调度：surface → SurfaceLiveBar（实时事件计数）；near_earth → NearEarthDataBar（标量图例+鼠标读数）。
+ * 切换空间层时，AnimatePresence 自动让旧条弹簧下沉 exit、新条弹簧抬升 enter。
  *
  * 定位锚点：absolute bottom-14（与原 MapControlBar 一致，布局零偏移）。
  * 门控：仅 activeBody === 'earth' 时渲染；非地球天体返回 null（保持现状）。
@@ -19,6 +22,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
 import { MapControlBar } from '@/components/ui/MapControlBar';
 import { NearEarthDataBar } from '@/components/ui/NearEarthDataBar';
+import { SurfaceLiveBar } from '@/components/ui/SurfaceLiveBar';
 
 interface BottomDockProps {
   className?: string;
@@ -27,6 +31,7 @@ interface BottomDockProps {
 export function BottomDock({ className = '' }: BottomDockProps) {
   const isEarth = useMapStore((s) => s.activeBody === 'earth');
   const inNearEarth = useMapStore((s) => s.activeBody === 'earth' && s.activeTier === 'near_earth');
+  const inSurface = useMapStore((s) => s.activeBody === 'earth' && s.activeTier === 'surface');
 
   if (!isEarth) return null;
 
@@ -38,8 +43,19 @@ export function BottomDock({ className = '' }: BottomDockProps) {
         className,
       ].join(' ')}
     >
-      {/* 近地数据层：弹簧抬升级联（在控制栏之后入场，离开近地时优雅收回） */}
+      {/* 数据层：按当前空间层调度，共用同一弹簧动效；切换层时旧条下沉/新条抬升级联过渡 */}
       <AnimatePresence>
+        {inSurface && (
+          <motion.div
+            key="surface-data"
+            initial={{ opacity: 0, y: 14, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.98 }}
+            transition={{ type: 'spring', stiffness: 320, damping: 28, mass: 0.8, delay: 0.04 }}
+          >
+            <SurfaceLiveBar />
+          </motion.div>
+        )}
         {inNearEarth && (
           <motion.div
             key="near-earth-data"

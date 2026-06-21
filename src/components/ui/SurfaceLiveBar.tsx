@@ -1,15 +1,18 @@
 'use client';
 
 /**
- * 地表实时态势计数条 — 仅地表层显示，汇总各实时点层的事件计数（地震/火山/风暴/洪水）。
+ * 地表实时态势计数条 — 由 BottomDock 级联叠放于底部控制栏正上方（与近地数据条共用
+ * DockDataCard 外壳与弹簧动效），汇总各实时点层的事件计数（地震/火山/风暴/洪水/沙尘/海冰）。
  * 与各图层共享 SWR（dedupe），仅统计已开启的层；至少一层开启才出现。真实数据·中立并陈。
+ * 仅地表层显示；挂载于 MapContainer（BottomDock 已在 MapProvider 内）。
+ * 定位与入场动效由 BottomDock 统一管理；本组件仅返回裸卡片。
  */
 
-import { motion } from 'framer-motion';
 import useSWR from 'swr';
 import type { FeatureCollection } from 'geojson';
 import { useMapStore } from '@/store/useMapStore';
 import type { LayerId } from '@/types/geo';
+import { DockDataCard } from '@/components/ui/DockDataCard';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 const swrOpts = { revalidateOnFocus: false, refreshInterval: 5 * 60 * 1000, dedupingInterval: 60_000 };
@@ -45,16 +48,15 @@ export function SurfaceLiveBar() {
   if (active.length === 0) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.22, ease: 'easeOut' }}
-      className="pointer-events-none fixed bottom-[6.25rem] left-1/2 z-20 -translate-x-1/2 max-sm:bottom-[7rem]"
+    <DockDataCard
+      footer={
+        <div className="w-full border-t border-dashboard-neutral/10 pt-1 text-[9px] text-dashboard-neutral/45">
+          各层计数每 5 分钟刷新 · 真实数据·中立并陈
+        </div>
+      }
     >
-      <div className="pointer-events-auto flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-lg border border-dashboard-neutral/20 bg-dashboard-bg/92 px-3 py-2 text-[11px] shadow-xl backdrop-blur-md shadow-[0_-1px_0_0_rgba(63,200,224,0.18)] transition-colors">
-        <span className="text-[10px] font-medium text-dashboard-neutral/55">实时态势</span>
-        {active.map((c) => <Chip key={c.layer} def={c} />)}
-      </div>
-    </motion.div>
+      <span className="text-[10px] font-medium text-dashboard-neutral/55">实时态势</span>
+      {active.map((c) => <Chip key={c.layer} def={c} />)}
+    </DockDataCard>
   );
 }

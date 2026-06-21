@@ -27,7 +27,6 @@ import { RegionDetailCard } from '@/components/region/RegionDetailCard';
 import { SeabedBriefingPanel } from '@/components/region/SeabedBriefingPanel';
 import { SpaceBriefingPanel } from '@/components/region/SpaceBriefingPanel';
 import { NeoPanel } from '@/components/region/NeoPanel';
-import { SurfaceLiveBar } from '@/components/ui/SurfaceLiveBar';
 import { OrbitalListHost } from '@/components/ui/OrbitalListHost';
 import { PizzaIndexHost } from '@/components/ui/PizzaIndexHost';
 import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
@@ -103,7 +102,6 @@ export function HomeDashboard() {
           </div>
 
           <OrbitalListHost />
-          <SurfaceLiveBar />
           <MapHudStack className="absolute bottom-[4.75rem] left-4 z-20 max-sm:bottom-[5.25rem] max-sm:left-2" />
           <MarqueeTicker className="absolute bottom-0 left-0 right-0 z-20" />
           <SidePanel />

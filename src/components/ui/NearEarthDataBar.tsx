@@ -15,6 +15,7 @@ import { useMapContext } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import { useNearEarthStore, SCALAR_META } from '@/store/useNearEarthStore';
 import { rampCss } from '@/lib/map/scalarColor';
+import { DockDataCard } from '@/components/ui/DockDataCard';
 
 interface GridMeta { generatedAt?: string; source?: string }
 interface VecGrid extends GridMeta { nx: number; ny: number; lon0: number; lat0: number; dLon: number; dLat: number; u: number[]; v: number[]; }
@@ -126,63 +127,60 @@ export function NearEarthDataBar() {
   const provAge = relTime(provGrid?.generatedAt);
 
   return (
-    <div className="w-[min(40rem,calc(100vw-1.5rem))]">
-      <div className="pointer-events-auto flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-lg border border-dashboard-neutral/20 bg-dashboard-bg/92 px-3 py-2 shadow-xl backdrop-blur-md shadow-[0_-1px_0_0_rgba(63,200,224,0.18)] transition-colors">
-        {/* 图例（醒目）：BAA 离散分级 / 其余连续浓度色阶 */}
-        {overlayOn && meta.ramp === 'baa' ? (
-          <div className="flex min-w-[14rem] flex-1 items-center gap-2">
-            <span className="shrink-0 text-[12px] font-medium text-white">{meta.label}</span>
-            <div className="flex flex-1 flex-wrap gap-x-2 gap-y-0.5">
-              {BAA_LEVELS.map((lv) => (
-                <span key={lv.label} className="flex items-center gap-1 text-[9px] text-dashboard-neutral/70">
-                  <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: lv.color }} />
-                  {lv.label}
-                </span>
-              ))}
-            </div>
-          </div>
-        ) : overlayOn ? (
-          <div className="flex min-w-[14rem] flex-1 items-center gap-2">
-            <span className="shrink-0 text-[12px] font-medium text-white">{meta.label}</span>
-            <div className="flex flex-1 flex-col gap-0.5">
-              <div className="h-2.5 w-full rounded" style={{ background: rampCss(meta.ramp, scheme) }} />
-              <div className="flex justify-between text-[9px] text-dashboard-neutral/55">
-                <span>{meta.min}</span>
-                <span>{meta.unit}</span>
-                <span>{meta.max}</span>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <span className="text-[11px] text-dashboard-neutral/50">未开启标量叠加 · 在「图层」菜单选择</span>
-        )}
-
-        {/* 实时读数（含流向） — tabular-nums：鼠标移动时数字等宽不抖 */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] tabular-nums text-dashboard-neutral/80">
-          {readout ? (
-            <>
-              <span className="text-dashboard-neutral/50">{readout.lat.toFixed(1)}°, {readout.lng.toFixed(1)}°</span>
-              {readout.wind != null && <span>风 <span className="text-white">{readout.wind.toFixed(1)}</span> m/s{readout.windDir && <span className="text-dashboard-neutral/55"> 向{readout.windDir}</span>}</span>}
-              {readout.ocean != null && <span>洋流 <span className="text-white">{readout.ocean.toFixed(2)}</span> m/s{readout.oceanDir && <span className="text-dashboard-neutral/55"> 向{readout.oceanDir}</span>}</span>}
-              {readout.wave != null && <span>浪 <span className="text-white">{readout.wave.toFixed(1)}</span> m{readout.waveDir && <span className="text-dashboard-neutral/55"> 向{readout.waveDir}</span>}</span>}
-              {readout.scalar != null && (
-                meta.ramp === 'baa'
-                  ? <span>{meta.label} <span className="text-white">{baaLabel(readout.scalar)}</span></span>
-                  : <span>{meta.label} <span className="text-white">{readout.scalar.toFixed(1)}</span> {meta.unit}</span>
-              )}
-            </>
-          ) : (
-            <span className="text-dashboard-neutral/45">移动鼠标查看该处实时数值</span>
-          )}
+    <DockDataCard
+      footer={provSource ? (
+        <div className="w-full border-t border-dashboard-neutral/10 pt-1 text-[9px] text-dashboard-neutral/45">
+          源：{provSource}{provAge && ` · ${provAge}更新`} · 真实数据·中立并陈
         </div>
-
-        {/* 数据来源 / 时效 */}
-        {provSource && (
-          <div className="w-full border-t border-dashboard-neutral/10 pt-1 text-[9px] text-dashboard-neutral/45">
-            源：{provSource}{provAge && ` · ${provAge}更新`} · 真实数据·中立并陈
+      ) : undefined}
+    >
+      {/* 图例（醒目）：BAA 离散分级 / 其余连续浓度色阶 */}
+      {overlayOn && meta.ramp === 'baa' ? (
+        <div className="flex min-w-[14rem] flex-1 items-center gap-2">
+          <span className="shrink-0 text-[12px] font-medium text-white">{meta.label}</span>
+          <div className="flex flex-1 flex-wrap gap-x-2 gap-y-0.5">
+            {BAA_LEVELS.map((lv) => (
+              <span key={lv.label} className="flex items-center gap-1 text-[9px] text-dashboard-neutral/70">
+                <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: lv.color }} />
+                {lv.label}
+              </span>
+            ))}
           </div>
+        </div>
+      ) : overlayOn ? (
+        <div className="flex min-w-[14rem] flex-1 items-center gap-2">
+          <span className="shrink-0 text-[12px] font-medium text-white">{meta.label}</span>
+          <div className="flex flex-1 flex-col gap-0.5">
+            <div className="h-2.5 w-full rounded" style={{ background: rampCss(meta.ramp, scheme) }} />
+            <div className="flex justify-between text-[9px] text-dashboard-neutral/55">
+              <span>{meta.min}</span>
+              <span>{meta.unit}</span>
+              <span>{meta.max}</span>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <span className="text-[11px] text-dashboard-neutral/50">未开启标量叠加 · 在「图层」菜单选择</span>
+      )}
+
+      {/* 实时读数（含流向） — tabular-nums：鼠标移动时数字等宽不抖 */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] tabular-nums text-dashboard-neutral/80">
+        {readout ? (
+          <>
+            <span className="text-dashboard-neutral/50">{readout.lat.toFixed(1)}°, {readout.lng.toFixed(1)}°</span>
+            {readout.wind != null && <span>风 <span className="text-white">{readout.wind.toFixed(1)}</span> m/s{readout.windDir && <span className="text-dashboard-neutral/55"> 向{readout.windDir}</span>}</span>}
+            {readout.ocean != null && <span>洋流 <span className="text-white">{readout.ocean.toFixed(2)}</span> m/s{readout.oceanDir && <span className="text-dashboard-neutral/55"> 向{readout.oceanDir}</span>}</span>}
+            {readout.wave != null && <span>浪 <span className="text-white">{readout.wave.toFixed(1)}</span> m{readout.waveDir && <span className="text-dashboard-neutral/55"> 向{readout.waveDir}</span>}</span>}
+            {readout.scalar != null && (
+              meta.ramp === 'baa'
+                ? <span>{meta.label} <span className="text-white">{baaLabel(readout.scalar)}</span></span>
+                : <span>{meta.label} <span className="text-white">{readout.scalar.toFixed(1)}</span> {meta.unit}</span>
+            )}
+          </>
+        ) : (
+          <span className="text-dashboard-neutral/45">移动鼠标查看该处实时数值</span>
         )}
       </div>
-    </div>
+    </DockDataCard>
   );
 }
