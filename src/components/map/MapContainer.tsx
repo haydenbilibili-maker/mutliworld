@@ -77,9 +77,11 @@ const BottomDock = dynamic(() => import('@/components/ui/BottomDock').then((m) =
 
 interface MapContainerProps {
   className?: string;
+  /** 精简模式（嵌入视图）：去除底部控制 Dock 等 chrome，仅保留地图与数据图层 */
+  chromeless?: boolean;
 }
 
-export function MapContainer({ className = '' }: MapContainerProps) {
+export function MapContainer({ className = '', chromeless = false }: MapContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const initialSyncDone = useRef(false);
@@ -406,8 +408,8 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <GeodataFetchIndicator />
             <MapSelectionPulse />
             <MapTooltip />
-            {/* 底部 Dock：级联分层居中，数据条(近地)与控制栏融合（自身门控 earth） */}
-            <BottomDock />
+            {/* 底部 Dock：级联分层居中，数据条(近地)与控制栏融合（自身门控 earth）；精简模式下隐藏 */}
+            {!chromeless && <BottomDock />}
           </>
         )}
       </div>

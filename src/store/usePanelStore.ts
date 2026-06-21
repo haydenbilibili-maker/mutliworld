@@ -27,7 +27,8 @@ export type PanelId =
   | 'econ'
   | 'insights'
   | 'neo-panel'
-  | 'anomaly-board';
+  | 'anomaly-board'
+  | 'data-health';
 
 /** 面板元信息（用于停靠工具条按钮） */
 export const PANEL_META: { id: PanelId; label: string }[] = [
@@ -127,6 +128,7 @@ const ALL: Record<PanelId, boolean> = {
   insights: false,
   'neo-panel': false,
   'anomaly-board': false,
+  'data-health': false,
 };
 
 /** 由 ALL 派生全开/全关，避免新增 PanelId 时遗漏手写枚举导致类型/状态漂移 */
