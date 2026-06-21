@@ -14,16 +14,18 @@ function Divider() {
 
 interface MapControlBarProps {
   className?: string;
+  /** 嵌入 BottomDock 时省略自身 max-w（层级宽度交由 dock 管理），并贴合数据条的玻璃语言。 */
+  embedded?: boolean;
 }
 
 /** 底部统一控制条：时间范围 + 图层筛选 + 全局搜索 */
-export function MapControlBar({ className = '' }: MapControlBarProps) {
+export function MapControlBar({ className = '', embedded = false }: MapControlBarProps) {
   return (
     <div
       className={[
         'flex flex-wrap items-center justify-center gap-x-1 gap-y-1.5 rounded-lg border border-dashboard-neutral/20',
-        'bg-dashboard-bg/90 px-2 py-1.5 shadow-lg backdrop-blur-sm',
-        'max-w-[min(calc(100vw-2rem),48rem)]',
+        'bg-dashboard-bg/92 px-2 py-1.5 shadow-lg backdrop-blur-md',
+        embedded ? '' : 'max-w-[min(calc(100vw-2rem),48rem)]',
         className,
       ].join(' ')}
       role="toolbar"

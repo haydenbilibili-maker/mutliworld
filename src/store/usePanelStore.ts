@@ -25,7 +25,8 @@ export type PanelId =
   | 'news'
   | 'markets'
   | 'econ'
-  | 'insights';
+  | 'insights'
+  | 'neo-panel';
 
 /** 面板元信息（用于停靠工具条按钮） */
 export const PANEL_META: { id: PanelId; label: string }[] = [
@@ -123,7 +124,12 @@ const ALL: Record<PanelId, boolean> = {
   markets: false,
   econ: false,
   insights: false,
+  'neo-panel': false,
 };
+
+/** 由 ALL 派生全开/全关，避免新增 PanelId 时遗漏手写枚举导致类型/状态漂移 */
+const ALL_TRUE = Object.fromEntries(Object.keys(ALL).map((k) => [k, true])) as Record<PanelId, boolean>;
+const ALL_FALSE = Object.fromEntries(Object.keys(ALL).map((k) => [k, false])) as Record<PanelId, boolean>;
 
 export const usePanelStore = create<PanelState>((set) => ({
   open: { ...ALL },
@@ -132,11 +138,7 @@ export const usePanelStore = create<PanelState>((set) => ({
   setOpen: (id, value) =>
     set((s) => ({ open: { ...s.open, [id]: value } })),
   showAll: () =>
-    set(() => ({
-      open: { overview: true, military: true, energy: true, persons: true, diplomacy: true, situation: true, marquee: true, briefing: true, 'china-briefing': true, 'us-briefing': true, 'seabed-briefing': true, 'space-briefing': true, news: true, markets: true, econ: true, insights: true },
-    })),
+    set(() => ({ open: { ...ALL_TRUE } })),
   hideAll: () =>
-    set(() => ({
-      open: { overview: false, military: false, energy: false, persons: false, diplomacy: false, situation: false, marquee: false, briefing: false, 'china-briefing': false, 'us-briefing': false, 'seabed-briefing': false, 'space-briefing': false, news: false, markets: false, econ: false, insights: false },
-    })),
+    set(() => ({ open: { ...ALL_FALSE } })),
 }));

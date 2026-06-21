@@ -9,11 +9,12 @@ import { motion } from 'framer-motion';
 import useSWR from 'swr';
 import type { FeatureCollection } from 'geojson';
 import { useMapStore } from '@/store/useMapStore';
+import type { LayerId } from '@/types/geo';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
-const swrOpts = { revalidateOnFocus: false, refreshInterval: 5 * 60 * 1000, dedupingInterval: 60 * 1000 };
+const swrOpts = { revalidateOnFocus: false, refreshInterval: 5 * 60 * 1000, dedupingInterval: 60_000 };
 
-interface ChipDef { layer: string; endpoint: string; icon: string; label: string; color: string }
+interface ChipDef { layer: LayerId; endpoint: string; icon: string; label: string; color: string }
 const CHIPS: ChipDef[] = [
   { layer: 'earthquakes', endpoint: '/api/earthquakes', icon: '🌐', label: '地震', color: 'text-rose-300' },
   { layer: 'volcanoes', endpoint: '/api/volcanoes', icon: '🌋', label: '火山', color: 'text-orange-300' },

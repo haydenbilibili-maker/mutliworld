@@ -1,13 +1,14 @@
 'use client';
 
 /**
- * 近地数据条 — 置于底部控制栏上方，醒目展示当前标量叠加的浓度色阶图例 + 鼠标悬停实时读数。
- * 替代原左下角弹窗：动画流场入「视图」菜单、标量叠加入「图层」模块，本条专注「数据 + 图例」。
+ * 近地数据条 — 由 BottomDock 级联叠放于底部控制栏正上方，专注展示当前标量叠加的
+ * 浓度色阶图例 + 鼠标悬停实时读数。替代原左下角弹窗：动画流场入「视图」菜单、标量
+ * 叠加入「图层」模块，本条专注「数据 + 图例」。
  * 仅在近地空间层显示；挂载于 MapContainer（持有地图上下文，监听 mousemove 取真实数据）。
+ * 定位与入场动效由 BottomDock 统一管理；本组件仅返回裸卡片，与控制栏共享玻璃语言。
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import useSWR from 'swr';
 import type maplibregl from 'maplibre-gl';
 import { useMapContext } from '@/context/MapContext';
@@ -82,7 +83,21 @@ export function NearEarthDataBar() {
   const { data: scalar } = useSWR<ScalarGrid>(overlayOn ? meta.endpoint : null, fetcher, swrOpts);
 
   const [readout, setReadout] = useState<Readout | null>(null);
+  // 时效标签（"X分钟前"）刷新 tick：每 60s 触发一次重渲，避免显示停留在旧时刻。
+  const [, setAgeTick] = useState(0);
+  useEffect(() => {
+    if (!inNearEarth) return;
+    const id = window.setInterval(() => setAgeTick((t) => t + 1), 60_000);
+    return () => window.clearInterval(id);
+  }, [inNearEarth]);
   const lastTs = useRef(0);
+  // 把数据网格存入 ref：mousemove 监听器只需挂载一次，避免 SWR 静默刷新（每 30min + 聚焦）
+  // 返回新对象引用 → 解绑/重绑 mousemove → 短暂窗口内读数失效闪现。
+  const windRef = useRef(wind); windRef.current = wind;
+  const oceanRef = useRef(ocean); oceanRef.current = ocean;
+  const waveRef = useRef(wave); waveRef.current = wave;
+  const scalarRef = useRef(scalar); scalarRef.current = scalar;
+  const paramKeyRef = useRef(meta.key); paramKeyRef.current = meta.key;
 
   useEffect(() => {
     if (!map || !inNearEarth) return;
@@ -92,15 +107,16 @@ export function NearEarthDataBar() {
       lastTs.current = now;
       const { lng, lat } = e.lngLat;
       const r: Readout = { lat, lng };
-      if (wind?.nx) { const u = bilerp(wind.u, wind, lng, lat); const v = bilerp(wind.v, wind, lng, lat); if (u != null && v != null) { r.wind = Math.hypot(u, v); r.windDir = compass(u, v); } }
-      if (ocean?.nx) { const u = bilerp(ocean.u, ocean, lng, lat); const v = bilerp(ocean.v, ocean, lng, lat); if (u != null && v != null) { r.ocean = Math.hypot(u, v); r.oceanDir = compass(u, v); } }
-      if (wave?.nx) { const u = bilerp(wave.u, wave, lng, lat); const v = bilerp(wave.v, wave, lng, lat); if (u != null && v != null) { r.wave = Math.hypot(u, v); r.waveDir = compass(u, v); } }
-      if (scalar?.nx && scalar.params[meta.key]) { const val = bilerp(scalar.params[meta.key], scalar, lng, lat); if (val != null) r.scalar = val; }
+      const w = windRef.current, o = oceanRef.current, wav = waveRef.current, sc = scalarRef.current, pkey = paramKeyRef.current;
+      if (w?.nx) { const u = bilerp(w.u, w, lng, lat); const v = bilerp(w.v, w, lng, lat); if (u != null && v != null) { r.wind = Math.hypot(u, v); r.windDir = compass(u, v); } }
+      if (o?.nx) { const u = bilerp(o.u, o, lng, lat); const v = bilerp(o.v, o, lng, lat); if (u != null && v != null) { r.ocean = Math.hypot(u, v); r.oceanDir = compass(u, v); } }
+      if (wav?.nx) { const u = bilerp(wav.u, wav, lng, lat); const v = bilerp(wav.v, wav, lng, lat); if (u != null && v != null) { r.wave = Math.hypot(u, v); r.waveDir = compass(u, v); } }
+      if (sc?.nx && sc.params[pkey]) { const val = bilerp(sc.params[pkey], sc, lng, lat); if (val != null) r.scalar = val; }
       setReadout(r);
     };
     map.on('mousemove', onMove);
     return () => { map.off('mousemove', onMove); };
-  }, [map, inNearEarth, wind, ocean, wave, scalar, meta.key]);
+  }, [map, inNearEarth]);
 
   if (!inNearEarth) return null;
 
@@ -110,13 +126,8 @@ export function NearEarthDataBar() {
   const provAge = relTime(provGrid?.generatedAt);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, ease: 'easeOut' }}
-      className="pointer-events-none fixed bottom-[6.25rem] left-1/2 z-30 w-[min(44rem,calc(100vw-1.5rem))] -translate-x-1/2 max-sm:bottom-[7rem]"
-    >
-      <div className="pointer-events-auto flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-lg border border-dashboard-neutral/25 bg-dashboard-bg/92 px-3 py-2 shadow-xl backdrop-blur-md transition-colors">
+    <div className="w-[min(40rem,calc(100vw-1.5rem))]">
+      <div className="pointer-events-auto flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-lg border border-dashboard-neutral/20 bg-dashboard-bg/92 px-3 py-2 shadow-xl backdrop-blur-md shadow-[0_-1px_0_0_rgba(63,200,224,0.18)] transition-colors">
         {/* 图例（醒目）：BAA 离散分级 / 其余连续浓度色阶 */}
         {overlayOn && meta.ramp === 'baa' ? (
           <div className="flex min-w-[14rem] flex-1 items-center gap-2">
@@ -146,8 +157,8 @@ export function NearEarthDataBar() {
           <span className="text-[11px] text-dashboard-neutral/50">未开启标量叠加 · 在「图层」菜单选择</span>
         )}
 
-        {/* 实时读数（含流向） */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-dashboard-neutral/80">
+        {/* 实时读数（含流向） — tabular-nums：鼠标移动时数字等宽不抖 */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] tabular-nums text-dashboard-neutral/80">
           {readout ? (
             <>
               <span className="text-dashboard-neutral/50">{readout.lat.toFixed(1)}°, {readout.lng.toFixed(1)}°</span>
@@ -172,6 +183,6 @@ export function NearEarthDataBar() {
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }

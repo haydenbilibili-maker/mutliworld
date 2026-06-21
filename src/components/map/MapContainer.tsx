@@ -71,6 +71,7 @@ const ScalarOverlayLayer = dynamic(() => import('@/components/map/ScalarOverlayL
 const WindParticleLayer = dynamic(() => import('@/components/map/WindParticleLayer').then((m) => m.WindParticleLayer), { ssr: false });
 const OceanFlowLayer = dynamic(() => import('@/components/map/WindParticleLayer').then((m) => m.OceanFlowLayer), { ssr: false });
 const WaveFlowLayer = dynamic(() => import('@/components/map/WindParticleLayer').then((m) => m.WaveFlowLayer), { ssr: false });
+const NearEarthBackdrop = dynamic(() => import('@/components/map/NearEarthBackdrop').then((m) => m.NearEarthBackdrop), { ssr: false });
 const BottomDock = dynamic(() => import('@/components/ui/BottomDock').then((m) => m.BottomDock), { ssr: false });
 
 interface MapContainerProps {
@@ -391,6 +392,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             {/* 近地专属：仅近地层挂载，非近地层不创建 canvas/不监听 mousemove/不发起网格请求/不跑 RAF（性能专项） */}
             {activeTier === 'near_earth' && (
               <>
+                <NearEarthBackdrop />
                 <ScalarOverlayLayer />
                 <WindParticleLayer />
                 <OceanFlowLayer />

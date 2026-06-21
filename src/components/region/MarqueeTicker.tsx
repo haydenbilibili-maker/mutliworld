@@ -57,6 +57,20 @@ export function MarqueeTicker({ className = '' }: MarqueeTickerProps) {
     [items],
   );
 
+  // 跑马灯动画防抖：duration 仅与「条目数量」挂钩，而非 items 引用。
+  // 否则 useNewsFeed 每 5 分钟轮询刷新 → items 引用变更 → React 重设 inline style.animation
+  // → CSS 动画从 0% 重启，跑马灯「跳回起点」造成可见抖动。
+  const count = rows.length;
+  const durationSec = useMemo(() => Math.max(28, count * 5), [count]);
+  // trackKey 仅在条目集合（数量+首尾 id）真正变化时才变；轮询刷新内容相同则保持不变，
+  // 从而不触发 DOM 重挂、不重启动画。内容更新由 React 对子节点 diff 平滑过渡。
+  const trackKey = useMemo(() => {
+    if (count === 0) return 'empty';
+    const head = rows[0]?.key ?? '';
+    const tail = rows[count - 1]?.key ?? '';
+    return `${count}:${head}:${tail}`;
+  }, [count, rows]);
+
   const handleClick = useCallback(
     (item: NewsFeedItem) => {
       const event = newsFeedItemToEventDetail(item);
@@ -73,7 +87,6 @@ export function MarqueeTicker({ className = '' }: MarqueeTickerProps) {
 
   const showEmpty = !isLoading && rows.length === 0;
   const loop = rows.length > 0 ? [...rows, ...rows] : [];
-  const durationSec = Math.max(28, rows.length * 5);
 
   return (
     <div
@@ -121,6 +134,7 @@ export function MarqueeTicker({ className = '' }: MarqueeTickerProps) {
             </div>
           ) : (
             <div
+              key={trackKey}
               className="mq-track flex w-max items-center gap-4 max-sm:gap-3 py-1.5 px-1 will-change-transform"
               style={{ animation: `mqScroll ${durationSec}s linear infinite` }}
             >
