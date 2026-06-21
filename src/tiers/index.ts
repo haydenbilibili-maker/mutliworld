@@ -73,7 +73,7 @@ const nearEarthTier: TierModule = {
   name: '近地',
   icon: '🌀',
   tagline: '大气环流 · 洋流 · 化学污染物 · 颗粒物（粒子流场 + 标量叠加）',
-  layers: ['wind_flow', 'ocean_flow', 'wave_flow', 'air_pollutants', 'particulates', 'sea_temp', 'sig_wave_height', 'sst_anomaly', 'coral_baa', 'dhw', 'air_temp', 'precip', 'daynight'],
+  layers: ['wind_flow', 'ocean_flow', 'wave_flow', 'air_pollutants', 'particulates', 'sea_temp', 'sig_wave_height', 'sst_anomaly', 'coral_baa', 'dhw', 'air_temp', 'precip', 'mslp', 'humidity', 'cape', 'daynight'],
   defaultLayers: ['wind_flow'],
   basemap: 'flow',
   renderMode: 'flow',
@@ -112,6 +112,9 @@ export const LAYER_TIER: Partial<Record<LayerId, SpatialTier>> = {
   dhw: 'near_earth',
   air_temp: 'near_earth',
   precip: 'near_earth',
+  mslp: 'near_earth',
+  humidity: 'near_earth',
+  cape: 'near_earth',
   // 洋底
   marine_archaeology: 'subsurface',
   ocean_currents: 'subsurface',

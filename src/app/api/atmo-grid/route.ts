@@ -9,7 +9,7 @@ import { NextResponse } from 'next/server';
 
 const DLON = 15, DLAT = 15, LON0 = -180, LAT0 = -75, NX = 24, NY = 11;
 const CACHE_TTL_MS = 30 * 60 * 1000;
-const PARAMS = ['temperature_2m', 'precipitation'] as const;
+const PARAMS = ['temperature_2m', 'precipitation', 'pressure_msl', 'relative_humidity_2m', 'cape'] as const;
 type Param = (typeof PARAMS)[number];
 
 interface ScalarGrid {
