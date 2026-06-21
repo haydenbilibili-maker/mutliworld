@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import type { OrbitalCategory } from '@/types/orbital';
 import { propagateAll, toOrbitalGeoJSON } from '@/lib/orbital/propagate';
+import { ensureFreshTle } from '@/lib/orbital/tleRuntime';
 
 const VALID_CATEGORIES: OrbitalCategory[] = ['station', 'satellite', 'debris'];
 
@@ -35,6 +36,9 @@ export async function GET(req: NextRequest) {
     const { searchParams } = req.nextUrl;
     const categories = parseCategories(searchParams.get('category'));
     const limit = parseLimit(searchParams.get('limit'), 200);
+
+    // 运行时自动获取 TLE（CelesTrak，6h 节流，免手动脚本/写盘）；失败回退 bundled/seed
+    await ensureFreshTle();
 
     const { objects, meta } = propagateAll({
       categories,

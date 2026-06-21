@@ -47,7 +47,7 @@ function popupHtml(p: QuakeProps): string {
   const t = new Date(p.time).toLocaleString('zh-CN', { hour12: false });
   return `
     <div style="font-size:13px;line-height:1.5;min-width:12rem">
-      <div style="font-weight:600;margin-bottom:4px">🌐 M${p.mag.toFixed(1)} 地震</div>
+      <div style="font-weight:600;margin-bottom:4px">📳 M${p.mag.toFixed(1)} 地震</div>
       <div style="font-size:11px;color:#94a3b8;margin-bottom:6px">${t}</div>
       <div>${p.place}</div>
       <div>震源深度：${Math.round(p.depth)} km</div>
@@ -80,15 +80,16 @@ export function EarthquakeLayer() {
       try {
         if (!map.getSource(SOURCE)) map.addSource(SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
         if (!map.getLayer(GLOW)) {
-          // 地震波：透明填充 + 红色描边的扩张环（半径/透明度由 RAF 逐帧脉动）
+          // 地震波：透明填充 + 红色描边的外扩环（静态，零地图重绘——深度防抖）
           map.addLayer({
             id: GLOW, type: 'circle', source: SOURCE, layout: { visibility: 'none' },
             paint: {
-              'circle-radius': RADIUS_EXPR,
+              'circle-radius': ['*', RADIUS_EXPR, 2.4],
               'circle-color': 'rgba(0,0,0,0)',
               'circle-stroke-color': COLOR_EXPR,
-              'circle-stroke-width': 2,
-              'circle-stroke-opacity': 0.6,
+              'circle-stroke-width': 1.5,
+              'circle-stroke-opacity': 0.5,
+              'circle-stroke-opacity-transition': { duration: 0 },
             },
           }, findLiveOverlayBeforeId(map));
         }
@@ -133,30 +134,6 @@ export function EarthquakeLayer() {
     return () => { map.off('style.load', apply); };
   }, [map, enabled, geojson, dataKey, styleEpoch]);
 
-  // 地震波动画：波环半径逐帧扩张、透明度淡出（红色震波观感）；尊重 prefers-reduced-motion
-  useEffect(() => {
-    if (!map || !enabled) return;
-    const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    const PERIOD = 2000, GROW = 26;
-    let raf = 0;
-    if (reduce) {
-      try { if (map.getLayer(GLOW)) { map.setPaintProperty(GLOW, 'circle-radius', ['+', RADIUS_EXPR, 10]); map.setPaintProperty(GLOW, 'circle-stroke-opacity', 0.45); } } catch { /* */ }
-      return;
-    }
-    const frame = (ts: number) => {
-      const t = (ts % PERIOD) / PERIOD; // 0..1
-      try {
-        if (map.getLayer(GLOW)) {
-          map.setPaintProperty(GLOW, 'circle-radius', ['+', RADIUS_EXPR, t * GROW]);
-          map.setPaintProperty(GLOW, 'circle-stroke-opacity', 0.65 * (1 - t));
-        }
-      } catch { /* 样式切换中 */ }
-      raf = requestAnimationFrame(frame);
-    };
-    raf = requestAnimationFrame(frame);
-    return () => cancelAnimationFrame(raf);
-  }, [map, enabled, styleEpoch]);
-
   useEffect(() => {
     if (!map) return;
     const onClick = (e: maplibregl.MapMouseEvent & { features?: maplibregl.MapGeoJSONFeature[] }) => {
@@ -171,7 +148,7 @@ export function EarthquakeLayer() {
       popupRef.current = popup;
       const detail: EventDetail = {
         id: `quake-${p.time}-${coords[0]},${coords[1]}`,
-        title: `🌐 M${p.mag.toFixed(1)} 地震`,
+        title: `📳 M${p.mag.toFixed(1)} 地震`,
         source: 'USGS 地震灾害项目（近实时）',
         timestamp: new Date(p.time).toISOString(),
         location: coords,

@@ -8,7 +8,7 @@ export function StormLayer() {
   return (
     <EonetEventLayer config={{
       layerId: 'storms', endpoint: '/api/storms', srcKey: 'storms',
-      glowColor: '#38bdf8', coreColor: '#7dd3fc', strokeColor: '#e0f2fe', icon: '🌀', dateLabel: '最新定位',
+      glowColor: '#38bdf8', coreColor: '#7dd3fc', strokeColor: '#e0f2fe', icon: '🌪️', dateLabel: '最新定位',
     }} />
   );
 }

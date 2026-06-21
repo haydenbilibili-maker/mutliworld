@@ -12,8 +12,25 @@
 > 由**独立开发者 · 超级个体 Hayden** 携 **Linus / Turing 等多平台 AI agent 协作**共创。
 
 [![GitHub](https://img.shields.io/badge/GitHub-mutliworld-181717?logo=github)](https://github.com/haydenbilibili-maker/mutliworld.git)
-[![Version](https://img.shields.io/badge/version-1.3.0-E8B563)](#版本说明)
+[![Version](https://img.shields.io/badge/version-2.0.0-E8B563)](#版本说明)
 [![姊妹作](https://img.shields.io/badge/姊妹作-国情调研系统-3FC8E0)](https://chinaos.hayden-bilibili.workers.dev/#/modules/zhengdi)
+
+---
+
+## 🏁 2.0 封板（四空间 · 实时图层体系）
+
+2.0 在「三位一体」之上扩展为 **四空间**：**宇宙 / 近地 / 地表 / 洋底**，并把全部新增图层统一为「**空间(Tier) → 图层(Layer) → 视图(View)**」级联模型。所有数据源**免密钥、真实、近实时、中立并陈**，可一键下架敏感层。
+
+**各空间实时/真实图层**
+
+- **近地（对标 earth.nullschool）**：风 / 洋流 / 海浪 三套粒子流场（屏幕空间平流，缩放/球面下铺满全视口）；标量叠加 9 类——化学污染物(CO/SO₂/NO₂/O₃)、颗粒物(PM2.5/PM10)、海面温度、有效波高、海温偏差、度日热 DHW、白化预警 BAA、2 米气温、降水、海平面气压、相对湿度、CAPE。底栏上方「数据 + 浓度色阶图例 + 悬停读数(含流向/来源/时效)」；视图菜单含 投影(平面/球面)、动画速度、配色方案(经典/Turbo/Viridis/灰度)。
+- **地表**：USGS 实时地震（红色地震波样式 + 海啸标记）、极光带(OVATION)、活跃火山 / 风暴气旋 / 洪水 / 沙尘霾 / 海冰(EONET)、真彩卫星云图(GIBS)；底栏「实时态势计数条」汇总各事件数。
+- **宇宙**：ISS、天宫 实时星下点（wheretheiss）；NEO 近地天体接近事件面板(CNEOS)；卫星 TLE **运行时自动获取**(CelesTrak GP，SGP4 传播，6h 节流、零写盘、serverless 安全，免手动脚本)。
+- **洋底**：地震按震源深度分带、海缆 / 管线 / 板块断层等。
+
+**免密钥数据源**：Open-Meteo(GFS/Marine/Air-Quality)、NOAA SWPC OVATION、NASA EONET、USGS Earthquake、NASA GIBS、PacIOOS ERDDAP(NOAA Coral Reef Watch)、wheretheiss.at、JPL CNEOS、CelesTrak。
+
+**工程基线**：原创代码复刻公开可视化技术（非拷贝竞品代码/资产）；强制**防抖回归** `npm run check:antijitter`（提交须 0 ERROR）；2.0 专项**深度防抖**——消除地震波每帧整图重绘、冲突区脉冲节流至 ~10fps 并在平移/缩放时暂停、近地组件按需懒加载 + 仅本层挂载。
 
 ---
 

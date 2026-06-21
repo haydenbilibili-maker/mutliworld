@@ -16,9 +16,9 @@ const swrOpts = { revalidateOnFocus: false, refreshInterval: 5 * 60 * 1000, dedu
 
 interface ChipDef { layer: LayerId; endpoint: string; icon: string; label: string; color: string }
 const CHIPS: ChipDef[] = [
-  { layer: 'earthquakes', endpoint: '/api/earthquakes', icon: '🌐', label: '地震', color: 'text-rose-300' },
+  { layer: 'earthquakes', endpoint: '/api/earthquakes', icon: '📳', label: '地震', color: 'text-rose-300' },
   { layer: 'volcanoes', endpoint: '/api/volcanoes', icon: '🌋', label: '火山', color: 'text-orange-300' },
-  { layer: 'storms', endpoint: '/api/storms', icon: '🌀', label: '风暴', color: 'text-sky-300' },
+  { layer: 'storms', endpoint: '/api/storms', icon: '🌪️', label: '风暴', color: 'text-sky-300' },
   { layer: 'floods', endpoint: '/api/floods', icon: '🌊', label: '洪水', color: 'text-blue-300' },
   { layer: 'dusthaze', endpoint: '/api/dusthaze', icon: '🌫️', label: '沙尘', color: 'text-amber-300' },
   { layer: 'seaice', endpoint: '/api/seaice', icon: '🧊', label: '海冰', color: 'text-cyan-200' },
@@ -51,7 +51,7 @@ export function SurfaceLiveBar() {
       transition={{ duration: 0.22, ease: 'easeOut' }}
       className="pointer-events-none fixed bottom-[6.25rem] left-1/2 z-20 -translate-x-1/2 max-sm:bottom-[7rem]"
     >
-      <div className="pointer-events-auto flex items-center gap-x-4 gap-y-1 rounded-lg border border-dashboard-neutral/20 bg-dashboard-bg/92 px-3 py-1.5 text-[11px] shadow-xl backdrop-blur-md">
+      <div className="pointer-events-auto flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-lg border border-dashboard-neutral/20 bg-dashboard-bg/92 px-3 py-2 text-[11px] shadow-xl backdrop-blur-md shadow-[0_-1px_0_0_rgba(63,200,224,0.18)] transition-colors">
         <span className="text-[10px] font-medium text-dashboard-neutral/55">实时态势</span>
         {active.map((c) => <Chip key={c.layer} def={c} />)}
       </div>

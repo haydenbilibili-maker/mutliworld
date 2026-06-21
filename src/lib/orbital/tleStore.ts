@@ -149,3 +149,8 @@ export function loadTleDatabase(): TleDatabase {
 export function clearTleCache(): void {
   cached = null;
 }
+
+/** 写入进程内缓存（运行时 CelesTrak 自动获取后调用，无需写盘） */
+export function setTleCache(db: TleDatabase): void {
+  cached = db;
+}

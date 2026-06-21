@@ -311,12 +311,22 @@ export function ConflictZonesLayer() {
   useEffect(() => {
     if (!map || !enabled) return;
 
+    const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return; // 降级：不做脉冲动画
+
     let frame = 0;
     let raf = 0;
+    let last = 0;
 
-    const tick = () => {
+    const tick = (ts: number) => {
+      raf = requestAnimationFrame(tick);
+      // 深度防抖：交互(平移/缩放/旋转)期间暂停脉冲，避免与移动渲染竞争导致高频抖动
+      if (map.isMoving() || map.isZooming() || map.isRotating()) return;
+      // 节流 ~10fps（脉冲细微，肉眼无差，整图重绘减少约 6×）
+      if (ts - last < 100) return;
+      last = ts;
       frame += 1;
-      const pulse = 0.5 + 0.5 * Math.sin(frame * 0.035);
+      const pulse = 0.5 + 0.5 * Math.sin(frame * 0.21);
       try {
         if (map.getLayer(FILL_LAYER)) {
           map.setPaintProperty(FILL_LAYER, 'fill-opacity', [
@@ -328,7 +338,6 @@ export function ConflictZonesLayer() {
       } catch {
         /* */
       }
-      raf = requestAnimationFrame(tick);
     };
 
     raf = requestAnimationFrame(tick);
