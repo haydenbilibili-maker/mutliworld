@@ -90,6 +90,17 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
   items.sort((a, b) => b.score - a.score);
   const top = items.slice(0, 12);
 
+  // 自动态势简报（确定性合成自真实聚合数据，不编造）
+  const count = (k: string) => items.filter((i) => i.kind === k).length;
+  const strongQuake = items.filter((i) => i.kind === '地震').sort((a, b) => b.score - a.score)[0];
+  const briefParts: string[] = [];
+  if (strongQuake) briefParts.push(`最强 ${strongQuake.label.split(' · ')[0]} 地震`);
+  const cs = count('风暴'), cv = count('火山'), cf = count('洪水');
+  if (cs) briefParts.push(`${cs} 个活跃风暴`);
+  if (cv) briefParts.push(`${cv} 处活跃火山`);
+  if (cf) briefParts.push(`${cf} 处洪水`);
+  const summary = briefParts.length ? `当前全球：${briefParts.join('、')}。` : '';
+
   const focus = (a: Anomaly) => {
     setViewport(a.coords, Math.max(useMapStore.getState().zoom, 3.5));
     const detail: EventDetail = {
@@ -113,6 +124,11 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
       className={`w-[min(18rem,calc(100vw-2rem))] border-rose-500/25 bg-dashboard-bg/95 shadow-xl backdrop-blur-md ${className}`}
     >
       <div className="space-y-1.5 text-[11px]">
+        {summary && (
+          <div className="rounded-md border border-rose-500/20 bg-rose-500/5 px-2 py-1.5 text-[11px] leading-snug text-dashboard-neutral/85">
+            <span className="mr-1" aria-hidden>📡</span>{summary}
+          </div>
+        )}
         <div className="text-[10px] text-dashboard-neutral/50">跨层聚合 · 按显著度排序 · 点击定位（地震 M≥4.5）</div>
         {top.length === 0 ? (
           <div className="py-2 text-center text-dashboard-neutral/45">暂无显著异常 / 数据加载中</div>
