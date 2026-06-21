@@ -53,11 +53,11 @@ const spaceTier: TierModule = {
   // Phase 2：发射场 + 测控站 + 在轨 GEO 卫星；后续增补 LEO 星座/星下点动效/space_events + 3D 地球
   layers: [
     'launch_sites', 'launch_log', 'ground_stations', 'sat_constellations',
-    'space_stations', 'satellites', 'space_debris', 'space_events', 'iss',
+    'space_stations', 'satellites', 'space_debris', 'space_events', 'iss', 'tiangong',
   ],
   defaultLayers: [
     'launch_sites', 'launch_log', 'ground_stations',
-    'space_stations', 'satellites', 'iss',
+    'space_stations', 'satellites', 'iss', 'tiangong',
   ],
   basemap: 'imagery',
   renderMode: 'orbit',
@@ -136,6 +136,7 @@ export const LAYER_TIER: Partial<Record<LayerId, SpatialTier>> = {
   space_debris: 'space',
   space_events: 'space',
   iss: 'space',
+  tiangong: 'space',
   // 其余默认地表（见 tierForLayer 兜底）
 };
 

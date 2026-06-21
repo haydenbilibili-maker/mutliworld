@@ -122,6 +122,7 @@ export type LayerId =
   | 'volcanoes'
   | 'satellite_imagery'
   | 'iss'
+  | 'tiangong'
   | 'pizza_index'
   | 'persons';
 

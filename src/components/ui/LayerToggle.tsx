@@ -81,7 +81,7 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
     title: '宇宙空间',
     ids: [
       'launch_sites', 'launch_log', 'ground_stations', 'sat_constellations',
-      'space_stations', 'satellites', 'space_debris', 'space_events', 'iss',
+      'space_stations', 'satellites', 'space_debris', 'space_events', 'iss', 'tiangong',
     ],
   },
 ];
@@ -151,6 +151,7 @@ const ALWAYS_ON: LayerId[] = [
   'space_debris',
   'space_events',
   'iss',
+  'tiangong',
   'persons',
 ];
 
