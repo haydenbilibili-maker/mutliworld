@@ -24,6 +24,7 @@ interface Anomaly {
   score: number; // 显著度 0–100+
   coords: [number, number];
   time: string; // ISO 或空
+  tsunami?: boolean;
 }
 
 function coordsOf(f: Feature): [number, number] | null {
@@ -34,6 +35,17 @@ function coordsOf(f: Feature): [number, number] | null {
 
 function severityClass(score: number): string {
   return score >= 70 ? 'text-rose-300' : score >= 55 ? 'text-amber-300' : 'text-dashboard-neutral/70';
+}
+
+/** 关注领域（按事件类型确定性推断，非预测；供关联引擎雏形） */
+function impactDomains(kind: string, tsunami: boolean): string[] {
+  switch (kind) {
+    case '地震': return tsunami ? ['海啸预警', '基建', '救灾'] : ['基建', '救灾', '保险'];
+    case '风暴': return ['航运', '能源', '航空', '农业'];
+    case '火山': return ['航空', '空气质量'];
+    case '洪水': return ['农业', '基建', '救灾'];
+    default: return [];
+  }
 }
 
 export function AnomalyBoard({ className = '' }: { className?: string }) {
@@ -64,6 +76,7 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
         score: Math.round(p.mag * 11 + tsunami),
         coords: c,
         time: typeof p.time === 'number' ? new Date(p.time).toISOString() : '',
+        tsunami: !!p.tsunami,
       });
     }
   }
@@ -111,7 +124,7 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
       location: a.coords,
       impact_level: a.score >= 70 ? 'high' : a.score >= 55 ? 'medium' : 'low',
       category: 'natural',
-      description: `${a.kind}事件 · 显著度 ${a.score}`,
+      description: `${a.kind}事件 · 显著度 ${a.score} · 关注领域（按类型）：${impactDomains(a.kind, !!a.tsunami).join(' · ')}`,
     };
     selectEvent(detail);
   };
