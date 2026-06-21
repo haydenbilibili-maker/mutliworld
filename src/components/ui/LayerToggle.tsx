@@ -46,7 +46,7 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   },
   {
     title: '自然',
-    ids: ['natural', 'earthquakes', 'weather', 'climate', 'daynight'],
+    ids: ['natural', 'earthquakes', 'aurora', 'volcanoes', 'weather', 'climate', 'daynight'],
   },
   {
     title: '文化与遗产',
@@ -105,6 +105,8 @@ const ALWAYS_ON: LayerId[] = [
   'protests',
   'climate',
   'earthquakes',
+  'aurora',
+  'volcanoes',
   'launch_sites',
   'launch_log',
   'semiconductors',

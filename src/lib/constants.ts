@@ -79,6 +79,8 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   air_temp: '2米气温',
   precip: '降水',
   earthquakes: '实时地震',
+  aurora: '极光带(实时)',
+  volcanoes: '活跃火山',
   iss: '国际空间站(实时)',
   persons: '人物分布',
 };

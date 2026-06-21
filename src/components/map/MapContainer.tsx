@@ -44,6 +44,8 @@ import { FlightLayer } from '@/components/map/FlightLayer';
 import { FireLayer } from '@/components/map/FireLayer';
 import { EarthquakeLayer } from '@/components/map/EarthquakeLayer';
 import { IssLayer } from '@/components/map/IssLayer';
+import { AuroraLayer } from '@/components/map/AuroraLayer';
+import { VolcanoLayer } from '@/components/map/VolcanoLayer';
 import { BodySiteLayer } from '@/components/map/BodySiteLayer';
 import { BodyOrbiterLayer } from '@/components/map/BodyOrbiterLayer';
 import { BodyTraverseLayer } from '@/components/map/BodyTraverseLayer';
@@ -63,7 +65,7 @@ const ScalarOverlayLayer = dynamic(() => import('@/components/map/ScalarOverlayL
 const WindParticleLayer = dynamic(() => import('@/components/map/WindParticleLayer').then((m) => m.WindParticleLayer), { ssr: false });
 const OceanFlowLayer = dynamic(() => import('@/components/map/WindParticleLayer').then((m) => m.OceanFlowLayer), { ssr: false });
 const WaveFlowLayer = dynamic(() => import('@/components/map/WindParticleLayer').then((m) => m.WaveFlowLayer), { ssr: false });
-const NearEarthDataBar = dynamic(() => import('@/components/ui/NearEarthDataBar').then((m) => m.NearEarthDataBar), { ssr: false });
+const BottomDock = dynamic(() => import('@/components/ui/BottomDock').then((m) => m.BottomDock), { ssr: false });
 
 interface MapContainerProps {
   className?: string;
@@ -367,6 +369,8 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <FireLayer />
             <EarthquakeLayer />
             <IssLayer />
+            <AuroraLayer />
+            <VolcanoLayer />
             <MaritimeLayer />
             <PizzaIndexLayer />
             <ProfilePicker />
@@ -379,7 +383,6 @@ export function MapContainer({ className = '' }: MapContainerProps) {
                 <WindParticleLayer />
                 <OceanFlowLayer />
                 <WaveFlowLayer />
-                <NearEarthDataBar />
               </>
             )}
             {activeTier !== 'near_earth' && <GeodataLayer />}
@@ -388,6 +391,8 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <GeodataFetchIndicator />
             <MapSelectionPulse />
             <MapTooltip />
+            {/* 底部 Dock：级联分层居中，数据条(近地)与控制栏融合（自身门控 earth） */}
+            <BottomDock />
           </>
         )}
       </div>
