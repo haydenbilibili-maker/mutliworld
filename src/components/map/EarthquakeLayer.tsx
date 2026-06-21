@@ -22,10 +22,10 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 type QuakeProps = { mag: number; place: string; depth: number; time: number; tsunami: number };
 
-/** 震级 → 颜色 */
+/** 震级 → 红色系（地震波）：浅红 → 深红 */
 const COLOR_EXPR: maplibregl.ExpressionSpecification = [
   'interpolate', ['linear'], ['get', 'mag'],
-  2.5, '#fbbf24', 4, '#f97316', 5, '#ef4444', 6.5, '#991b1b',
+  2.5, '#fca5a5', 4, '#f87171', 5, '#ef4444', 6.5, '#b91c1c',
 ];
 /** 震级 → 半径（指数感知：每级能量约 32 倍） */
 const RADIUS_EXPR: maplibregl.ExpressionSpecification = [
@@ -80,15 +80,23 @@ export function EarthquakeLayer() {
       try {
         if (!map.getSource(SOURCE)) map.addSource(SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
         if (!map.getLayer(GLOW)) {
+          // 地震波：透明填充 + 红色描边的扩张环（半径/透明度由 RAF 逐帧脉动）
           map.addLayer({
             id: GLOW, type: 'circle', source: SOURCE, layout: { visibility: 'none' },
-            paint: { 'circle-radius': ['*', RADIUS_EXPR, 2.3], 'circle-color': COLOR_EXPR, 'circle-opacity': 0.2, 'circle-blur': 0.8 },
+            paint: {
+              'circle-radius': RADIUS_EXPR,
+              'circle-color': 'rgba(0,0,0,0)',
+              'circle-stroke-color': COLOR_EXPR,
+              'circle-stroke-width': 2,
+              'circle-stroke-opacity': 0.6,
+            },
           }, findLiveOverlayBeforeId(map));
         }
         if (!map.getLayer(CORE)) {
+          // 震中：红色实心点 + 浅红光晕描边（去除原黑色描边）
           map.addLayer({
             id: CORE, type: 'circle', source: SOURCE, layout: { visibility: 'none' },
-            paint: { 'circle-radius': RADIUS_EXPR, 'circle-color': COLOR_EXPR, 'circle-opacity': 0.9, 'circle-stroke-width': 0.6, 'circle-stroke-color': '#1a0500' },
+            paint: { 'circle-radius': ['*', RADIUS_EXPR, 0.45], 'circle-color': COLOR_EXPR, 'circle-opacity': 0.95, 'circle-stroke-width': 1, 'circle-stroke-color': 'rgba(254,202,202,0.7)' },
           }, findLiveOverlayBeforeId(map));
         }
       } catch { /* 样式未就绪 */ }
@@ -124,6 +132,30 @@ export function EarthquakeLayer() {
     map.on('style.load', apply);
     return () => { map.off('style.load', apply); };
   }, [map, enabled, geojson, dataKey, styleEpoch]);
+
+  // 地震波动画：波环半径逐帧扩张、透明度淡出（红色震波观感）；尊重 prefers-reduced-motion
+  useEffect(() => {
+    if (!map || !enabled) return;
+    const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const PERIOD = 2000, GROW = 26;
+    let raf = 0;
+    if (reduce) {
+      try { if (map.getLayer(GLOW)) { map.setPaintProperty(GLOW, 'circle-radius', ['+', RADIUS_EXPR, 10]); map.setPaintProperty(GLOW, 'circle-stroke-opacity', 0.45); } } catch { /* */ }
+      return;
+    }
+    const frame = (ts: number) => {
+      const t = (ts % PERIOD) / PERIOD; // 0..1
+      try {
+        if (map.getLayer(GLOW)) {
+          map.setPaintProperty(GLOW, 'circle-radius', ['+', RADIUS_EXPR, t * GROW]);
+          map.setPaintProperty(GLOW, 'circle-stroke-opacity', 0.65 * (1 - t));
+        }
+      } catch { /* 样式切换中 */ }
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, [map, enabled, styleEpoch]);
 
   useEffect(() => {
     if (!map) return;
