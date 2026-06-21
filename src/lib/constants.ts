@@ -84,6 +84,7 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   earthquakes: '实时地震',
   aurora: '极光带(实时)',
   volcanoes: '活跃火山',
+  satellite_imagery: '真彩卫星云图',
   iss: '国际空间站(实时)',
   persons: '人物分布',
 };

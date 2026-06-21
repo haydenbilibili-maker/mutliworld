@@ -120,6 +120,7 @@ export type LayerId =
   | 'earthquakes'
   | 'aurora'
   | 'volcanoes'
+  | 'satellite_imagery'
   | 'iss'
   | 'pizza_index'
   | 'persons';
