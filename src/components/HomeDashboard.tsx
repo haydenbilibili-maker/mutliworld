@@ -35,10 +35,12 @@ import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
 import { useGlobalEscape } from '@/hooks/useGlobalEscape';
 import { useViewPrefsPersistence } from '@/hooks/useViewPrefsPersistence';
 import { useWatchlistPersistence } from '@/hooks/useWatchlistPersistence';
+import { useStoryPersistence } from '@/hooks/useStoryPersistence';
 import { LiveLayerPerformanceGuard } from '@/components/ui/LiveLayerPerformanceGuard';
 import { BriefingToast } from '@/components/ui/BriefingToast';
 import { WatchlistAlertToast } from '@/components/ui/WatchlistAlertToast';
 import { DataHealthPanel } from '@/components/region/DataHealthPanel';
+import { StoryPanel } from '@/components/region/StoryPanel';
 import { BriefingDetailPanel } from '@/components/ui/BriefingDetailPanel';
 import { GlobalLivePanel } from '@/components/ui/GlobalLivePanel';
 import { useMapStore } from '@/store/useMapStore';
@@ -74,6 +76,7 @@ export function HomeDashboard() {
   useGlobalEscape();
   useViewPrefsPersistence();
   useWatchlistPersistence();
+  useStoryPersistence();
   const isEarth = useMapStore((s) => s.activeBody === 'earth');
 
   return (
@@ -137,6 +140,7 @@ export function HomeDashboard() {
           <BriefingToast />
           <WatchlistAlertToast />
           <DataHealthPanel className="absolute right-4 top-16 z-[60]" />
+          <StoryPanel className="absolute left-4 top-16 z-[60]" />
           <GlobalLivePanel />
         </div>
       </main>

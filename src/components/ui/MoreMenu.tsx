@@ -42,7 +42,8 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
   const liveOpen = useLiveStreamStore((s) => s.open);
   const toggleLive = useLiveStreamStore((s) => s.toggle);
   const healthOpen = usePanelStore((s) => s.open['data-health']);
-  const toggleHealth = usePanelStore((s) => s.toggle);
+  const storyOpen = usePanelStore((s) => s.open['story']);
+  const togglePanel = usePanelStore((s) => s.toggle);
   const inSpace = useMapStore((s) => s.activeTier === 'space');
   const inSurface = useMapStore((s) => s.activeTier === 'surface');
   const setViewport = useMapStore((s) => s.setViewport);
@@ -304,7 +305,7 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
                   role="menuitemcheckbox"
                   aria-checked={healthOpen}
                   title="各免密钥真实数据源的可用性 / 延迟实时监控"
-                  onClick={() => { toggleHealth('data-health'); setMenuOpen(false); }}
+                  onClick={() => { togglePanel('data-health'); setMenuOpen(false); }}
                   className={[
                     'flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] transition-colors',
                     healthOpen ? 'bg-dashboard-military/15 text-white' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
@@ -313,6 +314,27 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
                   <span aria-hidden className="shrink-0 text-sm">🩺</span>
                   <span className="min-w-0 flex-1 font-medium">数据健康</span>
                   {healthOpen && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0 text-dashboard-military">
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  )}
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  role="menuitemcheckbox"
+                  aria-checked={storyOpen}
+                  title="把当前分析捕捉为多帧故事线，可播放导览与分享"
+                  onClick={() => { togglePanel('story'); setMenuOpen(false); }}
+                  className={[
+                    'flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] transition-colors',
+                    storyOpen ? 'bg-dashboard-military/15 text-white' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
+                  ].join(' ')}
+                >
+                  <span aria-hidden className="shrink-0 text-sm">📖</span>
+                  <span className="min-w-0 flex-1 font-medium">叙事故事线</span>
+                  {storyOpen && (
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0 text-dashboard-military">
                       <path d="M20 6 9 17l-5-5" />
                     </svg>

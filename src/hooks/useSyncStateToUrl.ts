@@ -75,6 +75,50 @@ function buildUrl(
   return `${pathname}?${params.toString()}`;
 }
 
+/**
+ * 将 URL 查询态应用到 store（命令式，经 getState 设值）。
+ * 供「初始读入」与「故事线播放（按帧还原视图态）」共用，确保解析口径一致。
+ * 返回是否检测到可识别的视图态参数。
+ */
+export function applyViewStateFromParams(sp: URLSearchParams): boolean {
+  const lat = sp.get('lat');
+  const lon = sp.get('lon');
+  const z = sp.get('zoom');
+  const v = sp.get('view');
+  const tr = sp.get('timeRange');
+  const layers = sp.get('layers');
+  const region = sp.get('region');
+  const basemap = sp.get('basemap');
+  const tierP = sp.get('tier');
+  const projP = sp.get('proj');
+  const schemeP = sp.get('scheme');
+  const ovP = sp.get('ov');
+
+  const hasUrlState =
+    lat != null || lon != null || z != null || v != null || tr != null ||
+    layers != null || region != null || basemap != null || tierP != null ||
+    projP != null || schemeP != null || ovP != null;
+  if (!hasUrlState) return false;
+
+  const m = useMapStore.getState();
+  const parsedRegion = parseRegion(region);
+  if (parsedRegion) m.setRegion(parsedRegion);
+  if (lat != null || lon != null) {
+    m.setCenter([parseNumber(lon, DEFAULT_CENTER[0]), parseNumber(lat, DEFAULT_CENTER[1])]);
+  }
+  if (z != null) m.setZoom(parseNumber(z, DEFAULT_ZOOM));
+  if (v === 'global' || v === 'asia') m.setView(v);
+  if (tr === '24h' || tr === '7d' || tr === '30d') m.setTimeRange(tr);
+  // tier 须在 layers 之前应用（setTier 会重置为该层默认图层），随后再用 layers 覆盖
+  if (tierP && VALID_TIERS.includes(tierP as SpatialTier)) m.setTier(tierP as SpatialTier);
+  if (layers != null) m.setActiveLayers(parseLayers(layers));
+  if (basemap != null) m.setBasemapMode(parseBasemapMode(basemap));
+  if (projP && projP in PROJECTIONS) m.setProjMode(projP as ProjectionId);
+  if (schemeP && ['default', 'turbo', 'viridis', 'grayscale'].includes(schemeP)) m.setOverlayScheme(schemeP as ColorScheme);
+  if (ovP && ovP in SCALAR_META) useNearEarthStore.getState().setParam(ovP as ScalarParam);
+  return true;
+}
+
 /** 从 URL 读入初始状态并同步 store -> URL */
 export function useSyncStateToUrl() {
   const pathname = usePathname();
@@ -92,65 +136,12 @@ export function useSyncStateToUrl() {
   const projMode = useMapStore((s) => s.projMode);
   const overlayScheme = useMapStore((s) => s.overlayScheme);
   const param = useNearEarthStore((s) => s.param);
-  const setTier = useMapStore((s) => s.setTier);
-  const setProjMode = useMapStore((s) => s.setProjMode);
-  const setOverlayScheme = useMapStore((s) => s.setOverlayScheme);
-  const setRegion = useMapStore((s) => s.setRegion);
-  const setCenter = useMapStore((s) => s.setCenter);
-  const setZoom = useMapStore((s) => s.setZoom);
-  const setView = useMapStore((s) => s.setView);
-  const setTimeRange = useMapStore((s) => s.setTimeRange);
-  const setActiveLayers = useMapStore((s) => s.setActiveLayers);
-  const setBasemapMode = useMapStore((s) => s.setBasemapMode);
 
   const lastSyncedUrlRef = useRef<string | null>(null);
   const viewportTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const lat = searchParams.get('lat');
-    const lon = searchParams.get('lon');
-    const z = searchParams.get('zoom');
-    const v = searchParams.get('view');
-    const tr = searchParams.get('timeRange');
-    const layers = searchParams.get('layers');
-    const region = searchParams.get('region');
-    const basemap = searchParams.get('basemap');
-
-    const hasUrlState =
-      lat != null ||
-      lon != null ||
-      z != null ||
-      v != null ||
-      tr != null ||
-      layers != null ||
-      region != null ||
-      basemap != null;
-
-    if (!hasUrlState) return;
-
-    const parsedRegion = parseRegion(region);
-    if (parsedRegion) setRegion(parsedRegion);
-
-    if (lat != null || lon != null) {
-      setCenter([
-        parseNumber(lon, DEFAULT_CENTER[0]),
-        parseNumber(lat, DEFAULT_CENTER[1]),
-      ]);
-    }
-    if (z != null) setZoom(parseNumber(z, DEFAULT_ZOOM));
-    if (v === 'global' || v === 'asia') setView(v);
-    if (tr === '24h' || tr === '7d' || tr === '30d') setTimeRange(tr);
-    // tier 须在 layers 之前应用（setTier 会重置为该层默认图层），随后再用 URL 的 layers 覆盖
-    const tierP = searchParams.get('tier');
-    if (tierP && VALID_TIERS.includes(tierP as SpatialTier)) setTier(tierP as SpatialTier);
-    if (layers != null) setActiveLayers(parseLayers(layers));
-    if (basemap != null) setBasemapMode(parseBasemapMode(basemap));
-    const projP = searchParams.get('proj');
-    if (projP && (projP in PROJECTIONS)) setProjMode(projP as ProjectionId);
-    const schemeP = searchParams.get('scheme');
-    if (schemeP && ['default', 'turbo', 'viridis', 'grayscale'].includes(schemeP)) setOverlayScheme(schemeP as ColorScheme);
-    const ovP = searchParams.get('ov');
-    if (ovP && ovP in SCALAR_META) useNearEarthStore.getState().setParam(ovP as ScalarParam);
+    applyViewStateFromParams(searchParams as unknown as URLSearchParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
