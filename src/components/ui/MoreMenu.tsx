@@ -21,6 +21,16 @@ interface MoreMenuProps {
 export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+
+  const handleShare = async () => {
+    if (typeof window === 'undefined') return;
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 1800);
+    } catch { /* 剪贴板不可用 */ }
+  };
 
   const launchLogOpen = useLaunchLogStore((s) => s.open);
   const toggleLaunchLog = useLaunchLogStore((s) => s.toggle);
@@ -151,6 +161,27 @@ export function MoreMenu({ className = '', embedded = false }: MoreMenuProps) {
               扩展功能
             </div>
             <ul className="py-1">
+              <li>
+                <button
+                  type="button"
+                  role="menuitem"
+                  title="复制当前视图的可分享链接（含空间层 / 投影 / 图层 / 视野）"
+                  onClick={handleShare}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-[12px] text-dashboard-neutral transition-colors hover:bg-white/5 hover:text-white"
+                >
+                  <span aria-hidden className="shrink-0 text-sm">🔗</span>
+                  <span className="min-w-0 flex-1 font-medium">分享当前视图</span>
+                  <span
+                    className={[
+                      'shrink-0 text-[10px] tabular-nums',
+                      shareCopied ? 'text-emerald-400' : 'text-dashboard-neutral/55',
+                    ].join(' ')}
+                  >
+                    {shareCopied ? '已复制 ✓' : '复制链接'}
+                  </span>
+                </button>
+              </li>
+              <li aria-hidden className="mx-3 my-1 border-t border-dashboard-neutral/15" />
               <li>
                 <button
                   type="button"

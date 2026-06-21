@@ -3,8 +3,12 @@
 import { useEffect, useRef } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMapStore } from '@/store/useMapStore';
+import { useNearEarthStore, SCALAR_META, type ScalarParam } from '@/store/useNearEarthStore';
 import type { LayerId } from '@/types/geo';
 import type { RegionId } from '@/types/region';
+import type { SpatialTier } from '@/types/tier';
+import type { ColorScheme } from '@/lib/map/scalarColor';
+import { PROJECTIONS, type ProjectionId } from '@/lib/projection/projections';
 import { parseBasemapMode } from '@/lib/map/basemap';
 import {
   DEFAULT_CENTER,
@@ -37,6 +41,8 @@ function parseRegion(value: string | null): RegionId | null {
   return null;
 }
 
+const VALID_TIERS: SpatialTier[] = ['space', 'near_earth', 'surface', 'subsurface'];
+
 function buildUrl(
   pathname: string,
   state: {
@@ -47,6 +53,10 @@ function buildUrl(
     timeRange: string;
     activeLayers: LayerId[];
     basemapMode: string;
+    tier: SpatialTier;
+    projMode: 'map' | ProjectionId;
+    overlayScheme: ColorScheme;
+    param: ScalarParam;
   },
 ): string {
   const params = new URLSearchParams();
@@ -57,9 +67,11 @@ function buildUrl(
   params.set('timeRange', state.timeRange);
   params.set('layers', state.activeLayers.join(LAYER_SEP));
   params.set('region', state.activeRegion);
-  if (state.basemapMode !== 'hybrid') {
-    params.set('basemap', state.basemapMode);
-  }
+  params.set('tier', state.tier);
+  if (state.basemapMode !== 'hybrid') params.set('basemap', state.basemapMode);
+  if (state.projMode !== 'map') params.set('proj', state.projMode);
+  if (state.overlayScheme !== 'default') params.set('scheme', state.overlayScheme);
+  if (state.param !== 'nitrogen_dioxide') params.set('ov', state.param);
   return `${pathname}?${params.toString()}`;
 }
 
@@ -76,6 +88,13 @@ export function useSyncStateToUrl() {
   const timeRange = useMapStore((s) => s.timeRange);
   const activeLayers = useMapStore((s) => s.activeLayers);
   const basemapMode = useMapStore((s) => s.basemapMode);
+  const activeTier = useMapStore((s) => s.activeTier);
+  const projMode = useMapStore((s) => s.projMode);
+  const overlayScheme = useMapStore((s) => s.overlayScheme);
+  const param = useNearEarthStore((s) => s.param);
+  const setTier = useMapStore((s) => s.setTier);
+  const setProjMode = useMapStore((s) => s.setProjMode);
+  const setOverlayScheme = useMapStore((s) => s.setOverlayScheme);
   const setRegion = useMapStore((s) => s.setRegion);
   const setCenter = useMapStore((s) => s.setCenter);
   const setZoom = useMapStore((s) => s.setZoom);
@@ -121,8 +140,17 @@ export function useSyncStateToUrl() {
     if (z != null) setZoom(parseNumber(z, DEFAULT_ZOOM));
     if (v === 'global' || v === 'asia') setView(v);
     if (tr === '24h' || tr === '7d' || tr === '30d') setTimeRange(tr);
-    setActiveLayers(parseLayers(layers));
+    // tier 须在 layers 之前应用（setTier 会重置为该层默认图层），随后再用 URL 的 layers 覆盖
+    const tierP = searchParams.get('tier');
+    if (tierP && VALID_TIERS.includes(tierP as SpatialTier)) setTier(tierP as SpatialTier);
+    if (layers != null) setActiveLayers(parseLayers(layers));
     if (basemap != null) setBasemapMode(parseBasemapMode(basemap));
+    const projP = searchParams.get('proj');
+    if (projP && (projP in PROJECTIONS)) setProjMode(projP as ProjectionId);
+    const schemeP = searchParams.get('scheme');
+    if (schemeP && ['default', 'turbo', 'viridis', 'grayscale'].includes(schemeP)) setOverlayScheme(schemeP as ColorScheme);
+    const ovP = searchParams.get('ov');
+    if (ovP && ovP in SCALAR_META) useNearEarthStore.getState().setParam(ovP as ScalarParam);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -146,6 +174,10 @@ export function useSyncStateToUrl() {
       timeRange: s.timeRange,
       activeLayers: s.activeLayers,
       basemapMode: s.basemapMode,
+      tier: s.activeTier,
+      projMode: s.projMode,
+      overlayScheme: s.overlayScheme,
+      param: useNearEarthStore.getState().param,
     });
   };
 
@@ -153,7 +185,7 @@ export function useSyncStateToUrl() {
   useEffect(() => {
     replaceUrl(syncFromStore());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, router, activeRegion, view, timeRange, activeLayers, basemapMode]);
+  }, [pathname, router, activeRegion, view, timeRange, activeLayers, basemapMode, activeTier, projMode, overlayScheme, param]);
 
   // 视野 lat/lon/zoom：防抖，避免拖拽地图时频繁软导航
   useEffect(() => {
