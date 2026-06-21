@@ -27,6 +27,7 @@ import { RegionDetailCard } from '@/components/region/RegionDetailCard';
 import { SeabedBriefingPanel } from '@/components/region/SeabedBriefingPanel';
 import { SpaceBriefingPanel } from '@/components/region/SpaceBriefingPanel';
 import { NeoPanel } from '@/components/region/NeoPanel';
+import { AnomalyBoard } from '@/components/region/AnomalyBoard';
 import { OrbitalListHost } from '@/components/ui/OrbitalListHost';
 import { PizzaIndexHost } from '@/components/ui/PizzaIndexHost';
 import { VerticalProfilePanel } from '@/components/region/VerticalProfilePanel';
@@ -73,6 +74,7 @@ export function HomeDashboard() {
           <>
           {/* 左轨：区域 / 简报 / 态势 / 外交 / 新闻 / 人物（flex-col 堆叠，自动避让，整体滚动） */}
           <div className="pointer-events-none absolute bottom-16 left-4 top-3 z-20 flex w-[min(19rem,calc(100vw-2rem))] flex-col items-start gap-2 overflow-y-auto overscroll-contain pr-1 [&>*]:pointer-events-auto">
+            <AnomalyBoard className="!w-full !max-h-[46vh]" />
             <RegionDetailCard className="!w-full" />
             <RegionBriefingPanel className="!w-full !max-h-[46vh]" />
             <ChinaBriefingPanel className="!w-full !max-h-[46vh]" />
