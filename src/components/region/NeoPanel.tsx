@@ -6,6 +6,7 @@
  * NEO 无地表经纬度，故以面板而非地图层呈现；诚实合成、不编造。
  */
 
+import { useState } from 'react';
 import useSWR from 'swr';
 import { useMapStore } from '@/store/useMapStore';
 import { DockPanel } from '@/components/region/DockPanel';
@@ -29,8 +30,12 @@ export function NeoPanel({ className = '' }: NeoPanelProps) {
     revalidateOnFocus: false, refreshInterval: 60 * 60 * 1000, dedupingInterval: 10 * 60 * 1000,
   });
 
+  const [sortBy, setSortBy] = useState<'dist' | 'date'>('dist');
+
   if (!enabled) return null;
-  const items = data?.items ?? [];
+  const items = [...(data?.items ?? [])].sort((a, b) =>
+    sortBy === 'dist' ? a.distLD - b.distLD : a.date.localeCompare(b.date),
+  );
 
   return (
     <DockPanel
@@ -40,7 +45,22 @@ export function NeoPanel({ className = '' }: NeoPanelProps) {
       className={`w-[min(18rem,calc(100vw-2rem))] border-sky-500/25 bg-dashboard-bg/95 shadow-xl backdrop-blur-md ${className}`}
     >
       <div className="space-y-1.5 text-[11px]">
-        <div className="text-[10px] text-dashboard-neutral/50">未来 7 天 · 最近距离 ≤ 0.05 au（约 19.5 月球距离）· 越近越靠前</div>
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[10px] text-dashboard-neutral/50">未来 7 天 · ≤0.05 au（约 19.5 LD）</span>
+          <div className="flex gap-0.5">
+            {([['dist', '按距离'], ['date', '按日期']] as const).map(([k, lbl]) => (
+              <button
+                key={k}
+                type="button"
+                onClick={() => setSortBy(k)}
+                aria-pressed={sortBy === k}
+                className={['rounded px-1.5 py-0.5 text-[10px] transition-colors', sortBy === k ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral/60 hover:bg-white/5'].join(' ')}
+              >
+                {lbl}
+              </button>
+            ))}
+          </div>
+        </div>
         {items.length === 0 ? (
           <div className="py-2 text-center text-dashboard-neutral/45">暂无符合条件的接近事件</div>
         ) : (

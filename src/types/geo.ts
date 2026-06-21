@@ -121,6 +121,7 @@ export type LayerId =
   | 'aurora'
   | 'volcanoes'
   | 'storms'
+  | 'floods'
   | 'satellite_imagery'
   | 'iss'
   | 'tiangong'
