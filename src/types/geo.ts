@@ -115,6 +115,7 @@ export type LayerId =
   | 'air_temp'
   | 'precip'
   | 'earthquakes'
+  | 'iss'
   | 'pizza_index'
   | 'persons';
 

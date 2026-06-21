@@ -15,7 +15,7 @@ interface QuakeFC {
     type: 'Feature';
     id: string;
     geometry: { type: 'Point'; coordinates: [number, number] };
-    properties: { mag: number; place: string; depth: number; time: number };
+    properties: { mag: number; place: string; depth: number; time: number; tsunami: number };
   }>;
   generatedAt: string;
   source: string;
@@ -24,7 +24,7 @@ let cache: { expires: number; body: QuakeFC } | null = null;
 
 interface UsgsFeature {
   id?: string;
-  properties?: { mag?: number | null; place?: string | null; time?: number | null };
+  properties?: { mag?: number | null; place?: string | null; time?: number | null; tsunami?: number | null };
   geometry?: { coordinates?: number[] };
 }
 interface UsgsFC { features?: UsgsFeature[] }
@@ -51,6 +51,7 @@ export async function GET() {
             place: String(f.properties?.place ?? '未知区域'),
             depth: typeof c[2] === 'number' ? c[2] : 0,
             time: Number(f.properties?.time ?? Date.now()),
+            tsunami: Number(f.properties?.tsunami ?? 0),
           },
         };
       });

@@ -20,7 +20,7 @@ const CORE = 'live-quakes-core';
 const POPUP_BG = '#0A0E17';
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-type QuakeProps = { mag: number; place: string; depth: number; time: number };
+type QuakeProps = { mag: number; place: string; depth: number; time: number; tsunami: number };
 
 /** 震级 → 颜色 */
 const COLOR_EXPR: maplibregl.ExpressionSpecification = [
@@ -51,6 +51,7 @@ function popupHtml(p: QuakeProps): string {
       <div style="font-size:11px;color:#94a3b8;margin-bottom:6px">${t}</div>
       <div>${p.place}</div>
       <div>震源深度：${Math.round(p.depth)} km</div>
+      ${p.tsunami ? '<div style="color:#38bdf8;font-weight:600">🌊 可能引发海啸（USGS 标记）</div>' : ''}
     </div>`;
 }
 

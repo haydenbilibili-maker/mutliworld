@@ -43,6 +43,7 @@ import { OrbitalObjectsLayer } from '@/components/map/OrbitalObjectsLayer';
 import { FlightLayer } from '@/components/map/FlightLayer';
 import { FireLayer } from '@/components/map/FireLayer';
 import { EarthquakeLayer } from '@/components/map/EarthquakeLayer';
+import { IssLayer } from '@/components/map/IssLayer';
 import { BodySiteLayer } from '@/components/map/BodySiteLayer';
 import { BodyOrbiterLayer } from '@/components/map/BodyOrbiterLayer';
 import { BodyTraverseLayer } from '@/components/map/BodyTraverseLayer';
@@ -365,6 +366,7 @@ export function MapContainer({ className = '' }: MapContainerProps) {
             <FlightLayer />
             <FireLayer />
             <EarthquakeLayer />
+            <IssLayer />
             <MaritimeLayer />
             <PizzaIndexLayer />
             <ProfilePicker />
