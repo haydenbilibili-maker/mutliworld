@@ -7,6 +7,7 @@ import type { RegionId } from '@/types/region';
 import type { SpatialTier } from '@/types/tier';
 import type { BasemapMode } from '@/types/tier';
 import type { ColorScheme } from '@/lib/map/scalarColor';
+import type { ProjectionId } from '@/lib/projection/projections';
 import type { CelestialBody } from '@/types/body';
 import { getRegion, DEFAULT_REGION_ID } from '@/regions';
 import { getTier, DEFAULT_TIER_ID } from '@/tiers';
@@ -41,6 +42,8 @@ export interface MapState {
   flowSpeed: number;
   /** 视图：近地标量叠加配色方案（经典/Turbo/Viridis/灰度） */
   overlayScheme: ColorScheme;
+  /** 投影模式：'map'=maplibre 默认底图；其余为自绘投影引擎(A) 全屏主视图 */
+  projMode: 'map' | ProjectionId;
   /** 时间机器（3.0 B · 事件层回放）：开关 / 播放 / 时间窗(小时) / 播放头(ms epoch) */
   tmActive: boolean;
   tmPlaying: boolean;
@@ -76,6 +79,8 @@ export interface MapActions {
   setFlowSpeed: (speed: number) => void;
   /** 设置近地标量叠加配色方案 */
   setOverlayScheme: (scheme: ColorScheme) => void;
+  /** 设置投影模式（'map' 或自绘投影 id） */
+  setProjMode: (m: 'map' | ProjectionId) => void;
   /** 时间机器：合并更新（开关/播放/时间窗/播放头） */
   setTimeMachine: (patch: Partial<Pick<MapState, 'tmActive' | 'tmPlaying' | 'tmWindowH' | 'tmPlayhead'>>) => void;
   /** 一键回正：正视图居中中国，bearing/pitch 归零 */
@@ -106,6 +111,7 @@ const initialState: MapState = {
   globeViewResetNonce: 0,
   flowSpeed: 0.5,
   overlayScheme: 'default',
+  projMode: 'map',
   tmActive: false,
   tmPlaying: false,
   tmWindowH: 72,
@@ -197,6 +203,7 @@ export const useMapStore = create<MapState & MapActions>((set) => ({
   setGlobeMotionSpeed: (globeMotionSpeed) => set({ globeMotionSpeed }),
   setFlowSpeed: (flowSpeed) => set({ flowSpeed }),
   setOverlayScheme: (overlayScheme) => set({ overlayScheme }),
+  setProjMode: (projMode) => set({ projMode }),
   setTimeMachine: (patch) => set(patch),
   resetGlobeToChinaView: () =>
     set((s) => ({

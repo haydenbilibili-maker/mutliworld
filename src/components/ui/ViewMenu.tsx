@@ -15,6 +15,7 @@ import type { PanelId } from '@/store/usePanelStore';
 import { BasemapModeSwitcher } from '@/components/ui/BasemapModeSwitcher';
 import { CosmicMotionControls } from '@/components/ui/CosmicMotionControls';
 import { COLOR_SCHEME_LABELS, type ColorScheme } from '@/lib/map/scalarColor';
+import { PROJECTION_LIST } from '@/lib/projection/projections';
 
 interface ViewMenuProps {
   className?: string;
@@ -71,6 +72,8 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
   const setHideSensitive = useMapStore((s) => s.setHideSensitive);
   const globe = useMapStore((s) => s.globe);
   const setGlobe = useMapStore((s) => s.setGlobe);
+  const projMode = useMapStore((s) => s.projMode);
+  const setProjMode = useMapStore((s) => s.setProjMode);
   const flowSpeed = useMapStore((s) => s.flowSpeed);
   const setFlowSpeed = useMapStore((s) => s.setFlowSpeed);
   const activeLayers = useMapStore((s) => s.activeLayers);
@@ -142,33 +145,46 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
             className="absolute bottom-full right-0 z-50 mb-1.5 w-[13rem] overflow-hidden rounded-lg border border-dashboard-neutral/25 bg-dashboard-bg/95 p-1.5 shadow-xl backdrop-blur-md"
           >
             <BasemapModeSwitcher className="mb-1" />
-            {/* 投影选择器（maplibre 引擎实际支持：平面墨卡托 / 球面正射） */}
+            {/* 投影：maplibre 底图(平面/球面) + 自绘投影引擎(A) */}
             <div className="px-2.5 py-1.5">
               <div className="mb-1 flex items-center gap-2 text-[12px] text-dashboard-neutral">
                 <span aria-hidden className="shrink-0 text-sm">🌐</span>
                 <span className="font-medium">投影</span>
               </div>
-              <div className="flex gap-1" role="group" aria-label="地图投影">
-                {([['平面', false], ['球面', true]] as const).map(([label, g]) => {
-                  const on = globeActive === g;
+              <div className="flex gap-1" role="group" aria-label="底图投影">
+                {([['平面墨卡托', false], ['球面正射', true]] as const).map(([label, g]) => {
+                  const on = projMode === 'map' && globeActive === g;
                   return (
                     <button
                       key={label}
                       type="button"
-                      onClick={() => setGlobe(g)}
+                      onClick={() => { setProjMode('map'); setGlobe(g); }}
                       aria-pressed={on}
                       disabled={activeTier === 'space' && !g}
-                      className={[
-                        'flex-1 rounded-md px-2 py-1 text-[12px] transition-colors disabled:opacity-40',
-                        on ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
-                      ].join(' ')}
+                      className={['flex-1 rounded-md px-2 py-1 text-[12px] transition-colors disabled:opacity-40', on ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white'].join(' ')}
                     >
-                      {label === '平面' ? '平面墨卡托' : '球面正射'}
+                      {label}
                     </button>
                   );
                 })}
               </div>
-              <p className="mt-1 text-[9px] leading-snug text-dashboard-neutral/40">更多投影(等距方位/温克尔三重等)需 D3 自绘引擎，可按需扩展</p>
+              <div className="mb-0.5 mt-1.5 text-[10px] text-dashboard-neutral/50">自绘投影（全屏 · 海岸线/经纬网/实时地震）</div>
+              <div className="grid grid-cols-3 gap-1" role="group" aria-label="自绘投影">
+                {PROJECTION_LIST.map((d) => {
+                  const on = projMode === d.id;
+                  return (
+                    <button
+                      key={d.id}
+                      type="button"
+                      onClick={() => setProjMode(d.id)}
+                      aria-pressed={on}
+                      className={['rounded-md px-1.5 py-1 text-[10px] transition-colors', on ? 'bg-sky-500/25 text-sky-200' : 'text-dashboard-neutral/70 hover:bg-white/5 hover:text-white'].join(' ')}
+                    >
+                      {d.name}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
             {activeTier === 'near_earth' && (
               <div className="px-2.5 py-1.5">
