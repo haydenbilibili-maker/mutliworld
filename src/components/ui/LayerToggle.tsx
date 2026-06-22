@@ -34,19 +34,19 @@ interface LayerToggleProps {
 const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   {
     title: '冲突与安全',
-    ids: ['conflicts', 'conflict_zones', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions', 'persons', 'borders', 'military_industry'],
+    ids: ['conflicts', 'conflict_zones', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions', 'persons', 'borders', 'military_industry', 'capitals'],
   },
   {
     title: '基础设施与通道',
-    ids: ['aviation', 'maritime', 'waterways', 'outages', 'dams', 'ports', 'airports', 'nuclear_reactors'],
+    ids: ['aviation', 'maritime', 'waterways', 'outages', 'dams', 'ports', 'airports', 'nuclear_reactors', 'power_plants'],
   },
   {
     title: '经济',
-    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'hydrocarbon_reserves', 'protests', 'megacities', 'refineries', 'factories', 'financial_centers', 'agriculture'],
+    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'hydrocarbon_reserves', 'protests', 'megacities', 'refineries', 'factories', 'financial_centers', 'agriculture', 'tech_companies', 'media_orgs', 'auto_brands', 'pharmaceutical'],
   },
   {
     title: '自然',
-    ids: ['natural', 'earthquakes', 'aurora', 'volcanoes', 'storms', 'floods', 'dusthaze', 'seaice', 'satellite_imagery', 'weather', 'climate', 'daynight', 'research_stations', 'deserts', 'islands'],
+    ids: ['natural', 'earthquakes', 'aurora', 'volcanoes', 'storms', 'floods', 'dusthaze', 'seaice', 'wildfires', 'landslides', 'satellite_imagery', 'weather', 'climate', 'daynight', 'research_stations', 'deserts', 'islands', 'forests', 'earthquakes_historical'],
   },
   {
     title: '文化与遗产',
@@ -111,6 +111,8 @@ const ALWAYS_ON: LayerId[] = [
   'floods',
   'dusthaze',
   'seaice',
+  'wildfires',
+  'landslides',
   'satellite_imagery',
   'launch_sites',
   'launch_log',
@@ -151,6 +153,14 @@ const ALWAYS_ON: LayerId[] = [
   'stadiums',
   'museums',
   'islands',
+  'capitals',
+  'power_plants',
+  'forests',
+  'earthquakes_historical',
+  'tech_companies',
+  'media_orgs',
+  'auto_brands',
+  'pharmaceutical',
   'wind_flow',
   'ocean_flow',
   'wave_flow',

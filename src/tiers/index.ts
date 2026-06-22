@@ -19,7 +19,7 @@ const surfaceTier: TierModule = {
     'conflicts', 'conflict_zones', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions',
     'economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors',
     'hydrocarbon_reserves', 'pipelines',
-    'natural', 'earthquakes', 'aurora', 'volcanoes', 'storms', 'floods', 'dusthaze', 'seaice', 'satellite_imagery', 'weather', 'live_weather', 'climate', 'protests',
+    'natural', 'earthquakes', 'aurora', 'volcanoes', 'storms', 'floods', 'dusthaze', 'seaice', 'wildfires', 'landslides', 'satellite_imagery', 'weather', 'live_weather', 'climate', 'protests',
     'aviation', 'live_flights', 'live_fires', 'live_maritime', 'outages', 'daynight',
     'persons',
   ],
