@@ -40,6 +40,21 @@ export function haversineKm(aLng: number, aLat: number, bLng: number, bLat: numb
   return 2 * R * Math.asin(Math.min(1, Math.sqrt(s)));
 }
 
+/** 取半径内跨类别最近的 k 个事件（排除自身与指定类别） */
+export function nearbyCrossCategory(lng: number, lat: number, excludeId: string, excludeCat: string, radiusKm = 1500, k = 5): (IndexItem & { distKm: number })[] {
+  const all = useEventIndexStore.getState().byCat;
+  const out: (IndexItem & { distKm: number })[] = [];
+  for (const cat of Object.keys(all)) {
+    if (cat === excludeCat) continue;
+    for (const it of all[cat]) {
+      if (it.id === excludeId || !Number.isFinite(it.lng) || !Number.isFinite(it.lat)) continue;
+      const d = haversineKm(lng, lat, it.lng, it.lat);
+      if (d <= radiusKm) out.push({ ...it, distKm: d });
+    }
+  }
+  return out.sort((a, b) => a.distKm - b.distKm).slice(0, k);
+}
+
 /** 取同类最近的 k 个事件（排除自身） */
 export function nearbySameCategory(category: string, lng: number, lat: number, excludeId: string, k = 5): (IndexItem & { distKm: number })[] {
   const items = useEventIndexStore.getState().byCat[category] ?? [];

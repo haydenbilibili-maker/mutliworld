@@ -9,7 +9,7 @@ import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { NEWS_CATEGORY_COLORS } from '@/data/news-feed';
 import { ImpactGauge, MiniGlobe, MiniChart, IMPACT_THEME } from '@/components/ui/EventViz';
-import { useEventIndexStore, nearbySameCategory } from '@/store/useEventIndexStore';
+import { useEventIndexStore, nearbySameCategory, nearbyCrossCategory } from '@/store/useEventIndexStore';
 import type { EventDetail, LayerId } from '@/types/geo';
 
 interface SidePanelProps {
@@ -38,11 +38,15 @@ export function SidePanel({ className = '' }: SidePanelProps) {
 
   // 邻近同类事件（订阅该类别索引桶以在数据刷新时更新）
   const catKey = selectedEvent?.category && !selectedEvent.category.startsWith('news:') ? selectedEvent.category : '';
-  const catBucket = useEventIndexStore((s) => (catKey ? s.byCat[catKey] : undefined));
-  const nearby = catKey && selectedEvent && (selectedEvent.location[0] !== 0 || selectedEvent.location[1] !== 0)
+  const byCat = useEventIndexStore((s) => s.byCat);
+  const hasLoc = !!selectedEvent && (selectedEvent.location[0] !== 0 || selectedEvent.location[1] !== 0);
+  const nearby = catKey && selectedEvent && hasLoc
     ? nearbySameCategory(catKey, selectedEvent.location[0], selectedEvent.location[1], selectedEvent.id, 5)
     : [];
-  void catBucket;
+  const nearbyOther = selectedEvent && hasLoc && !selectedEvent.category?.startsWith('news:')
+    ? nearbyCrossCategory(selectedEvent.location[0], selectedEvent.location[1], selectedEvent.id, catKey, 1500, 5)
+    : [];
+  void byCat;
 
   const [copied, setCopied] = useState(false);
 
@@ -235,6 +239,36 @@ export function SidePanel({ className = '' }: SidePanelProps) {
                               className="flex w-full items-center gap-2 rounded-md bg-white/5 px-2 py-1.5 text-left transition-colors hover:bg-white/10"
                             >
                               <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: th.color }} aria-hidden />
+                              <span className="min-w-0 flex-1 truncate text-[11px] text-dashboard-neutral/85">{it.title}</span>
+                              <span className="shrink-0 text-[10px] tabular-nums text-dashboard-neutral/45">{it.distKm < 1 ? '<1' : Math.round(it.distKm)} km</span>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+
+                {/* 周边其他灾害（跨类别，半径 1500km） */}
+                {nearbyOther.length > 0 && (
+                  <div className="border-t border-white/8 pt-2.5">
+                    <div className="mb-1 text-[10px] uppercase tracking-wide text-dashboard-neutral/40">周边其他灾害（≤1500km）</div>
+                    <ul className="space-y-1">
+                      {nearbyOther.map((it) => {
+                        const th = IMPACT_THEME[it.impact] ?? IMPACT_THEME.low;
+                        const catLabel = LAYER_LABELS[it.category as LayerId] ?? it.category;
+                        return (
+                          <li key={it.id}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setViewport([it.lng, it.lat], Math.max(useMapStore.getState().zoom, 4.5));
+                                selectEvent({ id: it.id, title: it.title, source: e.source, timestamp: '', location: [it.lng, it.lat], impact_level: it.impact, category: it.category } as EventDetail);
+                              }}
+                              className="flex w-full items-center gap-2 rounded-md bg-white/5 px-2 py-1.5 text-left transition-colors hover:bg-white/10"
+                            >
+                              <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: th.color }} aria-hidden />
+                              <span className="shrink-0 rounded bg-white/10 px-1 text-[9px] text-dashboard-neutral/70">{catLabel}</span>
                               <span className="min-w-0 flex-1 truncate text-[11px] text-dashboard-neutral/85">{it.title}</span>
                               <span className="shrink-0 text-[10px] tabular-nums text-dashboard-neutral/45">{it.distKm < 1 ? '<1' : Math.round(it.distKm)} km</span>
                             </button>
