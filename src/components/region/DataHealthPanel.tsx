@@ -7,6 +7,7 @@
 
 import useSWR from 'swr';
 import { DockPanel } from '@/components/region/DockPanel';
+import { SkeletonRows } from '@/components/ui/Skeleton';
 import { timeAgo } from '@/lib/format/time';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
@@ -76,7 +77,7 @@ export function DataHealthPanel({ className = '' }: { className?: string }) {
         </div>
 
         {!data && isLoading ? (
-          <div className="py-2 text-center text-dashboard-neutral/45">正在探测各上游数据源…</div>
+          <SkeletonRows rows={6} />
         ) : (
           <div className="space-y-1">
             {(data?.sources ?? []).map((s) => (
