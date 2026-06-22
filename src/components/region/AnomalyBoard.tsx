@@ -237,18 +237,22 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
             {onlyWatched ? '★ 仅关注' : '☆ 仅关注'}
           </button>
         </div>
-        {/* 类别过滤 */}
+        {/* 类别过滤（带实时计数） */}
         <div className="flex flex-wrap gap-1">
-          {['全部', ...kinds].map((k) => (
-            <button
-              key={k}
-              type="button"
-              onClick={() => setFilter(k)}
-              className={['rounded px-1.5 py-0.5 text-[10px] transition-colors', filter === k ? 'bg-rose-500/25 text-rose-200' : 'text-dashboard-neutral/55 hover:bg-white/5'].join(' ')}
-            >
-              {k}
-            </button>
-          ))}
+          {['全部', ...kinds].map((k) => {
+            const n = k === '全部' ? items.length : items.filter((i) => i.kind === k).length;
+            return (
+              <button
+                key={k}
+                type="button"
+                onClick={() => setFilter(k)}
+                className={['flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] transition-colors', filter === k ? 'bg-rose-500/25 text-rose-200' : 'text-dashboard-neutral/55 hover:bg-white/5'].join(' ')}
+              >
+                <span>{k}</span>
+                <span className={['tabular-nums', filter === k ? 'text-rose-100/90' : 'text-dashboard-neutral/40'].join(' ')}>{n}</span>
+              </button>
+            );
+          })}
         </div>
         {top.length === 0 ? (
           <div className="py-2 text-center text-dashboard-neutral/45">暂无显著异常 / 数据加载中</div>
