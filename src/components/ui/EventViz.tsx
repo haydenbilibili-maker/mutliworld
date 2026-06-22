@@ -36,19 +36,22 @@ export function ImpactGauge({ level }: { level: ImpactLevel }) {
   );
 }
 
-/** 坐标迷你地球 — 经纬网格 + 标记点（等距圆柱投影简版） */
-export function MiniGlobe({ lng, lat, color = '#38bdf8' }: { lng: number; lat: number; color?: string }) {
+/** 坐标迷你地球 — 经纬网格 + 标记点（等距圆柱投影简版）；可叠加邻近事件点 */
+export function MiniGlobe({ lng, lat, color = '#38bdf8', markers }: { lng: number; lat: number; color?: string; markers?: { lng: number; lat: number; color: string }[] }) {
   const W = 96, H = 56;
-  const x = ((lng + 180) / 360) * W;
-  const y = ((90 - lat) / 180) * H;
-  const verts = [-120, -60, 0, 60, 120].map((l) => ((l + 180) / 360) * W);
-  const horiz = [-60, -30, 0, 30, 60].map((la) => ((90 - la) / 180) * H);
+  const px = (lo: number) => ((lo + 180) / 360) * W;
+  const py = (la: number) => ((90 - la) / 180) * H;
+  const x = px(lng), y = py(lat);
+  const verts = [-120, -60, 0, 60, 120].map(px);
+  const horiz = [-60, -30, 0, 30, 60].map(py);
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} aria-hidden className="shrink-0 rounded-md" style={{ background: 'rgba(56,189,248,0.06)' }}>
       <rect x="0" y="0" width={W} height={H} fill="none" stroke="rgba(255,255,255,0.12)" rx="6" />
       {verts.map((vx, i) => <line key={`v${i}`} x1={vx} y1="0" x2={vx} y2={H} stroke="rgba(255,255,255,0.08)" />)}
       {horiz.map((hy, i) => <line key={`h${i}`} x1="0" y1={hy} x2={W} y2={hy} stroke="rgba(255,255,255,0.08)" />)}
       <line x1="0" y1={H / 2} x2={W} y2={H / 2} stroke="rgba(255,255,255,0.18)" strokeDasharray="2 3" />
+      {/* 邻近事件点（淡） */}
+      {markers?.map((m, i) => <circle key={i} cx={px(m.lng)} cy={py(m.lat)} r="1.6" fill={m.color} opacity="0.85" />)}
       <circle cx={x} cy={y} r="7" fill="none" stroke={color} strokeWidth="1" opacity="0.5">
         <animate attributeName="r" values="3;9;3" dur="2.4s" repeatCount="indefinite" />
         <animate attributeName="opacity" values="0.7;0;0.7" dur="2.4s" repeatCount="indefinite" />

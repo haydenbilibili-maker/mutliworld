@@ -47,6 +47,7 @@ export function SidePanel({ className = '' }: SidePanelProps) {
     ? nearbyCrossCategory(selectedEvent.location[0], selectedEvent.location[1], selectedEvent.id, catKey, 1500, 5)
     : [];
   void byCat;
+  const globeMarkers = [...nearby, ...nearbyOther].map((it) => ({ lng: it.lng, lat: it.lat, color: (IMPACT_THEME[it.impact] ?? IMPACT_THEME.low).color }));
 
   const [copied, setCopied] = useState(false);
 
@@ -203,7 +204,7 @@ export function SidePanel({ className = '' }: SidePanelProps) {
                 {/* 坐标迷你地球 + 动作 */}
                 {hasLocation && (
                   <div className="flex items-center gap-3 rounded-lg border border-white/8 bg-white/[0.03] p-2.5">
-                    <MiniGlobe lng={e.location[0]} lat={e.location[1]} color={theme.color} />
+                    <MiniGlobe lng={e.location[0]} lat={e.location[1]} color={theme.color} markers={globeMarkers} />
                     <div className="min-w-0 flex-1">
                       <div className="text-[11px] tabular-nums text-dashboard-neutral/80">
                         {e.location[1].toFixed(4)}°, {e.location[0].toFixed(4)}°
