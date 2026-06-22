@@ -151,6 +151,15 @@ export function SidePanel({ className = '' }: SidePanelProps) {
                     <MiniChart series={e.series} color={theme.color} />
                   </div>
                 )}
+                {e.series2 && e.series2.points.length > 1 && (
+                  <div className="rounded-lg border border-white/8 bg-white/[0.03] p-2.5">
+                    <div className="mb-1 flex items-center justify-between text-[10px] text-dashboard-neutral/55">
+                      <span>{e.series2.label}</span>
+                      {e.series2.unit && <span>{e.series2.unit}</span>}
+                    </div>
+                    <MiniChart series={e.series2} color={theme.color} />
+                  </div>
+                )}
 
                 {/* 坐标迷你地球 + 动作 */}
                 {hasLocation && (

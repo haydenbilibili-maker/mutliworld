@@ -134,19 +134,25 @@ export function NearEarthDataBar() {
       pushVec(wav, '浪高', 'm');
       if (metrics.length === 0) return; // 该处无真实数据则不弹
 
-      // 同纬度纬向剖面（±40° 真实采样）
+      // 真实采样剖面：纬向（沿经度）+ 经向（沿纬度）
       let series: EventDetail['series'];
+      let series2: EventDetail['series'];
       if (sc?.nx && sc.params[pkey]) {
-        const field = sc.params[pkey], N = 29, span = 80, pts: number[] = [];
-        let finite = 0, fallback = 0;
-        for (let i = 0; i < N; i++) {
-          const L = lng - span / 2 + (span * i) / (N - 1);
-          const v = bilerp(field, sc, L, lat);
-          if (v != null) { pts.push(v); finite++; fallback = v; } else { pts.push(NaN); }
-        }
-        if (finite > 4) {
-          series = { label: `同纬度纬向剖面 @ ${lat.toFixed(1)}°（${(lng - 40).toFixed(0)}°→${(lng + 40).toFixed(0)}°）`, points: pts.map((p) => (Number.isFinite(p) ? p : fallback)), unit: m.unit, kind: 'spark' };
-        }
+        const field = sc.params[pkey];
+        const transect = (vary: 'lon' | 'lat', span: number, N: number) => {
+          const pts: number[] = [];
+          let finite = 0, fallback = 0;
+          for (let i = 0; i < N; i++) {
+            const off = -span / 2 + (span * i) / (N - 1);
+            const v = bilerp(field, sc, vary === 'lon' ? lng + off : lng, vary === 'lon' ? lat : lat + off);
+            if (v != null) { pts.push(v); finite++; fallback = v; } else { pts.push(NaN); }
+          }
+          return finite > 4 ? pts.map((p) => (Number.isFinite(p) ? p : fallback)) : null;
+        };
+        const zonal = transect('lon', 80, 29);
+        if (zonal) series = { label: `纬向剖面 @ ${lat.toFixed(1)}°（${(lng - 40).toFixed(0)}°→${(lng + 40).toFixed(0)}°E）`, points: zonal, unit: m.unit, kind: 'spark' };
+        const merid = transect('lat', 60, 25);
+        if (merid) series2 = { label: `经向剖面 @ ${lng.toFixed(1)}°（${(lat - 30).toFixed(0)}°→${(lat + 30).toFixed(0)}°N）`, points: merid, unit: m.unit, kind: 'spark' };
       }
 
       let impact: ImpactLevel = 'low';
@@ -166,6 +172,7 @@ export function NearEarthDataBar() {
         description: `${m.label} 在 ${lat.toFixed(2)}°, ${lng.toFixed(2)}° 的实测读数及同纬度纬向剖面（真实网格双线性插值，非预测）。`,
         metrics,
         series,
+        series2,
         tags: [m.label, '近地标量场'],
       };
       selectEventRef.current(detail);

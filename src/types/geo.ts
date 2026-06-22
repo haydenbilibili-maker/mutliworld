@@ -50,6 +50,8 @@ export interface EventDetail {
   tags?: string[];
   /** 内联微型图表数据（如近 N 期序列、震源深度剖面等） */
   series?: EventSeries;
+  /** 第二组内联图表（如经向剖面，与 series 纬向剖面并列） */
+  series2?: EventSeries;
   /** 配图 URL（如卫星缩略图、机构图示） */
   imageUrl?: string;
   /** 附加来源/参考链接 */
