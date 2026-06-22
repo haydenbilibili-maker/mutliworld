@@ -68,6 +68,7 @@ export function EonetEventLayer({ config }: { config: EonetLayerConfig }) {
   const selectEventRef = useRef(selectEvent);
   selectEventRef.current = selectEvent;
   const popupRef = useRef<maplibregl.Popup | null>(null);
+  const hoverRef = useRef<maplibregl.Popup | null>(null);
   const lastKey = useRef('');
   const dataKey = useMemo(() => `${enabled}:${geojson.features.length}`, [geojson, enabled]);
 
@@ -126,6 +127,7 @@ export function EonetEventLayer({ config }: { config: EonetLayerConfig }) {
       const p = f.properties as unknown as EventProps;
       const coords = (f.geometry as unknown as { coordinates: [number, number] }).coordinates;
       popupRef.current?.remove();
+      hoverRef.current?.remove();
       const date = p.date ? new Date(p.date).toLocaleString('zh-CN', { hour12: false }) : '';
       const rel = p.date ? timeAgo(p.date) : '';
       const dateLine = date
@@ -155,11 +157,25 @@ export function EonetEventLayer({ config }: { config: EonetLayerConfig }) {
       };
       selectEventRef.current(detail);
     };
-    const onEnter = () => { map.getCanvas().style.cursor = 'pointer'; };
-    const onLeave = () => { map.getCanvas().style.cursor = ''; };
+    // 悬停预览：跟随光标的轻量卡（标题 + 最新定位相对龄期），点击再开完整浮窗+详情
+    const onMove = (e: maplibregl.MapMouseEvent & { features?: maplibregl.MapGeoJSONFeature[] }) => {
+      map.getCanvas().style.cursor = 'pointer';
+      const f = e.features?.[0];
+      if (!f?.properties) return;
+      const p = f.properties as unknown as EventProps;
+      const coords = (f.geometry as unknown as { coordinates: [number, number] }).coordinates;
+      const rel = p.date ? timeAgo(p.date) : '';
+      const html = `<div style="font-size:12px;line-height:1.4;max-width:13rem"><div style="font-weight:600">${icon} ${p.title}</div>${rel ? `<div style="font-size:10px;color:#94a3b8;margin-top:2px">${dateLabel} · ${rel}</div>` : ''}</div>`;
+      if (!hoverRef.current) {
+        hoverRef.current = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 12, className: 'geodata-popup' });
+      }
+      hoverRef.current.setLngLat(coords).setHTML(html).addTo(map);
+      applyPopupTheme(hoverRef.current);
+    };
+    const onLeave = () => { map.getCanvas().style.cursor = ''; hoverRef.current?.remove(); };
     const attach = () => {
       map.on('click', CORE, onClick);
-      map.on('mouseenter', CORE, onEnter);
+      map.on('mousemove', CORE, onMove);
       map.on('mouseleave', CORE, onLeave);
     };
     if (map.isStyleLoaded()) attach();
@@ -167,12 +183,13 @@ export function EonetEventLayer({ config }: { config: EonetLayerConfig }) {
     return () => {
       map.off('style.load', attach);
       map.off('click', CORE, onClick);
-      map.off('mouseenter', CORE, onEnter);
+      map.off('mousemove', CORE, onMove);
       map.off('mouseleave', CORE, onLeave);
+      hoverRef.current?.remove();
     };
   }, [map, styleEpoch, CORE, srcKey, layerId, icon, dateLabel, impact, domainsKey, coreColor]);
 
-  useEffect(() => () => { popupRef.current?.remove(); }, []);
+  useEffect(() => () => { popupRef.current?.remove(); hoverRef.current?.remove(); }, []);
 
   return null;
 }
