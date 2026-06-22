@@ -6,12 +6,33 @@
  * 仅在宇宙层显示；随右轨面板流式排布。
  */
 
+import { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 import { useMapStore } from '@/store/useMapStore';
 import { ageLabel } from '@/lib/format/time';
 import { MiniChart } from '@/components/ui/EventViz';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
+/** 数字滚动到目标值（缓出；尊重 reduced-motion 则直接落定） */
+function useCountUp(target: number | null, ms = 700): number {
+  const [v, setV] = useState(0);
+  const raf = useRef<number | null>(null);
+  useEffect(() => {
+    if (target == null) { setV(0); return; }
+    const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { setV(target); return; }
+    const from = 0, start = performance.now();
+    const step = (t: number) => {
+      const p = Math.min(1, (t - start) / ms);
+      setV(from + (target - from) * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) raf.current = requestAnimationFrame(step);
+    };
+    raf.current = requestAnimationFrame(step);
+    return () => { if (raf.current) cancelAnimationFrame(raf.current); };
+  }, [target, ms]);
+  return v;
+}
 
 interface SpaceWeather { kp: number | null; series: number[]; times: string[]; gLevel: string; gDesc: string; windSpeed: number | null; bz: number | null; generatedAt: string; source: string; stale?: boolean }
 
@@ -31,10 +52,11 @@ export function SpaceWeatherCard({ className = '' }: { className?: string }) {
   const { data } = useSWR<SpaceWeather>(inSpace ? '/api/spaceweather' : null, fetcher, {
     revalidateOnFocus: false, refreshInterval: 10 * 60 * 1000, dedupingInterval: 5 * 60 * 1000,
   });
+  const kp = data?.kp ?? null;
+  const kpAnim = useCountUp(kp);
 
   if (!inSpace) return null;
 
-  const kp = data?.kp ?? null;
   const color = kp != null ? kpColor(kp) : '#94a3b8';
   const isStorm = kp != null && kp >= 5;
   const auroraHint = kp == null ? '' : kp >= 7 ? '极光可达中低纬度' : kp >= 5 ? '极光向中纬度扩展' : kp >= 4 ? '高纬度极光活跃' : '极光局限极区';
@@ -50,7 +72,7 @@ export function SpaceWeatherCard({ className = '' }: { className?: string }) {
       <div className="space-y-2 p-3 text-[11px]">
         <div className="flex items-center gap-3">
           <div className="text-center">
-            <div className="text-2xl font-bold leading-none tabular-nums" style={{ color }}>{kp != null ? kp.toFixed(0) : '—'}</div>
+            <div className="text-2xl font-bold leading-none tabular-nums" style={{ color }}>{kp != null ? Math.round(kpAnim) : '—'}</div>
             <div className="mt-0.5 text-[9px] text-dashboard-neutral/50">Kp 指数</div>
           </div>
           <div className="min-w-0 flex-1">
