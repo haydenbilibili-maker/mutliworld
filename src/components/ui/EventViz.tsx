@@ -95,8 +95,13 @@ export function MiniChart({ series, color = '#38bdf8' }: { series: EventSeries; 
         {/* 均值基线 */}
         <line x1={P} y1={sy(mean)} x2={W - P} y2={sy(mean)} stroke="rgba(255,255,255,0.12)" strokeDasharray="2 3" />
         <polygon points={area} fill={color} opacity="0.12" />
-        <polyline points={line} fill="none" stroke={color} strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round" />
+        <polyline className="mc-draw" pathLength={1} points={line} fill="none" stroke={color} strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round" />
         <circle cx={sx(pts.length - 1)} cy={sy(last)} r="2.6" fill={color} />
+        <style jsx global>{`
+          .mc-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: mcDraw 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+          @keyframes mcDraw { to { stroke-dashoffset: 0; } }
+          @media (prefers-reduced-motion: reduce) { .mc-draw { animation: none; stroke-dashoffset: 0; } }
+        `}</style>
       </svg>
       {/* 极值/末值刻度：HTML 叠层，避免 SVG 非等比缩放拉伸文字 */}
       <span style={{ position: 'absolute', left: 2, top: 0, fontSize: 8, color: 'rgba(255,255,255,0.45)' }}>{fmt(max)}</span>
