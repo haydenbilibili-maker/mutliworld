@@ -54,6 +54,7 @@ export function GdacsLayer() {
   const selectEventRef = useRef(selectEvent);
   selectEventRef.current = selectEvent;
   const popupRef = useRef<maplibregl.Popup | null>(null);
+  const hoverRef = useRef<maplibregl.Popup | null>(null);
   const lastKey = useRef('');
   const dataKey = useMemo(() => `${enabled}:${geojson.features.length}`, [enabled, geojson.features.length]);
 
@@ -117,6 +118,7 @@ export function GdacsLayer() {
       const tISO = p.fromdate && !Number.isNaN(Date.parse(p.fromdate)) ? new Date(p.fromdate).toISOString() : '';
       const rel = tISO ? timeAgo(tISO) : '';
       popupRef.current?.remove();
+      hoverRef.current?.remove();
       const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, offset: 10, className: 'geodata-popup' })
         .setLngLat(coords)
         .setHTML(`<div style="font-size:13px;line-height:1.5;min-width:12rem"><div style="font-weight:600;margin-bottom:4px">${tm.icon} ${p.title}</div><div style="font-size:11px;margin-bottom:2px"><span style="color:${ALERT_COLOR[p.alertlevel] ?? '#94a3b8'};font-weight:600">${alertCn}告警</span>${p.country ? ` · ${p.country}` : ''}</div>${p.severity ? `<div style="font-size:11px;color:#94a3b8">${p.severity}</div>` : ''}${rel ? `<div style="font-size:11px;color:#64748b">${rel}</div>` : ''}</div>`)
@@ -149,11 +151,26 @@ export function GdacsLayer() {
       };
       selectEventRef.current(detail);
     };
-    const onEnter = () => { map.getCanvas().style.cursor = 'pointer'; };
-    const onLeave = () => { map.getCanvas().style.cursor = ''; };
+    // 悬停预览：告警级 + 标题 + 国家
+    const onMove = (e: maplibregl.MapMouseEvent & { features?: maplibregl.MapGeoJSONFeature[] }) => {
+      map.getCanvas().style.cursor = 'pointer';
+      const f = e.features?.[0];
+      if (!f?.properties) return;
+      const p = f.properties as unknown as GdacsProps;
+      const coords = (f.geometry as unknown as { coordinates: [number, number] }).coordinates;
+      const tm = typeMeta(p.eventtype);
+      const alertCn = ALERT_CN[p.alertlevel] ?? p.alertlevel;
+      const col = ALERT_COLOR[p.alertlevel] ?? '#94a3b8';
+      const html = `<div style="font-size:12px;line-height:1.4;max-width:13rem"><div style="font-weight:600">${tm.icon} ${p.title}</div><div style="font-size:10px;margin-top:2px"><span style="color:${col};font-weight:600">${alertCn}告警</span>${p.country ? ` · ${p.country}` : ''}</div></div>`;
+      if (!hoverRef.current) hoverRef.current = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 12, className: 'geodata-popup' });
+      hoverRef.current.setLngLat(coords).setHTML(html).addTo(map);
+      const c = hoverRef.current.getElement()?.querySelector('.maplibregl-popup-content');
+      if (c instanceof HTMLElement) { c.style.setProperty('background', '#0A0E17', 'important'); c.style.setProperty('color', '#e6edf3', 'important'); c.style.setProperty('border', '1px solid rgba(255,255,255,0.12)', 'important'); c.style.setProperty('border-radius', '8px', 'important'); }
+    };
+    const onLeave = () => { map.getCanvas().style.cursor = ''; hoverRef.current?.remove(); };
     const attach = () => {
       map.on('click', CORE, onClick);
-      map.on('mouseenter', CORE, onEnter);
+      map.on('mousemove', CORE, onMove);
       map.on('mouseleave', CORE, onLeave);
     };
     if (map.isStyleLoaded()) attach();
@@ -161,12 +178,13 @@ export function GdacsLayer() {
     return () => {
       map.off('style.load', attach);
       map.off('click', CORE, onClick);
-      map.off('mouseenter', CORE, onEnter);
+      map.off('mousemove', CORE, onMove);
       map.off('mouseleave', CORE, onLeave);
+      hoverRef.current?.remove();
     };
   }, [map, styleEpoch]);
 
-  useEffect(() => () => { popupRef.current?.remove(); }, []);
+  useEffect(() => () => { popupRef.current?.remove(); hoverRef.current?.remove(); }, []);
 
   return null;
 }
