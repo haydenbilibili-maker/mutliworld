@@ -267,7 +267,7 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
                 <button
                   type="button"
                   onClick={() => focus(a)}
-                  className="flex min-w-0 flex-1 items-center gap-2 px-2 py-1.5 text-left active:scale-[0.99]"
+                  className="flex min-w-0 flex-1 items-center gap-2 px-2 py-1.5 text-left transition-transform hover:translate-x-0.5 active:scale-[0.99]"
                 >
                   <span aria-hidden className="shrink-0 text-sm">{a.icon}</span>
                   <span className="min-w-0 flex-1">

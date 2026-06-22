@@ -257,7 +257,7 @@ export function SidePanel({ className = '' }: SidePanelProps) {
                                 setViewport([it.lng, it.lat], Math.max(useMapStore.getState().zoom, 4.5));
                                 selectEvent({ id: it.id, title: it.title, source: e.source, timestamp: '', location: [it.lng, it.lat], impact_level: it.impact, category: it.category } as EventDetail);
                               }}
-                              className="flex w-full items-center gap-2 rounded-md bg-white/5 px-2 py-1.5 text-left transition-colors hover:bg-white/10"
+                              className="flex w-full items-center gap-2 rounded-md bg-white/5 px-2 py-1.5 text-left transition-all hover:translate-x-0.5 hover:bg-white/10"
                             >
                               <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: th.color }} aria-hidden />
                               <span className="min-w-0 flex-1 truncate text-[11px] text-dashboard-neutral/85">{it.title}</span>
@@ -286,7 +286,7 @@ export function SidePanel({ className = '' }: SidePanelProps) {
                                 setViewport([it.lng, it.lat], Math.max(useMapStore.getState().zoom, 4.5));
                                 selectEvent({ id: it.id, title: it.title, source: e.source, timestamp: '', location: [it.lng, it.lat], impact_level: it.impact, category: it.category } as EventDetail);
                               }}
-                              className="flex w-full items-center gap-2 rounded-md bg-white/5 px-2 py-1.5 text-left transition-colors hover:bg-white/10"
+                              className="flex w-full items-center gap-2 rounded-md bg-white/5 px-2 py-1.5 text-left transition-all hover:translate-x-0.5 hover:bg-white/10"
                             >
                               <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: th.color }} aria-hidden />
                               <span className="shrink-0 rounded bg-white/10 px-1 text-[9px] text-dashboard-neutral/70">{catLabel}</span>
