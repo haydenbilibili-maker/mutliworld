@@ -20,6 +20,7 @@ interface Source {
 const SOURCES: Source[] = [
   { id: 'usgs', label: 'USGS 地震', category: '地表', url: 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson' },
   { id: 'eonet', label: 'NASA EONET 事件', category: '地表', url: 'https://eonet.gsfc.nasa.gov/api/v3/events?category=volcanoes&limit=1' },
+  { id: 'gdacs', label: 'GDACS 灾害告警', category: '地表', url: 'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP' },
   { id: 'swpc', label: 'NOAA SWPC 极光', category: '地表', url: 'https://services.swpc.noaa.gov/json/ovation_aurora_latest.json' },
   { id: 'open-meteo', label: 'Open-Meteo 气象', category: '近地', url: 'https://api.open-meteo.com/v1/forecast?latitude=0&longitude=0&current=temperature_2m' },
   { id: 'marine', label: 'Open-Meteo 海洋', category: '近地', url: 'https://marine-api.open-meteo.com/v1/marine?latitude=0&longitude=0&current=wave_height' },
