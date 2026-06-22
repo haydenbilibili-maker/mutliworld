@@ -48,7 +48,13 @@ export function TiangongLayer() {
         location: [p.lon, p.lat],
         impact_level: 'low',
         category: 'tiangong',
-        description: `轨道高度 ${Math.round(p.altitude)} km · 速度 ${Math.round(p.velocity).toLocaleString()} km/h · ${p.lat.toFixed(2)}°, ${p.lon.toFixed(2)}°`,
+        description: `天宫空间站实时星下点。NORAD 48274，中国近地轨道载人空间站。`,
+        metrics: [
+          { label: '轨道高度', value: `${Math.round(p.altitude)}`, hint: 'km', accent: '#f59e0b' },
+          { label: '速度', value: `${Math.round(p.velocity).toLocaleString()}`, hint: 'km/h', accent: '#fbbf24' },
+          { label: '星下点', value: `${p.lat.toFixed(1)}°, ${p.lon.toFixed(1)}°` },
+        ],
+        tags: ['载人航天', '近地轨道', 'NORAD 48274'],
       };
       selectEvent(detail);
     });

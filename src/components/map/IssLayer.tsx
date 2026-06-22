@@ -48,7 +48,13 @@ export function IssLayer() {
         location: [p.lon, p.lat],
         impact_level: 'low',
         category: 'iss',
-        description: `轨道高度 ${Math.round(p.altitude)} km · 速度 ${Math.round(p.velocity).toLocaleString()} km/h · ${p.lat.toFixed(2)}°, ${p.lon.toFixed(2)}°`,
+        description: `国际空间站实时星下点。NORAD 25544，近地轨道载人空间站，约 90 分钟绕地一圈。`,
+        metrics: [
+          { label: '轨道高度', value: `${Math.round(p.altitude)}`, hint: 'km', accent: '#38bdf8' },
+          { label: '速度', value: `${Math.round(p.velocity).toLocaleString()}`, hint: 'km/h', accent: '#7dd3fc' },
+          { label: '星下点', value: `${p.lat.toFixed(1)}°, ${p.lon.toFixed(1)}°` },
+        ],
+        tags: ['载人航天', '近地轨道', 'NORAD 25544'],
       };
       selectEvent(detail);
     });

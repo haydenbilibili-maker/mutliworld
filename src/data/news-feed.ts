@@ -560,6 +560,7 @@ export function newsFeedItemToEventDetail(item: NewsFeedItem): EventDetail {
     category: `news:${item.category}`,
     description: item.summary,
     url: item.url,
+    tags: [item.category],
   };
 }
 

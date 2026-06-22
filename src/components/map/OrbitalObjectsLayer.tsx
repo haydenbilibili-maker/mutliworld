@@ -299,7 +299,13 @@ export function OrbitalObjectsLayer() {
             location: [lng, lat],
             impact_level: 'high',
             category: 'space_stations',
-            description: `${s.operator ?? ''} · 高度 ${Math.round(s.alt_km)} km · 速度 ${Math.round(s.velocity_kmh).toLocaleString()} km/h · NORAD ${s.noradId}`,
+            description: `${s.operator ? s.operator + ' 运营。' : ''}TLE/SGP4 近实时定轨的在轨空间站。`,
+            metrics: [
+              { label: '轨道高度', value: `${Math.round(s.alt_km)}`, hint: 'km', accent: '#38bdf8' },
+              { label: '速度', value: `${Math.round(s.velocity_kmh).toLocaleString()}`, hint: 'km/h', accent: '#7dd3fc' },
+              { label: 'NORAD', value: `${s.noradId}` },
+            ],
+            tags: [s.operator, '空间站', '在轨'].filter(Boolean) as string[],
           });
         });
         // offset 向上抬升，使空间站漂浮在星下点上方
@@ -338,7 +344,13 @@ export function OrbitalObjectsLayer() {
         location: [coords[0], coords[1]],
         impact_level: p.category === 'debris' ? 'medium' : 'low',
         category: layerId,
-        description: `${p.operator ? p.operator + ' · ' : ''}高度 ${Math.round(p.alt_km)} km · 速度 ${Math.round(p.velocity_kmh).toLocaleString()} km/h · NORAD ${p.noradId}`,
+        description: `${p.operator ? p.operator + ' 运营。' : ''}${p.category === 'debris' ? '在轨空间碎片' : '在轨卫星'}，TLE/SGP4 近实时定轨。`,
+        metrics: [
+          { label: '轨道高度', value: `${Math.round(p.alt_km)}`, hint: 'km', accent: '#38bdf8' },
+          { label: '速度', value: `${Math.round(p.velocity_kmh).toLocaleString()}`, hint: 'km/h', accent: '#7dd3fc' },
+          { label: 'NORAD', value: `${p.noradId}` },
+        ],
+        tags: [p.operator, p.category === 'debris' ? '空间碎片' : '卫星', '在轨'].filter(Boolean) as string[],
       });
     };
 

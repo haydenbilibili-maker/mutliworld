@@ -18,6 +18,7 @@ import { rampCss } from '@/lib/map/scalarColor';
 import { ageLabel } from '@/lib/format/time';
 import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
 import { DockDataCard } from '@/components/ui/DockDataCard';
+import type { EventDetail, ImpactLevel } from '@/types/geo';
 
 interface GridMeta { generatedAt?: string; source?: string }
 interface VecGrid extends GridMeta { nx: number; ny: number; lon0: number; lat0: number; dLon: number; dLat: number; u: number[]; v: number[]; }
@@ -59,6 +60,7 @@ export function NearEarthDataBar() {
   const layers = useMapStore((s) => s.activeLayers);
   const param = useNearEarthStore((s) => s.param);
   const scheme = useMapStore((s) => s.overlayScheme);
+  const selectEvent = useMapStore((s) => s.selectEvent);
   const meta = SCALAR_META[param];
 
   const windOn = inNearEarth && layers.includes('wind_flow');
@@ -84,6 +86,8 @@ export function NearEarthDataBar() {
   const waveRef = useRef(wave); waveRef.current = wave;
   const scalarRef = useRef(scalar); scalarRef.current = scalar;
   const paramKeyRef = useRef(meta.key); paramKeyRef.current = meta.key;
+  const metaRef = useRef(meta); metaRef.current = meta;
+  const selectEventRef = useRef(selectEvent); selectEventRef.current = selectEvent;
 
   useEffect(() => {
     if (!map || !inNearEarth) return;
@@ -102,6 +106,72 @@ export function NearEarthDataBar() {
     };
     map.on('mousemove', onMove);
     return () => { map.off('mousemove', onMove); };
+  }, [map, inNearEarth]);
+
+  // 点击取点：开富详情（实测读数 + 同纬度纬向剖面，真实双线性插值·非预测）
+  useEffect(() => {
+    if (!map || !inNearEarth) return;
+    const onClick = (e: maplibregl.MapMouseEvent) => {
+      const { lng, lat } = e.lngLat;
+      const sc = scalarRef.current, pkey = paramKeyRef.current, m = metaRef.current;
+      const w = windRef.current, o = oceanRef.current, wav = waveRef.current;
+      const metrics: NonNullable<EventDetail['metrics']> = [];
+      let scalarVal: number | null = null;
+      if (sc?.nx && sc.params[pkey]) {
+        const v = bilerp(sc.params[pkey], sc, lng, lat);
+        if (v != null) {
+          scalarVal = v;
+          metrics.push({ label: m.label, value: m.ramp === 'baa' ? baaLabel(v) : v.toFixed(1), hint: m.ramp === 'baa' ? undefined : m.unit, accent: '#38bdf8' });
+        }
+      }
+      const pushVec = (g: VecGrid | undefined, label: string, unit: string) => {
+        if (!g?.nx) return;
+        const u = bilerp(g.u, g, lng, lat), v = bilerp(g.v, g, lng, lat);
+        if (u != null && v != null) metrics.push({ label, value: Math.hypot(u, v).toFixed(1), hint: `${unit} 向${compass(u, v)}` });
+      };
+      pushVec(w, '风速', 'm/s');
+      pushVec(o, '洋流', 'm/s');
+      pushVec(wav, '浪高', 'm');
+      if (metrics.length === 0) return; // 该处无真实数据则不弹
+
+      // 同纬度纬向剖面（±40° 真实采样）
+      let series: EventDetail['series'];
+      if (sc?.nx && sc.params[pkey]) {
+        const field = sc.params[pkey], N = 29, span = 80, pts: number[] = [];
+        let finite = 0, fallback = 0;
+        for (let i = 0; i < N; i++) {
+          const L = lng - span / 2 + (span * i) / (N - 1);
+          const v = bilerp(field, sc, L, lat);
+          if (v != null) { pts.push(v); finite++; fallback = v; } else { pts.push(NaN); }
+        }
+        if (finite > 4) {
+          series = { label: `同纬度纬向剖面 @ ${lat.toFixed(1)}°（${(lng - 40).toFixed(0)}°→${(lng + 40).toFixed(0)}°）`, points: pts.map((p) => (Number.isFinite(p) ? p : fallback)), unit: m.unit, kind: 'spark' };
+        }
+      }
+
+      let impact: ImpactLevel = 'low';
+      if (scalarVal != null) {
+        if (m.ramp === 'baa') impact = scalarVal >= 3 ? 'high' : scalarVal >= 2 ? 'medium' : 'low';
+        else { const f = (scalarVal - m.min) / ((m.max - m.min) || 1); impact = f > 0.8 ? 'high' : f > 0.5 ? 'medium' : 'low'; }
+      }
+
+      const detail: EventDetail = {
+        id: `scalar-${pkey}-${lng.toFixed(2)},${lat.toFixed(2)}`,
+        title: `📈 ${m.label} · 点位读数`,
+        source: sc?.source ?? '近地标量场（近实时）',
+        timestamp: sc?.generatedAt ?? '',
+        location: [lng, lat],
+        impact_level: impact,
+        category: m.layer,
+        description: `${m.label} 在 ${lat.toFixed(2)}°, ${lng.toFixed(2)}° 的实测读数及同纬度纬向剖面（真实网格双线性插值，非预测）。`,
+        metrics,
+        series,
+        tags: [m.label, '近地标量场'],
+      };
+      selectEventRef.current(detail);
+    };
+    map.on('click', onClick);
+    return () => { map.off('click', onClick); };
   }, [map, inNearEarth]);
 
   if (!inNearEarth) return null;
