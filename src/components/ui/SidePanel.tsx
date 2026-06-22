@@ -150,14 +150,21 @@ export function SidePanel({ className = '' }: SidePanelProps) {
                 {/* 卫星影像缩略（按坐标取 NASA GIBS 真彩，仅当事件未自带配图） */}
                 {hasLocation && !e.imageUrl && (() => {
                   const g = gibsThumb(e.location[0], e.location[1]);
-                  return g ? (
-                    <figure className="overflow-hidden rounded-lg border border-white/10">
+                  if (!g) return null;
+                  const lon = e.location[0], lat = e.location[1];
+                  const d = new Date(Date.now() - 36 * 3600 * 1000).toISOString().slice(0, 10);
+                  const wv = `https://worldview.earthdata.nasa.gov/?v=${(lon - 8).toFixed(1)},${(lat - 6).toFixed(1)},${(lon + 8).toFixed(1)},${(lat + 6).toFixed(1)}&t=${d}`;
+                  return (
+                    <a href={wv} target="_blank" rel="noopener noreferrer" className="group block overflow-hidden rounded-lg border border-white/10 transition-colors hover:border-sky-400/40">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={g} alt="" className="h-32 w-full object-cover"
-                        onError={(ev) => { const fig = (ev.currentTarget as HTMLImageElement).closest('figure'); if (fig) (fig as HTMLElement).style.display = 'none'; }} />
-                      <figcaption className="bg-black/30 px-2 py-1 text-[9px] text-dashboard-neutral/55">🛰 NASA GIBS 真彩卫星影像（近日 · 区域上下文）</figcaption>
-                    </figure>
-                  ) : null;
+                      <img src={g} alt="" className="h-32 w-full object-cover transition-transform group-hover:scale-[1.03]"
+                        onError={(ev) => { const a = (ev.currentTarget as HTMLImageElement).closest('a'); if (a) (a as HTMLElement).style.display = 'none'; }} />
+                      <figcaption className="flex items-center justify-between bg-black/30 px-2 py-1 text-[9px] text-dashboard-neutral/55">
+                        <span>🛰 NASA GIBS 真彩卫星影像（近日 · 区域上下文）</span>
+                        <span className="text-sky-400/80 group-hover:text-sky-300">Worldview ↗</span>
+                      </figcaption>
+                    </a>
+                  );
                 })()}
 
                 {/* 标签 */}
