@@ -78,6 +78,17 @@ export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> =
   'mineral-uranium': { emoji: '☢️', label: '铀矿' },
   'mineral-bauxite': { emoji: '🏔️', label: '铝土矿' },
   'mineral-tantalum': { emoji: '📱', label: '钽铌' },
+  'mineral-tungsten': { emoji: '🔩', label: '钨矿' },
+  'mineral-titanium': { emoji: '🛩️', label: '钛矿' },
+  'mineral-tin': { emoji: '🥫', label: '锡矿' },
+  'mineral-vanadium': { emoji: '🧱', label: '钒矿' },
+  'mineral-manganese': { emoji: '🧲', label: '锰矿' },
+  'mineral-graphite': { emoji: '✏️', label: '石墨' },
+  'mineral-diamond': { emoji: '💎', label: '钻石' },
+  'mineral-gold': { emoji: '🪙', label: '金矿' },
+  'mineral-potash': { emoji: '🌱', label: '钾肥' },
+  'mineral-jade': { emoji: '🟢', label: '玉石' },
+  'mineral-molybdenum': { emoji: '🔧', label: '钼矿' },
   daynight: { emoji: '🌓', label: '晨昏线' },
   pipelines: { emoji: '🛢️', label: '油气管线' },
   hydrocarbon_reserves: { emoji: '🛢️', label: '油气储藏' },
@@ -92,6 +103,9 @@ export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> =
   'climate-flood': { emoji: '🌊', label: '洪涝' },
   'climate-ice': { emoji: '🧊', label: '海冰异常' },
   'climate-ocean': { emoji: '🪸', label: '海洋生态' },
+  'climate-wildfire': { emoji: '🔥', label: '野火' },
+  'climate-storm': { emoji: '🌀', label: '风暴/台风' },
+  'climate-haze': { emoji: '🌫️', label: '烟霾/空气污染' },
   'launch-site': { emoji: '🛰️', label: '航天发射场' },
   'launch-site-orbital': { emoji: '🛰️', label: '轨道发射' },
   'launch-site-civilian': { emoji: '🛸', label: '民用航天' },
@@ -238,6 +252,54 @@ export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> =
   'island-tropical': { emoji: '🌴', label: '热带岛屿' },
   'island-strategic': { emoji: '⚓', label: '战略岛屿' },
   'island-arctic': { emoji: '🧊', label: '北极岛屿' },
+  capitals: { emoji: '🏙️', label: '各国首都' },
+  'cap-superpower': { emoji: '🏛️', label: '大国首都' },
+  'cap-regional': { emoji: '🏢', label: '地区首都' },
+  'cap-small': { emoji: '🏘️', label: '小国首都' },
+  power_plants: { emoji: '🏭', label: '火电与其他' },
+  'pp-coal': { emoji: '⚫', label: '燃煤电厂' },
+  'pp-gas': { emoji: '🔥', label: '燃气电厂' },
+  'pp-renewable': { emoji: '♻️', label: '风光/地热' },
+  forests: { emoji: '🌲', label: '森林生态' },
+  'forest-tropical': { emoji: '🌴', label: '热带雨林' },
+  'forest-temperate': { emoji: '🌳', label: '温带森林' },
+  'forest-boreal': { emoji: '🌲', label: '北方针叶林' },
+  earthquakes_historical: { emoji: '🌐', label: '历史大地震' },
+  'eq-mega': { emoji: '💥', label: '巨震（M9+）' },
+  'eq-great': { emoji: '⚠️', label: '大震（M8+）' },
+  'eq-major': { emoji: '🔸', label: '强震（M7+）' },
+  tech_companies: { emoji: '💻', label: '科技公司总部' },
+  'tc-internet': { emoji: '🌐', label: '互联网/平台' },
+  'tc-software': { emoji: '⚙️', label: '软件/SaaS' },
+  'tc-cloud': { emoji: '☁️', label: '云/AI' },
+  media_orgs: { emoji: '📺', label: '媒体机构' },
+  'mo-news': { emoji: '📰', label: '通讯社/报纸' },
+  'mo-tv': { emoji: '📡', label: '电视/广播' },
+  'mo-tech-media': { emoji: '🎙️', label: '科技/新媒体' },
+  auto_brands: { emoji: '🚗', label: '汽车品牌总部' },
+  'ab-mass': { emoji: '🚙', label: '大众市场品牌' },
+  'ab-luxury': { emoji: '🏎️', label: '豪华/超跑' },
+  'ab-ev': { emoji: '🔋', label: '新能源/电动' },
+  pharmaceutical: { emoji: '💊', label: '药企生物科技' },
+  'ph-big-pharma': { emoji: '🏥', label: '大型药企' },
+  'ph-biotech': { emoji: '🧬', label: '生物科技' },
+  'ph-vaccine': { emoji: '💉', label: '疫苗厂商' },
+  intl_orgs: { emoji: '🕊️', label: '国际组织' },
+  'io-un': { emoji: '🏛️', label: '联合国系统' },
+  'io-finance': { emoji: '💼', label: '国际金融机构' },
+  'io-other': { emoji: '🤝', label: '多边/区域组织' },
+  space_companies: { emoji: '🚀', label: '商业航天' },
+  'sc-rocket': { emoji: '🚀', label: '火箭发射' },
+  'sc-satellite': { emoji: '🛰️', label: '卫星/星座' },
+  'sc-tourism': { emoji: '🧑‍🚀', label: '太空旅游' },
+  rare_earth: { emoji: '♢', label: '稀土关键矿产' },
+  're-mining': { emoji: '⛏️', label: '稀土开采' },
+  're-refining': { emoji: '🏭', label: '精炼/加工' },
+  're-strategic': { emoji: '⚠️', label: '战略储备/瓶颈' },
+  flags_of_convenience: { emoji: '🚢', label: '船旗国避税地' },
+  'foc-maritime': { emoji: '⛵', label: '船旗国' },
+  'foc-tax': { emoji: '🏝️', label: '避税天堂' },
+  'foc-finance': { emoji: '💎', label: '离岸金融中心' },
   monsoon: { emoji: '🌧️', label: '季风气候带' },
   'monsoon-summer': { emoji: '🌧️', label: '夏季/湿季' },
   'monsoon-winter': { emoji: '❄️', label: '冬季/干季' },
@@ -333,6 +395,18 @@ export const LAYER_HALO_COLORS: Record<string, string> = {
   stadiums: '#ea580c',
   museums: '#0d9488',
   islands: '#0891b2',
+  capitals: '#be123c',
+  power_plants: '#525252',
+  forests: '#15803d',
+  earthquakes_historical: '#b91c1c',
+  tech_companies: '#0284c7',
+  media_orgs: '#db2777',
+  auto_brands: '#4338ca',
+  pharmaceutical: '#059669',
+  intl_orgs: '#1e40af',
+  space_companies: '#6d28d9',
+  rare_earth: '#ca8a04',
+  flags_of_convenience: '#0e7490',
   monsoon: '#6366f1',
   atmospheric_circulation: '#8b5cf6',
   deep_exploration: '#0e7490',
@@ -378,6 +452,17 @@ const MINERAL_KIND_IMAGE: Record<string, string> = {
   uranium: 'mineral-uranium',
   bauxite: 'mineral-bauxite',
   tantalum: 'mineral-tantalum',
+  tungsten: 'mineral-tungsten',
+  titanium: 'mineral-titanium',
+  tin: 'mineral-tin',
+  vanadium: 'mineral-vanadium',
+  manganese: 'mineral-manganese',
+  graphite: 'mineral-graphite',
+  diamond: 'mineral-diamond',
+  gold: 'mineral-gold',
+  potash: 'mineral-potash',
+  jade: 'mineral-jade',
+  molybdenum: 'mineral-molybdenum',
 };
 
 const LAUNCH_SITE_KIND_IMAGE: Record<string, string> = {
@@ -506,6 +591,9 @@ const CLIMATE_KIND_IMAGE: Record<string, string> = {
   flood: 'climate-flood',
   ice: 'climate-ice',
   ocean: 'climate-ocean',
+  wildfire: 'climate-wildfire',
+  storm: 'climate-storm',
+  haze: 'climate-haze',
 };
 
 const MEGACITY_KIND_IMAGE: Record<string, string> = {
@@ -623,6 +711,78 @@ const ISLAND_KIND_IMAGE: Record<string, string> = {
   tropical: 'island-tropical',
   strategic: 'island-strategic',
   arctic: 'island-arctic',
+};
+
+const CAPITAL_KIND_IMAGE: Record<string, string> = {
+  superpower: 'cap-superpower',
+  regional: 'cap-regional',
+  small: 'cap-small',
+};
+
+const POWER_PLANT_KIND_IMAGE: Record<string, string> = {
+  coal: 'pp-coal',
+  gas: 'pp-gas',
+  renewable: 'pp-renewable',
+};
+
+const FOREST_KIND_IMAGE: Record<string, string> = {
+  tropical: 'forest-tropical',
+  temperate: 'forest-temperate',
+  boreal: 'forest-boreal',
+};
+
+const EARTHQUAKE_HISTORICAL_KIND_IMAGE: Record<string, string> = {
+  mega: 'eq-mega',
+  great: 'eq-great',
+  major: 'eq-major',
+};
+
+const TECH_COMPANY_KIND_IMAGE: Record<string, string> = {
+  internet: 'tc-internet',
+  software: 'tc-software',
+  cloud: 'tc-cloud',
+};
+
+const MEDIA_ORG_KIND_IMAGE: Record<string, string> = {
+  news: 'mo-news',
+  tv: 'mo-tv',
+  tech_media: 'mo-tech-media',
+};
+
+const AUTO_BRAND_KIND_IMAGE: Record<string, string> = {
+  mass: 'ab-mass',
+  luxury: 'ab-luxury',
+  ev: 'ab-ev',
+};
+
+const PHARMACEUTICAL_KIND_IMAGE: Record<string, string> = {
+  big_pharma: 'ph-big-pharma',
+  biotech: 'ph-biotech',
+  vaccine: 'ph-vaccine',
+};
+
+const INTL_ORG_KIND_IMAGE: Record<string, string> = {
+  un: 'io-un',
+  finance: 'io-finance',
+  other: 'io-other',
+};
+
+const SPACE_COMPANY_KIND_IMAGE: Record<string, string> = {
+  rocket: 'sc-rocket',
+  satellite: 'sc-satellite',
+  tourism: 'sc-tourism',
+};
+
+const RARE_EARTH_KIND_IMAGE: Record<string, string> = {
+  mining: 're-mining',
+  refining: 're-refining',
+  strategic: 're-strategic',
+};
+
+const FLAGS_OF_CONVENIENCE_KIND_IMAGE: Record<string, string> = {
+  maritime: 'foc-maritime',
+  tax: 'foc-tax',
+  finance: 'foc-finance',
 };
 
 const INCIDENT_TYPE_IMAGE: Record<string, string> = {
@@ -753,6 +913,54 @@ function resolveImageId(props: MarkerStyleProps): string {
 
   if (layerId === 'islands' && props.subKind) {
     return ISLAND_KIND_IMAGE[String(props.subKind)] ?? 'islands';
+  }
+
+  if (layerId === 'capitals' && props.subKind) {
+    return CAPITAL_KIND_IMAGE[String(props.subKind)] ?? 'capitals';
+  }
+
+  if (layerId === 'power_plants' && props.subKind) {
+    return POWER_PLANT_KIND_IMAGE[String(props.subKind)] ?? 'power_plants';
+  }
+
+  if (layerId === 'forests' && props.subKind) {
+    return FOREST_KIND_IMAGE[String(props.subKind)] ?? 'forests';
+  }
+
+  if (layerId === 'earthquakes_historical' && props.subKind) {
+    return EARTHQUAKE_HISTORICAL_KIND_IMAGE[String(props.subKind)] ?? 'earthquakes_historical';
+  }
+
+  if (layerId === 'tech_companies' && props.subKind) {
+    return TECH_COMPANY_KIND_IMAGE[String(props.subKind)] ?? 'tech_companies';
+  }
+
+  if (layerId === 'media_orgs' && props.subKind) {
+    return MEDIA_ORG_KIND_IMAGE[String(props.subKind)] ?? 'media_orgs';
+  }
+
+  if (layerId === 'auto_brands' && props.subKind) {
+    return AUTO_BRAND_KIND_IMAGE[String(props.subKind)] ?? 'auto_brands';
+  }
+
+  if (layerId === 'pharmaceutical' && props.subKind) {
+    return PHARMACEUTICAL_KIND_IMAGE[String(props.subKind)] ?? 'pharmaceutical';
+  }
+
+  if (layerId === 'intl_orgs' && props.subKind) {
+    return INTL_ORG_KIND_IMAGE[String(props.subKind)] ?? 'intl_orgs';
+  }
+
+  if (layerId === 'space_companies' && props.subKind) {
+    return SPACE_COMPANY_KIND_IMAGE[String(props.subKind)] ?? 'space_companies';
+  }
+
+  if (layerId === 'rare_earth' && props.subKind) {
+    return RARE_EARTH_KIND_IMAGE[String(props.subKind)] ?? 'rare_earth';
+  }
+
+  if (layerId === 'flags_of_convenience' && props.subKind) {
+    return FLAGS_OF_CONVENIENCE_KIND_IMAGE[String(props.subKind)] ?? 'flags_of_convenience';
   }
 
   if (layerId === 'launch_sites') {
@@ -977,12 +1185,22 @@ const LAYER_LEGEND_ENTRIES: Partial<Record<LayerId, string[]>> = {
     'mineral-rare_earth',
     'mineral-copper',
     'mineral-nickel',
+    'mineral-iron',
+    'mineral-uranium',
+    'mineral-bauxite',
+    'mineral-tungsten',
+    'mineral-titanium',
+    'mineral-tin',
+    'mineral-graphite',
+    'mineral-gold',
+    'mineral-diamond',
+    'mineral-potash',
   ],
   daynight: ['daynight'],
   pipelines: ['pipelines'],
   datacenters: ['datacenters'],
   protests: ['protests'],
-  climate: ['climate', 'climate-heatwave', 'climate-drought', 'climate-flood', 'climate-ice'],
+  climate: ['climate', 'climate-heatwave', 'climate-drought', 'climate-flood', 'climate-ice', 'climate-wildfire', 'climate-storm', 'climate-haze'],
   launch_sites: ['launch-site', 'launch-site-orbital', 'launch-site-civilian', 'launch-site-military'],
   launch_log: ['launch-log', 'launch-log-success', 'launch-log-failure', 'launch-log-partial', 'launch-log-scheduled', 'launch-log-scrubbed'],
   semiconductors: ['semiconductors', 'semi-foundry', 'semi-memory', 'semi-idm'],
@@ -1024,6 +1242,18 @@ const LAYER_LEGEND_ENTRIES: Partial<Record<LayerId, string[]>> = {
   stadiums: ['st-football', 'st-olympic', 'st-american'],
   museums: ['mus-art', 'mus-history', 'mus-science'],
   islands: ['island-tropical', 'island-strategic', 'island-arctic'],
+  capitals: ['cap-superpower', 'cap-regional', 'cap-small'],
+  power_plants: ['pp-coal', 'pp-gas', 'pp-renewable'],
+  forests: ['forest-tropical', 'forest-temperate', 'forest-boreal'],
+  earthquakes_historical: ['eq-mega', 'eq-great', 'eq-major'],
+  tech_companies: ['tc-internet', 'tc-software', 'tc-cloud'],
+  media_orgs: ['mo-news', 'mo-tv', 'mo-tech-media'],
+  auto_brands: ['ab-mass', 'ab-luxury', 'ab-ev'],
+  pharmaceutical: ['ph-big-pharma', 'ph-biotech', 'ph-vaccine'],
+  intl_orgs: ['io-un', 'io-finance', 'io-other'],
+  space_companies: ['sc-rocket', 'sc-satellite', 'sc-tourism'],
+  rare_earth: ['re-mining', 're-refining', 're-strategic'],
+  flags_of_convenience: ['foc-maritime', 'foc-tax', 'foc-finance'],
 };
 
 /** 按当前开启图层生成图例分组 */

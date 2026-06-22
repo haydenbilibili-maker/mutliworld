@@ -1,7 +1,7 @@
 /**
  * 全球主题图层公开态势整理 — 经济中心 / 矿产 / 管线 / AI 数据中心 / 抗议 / 气候异常
  *
- * ⚠ 公开资料汇总与示意坐标，非实时情报。整理日：2026-06-16
+ * ⚠ 公开资料汇总与示意坐标，非实时情报。整理日：2026-06-22
  */
 
 import type { ImpactLevel, LayerId } from '@/types/geo';
@@ -15,6 +15,15 @@ import {
 } from './global.layers-densify-r2';
 import { DENSIFY_WORLD_HERITAGE_R3 } from './global.layers-densify-r3';
 import { DENSIFY_MINERALS_R3, DENSIFY_DATACENTERS_R3 } from './global.layers-densify-r3';
+import { DENSIFY_ECON_HUBS_R3, DENSIFY_DATACENTERS_R3B } from './global.layers-densify-r3';
+import {
+  DENSIFY_SPACE_COMPANIES_R4,
+  DENSIFY_FORESTS_R4,
+  DENSIFY_RARE_EARTH_R4,
+  DENSIFY_TECH_COMPANIES_R4,
+  DENSIFY_INTL_ORGS_R4,
+  DENSIFY_POWER_PLANTS_R4,
+} from './global.layers-densify-r4';
 import { DENSIFY_INFRA } from './global.densify-infra';
 import { DENSIFY_INFRA_R2 } from './global.densify-infra-r2';
 import { GLOBAL_WORLD_HERITAGE, GLOBAL_CHINA_HERITAGE } from './global.heritage';
@@ -41,9 +50,9 @@ export interface PipelineRoute {
   impact: ImpactLevel;
 }
 
-const T = '2026-06-15T10:00:00Z';
-const T2 = '2026-06-14T08:00:00Z';
-const T3 = '2026-06-13T16:00:00Z';
+const T = '2026-06-22T10:00:00Z';
+const T2 = '2026-06-21T08:00:00Z';
+const T3 = '2026-06-20T16:00:00Z';
 
 /** 全球主要经济金融中心 */
 export const GLOBAL_ECON_HUBS: ThematicPoint[] = [
@@ -69,6 +78,7 @@ export const GLOBAL_ECON_HUBS: ThematicPoint[] = [
   { id: 'hub-istanbul-fin', name: '伊斯坦布尔金融区', layerId: 'econ_hubs', lng: 29.01, lat: 41.08, note: '欧亚跨境资本与伊斯兰金融节点', impact: 'medium' },
   { id: 'hub-mexico-city', name: '墨西哥城', layerId: 'econ_hubs', lng: -99.13, lat: 19.43, note: '拉美第二大经济体金融核心', impact: 'medium' },
   ...DENSIFY_ECON_HUBS,
+  ...DENSIFY_ECON_HUBS_R3,
 ];
 
 /** 关键矿产与战略资源产地 */
@@ -234,6 +244,7 @@ export const GLOBAL_DATACENTERS: ThematicPoint[] = [
   { id: 'dc-riyadh', name: '利雅得', layerId: 'datacenters', lng: 46.72, lat: 24.71, note: '中东主权 AI 与云计算投资', impact: 'medium' },
   ...DENSIFY_DATACENTERS,
   ...DENSIFY_DATACENTERS_R3,
+  ...DENSIFY_DATACENTERS_R3B,
 ];
 
 /** 近期抗议与社会动员 */
@@ -252,6 +263,37 @@ export const GLOBAL_PROTESTS: ThematicPoint[] = [
   { id: 'pro-cairo-economic', name: '开罗 · 物价上涨抗议', layerId: 'protests', lng: 31.24, lat: 30.04, note: '通胀与补贴削减引发社会压力', impact: 'high', updatedAt: T3 },
   { id: 'pro-berlin-housing', name: '柏林 · 住房租金抗议', layerId: 'protests', lng: 13.4, lat: 52.52, note: '租金上限与保障房诉求', impact: 'low', updatedAt: T2 },
   { id: 'pro-manila-corruption', name: '马尼拉 · 反腐示威', layerId: 'protests', lng: 120.98, lat: 14.6, note: '公共采购腐败调查引发集会', impact: 'medium', updatedAt: T },
+  // ── 2026 当下热点（时效增密）──
+  { id: 'pro-bangladesh-jul', name: '达卡 · 反政府大示威', layerId: 'protests', lng: 90.41, lat: 23.81, note: '临时政府过渡期持续抗议，要求改革', impact: 'critical', updatedAt: T },
+  { id: 'pro-georgia-2026', name: '第比利斯 · 亲欧大游行', layerId: 'protests', lng: 44.8, lat: 41.72, note: '入欧进程受阻，数十万人上街', impact: 'critical', updatedAt: T2 },
+  { id: 'pro-venezuela-2026', name: '加拉加斯 · 大选后续抗议', layerId: 'protests', lng: -66.9, lat: 10.49, note: '反对派质疑选举结果，镇压与流亡', impact: 'high', updatedAt: T3 },
+  { id: 'pro-kenya-gen-z', name: '内罗毕 · Z 世代占领国会', layerId: 'protests', lng: 36.82, lat: -1.29, note: '增税法案引发青年占领议会运动', impact: 'high', updatedAt: T2 },
+  { id: 'pro-france-2026', name: '巴黎 · 退休制度再抗议', layerId: 'protests', lng: 2.35, lat: 48.86, note: '工会联合反对延迟退休后续改革', impact: 'high', updatedAt: T3 },
+  { id: 'pro-argentina-milei', name: '布宜诺斯艾利斯 · 紧缩冲击', layerId: 'protests', lng: -58.38, lat: -34.6, note: '米莱休克疗法引发工会与中产反弹', impact: 'high', updatedAt: T },
+  { id: 'pro-uk-strikes', name: '伦敦 · 公共部门罢工潮', layerId: 'protests', lng: -0.13, lat: 51.51, note: '医护/教师/铁路联合罢工', impact: 'medium', updatedAt: T2 },
+  { id: 'pro-us-immigration', name: '洛杉矶 · 移民政策抗议', layerId: 'protests', lng: -118.24, lat: 34.05, note: 'ICE 执法与边境政策引发对峙', impact: 'high', updatedAt: T3 },
+  { id: 'pro-ecuador-security', name: '基多 · 治安危机抗议', layerId: 'protests', lng: -78.47, lat: -0.18, note: '黑帮暴力升级，民众要求安全', impact: 'high', updatedAt: T },
+  { id: 'pro-haiti-2026', name: '太子港 · 帮派暴力与示威', layerId: 'protests', lng: -72.34, lat: 18.59, note: '武装帮派控制大部分城区', impact: 'critical', updatedAt: T2 },
+  { id: 'pro-india-farmer', name: '新德里 · 农民大军围城', layerId: 'protests', lng: 77.21, lat: 28.61, note: '最低支持价格诉求再起', impact: 'high', updatedAt: T3 },
+  { id: 'pro-china-housing', name: '多地 · 保交楼维权', layerId: 'protests', lng: 113.26, lat: 23.13, note: '烂尾楼业主集体停贷施压', impact: 'medium', updatedAt: T2 },
+  { id: 'pro-japan-cult', name: '东京 · 统一教会受害者集会', layerId: 'protests', lng: 139.69, lat: 35.69, note: '宗教法人法修正引发受害者维权', impact: 'low', updatedAt: T3 },
+  { id: 'pro-senegal-2026', name: '达喀尔 · 青年失业抗议', layerId: 'protests', lng: -17.45, lat: 14.69, note: '大选后经济承诺未兑现', impact: 'medium', updatedAt: T2 },
+  { id: 'pro-mozambique-2026', name: '马普托 · 大选争议抗议', layerId: 'protests', lng: 32.57, lat: -25.97, note: '执政党胜选受质疑，南部动荡', impact: 'high', updatedAt: T },
+  { id: 'pro-serbia-2026', name: '贝尔格莱德 · 反锂矿环保抗议', layerId: 'protests', lng: 20.46, lat: 44.79, note: 'Jadar 锂矿项目重启引发环保封锁', impact: 'high', updatedAt: T3 },
+  { id: 'pro-nigeria-cost', name: '拉各斯 · 生活成本抗议', layerId: 'protests', lng: 3.38, lat: 6.52, note: '取消燃油补贴后通胀飙升', impact: 'high', updatedAt: T },
+  // ── 2026 当下热点 · 第二批（时效增密）──
+  { id: 'pro-ukraine-draft', name: '基辅 · 征兵与战后诉求集会', layerId: 'protests', lng: 30.52, lat: 50.45, note: '前线动员与退伍安置引发社会讨论', impact: 'medium', updatedAt: T2 },
+  { id: 'pro-korea-medical', name: '首尔 · 医学院扩招罢诊', layerId: 'protests', lng: 126.98, lat: 37.57, note: '实习医生大规模辞职，医疗系统承压', impact: 'high', updatedAt: T },
+  { id: 'pro-germany-far-right', name: '德国多地 · 反极右集会', layerId: 'protests', lng: 13.38, lat: 52.52, note: 'AfD 崛起引发数百万人大游行', impact: 'high', updatedAt: T3 },
+  { id: 'pro-us-student-gaza', name: '美国多校 · 加沙声援复燃', layerId: 'protests', lng: -73.96, lat: 40.81, note: '哥大等校园帐篷营地再现，校方清场', impact: 'high', updatedAt: T2 },
+  { id: 'pro-lebanon-gov', name: '贝鲁特 · 经济崩溃周年抗议', layerId: 'protests', lng: 35.5, lat: 33.89, note: '货币贬值九成，银行挤兑记忆', impact: 'high', updatedAt: T3 },
+  { id: 'pro-sri-lanka-tax', name: '科伦坡 · 增税与紧缩抗议', layerId: 'protests', lng: 79.87, lat: 6.93, note: 'IMF 救助附加条件引发中产反弹', impact: 'medium', updatedAt: T },
+  { id: 'pro-cuba-blackout', name: '哈瓦那 · 全岛大停电抗议', layerId: 'protests', lng: -82.38, lat: 23.13, note: '电网崩溃后罕见上街，经济困境叠加', impact: 'high', updatedAt: T2 },
+  { id: 'pro-france-farmer', name: '巴黎 · 农民封锁大道', layerId: 'protests', lng: 2.35, lat: 48.86, note: '拖拉机封锁抗议环保法规与廉价进口', impact: 'high', updatedAt: T3 },
+  { id: 'pro-india-manipur', name: '英帕尔 · 民族冲突持续', layerId: 'protests', lng: 93.94, lat: 24.82, note: '梅泰族与库基族冲突，族群隔离', impact: 'critical', updatedAt: T },
+  { id: 'pro-turkey-inflation', name: '伊斯坦布尔 · 生活成本抗议', layerId: 'protests', lng: 29.01, lat: 41.08, note: '通胀长期高企，青年与退休群体承压', impact: 'high', updatedAt: T2 },
+  { id: 'pro-mexico-judicial', name: '墨西哥城 · 司法改革抗议', layerId: 'protests', lng: -99.13, lat: 19.43, note: '法官普选法案引发法官与律师罢工', impact: 'medium', updatedAt: T3 },
+  { id: 'pro-south-africa', name: '比勒陀利亚 · 大选后抗议', layerId: 'protests', lng: 28.19, lat: -25.75, note: '非国大失多数后联合政府摩擦', impact: 'medium', updatedAt: T },
   ...DENSIFY_PROTESTS,
 ];
 
@@ -271,6 +313,36 @@ export const GLOBAL_CLIMATE: ThematicPoint[] = [
   { id: 'cli-ganges-flood', name: '恒河平原 · 季风洪涝', layerId: 'climate', lng: 85.0, lat: 25.5, note: '强降雨致孟加拉国与比哈尔邦受灾', impact: 'critical', updatedAt: T, subKind: 'flood' },
   { id: 'cli-peru-el-nino', name: '秘鲁海岸 · 厄尔尼诺渔业冲击', layerId: 'climate', lng: -77.0, lat: -12.0, note: '海水升温影响鳀鱼渔获', impact: 'high', updatedAt: T3, subKind: 'ocean' },
   { id: 'cli-canada-wildfire', name: '加拿大西部 · 野火季', layerId: 'climate', lng: -120.0, lat: 54.0, note: '干旱与高温推高林火风险', impact: 'high', updatedAt: T2, subKind: 'wildfire' },
+  // ── 2026 当下极端天气（时效增密）──
+  { id: 'cli-me-heat', name: '中东 · 极端热浪', layerId: 'climate', lng: 47.0, lat: 29.0, note: '海湾多国体感温度逼近 55°C', impact: 'critical', updatedAt: T, subKind: 'heatwave' },
+  { id: 'cli-pakistan-flood', name: '巴基斯坦 · 季风前洪涝', layerId: 'climate', lng: 68.0, lat: 28.0, note: '冰川融化加速叠加早季降雨', impact: 'critical', updatedAt: T2, subKind: 'flood' },
+  { id: 'cli-us-southwest-heat', name: '美西南 · 热穹顶', layerId: 'climate', lng: -112.0, lat: 34.0, note: '亚利桑那/内华达连续 45°C+', impact: 'high', updatedAt: T, subKind: 'heatwave' },
+  { id: 'cli-china-heat-2026', name: '华北 · 高温红色预警', layerId: 'climate', lng: 116.4, lat: 39.9, note: '京津冀多地突破 40°C', impact: 'high', updatedAt: T, subKind: 'heatwave' },
+  { id: 'cli-siberia-permafrost', name: '西伯利亚 · 永冻土融化', layerId: 'climate', lng: 100.0, lat: 65.0, note: '气温异常加速甲烷释放', impact: 'high', updatedAt: T3, subKind: 'ice' },
+  { id: 'cli-amazon-drought', name: '亚马逊 · 历史性干旱', layerId: 'climate', lng: -60.0, lat: -5.0, note: '支流干涸，原住民断水断粮', impact: 'critical', updatedAt: T2, subKind: 'drought' },
+  { id: 'cli-eu-flood-2026', name: '中欧 · 暴雨洪涝', layerId: 'climate', lng: 17.0, lat: 50.0, note: '波兰/捷克/德国极端降水', impact: 'high', updatedAt: T, subKind: 'flood' },
+  { id: 'cli-japan-heat', name: '日本 · 致命酷暑', layerId: 'climate', lng: 138.0, lat: 36.0, note: '中暑预警最高级别，东京多次', impact: 'high', updatedAt: T2, subKind: 'heatwave' },
+  { id: 'cli-africa-sahel', name: '萨赫勒 · 粮食危机干旱', layerId: 'climate', lng: 5.0, lat: 14.0, note: '连续歉收引发人道紧急', impact: 'critical', updatedAt: T3, subKind: 'drought' },
+  { id: 'cli-caribbean-hurricane', name: '加勒比 · 飓风季提前', layerId: 'climate', lng: -75.0, lat: 18.0, note: '海面温度异常催生早季强风暴', impact: 'high', updatedAt: T, subKind: 'storm' },
+  { id: 'cli-philippines-typhoon', name: '菲律宾 · 超强台风', layerId: 'climate', lng: 122.0, lat: 14.0, note: '吕宋岛大规模疏散与断电', impact: 'critical', updatedAt: T2, subKind: 'storm' },
+  { id: 'cli-greenland-melt', name: '格陵兰 · 冰盖融化峰季', layerId: 'climate', lng: -40.0, lat: 72.0, note: '表面融化范围创新高', impact: 'high', updatedAt: T3, subKind: 'ice' },
+  { id: 'cli-argentina-wildfire', name: '阿根廷 · 湿地野火', layerId: 'climate', lng: -58.0, lat: -31.0, note: '巴拉那三角洲干旱引发火灾', impact: 'medium', updatedAt: T2, subKind: 'wildfire' },
+  { id: 'cli-chile-drought', name: '智利 · 百年大旱', layerId: 'climate', lng: -71.0, lat: -33.0, note: '中部连续十余年降水不足', impact: 'high', updatedAt: T3, subKind: 'drought' },
+  { id: 'cli-korea-flood', name: '韩国 · 集中暴雨', layerId: 'climate', lng: 127.5, lat: 36.5, note: '梅雨锋面滞留致内涝与山体滑坡', impact: 'medium', updatedAt: T, subKind: 'flood' },
+  { id: 'cli-greenland2', name: '南极 · 海冰再创新低', layerId: 'climate', lng: 0.0, lat: -75.0, note: '冬季最大范围低于历史均值', impact: 'high', updatedAt: T3, subKind: 'ice' },
+  // ── 2026 当下极端天气 · 第二批（时效增密）──
+  { id: 'cli-sahara-dust', name: '撒哈拉沙尘 · 跨洋输送', layerId: 'climate', lng: -25.0, lat: 18.0, note: '撒哈拉尘羽越洋影响加勒比空气质量', impact: 'medium', updatedAt: T, subKind: 'haze' },
+  { id: 'cli-indonesia-flood', name: '爪哇 · 季风洪涝', layerId: 'climate', lng: 110.0, lat: -7.0, note: '雅加达都市区内涝，万人撤离', impact: 'high', updatedAt: T2, subKind: 'flood' },
+  { id: 'cli-us-northeast-flood', name: '美东北 · 暴雨内涝', layerId: 'climate', lng: -74.0, lat: 40.7, note: '慢移动风暴致纽约/新泽西骤雨', impact: 'high', updatedAt: T3, subKind: 'flood' },
+  { id: 'cli-mediterranean-heat', name: '地中海 · 热浪与野火', layerId: 'climate', lng: 14.0, lat: 41.0, note: '希腊/意大利南高温干燥，林火提前', impact: 'high', updatedAt: T, subKind: 'heatwave' },
+  { id: 'cli-greece-wildfire', name: '希腊 · 伯罗奔尼撒野火', layerId: 'climate', lng: 22.0, lat: 37.5, note: '强风助长火势，村庄疏散', impact: 'high', updatedAt: T2, subKind: 'wildfire' },
+  { id: 'cli-australia-flood', name: '澳东 · 东海岸暴雨', layerId: 'climate', lng: 152.0, lat: -30.0, note: '新州/昆州极端降水，Lismore 再淹', impact: 'critical', updatedAt: T3, subKind: 'flood' },
+  { id: 'cli-china-drought', name: '长江中下游 · 伏旱', layerId: 'climate', lng: 114.3, lat: 30.6, note: '梅雨偏少叠加高温，农业受影响', impact: 'high', updatedAt: T, subKind: 'drought' },
+  { id: 'cli-east-africa-flood', name: '东非 · 异常暴雨洪涝', layerId: 'climate', lng: 39.0, lat: -3.0, note: '坦桑/肯尼亚洪灾，霍乱风险上升', impact: 'critical', updatedAt: T2, subKind: 'flood' },
+  { id: 'cli-california-wildfire', name: '加州 · 山火季提前', layerId: 'climate', lng: -119.0, lat: 36.5, note: '植被干旱指数高，多起大型山火', impact: 'high', updatedAt: T3, subKind: 'wildfire' },
+  { id: 'cli-himalaya-glacier', name: '喜马拉雅 · 冰湖溃决风险', layerId: 'climate', lng: 86.0, lat: 28.0, note: '升温加速冰川融化，GLOF 预警', impact: 'high', updatedAt: T, subKind: 'ice' },
+  { id: 'cli-mexico-hurricane', name: '墨西哥太平洋 · 飓风登陆', layerId: 'climate', lng: -104.0, lat: 19.0, note: '5 级飓风逼近，海岸度假城疏散', impact: 'critical', updatedAt: T2, subKind: 'storm' },
+  { id: 'cli-europe-heat-dome', name: '南欧 · 热穹顶持续', layerId: 'climate', lng: 12.5, lat: 42.0, note: '西班牙/意大利南部 45°C 持续', impact: 'critical', updatedAt: T3, subKind: 'heatwave' },
   ...DENSIFY_CLIMATE,
 ];
 
@@ -1298,6 +1370,585 @@ export const GLOBAL_ISLANDS: ThematicPoint[] = [
   { id: 'isl-axel', name: '阿克塞尔海伯格岛', layerId: 'islands', lng: -94.0, lat: 80.0, note: '加拿大北极无人岛', impact: 'low', subKind: 'arctic' },
 ];
 
+/**
+ * 各国首都（capitals）— 全球各国首都与行政中心。
+ * subKind 标量级：'superpower'（大国首都）/ 'regional'（地区大国首都）/ 'small'（中小国家首都）。
+ * 整理日：2026-06-22。
+ */
+export const GLOBAL_CAPITALS: ThematicPoint[] = [
+  // ── 大国首都 ──
+  { id: 'cap-beijing', name: '北京', layerId: 'capitals', lng: 116.41, lat: 39.9, note: '中华人民共和国首都', impact: 'critical', subKind: 'superpower' },
+  { id: 'cap-washington', name: '华盛顿', layerId: 'capitals', lng: -77.04, lat: 38.9, note: '美国首都', impact: 'critical', subKind: 'superpower' },
+  { id: 'cap-moscow', name: '莫斯科', layerId: 'capitals', lng: 37.62, lat: 55.75, note: '俄罗斯首都', impact: 'critical', subKind: 'superpower' },
+  { id: 'cap-tokyo', name: '东京', layerId: 'capitals', lng: 139.69, lat: 35.69, note: '日本首都', impact: 'critical', subKind: 'superpower' },
+  { id: 'cap-newdelhi', name: '新德里', layerId: 'capitals', lng: 77.21, lat: 28.61, note: '印度首都', impact: 'critical', subKind: 'superpower' },
+  { id: 'cap-london', name: '伦敦', layerId: 'capitals', lng: -0.13, lat: 51.51, note: '英国首都', impact: 'critical', subKind: 'superpower' },
+  { id: 'cap-paris', name: '巴黎', layerId: 'capitals', lng: 2.35, lat: 48.86, note: '法国首都', impact: 'critical', subKind: 'superpower' },
+  { id: 'cap-berlin', name: '柏林', layerId: 'capitals', lng: 13.38, lat: 52.52, note: '德国首都', impact: 'critical', subKind: 'superpower' },
+  // ── 地区大国首都 ──
+  { id: 'cap-seoul', name: '首尔', layerId: 'capitals', lng: 126.98, lat: 37.57, note: '韩国首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-riyadh', name: '利雅得', layerId: 'capitals', lng: 46.72, lat: 24.71, note: '沙特阿拉伯首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-tehran', name: '德黑兰', layerId: 'capitals', lng: 51.39, lat: 35.69, note: '伊朗首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-ankara', name: '安卡拉', layerId: 'capitals', lng: 32.86, lat: 39.93, note: '土耳其首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-cairo', name: '开罗', layerId: 'capitals', lng: 31.24, lat: 30.04, note: '埃及首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-jakarta', name: '雅加达', layerId: 'capitals', lng: 106.85, lat: -6.21, note: '印尼首都（迁都努山塔拉进行中）', impact: 'high', subKind: 'regional' },
+  { id: 'cap-brasilia', name: '巴西利亚', layerId: 'capitals', lng: -47.92, lat: -15.78, note: '巴西首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-mexicocity', name: '墨西哥城', layerId: 'capitals', lng: -99.13, lat: 19.43, note: '墨西哥首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-buenosaires', name: '布宜诺斯艾利斯', layerId: 'capitals', lng: -58.38, lat: -34.6, note: '阿根廷首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-ottawa', name: '渥太华', layerId: 'capitals', lng: -75.7, lat: 45.42, note: '加拿大首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-canberra', name: '堪培拉', layerId: 'capitals', lng: 149.13, lat: -35.28, note: '澳大利亚首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-rome', name: '罗马', layerId: 'capitals', lng: 12.5, lat: 41.9, note: '意大利首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-madrid', name: '马德里', layerId: 'capitals', lng: -3.7, lat: 40.42, note: '西班牙首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-abuja', name: '阿布贾', layerId: 'capitals', lng: 7.49, lat: 9.08, note: '尼日利亚首都', impact: 'medium', subKind: 'regional' },
+  { id: 'cap-pretoria', name: '比勒陀利亚', layerId: 'capitals', lng: 28.19, lat: -25.75, note: '南非行政首都', impact: 'medium', subKind: 'regional' },
+  { id: 'cap-hanoi', name: '河内', layerId: 'capitals', lng: 105.85, lat: 21.03, note: '越南首都', impact: 'medium', subKind: 'regional' },
+  { id: 'cap-bangkok', name: '曼谷', layerId: 'capitals', lng: 100.5, lat: 13.75, note: '泰国首都', impact: 'medium', subKind: 'regional' },
+  { id: 'cap-islamabad', name: '伊斯兰堡', layerId: 'capitals', lng: 73.05, lat: 33.68, note: '巴基斯坦首都', impact: 'medium', subKind: 'regional' },
+  { id: 'cap-kabul', name: '喀布尔', layerId: 'capitals', lng: 69.17, lat: 34.53, note: '阿富汗首都', impact: 'medium', subKind: 'regional' },
+  { id: 'cap-baghdad', name: '巴格达', layerId: 'capitals', lng: 44.36, lat: 33.31, note: '伊拉克首都', impact: 'medium', subKind: 'regional' },
+  { id: 'cap-damascus', name: '大马士革', layerId: 'capitals', lng: 36.28, lat: 33.51, note: '叙利亚首都', impact: 'medium', subKind: 'regional' },
+  { id: 'cap-pyongyang', name: '平壤', layerId: 'capitals', lng: 125.75, lat: 39.04, note: '朝鲜首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-taipei', name: '台北', layerId: 'capitals', lng: 121.56, lat: 25.03, note: '中国台湾行政中心', impact: 'high', subKind: 'regional' },
+  { id: 'cap-kyiv', name: '基辅', layerId: 'capitals', lng: 30.52, lat: 50.45, note: '乌克兰首都', impact: 'high', subKind: 'regional' },
+  { id: 'cap-warsaw', name: '华沙', layerId: 'capitals', lng: 21.01, lat: 52.23, note: '波兰首都', impact: 'medium', subKind: 'regional' },
+  // ── 中小国家首都 ──
+  { id: 'cap-singapore', name: '新加坡', layerId: 'capitals', lng: 103.85, lat: 1.35, note: '新加坡城邦', impact: 'high', subKind: 'small' },
+  { id: 'cap-manila', name: '马尼拉', layerId: 'capitals', lng: 120.98, lat: 14.6, note: '菲律宾首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-kualalumpur', name: '吉隆坡', layerId: 'capitals', lng: 101.69, lat: 3.14, note: '马来西亚首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-dhaka', name: '达卡', layerId: 'capitals', lng: 90.41, lat: 23.81, note: '孟加拉国首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-colombo', name: '科伦坡/斯里贾亚瓦德纳普拉', layerId: 'capitals', lng: 79.87, lat: 6.93, note: '斯里兰卡首都', impact: 'low', subKind: 'small' },
+  { id: 'cap-phnompenh', name: '金边', layerId: 'capitals', lng: 104.92, lat: 11.56, note: '柬埔寨首都', impact: 'low', subKind: 'small' },
+  { id: 'cap-vientiane', name: '万象', layerId: 'capitals', lng: 102.63, lat: 17.98, note: '老挝首都', impact: 'low', subKind: 'small' },
+  { id: 'cap-naypyidaw', name: '内比都', layerId: 'capitals', lng: 96.07, lat: 19.75, note: '缅甸首都（2005 迁都）', impact: 'low', subKind: 'small' },
+  { id: 'cap-jerusalem', name: '耶路撒冷', layerId: 'capitals', lng: 35.23, lat: 31.78, note: '以色列首都（争议）', impact: 'high', subKind: 'small' },
+  { id: 'cap-doha', name: '多哈', layerId: 'capitals', lng: 51.53, lat: 25.29, note: '卡塔尔首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-abudhabi', name: '阿布扎比', layerId: 'capitals', lng: 54.37, lat: 24.48, note: '阿联酋首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-amman', name: '安曼', layerId: 'capitals', lng: 35.93, lat: 31.95, note: '约旦首都', impact: 'low', subKind: 'small' },
+  { id: 'cap-beirut', name: '贝鲁特', layerId: 'capitals', lng: 35.5, lat: 33.89, note: '黎巴嫩首都', impact: 'low', subKind: 'small' },
+  { id: 'cap-nairobi', name: '内罗毕', layerId: 'capitals', lng: 36.82, lat: -1.29, note: '肯尼亚首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-addis', name: '亚的斯亚贝巴', layerId: 'capitals', lng: 38.74, lat: 9.03, note: '埃塞俄比亚首都，非盟总部', impact: 'medium', subKind: 'small' },
+  { id: 'cap-dakar', name: '达喀尔', layerId: 'capitals', lng: -17.45, lat: 14.69, note: '塞内加尔首都', impact: 'low', subKind: 'small' },
+  { id: 'cap-accra', name: '阿克拉', layerId: 'capitals', lng: -0.19, lat: 5.56, note: '加纳首都', impact: 'low', subKind: 'small' },
+  { id: 'cap-lima', name: '利马', layerId: 'capitals', lng: -77.04, lat: -12.05, note: '秘鲁首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-bogota', name: '波哥大', layerId: 'capitals', lng: -74.07, lat: 4.71, note: '哥伦比亚首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-santiago', name: '圣地亚哥', layerId: 'capitals', lng: -70.67, lat: -33.45, note: '智利首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-caracas', name: '加拉加斯', layerId: 'capitals', lng: -66.9, lat: 10.49, note: '委内瑞拉首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-havana', name: '哈瓦那', layerId: 'capitals', lng: -82.38, lat: 23.13, note: '古巴首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-stockholm', name: '斯德哥尔摩', layerId: 'capitals', lng: 18.07, lat: 59.33, note: '瑞典首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-oslo', name: '奥斯陆', layerId: 'capitals', lng: 10.75, lat: 59.91, note: '挪威首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-copenhagen', name: '哥本哈根', layerId: 'capitals', lng: 12.57, lat: 55.68, note: '丹麦首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-helsinki', name: '赫尔辛基', layerId: 'capitals', lng: 24.94, lat: 60.17, note: '芬兰首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-amsterdam', name: '阿姆斯特丹', layerId: 'capitals', lng: 4.9, lat: 52.37, note: '荷兰宪法首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-brussels', name: '布鲁塞尔', layerId: 'capitals', lng: 4.35, lat: 50.85, note: '比利时首都，欧盟总部', impact: 'high', subKind: 'small' },
+  { id: 'cap-vienna', name: '维也纳', layerId: 'capitals', lng: 16.37, lat: 48.21, note: '奥地利首都，联合国办事处', impact: 'medium', subKind: 'small' },
+  { id: 'cap-prague', name: '布拉格', layerId: 'capitals', lng: 14.42, lat: 50.08, note: '捷克首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-budapest', name: '布达佩斯', layerId: 'capitals', lng: 19.04, lat: 47.5, note: '匈牙利首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-athens', name: '雅典', layerId: 'capitals', lng: 23.73, lat: 37.98, note: '希腊首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-lisbon', name: '里斯本', layerId: 'capitals', lng: -9.14, lat: 38.72, note: '葡萄牙首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-dublin', name: '都柏林', layerId: 'capitals', lng: -6.27, lat: 53.35, note: '爱尔兰首都', impact: 'low', subKind: 'small' },
+  { id: 'cap-bucharest', name: '布加勒斯特', layerId: 'capitals', lng: 26.1, lat: 44.43, note: '罗马尼亚首都', impact: 'low', subKind: 'small' },
+  { id: 'cap-minsk', name: '明斯克', layerId: 'capitals', lng: 27.56, lat: 53.9, note: '白俄罗斯首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-astana', name: '阿斯塔纳（努尔苏丹）', layerId: 'capitals', lng: 71.43, lat: 51.16, note: '哈萨克斯坦首都', impact: 'medium', subKind: 'small' },
+  { id: 'cap-tashkent', name: '塔什干', layerId: 'capitals', lng: 69.24, lat: 41.31, note: '乌兹别克斯坦首都', impact: 'low', subKind: 'small' },
+];
+
+/**
+ * 火电与其他发电（power_plants）— 全球主要火电厂与其他大型发电设施。
+ * subKind 标类型：'coal'（燃煤）/ 'gas'（燃气）/ 'renewable'（风光/地热/光热）。
+ * 与 nuclear_reactors/dams 互补，覆盖化石能源与可再生发电。整理日：2026-06-22。
+ */
+export const GLOBAL_POWER_PLANTS: ThematicPoint[] = [
+  // ── 燃煤电厂（世界最大） ──
+  { id: 'pp-tuoketuo', name: '托克托电厂', layerId: 'power_plants', lng: 111.2, lat: 40.28, note: '中国内蒙古，6.7GW 世界最大燃煤电厂', impact: 'critical', subKind: 'coal' },
+  { id: 'pp-belchatow', name: '贝乌哈图夫电厂', layerId: 'power_plants', lng: 19.33, lat: 51.27, note: '波兰，5.3GW 欧洲最大褐煤电厂', impact: 'high', subKind: 'coal' },
+  { id: 'pp-vindhachal', name: '温迪亚恰尔电厂', layerId: 'power_plants', lng: 82.6, lat: 24.1, note: '印度，4.8GW', impact: 'high', subKind: 'coal' },
+  { id: 'pp-mundra-pp', name: '蒙德拉电厂', layerId: 'power_plants', lng: 69.72, lat: 22.84, note: '印度泰塔，4.6GW 私营燃煤', impact: 'high', subKind: 'coal' },
+  { id: 'pp-sasan', name: '萨桑电厂', layerId: 'power_plants', lng: 82.5, lat: 23.8, note: '印度，3.9GW', impact: 'medium', subKind: 'coal' },
+  { id: 'pp-kendal', name: '肯达尔电厂', layerId: 'power_plants', lng: 29.4, lat: -26.1, note: '南非，4.1GW 煤电', impact: 'high', subKind: 'coal' },
+  { id: 'pp-majuba', name: '马久巴电厂', layerId: 'power_plants', lng: 29.8, lat: -27.05, note: '南非，4.1GW', impact: 'medium', subKind: 'coal' },
+  { id: 'pp-waigaoqiao', name: '外高桥电厂', layerId: 'power_plants', lng: 121.55, lat: 31.3, note: '上海，5GW 超超临界煤电', impact: 'high', subKind: 'coal' },
+  { id: 'pp-jinzhou', name: '锦州/葫芦岛电厂群', layerId: 'power_plants', lng: 121.1, lat: 41.1, note: '辽宁，超大型煤电集群', impact: 'medium', subKind: 'coal' },
+  { id: 'pp-schwarze', name: '黑泵电厂', layerId: 'power_plants', lng: 14.0, lat: 51.45, note: '德国，褐煤/生物质', impact: 'medium', subKind: 'coal' },
+  { id: 'pp-neurath', name: '诺伊拉特电厂', layerId: 'power_plants', lng: 6.6, lat: 50.99, note: '德国，4.3GW 褐煤', impact: 'high', subKind: 'coal' },
+  { id: 'pp-drax', name: '德拉克斯电厂', layerId: 'power_plants', lng: -0.99, lat: 53.74, note: '英国，2.6GW 转生物质', impact: 'medium', subKind: 'coal' },
+  { id: 'pp-gibson', name: '吉布森县电厂', layerId: 'power_plants', lng: -87.7, lat: 38.4, note: '美国印第安纳，3.4GW 煤电', impact: 'medium', subKind: 'coal' },
+  { id: 'pp-monroe', name: '门罗电厂', layerId: 'power_plants', lng: -83.35, lat: 41.9, note: '美国密歇根，3.3GW', impact: 'medium', subKind: 'coal' },
+  // ── 燃气电厂 ──
+  { id: 'pp-surgut-2', name: '苏尔古特-2 电厂', layerId: 'power_plants', lng: 73.4, lat: 61.25, note: '俄罗斯，5.6GW 世界最大燃气电厂', impact: 'critical', subKind: 'gas' },
+  { id: 'pp-ras-laffan', name: '拉斯拉凡电厂群', layerId: 'power_plants', lng: 51.2, lat: 25.87, note: '卡塔尔，4.8GW 燃气+淡化', impact: 'high', subKind: 'gas' },
+  { id: 'pp-jubail-pp', name: '朱拜勒电厂群', layerId: 'power_plants', lng: 49.99, lat: 27.0, note: '沙特，4GW 燃气/淡化', impact: 'high', subKind: 'gas' },
+  { id: 'pp-kashima', name: '鹿岛电厂', layerId: 'power_plants', lng: 140.83, lat: 35.95, note: '日本，4.4GW 燃气/油', impact: 'medium', subKind: 'gas' },
+  { id: 'pp-tracy', name: '特雷西电厂（加州）', layerId: 'power_plants', lng: -121.4, lat: 37.7, note: '美国，1.7GW 燃气调峰', impact: 'low', subKind: 'gas' },
+  { id: 'pp-medway', name: '梅德韦电厂', layerId: 'power_plants', lng: 0.6, lat: 51.4, note: '英国，1.8GW 燃气', impact: 'low', subKind: 'gas' },
+  // ── 风光/地热 ──
+  { id: 'pp-gansu-wind', name: '甘肃酒泉风电基地', layerId: 'power_plants', lng: 96.3, lat: 39.74, note: '中国，世界最大陆上风电集群 8GW+', impact: 'critical', subKind: 'renewable' },
+  { id: 'pp-bhadralfa', name: '巴德拉太阳能公园', layerId: 'power_plants', lng: 71.6, lat: 23.7, note: '印度古吉拉特，2.25GW 光伏', impact: 'high', subKind: 'renewable' },
+  { id: 'pp-tengger', name: '腾格里沙漠光伏基地', layerId: 'power_plants', lng: 105.0, lat: 37.5, note: '中国宁夏，1.5GW 光伏', impact: 'high', subKind: 'renewable' },
+  { id: 'pp-bhadla', name: 'Bhadla 光伏园', layerId: 'power_plants', lng: 71.9, lat: 27.5, note: '印度拉贾斯坦，2.2GW', impact: 'medium', subKind: 'renewable' },
+  { id: 'pp-geysers', name: '盖塞斯地热田', layerId: 'power_plants', lng: -122.75, lat: 38.8, note: '美国加州，世界最大地热田', impact: 'high', subKind: 'renewable' },
+  { id: 'pp-hellisheidi', name: '海利舍迪地热电站', layerId: 'power_plants', lng: -21.4, lat: 64.03, note: '冰岛，303MW 地热+热电联产', impact: 'medium', subKind: 'renewable' },
+  { id: 'pp-cerro', name: 'Cerro Dominador 光热', layerId: 'power_plants', lng: -69.9, lat: -23.5, note: '智利阿塔卡马，110MW 塔式光热', impact: 'medium', subKind: 'renewable' },
+  { id: 'pp-noor', name: '努奥光热综合体', layerId: 'power_plants', lng: -6.9, lat: 31.08, note: '摩洛哥瓦尔扎扎特，580MW 光热', impact: 'high', subKind: 'renewable' },
+  { id: 'pp-hornsdale', name: '霍恩斯代尔储能', layerId: 'power_plants', lng: 138.6, lat: -33.1, note: '澳洲南澳，150MW/194MWh 特斯拉储能', impact: 'medium', subKind: 'renewable' },
+  { id: 'pp-markbygden', name: '马尔克比格登风电', layerId: 'power_plants', lng: 21.0, lat: 65.6, note: '瑞典，欧洲最大规划风电集群', impact: 'low', subKind: 'renewable' },
+  { id: 'pp-ivanpah', name: '伊万帕光热电站', layerId: 'power_plants', lng: -115.47, lat: 35.55, note: '美加州莫哈维，392MW 塔式', impact: 'medium', subKind: 'renewable' },
+  { id: 'pp-tide-sihwa', name: '始华湖潮汐电站', layerId: 'power_plants', lng: 126.7, lat: 37.4, note: '韩国，254MW 世界最大潮汐电站', impact: 'medium', subKind: 'renewable' },
+  { id: 'pp-tide-rance', name: '朗斯潮汐电站', layerId: 'power_plants', lng: -2.02, lat: 48.62, note: '法国，240MW 世界首座大型潮汐电站', impact: 'medium', subKind: 'renewable' },
+  ...DENSIFY_POWER_PLANTS_R4,
+];
+
+/**
+ * 森林生态（forests）— 全球主要森林与生态区。
+ * subKind 标类型：'tropical'（热带雨林）/ 'temperate'（温带森林）/ 'boreal'（北方针叶林）。
+ * 整理日：2026-06-22。
+ */
+export const GLOBAL_FORESTS: ThematicPoint[] = [
+  // ── 热带雨林 ──
+  { id: 'for-amazon', name: '亚马逊雨林', layerId: 'forests', lng: -60.0, lat: -3.5, note: '世界最大热带雨林，约 550 万 km²', impact: 'critical', subKind: 'tropical' },
+  { id: 'for-congo', name: '刚果雨林', layerId: 'forests', lng: 22.0, lat: -1.0, note: '世界第二大热带雨林，约 180 万 km²', impact: 'critical', subKind: 'tropical' },
+  { id: 'for-borneo-rain', name: '婆罗洲雨林', layerId: 'forests', lng: 114.0, lat: 1.0, note: '亚洲最大热带雨林', impact: 'high', subKind: 'tropical' },
+  { id: 'for-sumatra-rain', name: '苏门答腊雨林', layerId: 'forests', lng: 101.0, lat: -0.5, note: '濒危雨林，红猩猩栖息地', impact: 'high', subKind: 'tropical' },
+  { id: 'for-newguinea-rain', name: '新几内亚雨林', layerId: 'forests', lng: 138.0, lat: -5.5, note: '亚太最大连续雨林之一', impact: 'high', subKind: 'tropical' },
+  { id: 'for-madagascar', name: '马达加斯加雨林', layerId: 'forests', lng: 47.0, lat: -19.0, note: '生物多样性热点，狐猴故乡', impact: 'high', subKind: 'tropical' },
+  { id: 'for-Atlantic', name: '大西洋沿岸林（Mata Atlântica）', layerId: 'forests', lng: -45.0, lat: -23.0, note: '巴西东海岸，仅存 15%', impact: 'high', subKind: 'tropical' },
+  { id: 'for-westernghats', name: '西高止山脉雨林', layerId: 'forests', lng: 76.5, lat: 11.0, note: '印度西南，世界遗产', impact: 'medium', subKind: 'tropical' },
+  { id: 'for-daintree', name: '丹特里雨林', layerId: 'forests', lng: 145.4, lat: -16.2, note: '澳洲昆士兰，最古老雨林', impact: 'medium', subKind: 'tropical' },
+  { id: 'for-centralamerica', name: '中美洲雨林', layerId: 'forests', lng: -86.0, lat: 14.5, note: '墨西哥南部至巴拿马走廊', impact: 'medium', subKind: 'tropical' },
+  { id: 'for-choco', name: '乔科-达里恩雨林', layerId: 'forests', lng: -77.0, lat: 6.0, note: '哥伦比亚/巴拿马，高降水雨林', impact: 'medium', subKind: 'tropical' },
+  { id: 'for-sulawesi', name: '苏拉威西雨林', layerId: 'forests', lng: 121.0, lat: -1.5, note: '印尼，特有物种丰富', impact: 'low', subKind: 'tropical' },
+  // ── 温带森林 ──
+  { id: 'for-tongass', name: '通加斯国家森林', layerId: 'forests', lng: -133.5, lat: 57.5, note: '阿拉斯加，美国最大温带雨林', impact: 'high', subKind: 'temperate' },
+  { id: 'for-pacificnw', name: '太平洋西北温带雨林', layerId: 'forests', lng: -124.0, lat: 47.0, note: '美/加，红杉/花旗松', impact: 'high', subKind: 'temperate' },
+  { id: 'for-valdivian', name: '瓦尔迪维亚温带雨林', layerId: 'forests', lng: -72.5, lat: -40.5, note: '智利/阿根廷南端', impact: 'high', subKind: 'temperate' },
+  { id: 'for-blackforest', name: '黑森林', layerId: 'forests', lng: 8.3, lat: 48.0, note: '德国巴登-符腾堡', impact: 'low', subKind: 'temperate' },
+  { id: 'for-bialowieza', name: '比亚沃维耶扎森林', layerId: 'forests', lng: 23.85, lat: 52.7, note: '波/白，欧洲最后原始低地林', impact: 'high', subKind: 'temperate' },
+  { id: 'for-appalachian', name: '阿巴拉契亚森林', layerId: 'forests', lng: -82.0, lat: 37.5, note: '美东，阔叶混交林带', impact: 'medium', subKind: 'temperate' },
+  { id: 'for-changbai', name: '长白山森林', layerId: 'forests', lng: 128.1, lat: 42.0, note: '中朝边境，温带原始林', impact: 'medium', subKind: 'temperate' },
+  { id: 'for-shennongjia', name: '神农架', layerId: 'forests', lng: 110.5, lat: 31.5, note: '湖北，华中原始林，金丝猴', impact: 'medium', subKind: 'temperate' },
+  { id: 'for-sichuan-bamboo', name: '蜀南竹海', layerId: 'forests', lng: 104.9, lat: 28.4, note: '四川，中国最大竹海', impact: 'low', subKind: 'temperate' },
+  // ── 北方针叶林（泰加林） ──
+  { id: 'for-siberian', name: '西伯利亚针叶林', layerId: 'forests', lng: 95.0, lat: 62.0, note: '世界最大连续森林，约 800 万 km²', impact: 'critical', subKind: 'boreal' },
+  { id: 'for-canadian-boreal', name: '加拿大北方林', layerId: 'forests', lng: -100.0, lat: 56.0, note: '世界第二大陆地生物群系', impact: 'critical', subKind: 'boreal' },
+  { id: 'for-scandinavian', name: '斯堪的纳维亚泰加林', layerId: 'forests', lng: 20.0, lat: 66.0, note: '瑞典/芬兰/挪威北部', impact: 'high', subKind: 'boreal' },
+  { id: 'for-alaskan', name: '阿拉斯加北方林', layerId: 'forests', lng: -150.0, lat: 64.0, note: '环极地林带西端', impact: 'medium', subKind: 'boreal' },
+  { id: 'for-kamchatka', name: '堪察加森林', layerId: 'forests', lng: 158.0, lat: 56.0, note: '俄罗斯远东，火山与棕熊', impact: 'medium', subKind: 'boreal' },
+  { id: 'for-yakutia', name: '雅库特落叶松林', layerId: 'forests', lng: 125.0, lat: 63.0, note: '东西伯利亚极寒林', impact: 'medium', subKind: 'boreal' },
+  { id: 'for-rocky', name: '落基山针叶林', layerId: 'forests', lng: -115.0, lat: 52.0, note: '加拿大/美西，高山针叶林', impact: 'medium', subKind: 'boreal' },
+  ...DENSIFY_FORESTS_R4,
+];
+
+/**
+ * 历史大地震（earthquakes_historical）— 历史上造成重大伤亡/影响的大地震。
+ * subKind 标量级：'mega'（M9+巨震）/ 'great'（M8+大震）/ 'major'（M7+强震，伤亡重大）。
+ * 整理日：2026-06-22。
+ */
+export const GLOBAL_EARTHQUAKES_HISTORICAL: ThematicPoint[] = [
+  // ── 巨震（M9+） ──
+  { id: 'eq-valdivia', name: '1960 瓦尔迪维亚地震', layerId: 'earthquakes_historical', lng: -73.05, lat: -39.5, note: 'M9.5，人类记录最强地震，智利', impact: 'critical', subKind: 'mega' },
+  { id: 'eq-alaska', name: '1964 阿拉斯加大地震', layerId: 'earthquakes_historical', lng: -147.5, lat: 60.9, note: 'M9.2，北美最强，安克雷奇', impact: 'critical', subKind: 'mega' },
+  { id: 'eq-sumatra', name: '2004 印度洋地震/海啸', layerId: 'earthquakes_historical', lng: 95.85, lat: 3.3, note: 'M9.1，约 23 万人遇难，环印度洋海啸', impact: 'critical', subKind: 'mega' },
+  { id: 'eq-tohoku', name: '2011 东日本大地震', layerId: 'earthquakes_historical', lng: 142.37, lat: 38.3, note: 'M9.0，约 2 万人遇难，福岛核事故', impact: 'critical', subKind: 'mega' },
+  { id: 'eq-kamchatka', name: '1952 堪察加地震', layerId: 'earthquakes_historical', lng: 160.0, lat: 52.5, note: 'M9.0，太平洋海啸波及夏威夷', impact: 'high', subKind: 'mega' },
+  // ── 大震（M8+） ──
+  { id: 'eq-sichuan', name: '2008 汶川地震', layerId: 'earthquakes_historical', lng: 103.4, lat: 31.0, note: 'M8.0，约 8.7 万人遇难/失踪，四川', impact: 'critical', subKind: 'great' },
+  { id: 'eq-tangshan', name: '1976 唐山大地震', layerId: 'earthquakes_historical', lng: 118.18, lat: 39.63, note: 'M7.8，约 24 万人遇难', impact: 'critical', subKind: 'great' },
+  { id: 'eq-chile', name: '2010 智利地震', layerId: 'earthquakes_historical', lng: -72.7, lat: -35.9, note: 'M8.8，500 余人遇难，海啸', impact: 'high', subKind: 'great' },
+  { id: 'eq-mexico85', name: '1985 墨西哥城地震', layerId: 'earthquakes_historical', lng: -102.0, lat: 18.5, note: 'M8.0，约 1 万人遇难', impact: 'high', subKind: 'great' },
+  { id: 'eq-ec', name: '1906 厄瓜多尔-哥伦比亚地震', layerId: 'earthquakes_historical', lng: -79.0, lat: 1.0, note: 'M8.8，海啸波及中美', impact: 'medium', subKind: 'great' },
+  { id: 'eq-assy', name: '1923 关东大地震', layerId: 'earthquakes_historical', lng: 139.5, lat: 35.3, note: 'M7.9，约 10 万人遇难，东京/横滨', impact: 'critical', subKind: 'great' },
+  { id: 'eq-nepal', name: '2015 尼泊尔地震', layerId: 'earthquakes_historical', lng: 84.7, lat: 28.15, note: 'M7.8，约 9000 人遇难', impact: 'high', subKind: 'great' },
+  { id: 'eq-haiti', name: '2010 海地地震', layerId: 'earthquakes_historical', lng: -72.53, lat: 18.46, note: 'M7.0，约 22 万人遇难', impact: 'critical', subKind: 'great' },
+  { id: 'eq-pakistan', name: '2005 克什米尔地震', layerId: 'earthquakes_historical', lng: 73.6, lat: 34.5, note: 'M7.6，约 8.7 万人遇难', impact: 'high', subKind: 'great' },
+  { id: 'eq-turkey', name: '2023 土耳其-叙利亚地震', layerId: 'earthquakes_historical', lng: 37.2, lat: 37.2, note: 'M7.8，超 5 万人遇难', impact: 'critical', subKind: 'great' },
+  { id: 'eq-sparse', name: '2017 墨西哥中部地震', layerId: 'earthquakes_historical', lng: -98.6, lat: 18.5, note: 'M7.1，约 370 人遇难', impact: 'medium', subKind: 'great' },
+  { id: 'eq-lisbon', name: '1755 里斯本地震', layerId: 'earthquakes_historical', lng: -9.15, lat: 38.7, note: 'M8.5-9.0，启启蒙运动地震学', impact: 'high', subKind: 'great' },
+  { id: 'eq-sanfrancisco', name: '1906 旧金山地震', layerId: 'earthquakes_historical', lng: -122.5, lat: 37.7, note: 'M7.9，大火毁灭城市', impact: 'high', subKind: 'great' },
+  // ── 强震（M7+，伤亡重大） ──
+  { id: 'eq-arms-armenia', name: '1988 亚美尼亚地震', layerId: 'earthquakes_historical', lng: 44.2, lat: 40.9, note: 'M6.8，约 2.5 万人遇难', impact: 'medium', subKind: 'major' },
+  { id: 'eq-iran-bam', name: '2003 巴姆地震', layerId: 'earthquakes_historical', lng: 58.5, lat: 29.1, note: 'M6.6，约 2.6 万人遇难', impact: 'medium', subKind: 'major' },
+  { id: 'eq-china-qinghai', name: '2010 玉树地震', layerId: 'earthquakes_historical', lng: 96.6, lat: 33.2, note: 'M6.9，约 2700 人遇难', impact: 'medium', subKind: 'major' },
+  { id: 'eq-lushan', name: '2013 芦山地震', layerId: 'earthquakes_historical', lng: 102.9, lat: 30.3, note: 'M7.0，约 200 人遇难', impact: 'low', subKind: 'major' },
+  { id: 'eq-italia', name: '2009 拉奎拉地震', layerId: 'earthquakes_historical', lng: 13.4, lat: 42.35, note: 'M6.3，约 300 人遇难', impact: 'low', subKind: 'major' },
+  { id: 'eq-jiji', name: '1999 集集地震', layerId: 'earthquakes_historical', lng: 120.85, lat: 23.85, note: 'M7.3，台湾 921，约 2400 人遇难', impact: 'high', subKind: 'major' },
+  { id: 'eq-kobe', name: '1995 阪神大地震', layerId: 'earthquakes_historical', lng: 135.0, lat: 34.6, note: 'M7.3，约 6400 人遇难', impact: 'high', subKind: 'major' },
+  { id: 'eq-algeria', name: '2003 阿尔及利亚地震', layerId: 'earthquakes_historical', lng: 3.6, lat: 36.9, note: 'M6.8，约 2200 人遇难', impact: 'low', subKind: 'major' },
+  { id: 'eq-afghan', name: '2023 阿富汗-赫罗特地震', layerId: 'earthquakes_historical', lng: 61.5, lat: 34.5, note: 'M6.3，约 1000 人遇难', impact: 'low', subKind: 'major' },
+  { id: 'eq-morocco', name: '2023 摩洛哥地震', layerId: 'earthquakes_historical', lng: -8.4, lat: 30.9, note: 'M6.8，马拉喀什南，约 2900 人遇难', impact: 'medium', subKind: 'major' },
+  { id: 'eq-japan-noto', name: '2024 能登半岛地震', layerId: 'earthquakes_historical', lng: 137.2, lat: 37.5, note: 'M7.6，日本石川，海啸预警', impact: 'medium', subKind: 'major' },
+  { id: 'eq-ankang', name: '1556 关中大地震（华县）', layerId: 'earthquakes_historical', lng: 109.7, lat: 34.5, note: 'M8.0，人类史上最致命地震，约 83 万人', impact: 'critical', subKind: 'great' },
+];
+
+/**
+ * 科技公司总部（tech_companies）— 全球主要科技公司总部。
+ * subKind 标类型：'internet'（互联网/平台）/ 'software'（软件/SaaS）/ 'cloud'（云/AI）。
+ * 整理日：2026-06-22。
+ */
+export const GLOBAL_TECH_COMPANIES: ThematicPoint[] = [
+  // ── 互联网/平台 ──
+  { id: 'tc-google', name: 'Google/Alphabet', layerId: 'tech_companies', lng: -122.08, lat: 37.42, note: '山景城 Googleplex，搜索/广告/Android', impact: 'critical', subKind: 'internet' },
+  { id: 'tc-meta', name: 'Meta（Facebook）', layerId: 'tech_companies', lng: -122.15, lat: 37.48, note: '门洛帕克，社交/VR/元宇宙', impact: 'critical', subKind: 'internet' },
+  { id: 'tc-amazon', name: 'Amazon', layerId: 'tech_companies', lng: -122.34, lat: 47.61, note: '西雅图，电商/AWS/物流', impact: 'critical', subKind: 'internet' },
+  { id: 'tc-apple', name: 'Apple', layerId: 'tech_companies', lng: -122.03, lat: 37.33, note: '库比蒂诺 Apple Park，iPhone/Mac', impact: 'critical', subKind: 'internet' },
+  { id: 'tc-netflix', name: 'Netflix', layerId: 'tech_companies', lng: -122.27, lat: 37.43, note: '洛斯加托斯，流媒体', impact: 'high', subKind: 'internet' },
+  { id: 'tc-uber', name: 'Uber', layerId: 'tech_companies', lng: -122.4, lat: 37.77, note: '旧金山，网约车/外卖', impact: 'medium', subKind: 'internet' },
+  { id: 'tc-airbnb', name: 'Airbnb', layerId: 'tech_companies', lng: -122.41, lat: 37.77, note: '旧金山，民宿平台', impact: 'low', subKind: 'internet' },
+  { id: 'tc-tencent', name: '腾讯', layerId: 'tech_companies', lng: 113.94, lat: 22.54, note: '深圳，微信/游戏/云', impact: 'critical', subKind: 'internet' },
+  { id: 'tc-alibaba', name: '阿里巴巴', layerId: 'tech_companies', lng: 120.11, lat: 30.18, note: '杭州，电商/支付宝/云', impact: 'critical', subKind: 'internet' },
+  { id: 'tc-bytedance', name: '字节跳动', layerId: 'tech_companies', lng: 116.48, lat: 39.99, note: '北京，抖音/TikTok', impact: 'critical', subKind: 'internet' },
+  { id: 'tc-meituan', name: '美团', layerId: 'tech_companies', lng: 116.48, lat: 39.99, note: '北京，本地生活/外卖', impact: 'high', subKind: 'internet' },
+  { id: 'tc-pdd', name: '拼多多', layerId: 'tech_companies', lng: 121.42, lat: 31.23, note: '上海，下沉市场电商', impact: 'high', subKind: 'internet' },
+  { id: 'tc-jd', name: '京东', layerId: 'tech_companies', lng: 116.49, lat: 39.91, note: '北京亦庄，自营电商', impact: 'high', subKind: 'internet' },
+  { id: 'tc-rakuten', name: '乐天', layerId: 'tech_companies', lng: 139.73, lat: 35.65, note: '东京，日本电商/金融', impact: 'medium', subKind: 'internet' },
+  { id: 'tc-naver', name: 'Naver', layerId: 'tech_companies', lng: 127.03, lat: 37.36, note: '城南，韩国搜索/Line', impact: 'medium', subKind: 'internet' },
+  { id: 'tc-coupang', name: 'Coupang', layerId: 'tech_companies', lng: 127.03, lat: 37.5, note: '首尔，韩国电商', impact: 'low', subKind: 'internet' },
+  { id: 'tc-flipkart', name: 'Flipkart', layerId: 'tech_companies', lng: 77.64, lat: 12.93, note: '班加罗尔，印度电商（沃尔玛）', impact: 'medium', subKind: 'internet' },
+  { id: 'tc-booking', name: 'Booking.com', layerId: 'tech_companies', lng: 4.9, lat: 52.37, note: '阿姆斯特丹，全球订房', impact: 'medium', subKind: 'internet' },
+  { id: 'tc-spotify', name: 'Spotify', layerId: 'tech_companies', lng: 18.07, lat: 59.33, note: '斯德哥尔摩，流媒体音乐', impact: 'medium', subKind: 'internet' },
+  { id: 'tc-ebay', name: 'eBay', layerId: 'tech_companies', lng: -121.93, lat: 37.3, note: '圣何塞，拍卖/C2C', impact: 'low', subKind: 'internet' },
+  { id: 'tc-shopify', name: 'Shopify', layerId: 'tech_companies', lng: -80.52, lat: 43.46, note: '渥太华，独立站电商SaaS', impact: 'medium', subKind: 'internet' },
+  // ── 软件/SaaS ──
+  { id: 'tc-microsoft', name: 'Microsoft', layerId: 'tech_companies', lng: -122.13, lat: 47.64, note: '雷德蒙德，Windows/Azure/Office', impact: 'critical', subKind: 'software' },
+  { id: 'tc-oracle', name: 'Oracle', layerId: 'tech_companies', lng: -122.31, lat: 37.53, note: '奥斯汀/红木城，数据库/云', impact: 'high', subKind: 'software' },
+  { id: 'tc-sap', name: 'SAP', layerId: 'tech_companies', lng: 8.65, lat: 49.4, note: '瓦尔多夫，德国，ERP 软件', impact: 'high', subKind: 'software' },
+  { id: 'tc-adobe', name: 'Adobe', layerId: 'tech_companies', lng: -121.95, lat: 37.33, note: '圣何塞，Creative/PDF', impact: 'high', subKind: 'software' },
+  { id: 'tc-salesforce', name: 'Salesforce', layerId: 'tech_companies', lng: -122.4, lat: 37.78, note: '旧金山，CRM SaaS', impact: 'high', subKind: 'software' },
+  { id: 'tc-intuit', name: 'Intuit', layerId: 'tech_companies', lng: -122.16, lat: 37.43, note: '山景城，财务软件（TurboTax）', impact: 'low', subKind: 'software' },
+  { id: 'tc-vmware', name: 'VMware', layerId: 'tech_companies', lng: -122.14, lat: 37.46, note: '帕洛阿尔托，虚拟化', impact: 'low', subKind: 'software' },
+  { id: 'tc-figma', name: 'Figma', layerId: 'tech_companies', lng: -122.4, lat: 37.78, note: '旧金山，协作设计', impact: 'low', subKind: 'software' },
+  { id: 'tc-atlassian', name: 'Atlassian', layerId: 'tech_companies', lng: 151.2, lat: -33.87, note: '悉尼，Jira/Confluence', impact: 'medium', subKind: 'software' },
+  { id: 'tc-zoom', name: 'Zoom', layerId: 'tech_companies', lng: -122.0, lat: 37.38, note: '圣何塞，视频会议', impact: 'low', subKind: 'software' },
+  // ── 云/AI/芯片设计 ──
+  { id: 'tc-nvidia', name: 'NVIDIA', layerId: 'tech_companies', lng: -121.96, lat: 37.37, note: '圣克拉拉，GPU/AI 算力王者', impact: 'critical', subKind: 'cloud' },
+  { id: 'tc-openai', name: 'OpenAI', layerId: 'tech_companies', lng: -122.4, lat: 37.78, note: '旧金山，ChatGPT/GPT', impact: 'critical', subKind: 'cloud' },
+  { id: 'tc-anthropic', name: 'Anthropic', layerId: 'tech_companies', lng: -122.4, lat: 37.78, note: '旧金山，Claude', impact: 'high', subKind: 'cloud' },
+  { id: 'tc-palantir', name: 'Palantir', layerId: 'tech_companies', lng: -122.42, lat: 37.77, note: '丹佛，大数据情报', impact: 'medium', subKind: 'cloud' },
+  { id: 'tc-cloudflare', name: 'Cloudflare', layerId: 'tech_companies', lng: -122.4, lat: 37.78, note: '旧金山，CDN/安全', impact: 'medium', subKind: 'cloud' },
+  { id: 'tc-stripe', name: 'Stripe', layerId: 'tech_companies', lng: -122.4, lat: 37.78, note: '旧金山/都柏林，支付基础设施', impact: 'high', subKind: 'cloud' },
+  { id: 'tc-snowflake', name: 'Snowflake', layerId: 'tech_companies', lng: -122.15, lat: 37.43, note: '博兹曼/硅谷，数据云仓', impact: 'medium', subKind: 'cloud' },
+  { id: 'tc-databricks', name: 'Databricks', layerId: 'tech_companies', lng: -122.15, lat: 37.43, note: '旧金山，数据/AI 平台', impact: 'medium', subKind: 'cloud' },
+  { id: 'tc-huawei-tech', name: '华为', layerId: 'tech_companies', lng: 114.06, lat: 22.55, note: '深圳坂田，通信/手机/云/昇腾', impact: 'critical', subKind: 'cloud' },
+  { id: 'tc-baidu', name: '百度', layerId: 'tech_companies', lng: 116.31, lat: 40.05, note: '北京，搜索/文心一言/自动驾驶', impact: 'high', subKind: 'cloud' },
+  { id: 'tc-deepseek', name: 'DeepSeek', layerId: 'tech_companies', lng: 116.31, lat: 40.05, note: '杭州/北京，开源大模型', impact: 'high', subKind: 'cloud' },
+  { id: 'tc-moonshot', name: '月之暗面', layerId: 'tech_companies', lng: 116.48, lat: 39.99, note: '北京，Kimi', impact: 'medium', subKind: 'cloud' },
+  { id: 'tc-zhipu', name: '智谱 AI', layerId: 'tech_companies', lng: 116.31, lat: 40.05, note: '北京，GLM 系列大模型', impact: 'medium', subKind: 'cloud' },
+  { id: 'tc-arm', name: 'ARM', layerId: 'tech_companies', lng: 0.12, lat: 52.21, note: '剑桥，移动芯片架构授权', impact: 'critical', subKind: 'cloud' },
+  { id: 'tc-stm', name: '意法半导体', layerId: 'tech_companies', lng: 6.94, lat: 45.81, note: '日内瓦/米兰，嵌入式芯片', impact: 'medium', subKind: 'cloud' },
+  { id: 'tc-qualcomm', name: '高通', layerId: 'tech_companies', lng: -117.16, lat: 32.72, note: '圣迭戈，骁龙/基带', impact: 'high', subKind: 'cloud' },
+  { id: 'tc-yandex', name: 'Yandex', layerId: 'tech_companies', lng: 37.59, lat: 55.73, note: '莫斯科，俄罗斯搜索/出行', impact: 'medium', subKind: 'internet' },
+  ...DENSIFY_TECH_COMPANIES_R4,
+];
+
+/**
+ * 媒体机构（media_orgs）— 全球主要媒体与新闻机构总部。
+ * subKind 标类型：'news'（通讯社/报纸）/ 'tv'（电视/广播）/ 'tech_media'（科技/新媒体）。
+ * 整理日：2026-06-22。
+ */
+export const GLOBAL_MEDIA_ORGS: ThematicPoint[] = [
+  // ── 通讯社/报纸 ──
+  { id: 'mo-ap', name: '美联社（AP）', layerId: 'media_orgs', lng: -74.0, lat: 40.75, note: '纽约，全球最大非营利通讯社', impact: 'critical', subKind: 'news' },
+  { id: 'mo-reuters', name: '路透社', layerId: 'media_orgs', lng: -0.1, lat: 51.51, note: '伦敦，金融/国际新闻', impact: 'critical', subKind: 'news' },
+  { id: 'mo-afp', name: '法新社（AFP）', layerId: 'media_orgs', lng: 2.33, lat: 48.87, note: '巴黎，全球最古老通讯社之一', impact: 'high', subKind: 'news' },
+  { id: 'mo-bloomberg', name: '彭博社', layerId: 'media_orgs', lng: -74.01, lat: 40.71, note: '纽约，金融数据/终端', impact: 'critical', subKind: 'news' },
+  { id: 'mo-xinhua', name: '新华社', layerId: 'media_orgs', lng: 116.34, lat: 39.91, note: '北京，中国国家通讯社', impact: 'critical', subKind: 'news' },
+  { id: 'mo-people', name: '人民日报', layerId: 'media_orgs', lng: 116.38, lat: 39.91, note: '北京，中共中央机关报', impact: 'high', subKind: 'news' },
+  { id: 'mo-cctv', name: '中央广播电视总台（CMG）', layerId: 'media_orgs', lng: 116.32, lat: 39.92, note: '北京，CCTV/CGTN', impact: 'critical', subKind: 'tv' },
+  { id: 'mo-kyodo', name: '共同社', layerId: 'media_orgs', lng: 139.77, lat: 35.68, note: '东京，日本通讯社', impact: 'medium', subKind: 'news' },
+  { id: 'mo-yomiuri', name: '读卖新闻', layerId: 'media_orgs', lng: 139.77, lat: 35.68, note: '东京，日本发行量第一', impact: 'medium', subKind: 'news' },
+  { id: 'mo-yonhap', name: '韩联社', layerId: 'media_orgs', lng: 126.98, lat: 37.57, note: '首尔，韩国通讯社', impact: 'medium', subKind: 'news' },
+  { id: 'mo-tass', name: '塔斯社', layerId: 'media_orgs', lng: 37.62, lat: 55.75, note: '莫斯科，俄罗斯国家通讯社', impact: 'high', subKind: 'news' },
+  { id: 'mo-rt', name: 'RT（今日俄罗斯）', layerId: 'media_orgs', lng: 37.62, lat: 55.75, note: '莫斯科，国际广播', impact: 'medium', subKind: 'tv' },
+  { id: 'mo-press-tv', name: 'Press TV', layerId: 'media_orgs', lng: 51.39, lat: 35.69, note: '德黑兰，伊朗国际英语新闻', impact: 'low', subKind: 'tv' },
+  { id: 'mo-al-jazeera', name: '半岛电视台', layerId: 'media_orgs', lng: 51.53, lat: 25.29, note: '多哈，卡塔尔，泛阿拉伯/英语', impact: 'high', subKind: 'tv' },
+  { id: 'mo-times', name: '纽约时报', layerId: 'media_orgs', lng: -74.0, lat: 40.76, note: '纽约，美国记录报', impact: 'critical', subKind: 'news' },
+  { id: 'mo-wsj', name: '华尔街日报', layerId: 'media_orgs', lng: -74.01, lat: 40.71, note: '纽约，财经/国际', impact: 'high', subKind: 'news' },
+  { id: 'mo-washington-post', name: '华盛顿邮报', layerId: 'media_orgs', lng: -77.03, lat: 38.9, note: '华盛顿，水门事件', impact: 'high', subKind: 'news' },
+  { id: 'mo-ft', name: '金融时报（FT）', layerId: 'media_orgs', lng: -0.1, lat: 51.51, note: '伦敦，粉色报纸', impact: 'high', subKind: 'news' },
+  { id: 'mo-economist', name: '经济学人', layerId: 'media_orgs', lng: -0.1, lat: 51.51, note: '伦敦，周刊', impact: 'high', subKind: 'news' },
+  { id: 'mo-guardian', name: '卫报', layerId: 'media_orgs', lng: -0.12, lat: 51.53, note: '伦敦，左翼/调查', impact: 'medium', subKind: 'news' },
+  { id: 'mo-lemonde', name: '世界报', layerId: 'media_orgs', lng: 2.35, lat: 48.86, note: '巴黎，法国记录报', impact: 'medium', subKind: 'news' },
+  { id: 'mo-bild', name: '图片报', layerId: 'media_orgs', lng: 8.68, lat: 50.11, note: '柏林，德国小报发行量第一', impact: 'low', subKind: 'news' },
+  // ── 电视/广播 ──
+  { id: 'mo-cnn', name: 'CNN', layerId: 'media_orgs', lng: -84.39, lat: 33.78, note: '亚特兰大，24 小时新闻鼻祖', impact: 'critical', subKind: 'tv' },
+  { id: 'mo-fox-news', name: '福克斯新闻', layerId: 'media_orgs', lng: -74.01, lat: 40.75, note: '纽约，右翼有线电视', impact: 'high', subKind: 'tv' },
+  { id: 'mo-msnbc', name: 'MSNBC', layerId: 'media_orgs', lng: -74.01, lat: 40.75, note: '纽约，左翼有线新闻', impact: 'medium', subKind: 'tv' },
+  { id: 'mo-abc', name: 'ABC News', layerId: 'media_orgs', lng: -73.95, lat: 40.77, note: '纽约，迪士尼/ABC', impact: 'medium', subKind: 'tv' },
+  { id: 'mo-nbc', name: 'NBC News', layerId: 'media_orgs', lng: -74.01, lat: 40.75, note: '纽约 30 Rockefeller', impact: 'medium', subKind: 'tv' },
+  { id: 'mo-bbc', name: 'BBC', layerId: 'media_orgs', lng: -0.13, lat: 51.52, note: '伦敦 Broadcasting House', impact: 'critical', subKind: 'tv' },
+  { id: 'mo-sky', name: 'Sky News', layerId: 'media_orgs', lng: -0.18, lat: 51.49, note: '伦敦奥斯特利', impact: 'medium', subKind: 'tv' },
+  { id: 'mo-nhk', name: 'NHK', layerId: 'media_orgs', lng: 139.69, lat: 35.68, note: '东京涩谷，日本公共广播', impact: 'medium', subKind: 'tv' },
+  // ── 科技/新媒体 ──
+  { id: 'mo-techcrunch', name: 'TechCrunch', layerId: 'media_orgs', lng: -122.42, lat: 37.77, note: '旧金山，创业科技媒体', impact: 'low', subKind: 'tech_media' },
+  { id: 'mo-the-verge', name: 'The Verge', layerId: 'media_orgs', lng: -74.0, lat: 40.75, note: '纽约，Vox 旗下科技文化', impact: 'low', subKind: 'tech_media' },
+  { id: 'mo-wired', name: 'WIRED', layerId: 'media_orgs', lng: -122.42, lat: 37.77, note: '旧金山，康泰纳仕科技杂志', impact: 'low', subKind: 'tech_media' },
+  { id: 'mo-36kr', name: '36氪', layerId: 'media_orgs', lng: 116.48, lat: 39.99, note: '北京，创投科技媒体', impact: 'low', subKind: 'tech_media' },
+  { id: 'mo-huxiu', name: '虎嗅', layerId: 'media_orgs', lng: 116.48, lat: 39.99, note: '北京，商业科技评论', impact: 'low', subKind: 'tech_media' },
+];
+
+/**
+ * 汽车品牌总部（auto_brands）— 全球主要汽车品牌总部。
+ * subKind 标类型：'mass'（大众市场）/ 'luxury'（豪华/超跑）/ 'ev'（新能源/电动）。
+ * 与 factories（工厂）互补，聚焦品牌决策中心。整理日：2026-06-22。
+ */
+export const GLOBAL_AUTO_BRANDS: ThematicPoint[] = [
+  // ── 大众市场 ──
+  { id: 'ab-toyota', name: '丰田汽车', layerId: 'auto_brands', lng: 137.15, lat: 35.08, note: '丰田市，全球销量冠军', impact: 'critical', subKind: 'mass' },
+  { id: 'ab-volkswagen', name: '大众集团', layerId: 'auto_brands', lng: 10.79, lat: 52.43, note: '沃尔夫斯堡，含奥迪/保时捷', impact: 'critical', subKind: 'mass' },
+  { id: 'ab-hyundai-mob', name: '现代-起亚', layerId: 'auto_brands', lng: 127.13, lat: 37.4, note: '首尔，韩国汽车双雄', impact: 'critical', subKind: 'mass' },
+  { id: 'ab-gm', name: '通用汽车（GM）', layerId: 'auto_brands', lng: -83.25, lat: 42.56, note: '底特律 Renaissance Center', impact: 'high', subKind: 'mass' },
+  { id: 'ab-ford', name: '福特汽车', layerId: 'auto_brands', lng: -83.24, lat: 42.3, note: '迪尔伯恩，福特 Rouge', impact: 'high', subKind: 'mass' },
+  { id: 'ab-stellantis', name: 'Stellantis', layerId: 'auto_brands', lng: 9.19, lat: 45.46, note: '阿姆斯特丹/都灵/底特律，PSA+FCA', impact: 'high', subKind: 'mass' },
+  { id: 'ab-renault', name: '雷诺集团', layerId: 'auto_brands', lng: 2.2, lat: 48.83, note: '布洛涅-比扬古，法国', impact: 'high', subKind: 'mass' },
+  { id: 'ab-nissan', name: '日产汽车', layerId: 'auto_brands', lng: 139.65, lat: 35.65, note: '横滨，日法联盟', impact: 'high', subKind: 'mass' },
+  { id: 'ab-honda', name: '本田汽车', layerId: 'auto_brands', lng: 139.46, lat: 35.49, note: '东京青山区（旧滨松）', impact: 'high', subKind: 'mass' },
+  { id: 'ab-suzuki', name: '铃木汽车', layerId: 'auto_brands', lng: 137.68, lat: 34.71, note: '滨松，印度市场王', impact: 'medium', subKind: 'mass' },
+  { id: 'ab-fiat', name: '菲亚特', layerId: 'auto_brands', lng: 7.69, lat: 45.07, note: '都灵 Lingotto（合并 Stellantis）', impact: 'low', subKind: 'mass' },
+  { id: 'ab-tata-motors', name: '塔塔汽车', layerId: 'auto_brands', lng: 72.88, lat: 19.07, note: '孟买，含捷豹路虎', impact: 'medium', subKind: 'mass' },
+  { id: 'ab-saic', name: '上汽集团', layerId: 'auto_brands', lng: 121.45, lat: 31.23, note: '上海，含通用/大众合资', impact: 'high', subKind: 'mass' },
+  { id: 'ab-faw', name: '一汽集团', layerId: 'auto_brands', lng: 125.32, lat: 43.82, note: '长春，含奥迪/丰田/大众合资', impact: 'high', subKind: 'mass' },
+  { id: 'ab-dongfeng', name: '东风汽车', layerId: 'auto_brands', lng: 114.4, lat: 30.5, note: '武汉，含日产/本田合资', impact: 'high', subKind: 'mass' },
+  { id: 'ab-changan', name: '长安汽车', layerId: 'auto_brands', lng: 106.55, lat: 29.56, note: '重庆，含福特/马自达合资', impact: 'medium', subKind: 'mass' },
+  { id: 'ab-geely', name: '吉利控股', layerId: 'auto_brands', lng: 120.16, lat: 30.27, note: '杭州，含沃尔沃/路特斯', impact: 'high', subKind: 'mass' },
+  { id: 'ab-great-wall', name: '长城汽车', layerId: 'auto_brands', lng: 114.49, lat: 38.04, note: '保定，SUV/皮卡', impact: 'medium', subKind: 'mass' },
+  // ── 豪华/超跑 ──
+  { id: 'ab-mercedes', name: '梅赛德斯-奔驰', layerId: 'auto_brands', lng: 9.0, lat: 48.73, note: '斯图加特 Untertürkheim', impact: 'high', subKind: 'luxury' },
+  { id: 'ab-bmw', name: '宝马集团', layerId: 'auto_brands', lng: 11.58, lat: 48.13, note: '慕尼黑，含劳斯莱斯/MINI', impact: 'high', subKind: 'luxury' },
+  { id: 'ab-audi', name: '奥迪', layerId: 'auto_brands', lng: 10.89, lat: 48.37, note: '英戈尔施塔特', impact: 'medium', subKind: 'luxury' },
+  { id: 'ab-porsche', name: '保时捷', layerId: 'auto_brands', lng: 8.93, lat: 48.83, note: '斯图加特祖文豪森', impact: 'high', subKind: 'luxury' },
+  { id: 'ab-fer', name: '法拉利', layerId: 'auto_brands', lng: 10.86, lat: 44.53, note: '马拉内罗，F1 跃马', impact: 'high', subKind: 'luxury' },
+  { id: 'ab-lambo', name: '兰博基尼', layerId: 'auto_brands', lng: 9.0, lat: 45.3, note: '圣亚加塔，奥迪旗下', impact: 'medium', subKind: 'luxury' },
+  { id: 'ab-bentley', name: '宾利', layerId: 'auto_brands', lng: -2.46, lat: 53.0, note: '克鲁，英国，大众旗下', impact: 'low', subKind: 'luxury' },
+  { id: 'ab-rolls', name: '劳斯莱斯', layerId: 'auto_brands', lng: -2.29, lat: 53.0, note: '古德伍德，宝马旗下', impact: 'medium', subKind: 'luxury' },
+  { id: 'ab-volvo-cars', name: '沃尔沃汽车', layerId: 'auto_brands', lng: 12.15, lat: 57.71, note: '哥德堡，吉利旗下', impact: 'medium', subKind: 'luxury' },
+  { id: 'ab-jlr', name: '捷豹路虎', layerId: 'auto_brands', lng: -1.47, lat: 52.91, note: '考文垂，塔塔旗下', impact: 'medium', subKind: 'luxury' },
+  // ── 新能源/电动 ──
+  { id: 'ab-tesla-ab', name: '特斯拉', layerId: 'auto_brands', lng: -122.03, lat: 37.37, note: '奥斯汀/帕洛阿尔托', impact: 'critical', subKind: 'ev' },
+  { id: 'ab-byd-ab', name: '比亚迪', layerId: 'auto_brands', lng: 114.06, lat: 22.55, note: '深圳坪山，全球新能源销冠', impact: 'critical', subKind: 'ev' },
+  { id: 'ab-nio', name: '蔚来', layerId: 'auto_brands', lng: 121.6, lat: 31.25, note: '上海/合肥，换电模式', impact: 'medium', subKind: 'ev' },
+  { id: 'ab-xpeng', name: '小鹏汽车', layerId: 'auto_brands', lng: 113.27, lat: 23.13, note: '广州，智能驾驶', impact: 'medium', subKind: 'ev' },
+  { id: 'ab-li-auto', name: '理想汽车', layerId: 'auto_brands', lng: 116.41, lat: 39.9, note: '北京，增程式', impact: 'medium', subKind: 'ev' },
+  { id: 'ab-lucid', name: 'Lucid Motors', layerId: 'auto_brands', lng: -121.93, lat: 37.4, note: '纽瓦克/亚利桑那', impact: 'low', subKind: 'ev' },
+  { id: 'ab-rivian', name: 'Rivian', layerId: 'auto_brands', lng: -88.2, lat: 40.11, note: ' Normal 伊利诺伊，电动皮卡', impact: 'low', subKind: 'ev' },
+  { id: 'ab-rimac', name: 'Rimac', layerId: 'auto_brands', lng: 16.03, lat: 45.78, note: '萨格勒布，克罗地亚超跑', impact: 'low', subKind: 'ev' },
+];
+
+/**
+ * 药企生物科技（pharmaceutical）— 全球主要药企与生物科技公司总部。
+ * subKind 标类型：'big_pharma'（大型药企）/ 'biotech'（生物科技）/ 'vaccine'（疫苗厂商）。
+ * 整理日：2026-06-22。
+ */
+export const GLOBAL_PHARMACEUTICAL: ThematicPoint[] = [
+  // ── 大型药企 ──
+  { id: 'ph-pfizer', name: '辉瑞', layerId: 'pharmaceutical', lng: -74.0, lat: 40.75, note: '纽约，新冠疫苗/伟哥', impact: 'critical', subKind: 'big_pharma' },
+  { id: 'ph-jnj', name: '强生', layerId: 'pharmaceutical', lng: -74.42, lat: 40.47, note: '新不伦瑞克 NJ，多元化医疗', impact: 'critical', subKind: 'big_pharma' },
+  { id: 'ph-abbvie', name: '艾伯维', layerId: 'pharmaceutical', lng: -87.84, lat: 42.1, note: '北芝加哥 IL，修美乐', impact: 'high', subKind: 'big_pharma' },
+  { id: 'ph-merck', name: '默克（MSD）', layerId: 'pharmaceutical', lng: -74.35, lat: 40.51, note: '拉韦 NJ，HPV/K 药', impact: 'critical', subKind: 'big_pharma' },
+  { id: 'ph-lilly', name: '礼来', layerId: 'pharmaceutical', lng: -86.16, lat: 39.77, note: '印第安纳波利斯，替尔泊肽', impact: 'critical', subKind: 'big_pharma' },
+  { id: 'ph-roche', name: '罗氏', layerId: 'pharmaceutical', lng: 8.56, lat: 47.39, note: '巴塞尔，瑞士，肿瘤', impact: 'critical', subKind: 'big_pharma' },
+  { id: 'ph-novartis', name: '诺华', layerId: 'pharmaceutical', lng: 8.56, lat: 47.39, note: '巴塞尔，瑞士', impact: 'high', subKind: 'big_pharma' },
+  { id: 'ph-novonordisk', name: '诺和诺德', layerId: 'pharmaceutical', lng: 12.06, lat: 55.68, note: ' Bagsværd 丹麦，司美格鲁肽', impact: 'critical', subKind: 'big_pharma' },
+  { id: 'ph-astrazeneca', name: '阿斯利康', layerId: 'pharmaceutical', lng: 2.21, lat: 48.76, note: '剑桥英国，肿瘤/心血管', impact: 'high', subKind: 'big_pharma' },
+  { id: 'ph-gsk', name: '葛兰素史克（GSK）', layerId: 'pharmaceutical', lng: -0.34, lat: 51.39, note: '布伦特福德英国', impact: 'high', subKind: 'big_pharma' },
+  { id: 'ph-sanofi', name: '赛诺菲', layerId: 'pharmaceutical', lng: 2.34, lat: 48.84, note: '巴黎，法国最大药企', impact: 'high', subKind: 'big_pharma' },
+  { id: 'ph-bayer', name: '拜耳', layerId: 'pharmaceutical', lng: 6.95, lat: 50.94, note: '勒沃库森，德国，阿司匹林', impact: 'high', subKind: 'big_pharma' },
+  { id: 'ph-boehringer', name: '勃林格殷格翰', layerId: 'pharmaceutical', lng: 8.57, lat: 48.73, note: ' Ingelheim 德国，家族药企', impact: 'medium', subKind: 'big_pharma' },
+  { id: 'ph-takeda', name: '武田药品', layerId: 'pharmaceutical', lng: 135.51, lat: 34.69, note: '大阪，日本最大药企', impact: 'high', subKind: 'big_pharma' },
+  { id: 'ph-astellas', name: '安斯泰来', layerId: 'pharmaceutical', lng: 139.73, lat: 35.65, note: '东京，日本', impact: 'medium', subKind: 'big_pharma' },
+  { id: 'ph-hualan', name: '华兰生物', layerId: 'pharmaceutical', lng: 113.88, lat: 35.31, note: '新乡，血液制品', impact: 'low', subKind: 'big_pharma' },
+  { id: 'ph-hengrui', name: '恒瑞医药', layerId: 'pharmaceutical', lng: 119.17, lat: 34.6, note: '连云港，中国创新药龙头', impact: 'medium', subKind: 'big_pharma' },
+  // ── 生物科技 ──
+  { id: 'ph-amgen', name: '安进', layerId: 'pharmaceutical', lng: -118.87, lat: 34.22, note: '千橡市 CA，生物药巨头', impact: 'high', subKind: 'biotech' },
+  { id: 'ph-gilead', name: '吉利德科学', layerId: 'pharmaceutical', lng: -121.93, lat: 37.4, note: '福斯特城，抗病毒/HIV', impact: 'high', subKind: 'biotech' },
+  { id: 'ph-biogen', name: '渤健', layerId: 'pharmaceutical', lng: -71.26, lat: 42.36, note: '剑桥 MA，多发性硬化', impact: 'medium', subKind: 'biotech' },
+  { id: 'ph-regeneron', name: '再生元', layerId: 'pharmaceutical', lng: -73.72, lat: 41.25, note: '塔里敦 NY，抗体', impact: 'medium', subKind: 'biotech' },
+  { id: 'ph-moderna', name: 'Moderna', layerId: 'pharmaceutical', lng: -71.09, lat: 42.36, note: '剑桥 MA，mRNA', impact: 'high', subKind: 'biotech' },
+  { id: 'ph-vertex', name: 'Vertex 制药', layerId: 'pharmaceutical', lng: -71.06, lat: 42.36, note: '波士顿，囊性纤维化', impact: 'medium', subKind: 'biotech' },
+  { id: 'ph-bms', name: '百时美施贵宝（BMS）', layerId: 'pharmaceutical', lng: -74.01, lat: 40.71, note: '纽约，肿瘤免疫', impact: 'high', subKind: 'big_pharma' },
+  { id: 'ph-wuxi', name: '药明康德', layerId: 'pharmaceutical', lng: 121.45, lat: 31.23, note: '上海，全球 CRO 龙头', impact: 'high', subKind: 'biotech' },
+  // ── 疫苗厂商 ──
+  { id: 'ph-biontech', name: 'BioNTech', layerId: 'pharmaceutical', lng: 8.25, lat: 49.99, note: '美因茨德国，mRNA 疫苗', impact: 'high', subKind: 'vaccine' },
+  { id: 'ph-sinovac', name: '科兴生物', layerId: 'pharmaceutical', lng: 116.48, lat: 39.99, note: '北京，灭活疫苗', impact: 'medium', subKind: 'vaccine' },
+  { id: 'ph-cansino', name: '康希诺', layerId: 'pharmaceutical', lng: 117.2, lat: 39.13, note: '天津，腺病毒载体疫苗', impact: 'low', subKind: 'vaccine' },
+  { id: 'ph-bharat', name: 'Bharat Biotech', layerId: 'pharmaceutical', lng: 78.41, lat: 17.45, note: '海得拉巴，印度疫苗', impact: 'medium', subKind: 'vaccine' },
+  { id: 'ph-serum', name: 'Serum Institute of India', layerId: 'pharmaceutical', lng: 73.85, lat: 18.52, note: '浦那，全球最大疫苗生产商', impact: 'critical', subKind: 'vaccine' },
+];
+
+/**
+ * 国际组织（intl_orgs）— 全球主要国际组织与多边机构总部。
+ * subKind 标类型：'un'（联合国系统）/ 'finance'（国际金融机构）/ 'other'（多边/区域组织）。
+ * 整理日：2026-06-22。
+ */
+export const GLOBAL_INTL_ORGS: ThematicPoint[] = [
+  // ── 联合国系统 ──
+  { id: 'io-un-nyc', name: '联合国总部', layerId: 'intl_orgs', lng: -73.97, lat: 40.75, note: '纽约东河，联合国大会/安理会', impact: 'critical', subKind: 'un' },
+  { id: 'io-un-geneva', name: '联合国日内瓦办事处', layerId: 'intl_orgs', lng: 6.14, lat: 46.22, note: '万国宫，人权/裁军/人道', impact: 'critical', subKind: 'un' },
+  { id: 'io-un-vienna', name: '联合国维也纳办事处', layerId: 'intl_orgs', lng: 16.42, lat: 48.23, note: '维也纳国际中心，IAEA/UNODC', impact: 'high', subKind: 'un' },
+  { id: 'io-un-nairobi', name: '联合国内罗毕办事处', layerId: 'intl_orgs', lng: 36.82, lat: -1.23, note: 'UNEP/UN-Habitat 总部', impact: 'high', subKind: 'un' },
+  { id: 'io-un-bangkok', name: '联合国亚太经社会（ESCAP）', layerId: 'intl_orgs', lng: 100.5, lat: 13.75, note: '曼谷，联合国亚太总部', impact: 'medium', subKind: 'un' },
+  { id: 'io-fao', name: '联合国粮农组织（FAO）', layerId: 'intl_orgs', lng: 12.45, lat: 41.88, note: '罗马，粮食与农业', impact: 'high', subKind: 'un' },
+  { id: 'io-unesco', name: '联合国教科文组织（UNESCO）', layerId: 'intl_orgs', lng: 2.3, lat: 48.84, note: '巴黎丰特努瓦广场', impact: 'high', subKind: 'un' },
+  { id: 'io-ilo', name: '国际劳工组织（ILO）', layerId: 'intl_orgs', lng: 6.15, lat: 46.22, note: '日内瓦', impact: 'medium', subKind: 'un' },
+  { id: 'io-who', name: '世界卫生组织（WHO）', layerId: 'intl_orgs', lng: 6.15, lat: 46.22, note: '日内瓦，公共卫生', impact: 'critical', subKind: 'un' },
+  { id: 'io-wto', name: '世界贸易组织（WTO）', layerId: 'intl_orgs', lng: 6.14, lat: 46.23, note: '日内瓦，William Rappard 中心', impact: 'high', subKind: 'un' },
+  { id: 'io-itu', name: '国际电信联盟（ITU）', layerId: 'intl_orgs', lng: 6.14, lat: 46.22, note: '日内瓦，电信标准', impact: 'medium', subKind: 'un' },
+  { id: 'io-unhcr', name: '联合国难民署（UNHCR）', layerId: 'intl_orgs', lng: 6.14, lat: 46.22, note: '日内瓦，难民事务', impact: 'high', subKind: 'un' },
+  { id: 'io-iaea', name: '国际原子能机构（IAEA）', layerId: 'intl_orgs', lng: 16.42, lat: 48.23, note: '维也纳，核监督', impact: 'critical', subKind: 'un' },
+  { id: 'io-opcw', name: '禁止化学武器组织（OPCW）', layerId: 'intl_orgs', lng: 4.34, lat: 52.09, note: '海牙，化学武器监督', impact: 'high', subKind: 'un' },
+  { id: 'io-icao', name: '国际民航组织（ICAO）', layerId: 'intl_orgs', lng: -73.58, lat: 45.5, note: '蒙特利尔，航空标准', impact: 'medium', subKind: 'un' },
+  { id: 'io-imo', name: '国际海事组织（IMO）', layerId: 'intl_orgs', lng: -0.12, lat: 51.51, note: '伦敦，海事/航运规则', impact: 'medium', subKind: 'un' },
+  { id: 'io-wipo', name: '世界知识产权组织（WIPO）', layerId: 'intl_orgs', lng: 6.14, lat: 46.22, note: '日内瓦', impact: 'medium', subKind: 'un' },
+  { id: 'io-unicef', name: '联合国儿童基金会（UNICEF）', layerId: 'intl_orgs', lng: -73.97, lat: 40.75, note: '纽约', impact: 'high', subKind: 'un' },
+  { id: 'io-wmo', name: '世界气象组织（WMO）', layerId: 'intl_orgs', lng: 6.14, lat: 46.22, note: '日内瓦', impact: 'medium', subKind: 'un' },
+  // ── 国际金融机构 ──
+  { id: 'io-imf', name: '国际货币基金组织（IMF）', layerId: 'intl_orgs', lng: -77.03, lat: 38.9, note: '华盛顿，全球金融稳定', impact: 'critical', subKind: 'finance' },
+  { id: 'io-worldbank', name: '世界银行集团', layerId: 'intl_orgs', lng: -77.04, lat: 38.9, note: '华盛顿，IBRD/IDA/IFC/MIGA', impact: 'critical', subKind: 'finance' },
+  { id: 'io-bis', name: '国际清算银行（BIS）', layerId: 'intl_orgs', lng: 7.59, lat: 47.55, note: '巴塞尔，央行之央行', impact: 'critical', subKind: 'finance' },
+  { id: 'io-fsb', name: '金融稳定理事会（FSB）', layerId: 'intl_orgs', lng: 7.59, lat: 47.55, note: '巴塞尔，G20 金融监管', impact: 'high', subKind: 'finance' },
+  { id: 'io-aib', name: '亚洲基础设施投资银行（AIIB）', layerId: 'intl_orgs', lng: 116.39, lat: 39.91, note: '北京，多边开发银行', impact: 'high', subKind: 'finance' },
+  { id: 'io-adb', name: '亚洲开发银行（ADB）', layerId: 'intl_orgs', lng: 121.05, lat: 14.55, note: '马尼拉 Ortigas', impact: 'high', subKind: 'finance' },
+  { id: 'io-idb', name: '美洲开发银行（IDB）', layerId: 'intl_orgs', lng: -77.05, lat: 38.9, note: '华盛顿，拉美开发融资', impact: 'medium', subKind: 'finance' },
+  { id: 'io-afdb', name: '非洲开发银行（AfDB）', layerId: 'intl_orgs', lng: 3.4, lat: 6.42, note: '阿比让（科特迪瓦）', impact: 'medium', subKind: 'finance' },
+  { id: 'io-ebd', name: '欧洲复兴开发银行（EBRD）', layerId: 'intl_orgs', lng: -0.12, lat: 51.51, note: '伦敦，转型经济', impact: 'medium', subKind: 'finance' },
+  { id: 'io-ndb', name: '新开发银行（金砖银行）', layerId: 'intl_orgs', lng: 121.49, lat: 31.23, note: '上海，金砖五国', impact: 'medium', subKind: 'finance' },
+  { id: 'io-fsb-2', name: '伊斯兰开发银行（IsDB）', layerId: 'intl_orgs', lng: 39.83, lat: 21.49, note: '吉达，伊斯兰世界', impact: 'medium', subKind: 'finance' },
+  // ── 多边/区域/标准化组织 ──
+  { id: 'io-oecd', name: '经合组织（OECD）', layerId: 'intl_orgs', lng: 2.28, lat: 48.85, note: '巴黎 Château de la Muette', impact: 'high', subKind: 'other' },
+  { id: 'io-nato', name: '北大西洋公约组织（NATO）', layerId: 'intl_orgs', lng: 4.34, lat: 50.85, note: '布鲁塞尔，31 国军事联盟', impact: 'critical', subKind: 'other' },
+  { id: 'io-eu', name: '欧洲联盟（EU）', layerId: 'intl_orgs', lng: 4.35, lat: 50.85, note: '布鲁塞尔，主要机构所在地', impact: 'critical', subKind: 'other' },
+  { id: 'io-asean', name: '东南亚国家联盟（ASEAN）', layerId: 'intl_orgs', lng: 100.5, lat: 13.75, note: '雅加达秘书处', impact: 'high', subKind: 'other' },
+  { id: 'io-au', name: '非洲联盟（AU）', layerId: 'intl_orgs', lng: 38.74, lat: 9.03, note: '亚的斯亚贝巴', impact: 'high', subKind: 'other' },
+  { id: 'io-oas', name: '美洲国家组织（OAS）', layerId: 'intl_orgs', lng: -77.04, lat: 38.9, note: '华盛顿', impact: 'medium', subKind: 'other' },
+  { id: 'io-gcc', name: '海湾合作委员会（GCC）', layerId: 'intl_orgs', lng: 46.72, lat: 24.71, note: '利雅得秘书处', impact: 'medium', subKind: 'other' },
+  { id: 'io-iso', name: '国际标准化组织（ISO）', layerId: 'intl_orgs', lng: 6.14, lat: 46.22, note: '日内瓦', impact: 'low', subKind: 'other' },
+  { id: 'io-crc', name: '红十字会与红新月会国际联合会', layerId: 'intl_orgs', lng: 6.14, lat: 46.22, note: '日内瓦', impact: 'medium', subKind: 'other' },
+  ...DENSIFY_INTL_ORGS_R4,
+];
+
+/**
+ * 商业航天（space_companies）— 全球商业航天与卫星公司总部。
+ * subKind 标类型：'rocket'（火箭发射）/ 'satellite'（卫星/星座）/ 'tourism'（太空旅游）。
+ * 与 launch_sites（发射场）互补，聚焦公司决策中心。整理日：2026-06-22。
+ */
+export const GLOBAL_SPACE_COMPANIES: ThematicPoint[] = [
+  // ── 火箭发射 ──
+  { id: 'sc-spacex', name: 'SpaceX', layerId: 'space_companies', lng: -95.09, lat: 29.56, note: '霍桑/博卡奇卡星基地，猎鹰/星舰', impact: 'critical', subKind: 'rocket' },
+  { id: 'sc-rocket-lab', name: 'Rocket Lab', layerId: 'space_companies', lng: 174.8, lat: -39.26, note: '长滩/新西兰 Mahia，电子号火箭', impact: 'high', subKind: 'rocket' },
+  { id: 'sc-relativity', name: 'Relativity Space', layerId: 'space_companies', lng: -118.25, lat: 33.92, note: '长滩，3D 打印火箭', impact: 'medium', subKind: 'rocket' },
+  { id: 'sc-firefly', name: 'Firefly Aerospace', layerId: 'space_companies', lng: -97.87, lat: 30.5, note: '奥斯汀 TX，小型火箭', impact: 'medium', subKind: 'rocket' },
+  { id: 'sc-ula', name: '联合发射联盟（ULA）', layerId: 'space_companies', lng: -105.13, lat: 39.81, note: '丹佛 Centennial，Atlas/Delta', impact: 'high', subKind: 'rocket' },
+  { id: 'sc-blue-origin', name: '蓝色起源（Blue Origin）', layerId: 'space_companies', lng: -122.34, lat: 47.53, note: '肯特 WA，新格伦/新谢泼德', impact: 'high', subKind: 'rocket' },
+  { id: 'sc-northrop-space', name: '诺斯罗普·格鲁曼（航天）', layerId: 'space_companies', lng: -79.4, lat: 43.69, note: '敦刻尔克/范奈斯，Antares/Pegasus', impact: 'high', subKind: 'rocket' },
+  { id: 'sc-expace', name: 'ExPace（科工火箭）', layerId: 'space_companies', lng: 114.39, lat: 30.52, note: '武汉，快舟系列固体火箭（中国航天科工旗下）', impact: 'medium', subKind: 'rocket' },
+  { id: 'sc-galactic-energy', name: '星河动力（Galactic Energy）', layerId: 'space_companies', lng: 116.41, lat: 39.9, note: '北京，谷神星一号', impact: 'medium', subKind: 'rocket' },
+  { id: 'sc-i-space', name: '星际荣耀（i-Space）', layerId: 'space_companies', lng: 116.41, lat: 39.9, note: '北京，双曲线一号', impact: 'medium', subKind: 'rocket' },
+  { id: 'sc-ariane', name: '阿丽亚娜空间（Arianespace）', layerId: 'space_companies', lng: 2.33, lat: 48.93, note: '埃夫里-库尔库罗讷，法国', impact: 'high', subKind: 'rocket' },
+  { id: 'sc-roscosmos', name: '俄罗斯国家航天集团', layerId: 'space_companies', lng: 37.62, lat: 55.75, note: '莫斯科，联盟/安加拉', impact: 'critical', subKind: 'rocket' },
+  { id: 'sc-ispace', name: 'ispace（日本）', layerId: 'space_companies', lng: 139.73, lat: 35.65, note: '东京，Hakuto 月球着陆器', impact: 'medium', subKind: 'rocket' },
+  { id: 'sc-ispace2', name: 'ispace（中国星际微宇）', layerId: 'space_companies', lng: 114.06, lat: 22.55, note: '深圳，商业卫星', impact: 'low', subKind: 'satellite' },
+  // ── 卫星/星座 ──
+  { id: 'sc-iridium', name: 'Iridium Communications', layerId: 'space_companies', lng: -117.16, lat: 32.72, note: '麦克利恩 VA，铱星 66 星座', impact: 'medium', subKind: 'satellite' },
+  { id: 'sc-planet', name: 'Planet Labs', layerId: 'space_companies', lng: -122.39, lat: 37.77, note: '旧金山，鸽子卫星地球影像', impact: 'medium', subKind: 'satellite' },
+  { id: 'sc-maxar', name: 'Maxar Technologies', layerId: 'space_companies', lng: -105.13, lat: 39.81, note: '威斯敏斯特 CO，地球影像/卫星', impact: 'medium', subKind: 'satellite' },
+  { id: 'sc-inmarsat', name: 'Inmarsat', layerId: 'space_companies', lng: -0.12, lat: 51.51, note: '伦敦，海事/航空卫星', impact: 'medium', subKind: 'satellite' },
+  { id: 'sc-intelsat', name: 'Intelsat', layerId: 'space_companies', lng: -77.04, lat: 38.9, note: '麦克莱恩 VA，GEO 卫星', impact: 'medium', subKind: 'satellite' },
+  { id: 'sc-ses', name: 'SES S.A.', layerId: 'space_companies', lng: 6.14, lat: 49.62, note: '贝滕堡 卢森堡，GEO/MEO', impact: 'medium', subKind: 'satellite' },
+  { id: 'sc-ecom', name: 'Eutelsat', layerId: 'space_companies', lng: 2.21, lat: 48.83, note: '巴黎，GEO 卫星', impact: 'medium', subKind: 'satellite' },
+  { id: 'sc-star-one', name: 'Star One', layerId: 'space_companies', lng: -43.2, lat: -22.9, note: '里约，拉美最大通信卫星运营商', impact: 'low', subKind: 'satellite' },
+  { id: 'sc-fgw', name: '中国卫通', layerId: 'space_companies', lng: 116.32, lat: 39.93, note: '北京，中星系列卫星', impact: 'medium', subKind: 'satellite' },
+  { id: 'sc-aselsat', name: '中国航天科技（卫星业务）', layerId: 'space_companies', lng: 116.32, lat: 39.93, note: '北京，东方红/风云/北斗', impact: 'high', subKind: 'satellite' },
+  // ── 太空旅游/新兴 ──
+  { id: 'sc-vg', name: '维珍银河（Virgin Galactic）', layerId: 'space_companies', lng: -106.9, lat: 32.94, note: '拉斯克鲁塞斯 NM，亚轨道旅游', impact: 'medium', subKind: 'tourism' },
+  { id: 'sc-aevum', name: 'Aevum', layerId: 'space_companies', lng: -86.6, lat: 34.7, note: '亨茨维尔 AL，空中发射', impact: 'low', subKind: 'tourism' },
+  { id: 'sc-axiom', name: 'Axiom Space', layerId: 'space_companies', lng: -95.37, lat: 29.76, note: '休斯顿，商业空间站模块', impact: 'medium', subKind: 'tourism' },
+  { id: 'sc-boeing-star', name: '波音星际航线（Starliner）', layerId: 'space_companies', lng: -122.3, lat: 47.53, note: '西雅图（合并）', impact: 'medium', subKind: 'tourism' },
+  { id: 'sc-sierra', name: 'Sierra Space', layerId: 'space_companies', lng: -105.25, lat: 40.03, note: '路易斯维尔 CO，追梦者', impact: 'low', subKind: 'tourism' },
+  ...DENSIFY_SPACE_COMPANIES_R4,
+];
+
+/**
+ * 稀土关键矿产（rare_earth）— 全球稀土与关键矿产供应链节点。
+ * subKind 标类型：'mining'（开采）/ 'refining'（精炼/加工）/ 'strategic'（战略储备/瓶颈）。
+ * 专注于稀土元素（REE）与新能源/半导体关键矿产，与 minerals 互补。整理日：2026-06-22。
+ */
+export const GLOBAL_RARE_EARTH: ThematicPoint[] = [
+  // ── 稀土开采 ──
+  { id: 're-bayanobo', name: '白云鄂博矿', layerId: 'rare_earth', lng: 109.97, lat: 41.77, note: '中国内蒙古，全球最大轻稀土矿，占中国储量主体', impact: 'critical', subKind: 'mining' },
+  { id: 're-jiangxi-ion', name: '赣州离子型稀土', layerId: 'rare_earth', lng: 114.93, lat: 25.83, note: '中国江西，重稀土核心，离子吸附型', impact: 'critical', subKind: 'mining' },
+  { id: 're-sichuan', name: '凉山稀土矿', layerId: 'rare_earth', lng: 102.27, lat: 27.9, note: '中国四川冕宁/德昌', impact: 'high', subKind: 'mining' },
+  { id: 're-shandong', name: '山东微山湖稀土', layerId: 'rare_earth', lng: 116.83, lat: 35.2, note: '中国山东，轻稀土', impact: 'medium', subKind: 'mining' },
+  { id: 're-mountain-pass-re', name: '芒廷帕斯矿', layerId: 'rare_earth', lng: -115.43, lat: 35.49, note: '美国加州，MP Materials 主力，西方唯一大型稀土矿', impact: 'critical', subKind: 'mining' },
+  { id: 're-round-top', name: 'Round Top 矿', layerId: 'rare_earth', lng: -105.67, lat: 31.05, note: '美国得州，USA Rare Earth', impact: 'medium', subKind: 'mining' },
+  { id: 're-mt-weld-re', name: '韦尔德山矿', layerId: 'rare_earth', lng: 122.46, lat: -28.83, note: '澳大利亚西澳，Lynas 主力', impact: 'critical', subKind: 'mining' },
+  { id: 're-nolans-bore', name: 'Nolans Bore 矿', layerId: 'rare_earth', lng: 133.3, lat: -22.7, note: '澳大利亚北领地，Arafura', impact: 'medium', subKind: 'mining' },
+  { id: 're-duba', name: 'Dubbo Zirconia 项目', layerId: 'rare_earth', lng: 148.4, lat: -32.2, note: '澳大利亚新南威尔士，ASM', impact: 'low', subKind: 'mining' },
+  { id: 're-zandkops', name: 'Steenkampskraal 矿', layerId: 'rare_earth', lng: 18.33, lat: -31.43, note: '南非，高品位独居石', impact: 'low', subKind: 'mining' },
+  { id: 're-nechalacho', name: 'Nechalacho 矿', layerId: 'rare_earth', lng: -112.0, lat: 62.0, note: '加拿大西北地区，重稀土', impact: 'medium', subKind: 'mining' },
+  { id: 're-kvanefjeld', name: 'Kvanefjeld 矿', layerId: 'rare_earth', lng: -45.7, lat: 60.95, note: '格陵兰，争议稀土/铀矿', impact: 'medium', subKind: 'mining' },
+  { id: 're-mriz', name: 'Mrima Hill 矿', layerId: 'rare_earth', lng: 39.27, lat: -4.5, note: '肯尼亚，独居石稀土', impact: 'low', subKind: 'mining' },
+  // ── 精炼/加工 ──
+  { id: 're-baotou-ref', name: '包头稀土高新区', layerId: 'rare_earth', lng: 109.84, lat: 40.66, note: '中国内蒙古，全球稀土精炼核心', impact: 'critical', subKind: 'refining' },
+  { id: 're-ganzhou-ref', name: '赣州稀土加工集群', layerId: 'rare_earth', lng: 114.93, lat: 25.83, note: '中国江西，重稀土分离/永磁', impact: 'critical', subKind: 'refining' },
+  { id: 're-lynas-lynas', name: 'Lynas Gebeng 厂', layerId: 'rare_earth', lng: 103.42, lat: 3.96, note: '马来西亚关丹，Lynas 海外精炼', impact: 'high', subKind: 'refining' },
+  { id: 're-lynas-kal', name: 'Lynas Kalgoorlie 厂', layerId: 'rare_earth', lng: 121.49, lat: -30.75, note: '西澳，新建裂解/浸出厂', impact: 'medium', subKind: 'refining' },
+  { id: 're-mp-refine', name: 'MP Materials 精炼', layerId: 'rare_earth', lng: -115.43, lat: 35.49, note: '芒廷帕斯（在恢复分离产能）', impact: 'high', subKind: 'refining' },
+  { id: 're-energyfuels', name: 'Energy Fuels White Mesa 厂', layerId: 'rare_earth', lng: -109.55, lat: 37.6, note: '犹他，铀/稀土共处理', impact: 'medium', subKind: 'refining' },
+  { id: 're-shenghe', name: '盛和资源', layerId: 'rare_earth', lng: 104.07, lat: 30.67, note: '成都，海外稀土布局', impact: 'medium', subKind: 'refining' },
+  { id: 're-zhongke', name: '中科三环', layerId: 'rare_earth', lng: 116.31, lat: 40.05, note: '北京，钕铁硼永磁', impact: 'high', subKind: 'refining' },
+  { id: 're-va-xiamen', name: '厦门钨业', layerId: 'rare_earth', lng: 118.09, lat: 24.48, note: '福建，钨/稀土/锂电', impact: 'medium', subKind: 'refining' },
+  { id: 're-vac', name: 'Vacuumschmelze', layerId: 'rare_earth', lng: 9.27, lat: 50.7, note: '德国哈瑙，磁性材料', impact: 'medium', subKind: 'refining' },
+  // ── 战略储备/瓶颈 ──
+  { id: 're-mit', name: '镓锗出口管制（中国）', layerId: 'rare_earth', lng: 116.36, lat: 39.92, note: '2023 起管制镓/锗/锑等关键金属出口', impact: 'critical', subKind: 'strategic' },
+  { id: 're-graphite-cn', name: '石墨出口管制（中国）', layerId: 'rare_earth', lng: 116.36, lat: 39.92, note: '高纯/球化石墨出口管制，电池负极', impact: 'critical', subKind: 'strategic' },
+  { id: 're-cobalt-drc', name: '刚果（金）钴垄断', layerId: 'rare_earth', lng: 27.48, lat: -11.66, note: '全球约 70% 钴供应，电池关键瓶颈', impact: 'critical', subKind: 'strategic' },
+  { id: 're-indonesia-nickel', name: '印尼镍禁令', layerId: 'rare_earth', lng: 121.27, lat: -2.55, note: '原矿出口禁令，电池/不锈钢原料', impact: 'high', subKind: 'strategic' },
+  { id: 're-us-stockpile', name: '美国国防储备库', layerId: 'rare_earth', lng: -84.4, lat: 33.75, note: 'Fort Belvoir/DLA，战略矿产储备', impact: 'medium', subKind: 'strategic' },
+  { id: 're-jogmec', name: 'JOGMEC（日本）', layerId: 'rare_earth', lng: 139.73, lat: 35.65, note: '东京，油气/金属矿物机构', impact: 'medium', subKind: 'strategic' },
+  ...DENSIFY_RARE_EARTH_R4,
+];
+
+/**
+ * 船旗国避税地（flags_of_convenience）— 全球主要船旗国与避税地。
+ * subKind 标类型：'maritime'（船旗国）/ 'tax'（避税天堂）/ 'finance'（离岸金融中心）。
+ * 整理日：2026-06-22。
+ */
+export const GLOBAL_FLAGS_OF_CONVENIENCE: ThematicPoint[] = [
+  // ── 船旗国（开放登记） ──
+  { id: 'foc-panama', name: '巴拿马', layerId: 'flags_of_convenience', lng: -79.52, lat: 8.98, note: '世界最大船旗国，约 2.2 亿总吨', impact: 'critical', subKind: 'maritime' },
+  { id: 'foc-liberia', name: '利比里亚', layerId: 'flags_of_convenience', lng: -10.8, lat: 6.43, note: '第二大船旗国，美国资本主导注册', impact: 'high', subKind: 'maritime' },
+  { id: 'foc-marshall', name: '马绍尔群岛', layerId: 'flags_of_convenience', lng: 171.0, lat: 7.1, note: '第三大船旗国，与利比里亚同管理', impact: 'high', subKind: 'maritime' },
+  { id: 'foc-hongkong', name: '香港', layerId: 'flags_of_convenience', lng: 114.16, lat: 22.28, note: '全球第五大船舶注册', impact: 'medium', subKind: 'maritime' },
+  { id: 'foc-singapore', name: '新加坡', layerId: 'flags_of_convenience', lng: 103.85, lat: 1.28, note: '高质量船旗国，前五大', impact: 'high', subKind: 'maritime' },
+  { id: 'foc-bahamas', name: '巴哈马', layerId: 'flags_of_convenience', lng: -77.4, lat: 25.06, note: '邮轮业主要船旗国', impact: 'high', subKind: 'maritime' },
+  { id: 'foc-malta', name: '马耳他', layerId: 'flags_of_convenience', lng: 14.38, lat: 35.9, note: '欧洲最大开放船旗国', impact: 'medium', subKind: 'maritime' },
+  { id: 'foc-cyprus-foc', name: '塞浦路斯', layerId: 'flags_of_convenience', lng: 33.0, lat: 35.0, note: '欧洲第二大船舶登记', impact: 'medium', subKind: 'maritime' },
+  { id: 'foc-isle-of-man', name: '马恩岛', layerId: 'flags_of_convenience', lng: -4.5, lat: 54.2, note: '英国皇家属地，游艇/船舶登记', impact: 'low', subKind: 'maritime' },
+  { id: 'foc-bermuda', name: '百慕大', layerId: 'flags_of_convenience', lng: -64.75, lat: 32.3, note: '英国海外领地，邮轮登记', impact: 'medium', subKind: 'maritime' },
+  { id: 'foc-st-kitts', name: '圣基茨和尼维斯', layerId: 'flags_of_convenience', lng: -62.7, lat: 17.36, note: '小船旗国，投资入籍', impact: 'low', subKind: 'maritime' },
+  { id: 'foc-comoros', name: '科摩罗', layerId: 'flags_of_convenience', lng: 43.36, lat: -11.65, note: '小型开放登记', impact: 'low', subKind: 'maritime' },
+  { id: 'foc-mongolia', name: '蒙古（内陆船旗）', layerId: 'flags_of_convenience', lng: 106.92, lat: 47.92, note: '内陆国但开放船舶登记', impact: 'low', subKind: 'maritime' },
+  { id: 'foc-moldova', name: '摩尔多瓦', layerId: 'flags_of_convenience', lng: 28.47, lat: 47.36, note: '内陆国船舶登记', impact: 'low', subKind: 'maritime' },
+  // ── 避税天堂 ──
+  { id: 'foc-cayman', name: '开曼群岛', layerId: 'flags_of_convenience', lng: -81.25, lat: 19.3, note: '全球对冲基金/PE 注册圣地', impact: 'critical', subKind: 'tax' },
+  { id: 'foc-bvi', name: '英属维尔京群岛', layerId: 'flags_of_convenience', lng: -64.62, lat: 18.42, note: '离岸公司注册，BVI 商业公司', impact: 'high', subKind: 'tax' },
+  { id: 'foc-bermuda-tax', name: '百慕大（再保险/避税）', layerId: 'flags_of_convenience', lng: -64.75, lat: 32.3, note: '再保险/ Catastrophe Bond 中心', impact: 'high', subKind: 'tax' },
+  { id: 'foc-jersey', name: '泽西岛', layerId: 'flags_of_convenience', lng: -2.13, lat: 49.21, note: '英国皇家属地，信托/基金', impact: 'medium', subKind: 'tax' },
+  { id: 'foc-guernsey', name: '根西岛', layerId: 'flags_of_convenience', lng: -2.54, lat: 49.47, note: '英国皇家属地，私人财富', impact: 'low', subKind: 'tax' },
+  { id: 'foc-vanuatu', name: '瓦努阿图', layerId: 'flags_of_convenience', lng: 168.32, lat: -17.74, note: '太平洋避税/投资入籍', impact: 'low', subKind: 'tax' },
+  { id: 'foc-seychelles', name: '塞舌尔', layerId: 'flags_of_convenience', lng: 55.45, lat: -4.68, note: '印度洋离岸公司', impact: 'low', subKind: 'tax' },
+  { id: 'foc-beliz', name: '伯利兹', layerId: 'flags_of_convenience', lng: -88.77, lat: 17.25, note: '中美洲离岸登记', impact: 'low', subKind: 'tax' },
+  { id: 'foc-nauru', name: '瑙鲁', layerId: 'flags_of_convenience', lng: 166.93, lat: -0.55, note: '磷酸盐/避税/洗钱历史', impact: 'low', subKind: 'tax' },
+  { id: 'foc-monaco', name: '摩纳哥', layerId: 'flags_of_convenience', lng: 7.42, lat: 43.74, note: '个人免税/富豪聚居', impact: 'medium', subKind: 'tax' },
+  { id: 'foc-andorra', name: '安道尔', layerId: 'flags_of_convenience', lng: 1.52, lat: 42.51, note: '比利牛斯避税公国', impact: 'low', subKind: 'tax' },
+  { id: 'foc-liechtenstein', name: '列支敦士登', layerId: 'flags_of_convenience', lng: 9.55, lat: 47.14, note: '阿尔卑斯信托/基金中心', impact: 'medium', subKind: 'tax' },
+  { id: 'foc-sanmarino', name: '圣马力诺', layerId: 'flags_of_convenience', lng: 12.46, lat: 43.94, note: '意大利半岛避税', impact: 'low', subKind: 'tax' },
+  // ── 离岸金融中心 ──
+  { id: 'foc-luxembourg-fin', name: '卢森堡', layerId: 'flags_of_convenience', lng: 6.13, lat: 49.81, note: '欧盟最大投资基金注册地', impact: 'high', subKind: 'finance' },
+  { id: 'foc-ireland-fin', name: '爱尔兰', layerId: 'flags_of_convenience', lng: -6.27, lat: 53.35, note: '苹果/谷歌/Meta 欧洲总部（低税率）', impact: 'high', subKind: 'finance' },
+  { id: 'foc-dutch', name: '荷兰（三明治结构）', layerId: 'flags_of_convenience', lng: 4.9, lat: 52.37, note: '荷兰三明治税收结构', impact: 'high', subKind: 'finance' },
+  { id: 'foc-mauritius-fin', name: '毛里求斯', layerId: 'flags_of_convenience', lng: 57.5, lat: -20.35, note: '印度/非洲投资枢纽（DTAA）', impact: 'medium', subKind: 'finance' },
+  { id: 'foc-dubai-fin', name: '迪拜（DIFC/JAFZA）', layerId: 'flags_of_convenience', lng: 55.27, lat: 25.2, note: '中东离岸/自由区金融', impact: 'high', subKind: 'finance' },
+  { id: 'foc-samoa', name: '萨摩亚', layerId: 'flags_of_convenience', lng: -172.13, lat: -13.6, note: '亚太离岸公司（亚洲客户）', impact: 'low', subKind: 'finance' },
+];
+
 export const GLOBAL_THEMATIC_POINTS: ThematicPoint[] = [
   ...GLOBAL_ECON_HUBS,
   ...GLOBAL_MINERALS,
@@ -1327,4 +1978,16 @@ export const GLOBAL_THEMATIC_POINTS: ThematicPoint[] = [
   ...GLOBAL_STADIUMS,
   ...GLOBAL_MUSEUMS,
   ...GLOBAL_ISLANDS,
+  ...GLOBAL_CAPITALS,
+  ...GLOBAL_POWER_PLANTS,
+  ...GLOBAL_FORESTS,
+  ...GLOBAL_EARTHQUAKES_HISTORICAL,
+  ...GLOBAL_TECH_COMPANIES,
+  ...GLOBAL_MEDIA_ORGS,
+  ...GLOBAL_AUTO_BRANDS,
+  ...GLOBAL_PHARMACEUTICAL,
+  ...GLOBAL_INTL_ORGS,
+  ...GLOBAL_SPACE_COMPANIES,
+  ...GLOBAL_RARE_EARTH,
+  ...GLOBAL_FLAGS_OF_CONVENIENCE,
 ];
