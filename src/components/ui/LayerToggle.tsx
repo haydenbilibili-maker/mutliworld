@@ -34,7 +34,7 @@ interface LayerToggleProps {
 const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   {
     title: '冲突与安全',
-    ids: ['conflicts', 'conflict_zones', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions', 'persons', 'borders', 'military_industry', 'capitals'],
+    ids: ['conflicts', 'conflict_zones', 'hotspots', 'military', 'bases', 'garrisons', 'nuclear', 'sanctions', 'persons', 'borders', 'military_industry', 'capitals', 'intl_orgs'],
   },
   {
     title: '基础设施与通道',
@@ -42,11 +42,11 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   },
   {
     title: '经济',
-    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'hydrocarbon_reserves', 'protests', 'megacities', 'refineries', 'factories', 'financial_centers', 'agriculture', 'tech_companies', 'media_orgs', 'auto_brands', 'pharmaceutical'],
+    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'hydrocarbon_reserves', 'protests', 'megacities', 'refineries', 'factories', 'financial_centers', 'agriculture', 'tech_companies', 'media_orgs', 'auto_brands', 'pharmaceutical', 'space_companies', 'rare_earth', 'flags_of_convenience'],
   },
   {
     title: '自然',
-    ids: ['natural', 'earthquakes', 'aurora', 'volcanoes', 'storms', 'floods', 'dusthaze', 'seaice', 'wildfires', 'landslides', 'gdacs', 'satellite_imagery', 'weather', 'climate', 'daynight', 'research_stations', 'deserts', 'islands', 'forests', 'earthquakes_historical'],
+    ids: ['natural', 'earthquakes', 'aurora', 'volcanoes', 'storms', 'floods', 'dusthaze', 'seaice', 'wildfires', 'landslides', 'drought', 'tempextremes', 'gdacs', 'satellite_imagery', 'weather', 'climate', 'daynight', 'research_stations', 'deserts', 'islands', 'forests', 'earthquakes_historical'],
   },
   {
     title: '文化与遗产',
@@ -113,6 +113,8 @@ const ALWAYS_ON: LayerId[] = [
   'seaice',
   'wildfires',
   'landslides',
+  'drought',
+  'tempextremes',
   'gdacs',
   'satellite_imagery',
   'launch_sites',
@@ -162,6 +164,10 @@ const ALWAYS_ON: LayerId[] = [
   'media_orgs',
   'auto_brands',
   'pharmaceutical',
+  'intl_orgs',
+  'space_companies',
+  'rare_earth',
+  'flags_of_convenience',
   'wind_flow',
   'ocean_flow',
   'wave_flow',

@@ -121,6 +121,8 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   seaice: '海冰',
   wildfires: '野火',
   landslides: '滑坡',
+  drought: '干旱',
+  tempextremes: '极端气温',
   gdacs: '灾害告警(GDACS)',
   satellite_imagery: '真彩卫星云图',
   iss: '国际空间站(实时)',

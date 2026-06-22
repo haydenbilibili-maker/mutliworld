@@ -192,6 +192,8 @@ export type LayerId =
   | 'seaice'
   | 'wildfires'
   | 'landslides'
+  | 'drought'
+  | 'tempextremes'
   | 'gdacs'
   | 'satellite_imagery'
   | 'iss'

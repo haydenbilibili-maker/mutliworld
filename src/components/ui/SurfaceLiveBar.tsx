@@ -41,6 +41,8 @@ const CHIPS: ChipDef[] = [
   { layer: 'seaice', endpoint: '/api/seaice', icon: '🧊', label: '海冰', color: 'text-cyan-200', refreshMs: 30 * 60 * 1000 },
   { layer: 'wildfires', endpoint: '/api/wildfires', icon: '🔥', label: '野火', color: 'text-red-300', refreshMs: 30 * 60 * 1000 },
   { layer: 'landslides', endpoint: '/api/landslides', icon: '⛰️', label: '滑坡', color: 'text-yellow-300', refreshMs: 30 * 60 * 1000 },
+  { layer: 'drought', endpoint: '/api/drought', icon: '🏜️', label: '干旱', color: 'text-amber-200', refreshMs: 30 * 60 * 1000 },
+  { layer: 'tempextremes', endpoint: '/api/tempextremes', icon: '🌡️', label: '极端气温', color: 'text-orange-300', refreshMs: 30 * 60 * 1000 },
   { layer: 'gdacs', endpoint: '/api/gdacs', icon: '⚠️', label: '灾害告警', color: 'text-rose-300', refreshMs: 30 * 60 * 1000 },
 ];
 
