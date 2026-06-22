@@ -15,6 +15,18 @@ interface SidePanelProps {
   className?: string;
 }
 
+/** 按坐标计算 NASA GIBS 真彩瓦片 URL（Web Mercator slippy tile，免密钥真实影像，取近日） */
+function gibsThumb(lng: number, lat: number, z = 4): string | null {
+  if (!Number.isFinite(lng) || !Number.isFinite(lat) || Math.abs(lat) > 85) return null;
+  const n = 2 ** z;
+  const x = Math.floor(((lng + 180) / 360) * n);
+  const latRad = (lat * Math.PI) / 180;
+  const y = Math.floor(((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2) * n);
+  if (x < 0 || y < 0 || x >= n || y >= n) return null;
+  const d = new Date(Date.now() - 36 * 3600 * 1000).toISOString().slice(0, 10); // 近日（留 GIBS 出图余量）
+  return `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${d}/GoogleMapsCompatible_Level9/${z}/${y}/${x}.jpg`;
+}
+
 export function SidePanel({ className = '' }: SidePanelProps) {
   const sidePanelOpen = useMapStore((s) => s.sidePanelOpen);
   const selectedEvent = useMapStore((s) => s.selectedEvent);
@@ -119,6 +131,19 @@ export function SidePanel({ className = '' }: SidePanelProps) {
                     onError={(ev) => { (ev.currentTarget as HTMLImageElement).style.display = 'none'; }}
                   />
                 )}
+
+                {/* 卫星影像缩略（按坐标取 NASA GIBS 真彩，仅当事件未自带配图） */}
+                {hasLocation && !e.imageUrl && (() => {
+                  const g = gibsThumb(e.location[0], e.location[1]);
+                  return g ? (
+                    <figure className="overflow-hidden rounded-lg border border-white/10">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={g} alt="" className="h-32 w-full object-cover"
+                        onError={(ev) => { const fig = (ev.currentTarget as HTMLImageElement).closest('figure'); if (fig) (fig as HTMLElement).style.display = 'none'; }} />
+                      <figcaption className="bg-black/30 px-2 py-1 text-[9px] text-dashboard-neutral/55">🛰 NASA GIBS 真彩卫星影像（近日 · 区域上下文）</figcaption>
+                    </figure>
+                  ) : null;
+                })()}
 
                 {/* 标签 */}
                 {e.tags && e.tags.length > 0 && (
