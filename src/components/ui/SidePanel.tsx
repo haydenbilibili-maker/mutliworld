@@ -91,6 +91,19 @@ export function SidePanel({ className = '' }: SidePanelProps) {
           transition={{ type: 'tween', duration: 0.25 }}
           className={`absolute top-0 right-0 z-35 h-full w-full max-w-md overflow-y-auto border-l border-dashboard-neutral/20 bg-dashboard-bg/97 shadow-2xl ${className}`}
         >
+          <style jsx global>{`
+            .sp-stagger > * { opacity: 0; animation: spUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+            .sp-stagger > *:nth-child(1) { animation-delay: 0.03s; }
+            .sp-stagger > *:nth-child(2) { animation-delay: 0.07s; }
+            .sp-stagger > *:nth-child(3) { animation-delay: 0.11s; }
+            .sp-stagger > *:nth-child(4) { animation-delay: 0.15s; }
+            .sp-stagger > *:nth-child(5) { animation-delay: 0.19s; }
+            .sp-stagger > *:nth-child(6) { animation-delay: 0.23s; }
+            .sp-stagger > *:nth-child(7) { animation-delay: 0.27s; }
+            .sp-stagger > *:nth-child(n+8) { animation-delay: 0.31s; }
+            @keyframes spUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+            @media (prefers-reduced-motion: reduce) { .sp-stagger > * { animation: none; opacity: 1; } }
+          `}</style>
           {e ? (
             <div>
               {/* 渐变头：按影响等级着色 */}
@@ -135,7 +148,7 @@ export function SidePanel({ className = '' }: SidePanelProps) {
                 )}
               </div>
 
-              <div className="space-y-3 p-4 pt-2">
+              <div className="sp-stagger space-y-3 p-4 pt-2">
                 {/* 配图 */}
                 {e.imageUrl && (
                   // eslint-disable-next-line @next/next/no-img-element
