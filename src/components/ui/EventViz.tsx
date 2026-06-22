@@ -82,11 +82,23 @@ export function MiniChart({ series, color = '#38bdf8' }: { series: EventSeries; 
 
   const line = pts.map((v, i) => `${sx(i).toFixed(1)},${sy(v).toFixed(1)}`).join(' ');
   const area = `${P},${H - P} ${line} ${(W - P)},${H - P}`;
+  const last = pts[pts.length - 1];
+  const mean = pts.reduce((s, v) => s + v, 0) / pts.length;
+  const fmt = (n: number) => (Math.abs(n) >= 100 ? Math.round(n).toString() : n.toFixed(1));
+  const lastTopPct = (sy(last) / H) * 100;
   return (
-    <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden>
-      <polygon points={area} fill={color} opacity="0.12" />
-      <polyline points={line} fill="none" stroke={color} strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round" />
-      <circle cx={sx(pts.length - 1)} cy={sy(pts[pts.length - 1])} r="2.4" fill={color} />
-    </svg>
+    <div style={{ position: 'relative' }}>
+      <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden style={{ display: 'block' }}>
+        {/* 均值基线 */}
+        <line x1={P} y1={sy(mean)} x2={W - P} y2={sy(mean)} stroke="rgba(255,255,255,0.12)" strokeDasharray="2 3" />
+        <polygon points={area} fill={color} opacity="0.12" />
+        <polyline points={line} fill="none" stroke={color} strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round" />
+        <circle cx={sx(pts.length - 1)} cy={sy(last)} r="2.6" fill={color} />
+      </svg>
+      {/* 极值/末值刻度：HTML 叠层，避免 SVG 非等比缩放拉伸文字 */}
+      <span style={{ position: 'absolute', left: 2, top: 0, fontSize: 8, color: 'rgba(255,255,255,0.45)' }}>{fmt(max)}</span>
+      <span style={{ position: 'absolute', left: 2, bottom: 0, fontSize: 8, color: 'rgba(255,255,255,0.45)' }}>{fmt(min)}</span>
+      <span style={{ position: 'absolute', right: 2, top: `${lastTopPct}%`, transform: 'translateY(-130%)', fontSize: 8.5, fontWeight: 600, color }}>{fmt(last)}</span>
+    </div>
   );
 }
