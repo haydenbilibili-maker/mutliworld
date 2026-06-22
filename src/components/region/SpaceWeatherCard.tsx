@@ -40,6 +40,43 @@ function kpColor(kp: number): string {
   return kp >= 7 ? '#f43f5e' : kp >= 5 ? '#fb923c' : kp >= 4 ? '#fbbf24' : '#34d399';
 }
 
+/** Kp 驱动的极光带 canvas 动画：振幅/流速随地磁活动；reduced-motion 时画静态单帧 */
+function AuroraRibbon({ kp }: { kp: number | null }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const cv = ref.current; if (!cv) return;
+    const ctx = cv.getContext('2d'); if (!ctx) return;
+    const dpr = Math.min(2, (typeof window !== 'undefined' && window.devicePixelRatio) || 1);
+    const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const amp = kp == null ? 0.12 : Math.max(0.12, Math.min(1, kp / 9));
+    const bands = [{ c: '52,211,153', phase: 0 }, { c: '167,139,250', phase: 1.6 }, { c: '56,189,248', phase: 3.0 }];
+    let raf = 0, t = 0;
+    const resize = () => { cv.width = Math.max(1, cv.clientWidth * dpr); cv.height = Math.max(1, cv.clientHeight * dpr); };
+    resize();
+    const draw = () => {
+      const w = cv.width, h = cv.height;
+      ctx.clearRect(0, 0, w, h);
+      bands.forEach((b, bi) => {
+        ctx.beginPath();
+        for (let x = 0; x <= w; x += 5 * dpr) {
+          const y = h * 0.55 + Math.sin((x / w) * Math.PI * 2 * 1.6 + t + b.phase) * h * 0.34 * amp - bi * h * 0.06;
+          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
+        const g = ctx.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, `rgba(${b.c},${0.05 + amp * 0.22})`);
+        g.addColorStop(1, `rgba(${b.c},0)`);
+        ctx.fillStyle = g; ctx.fill();
+      });
+      if (!reduce) { t += 0.012 + amp * 0.03; raf = requestAnimationFrame(draw); }
+    };
+    draw();
+    window.addEventListener('resize', resize);
+    return () => { if (raf) cancelAnimationFrame(raf); window.removeEventListener('resize', resize); };
+  }, [kp]);
+  return <canvas ref={ref} className="h-8 w-full" aria-hidden />;
+}
+
 export function SpaceWeatherCard({ className = '' }: { className?: string }) {
   const inSpace = useMapStore((s) => s.activeBody === 'earth' && s.activeTier === 'space');
   const setTier = useMapStore((s) => s.setTier);
@@ -89,6 +126,11 @@ export function SpaceWeatherCard({ className = '' }: { className?: string }) {
             {kp != null && <div className="absolute top-1/2 h-3 w-0.5 -translate-y-1/2 bg-white shadow" style={{ left: `${Math.min(100, Math.max(0, (kp / 9) * 100))}%` }} />}
           </div>
           <div className="mt-0.5 flex justify-between text-[8px] text-dashboard-neutral/45"><span>0 平静</span><span>5 G1</span><span>9 G5</span></div>
+        </div>
+
+        {/* Kp 驱动的极光带动画（振幅随地磁活动） */}
+        <div className="overflow-hidden rounded-md border border-white/8 bg-black/20">
+          <AuroraRibbon kp={kp} />
         </div>
 
         {/* 太阳风实时（速度 + Bz；南向 Bz 利于触发地磁暴） */}
