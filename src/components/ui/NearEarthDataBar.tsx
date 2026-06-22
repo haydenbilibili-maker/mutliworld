@@ -155,6 +155,12 @@ export function NearEarthDataBar() {
         if (merid) series2 = { label: `经向剖面 @ ${lng.toFixed(1)}°（${(lat - 30).toFixed(0)}°→${(lat + 30).toFixed(0)}°N）`, points: merid, unit: m.unit, kind: 'spark' };
       }
 
+      // 区间极值（从已采样剖面取，真实读数）
+      if (series && m.ramp !== 'baa') {
+        const mx = Math.max(...series.points), mn = Math.min(...series.points);
+        metrics.push({ label: '纬向区间', value: `${mn.toFixed(1)}~${mx.toFixed(1)}`, hint: m.unit });
+      }
+
       let impact: ImpactLevel = 'low';
       if (scalarVal != null) {
         if (m.ramp === 'baa') impact = scalarVal >= 3 ? 'high' : scalarVal >= 2 ? 'medium' : 'low';
