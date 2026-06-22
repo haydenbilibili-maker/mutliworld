@@ -21,6 +21,13 @@ function kpColor(kp: number): string {
 
 export function SpaceWeatherCard({ className = '' }: { className?: string }) {
   const inSpace = useMapStore((s) => s.activeBody === 'earth' && s.activeTier === 'space');
+  const setTier = useMapStore((s) => s.setTier);
+  const toggleLayer = useMapStore((s) => s.toggleLayer);
+
+  const viewAurora = () => {
+    setTier('surface');
+    if (!useMapStore.getState().activeLayers.includes('aurora')) toggleLayer('aurora');
+  };
   const { data } = useSWR<SpaceWeather>(inSpace ? '/api/spaceweather' : null, fetcher, {
     revalidateOnFocus: false, refreshInterval: 10 * 60 * 1000, dedupingInterval: 5 * 60 * 1000,
   });
@@ -75,6 +82,15 @@ export function SpaceWeatherCard({ className = '' }: { className?: string }) {
             ⚠ 地磁暴可能影响高频通信、GNSS 定位与极区航线。
           </div>
         )}
+
+        <button
+          type="button"
+          onClick={viewAurora}
+          title="切到地表层并开启极光带图层"
+          className="w-full rounded-md border border-violet-400/35 bg-violet-400/10 px-2 py-1 text-[11px] text-violet-100 transition-colors hover:bg-violet-400/20"
+        >
+          🌌 查看极光带（地表层）→
+        </button>
 
         <div className="border-t border-dashboard-neutral/10 pt-1 text-[9px] text-dashboard-neutral/40">
           源：{data?.source ?? 'NOAA SWPC'} · 真实观测·非预测
