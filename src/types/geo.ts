@@ -161,6 +161,10 @@ export type LayerId =
   | 'media_orgs'
   | 'auto_brands'
   | 'pharmaceutical'
+  | 'intl_orgs'
+  | 'space_companies'
+  | 'rare_earth'
+  | 'flags_of_convenience'
   // 近地空间（对标 earth.nullschool：粒子流场 + 标量叠加）
   | 'wind_flow'
   | 'ocean_flow'
@@ -186,6 +190,7 @@ export type LayerId =
   | 'seaice'
   | 'wildfires'
   | 'landslides'
+  | 'gdacs'
   | 'satellite_imagery'
   | 'iss'
   | 'tiangong'

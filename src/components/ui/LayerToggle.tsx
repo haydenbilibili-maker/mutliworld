@@ -46,7 +46,7 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   },
   {
     title: '自然',
-    ids: ['natural', 'earthquakes', 'aurora', 'volcanoes', 'storms', 'floods', 'dusthaze', 'seaice', 'wildfires', 'landslides', 'satellite_imagery', 'weather', 'climate', 'daynight', 'research_stations', 'deserts', 'islands', 'forests', 'earthquakes_historical'],
+    ids: ['natural', 'earthquakes', 'aurora', 'volcanoes', 'storms', 'floods', 'dusthaze', 'seaice', 'wildfires', 'landslides', 'gdacs', 'satellite_imagery', 'weather', 'climate', 'daynight', 'research_stations', 'deserts', 'islands', 'forests', 'earthquakes_historical'],
   },
   {
     title: '文化与遗产',
@@ -113,6 +113,7 @@ const ALWAYS_ON: LayerId[] = [
   'seaice',
   'wildfires',
   'landslides',
+  'gdacs',
   'satellite_imagery',
   'launch_sites',
   'launch_log',

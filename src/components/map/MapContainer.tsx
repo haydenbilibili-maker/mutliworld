@@ -52,6 +52,7 @@ import { StormLayer } from '@/components/map/StormLayer';
 import { FloodLayer } from '@/components/map/FloodLayer';
 import { WildfireLayer } from '@/components/map/WildfireLayer';
 import { LandslideLayer } from '@/components/map/LandslideLayer';
+import { GdacsLayer } from '@/components/map/GdacsLayer';
 import { DustHazeLayer } from '@/components/map/DustHazeLayer';
 import { SeaIceLayer } from '@/components/map/SeaIceLayer';
 import { MaritimeLayer } from '@/components/map/MaritimeLayer';
@@ -389,6 +390,7 @@ export function MapContainer({ className = '', chromeless = false }: MapContaine
             <FloodLayer />
             <WildfireLayer />
             <LandslideLayer />
+            <GdacsLayer />
             <DustHazeLayer />
             <SeaIceLayer />
             <MaritimeLayer />
