@@ -9,6 +9,7 @@
 import { useMapStore } from '@/store/useMapStore';
 import type { LayerId } from '@/types/geo';
 import type { SpatialTier } from '@/types/tier';
+import { keyBadgeForLayer } from '@/lib/layers/liveSourceKeys';
 
 interface RealtimeSource {
   id: LayerId;
@@ -52,13 +53,21 @@ export function RealtimeDashboard({ className = '' }: RealtimeDashboardProps) {
     <div className={`flex flex-row flex-wrap items-center gap-1.5 ${className}`} role="group" aria-label="实时数据源">
       {SOURCES.map((src) => {
         const active = activeTier === src.tier && activeLayers.includes(src.id);
+        const badge = keyBadgeForLayer(src.id);
+        const keyHint = badge
+          ? badge.requirement === 'none'
+            ? ' · 免费无Key'
+            : badge.hasKey
+              ? ' · 免费Key'
+              : ` · 需配置 ${badge.envVar}`
+          : '';
         return (
           <button
             key={src.id}
             type="button"
             onClick={() => handleToggle(src)}
             aria-pressed={active}
-            title={`${src.label} · ${active ? '实时开启中，点击关闭' : '点击开启实时图层'}${src.tier === 'space' ? '（宇宙层）' : ''}`}
+            title={`${src.label} · ${active ? '实时开启中，点击关闭' : '点击开启实时图层'}${src.tier === 'space' ? '（宇宙层）' : ''}${keyHint}`}
             className="group flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs transition-colors"
             style={
               active
@@ -70,6 +79,13 @@ export function RealtimeDashboard({ className = '' }: RealtimeDashboardProps) {
               {src.icon}
             </span>
             <span className="font-medium max-sm:hidden">{src.label}</span>
+            {badge?.requirement === 'none' && (
+              <span
+                aria-hidden
+                className="h-1.5 w-1.5 shrink-0 rounded-full bg-green-400/80"
+                title="免费无Key 数据源"
+              />
+            )}
             <span
               className="h-2 w-2 shrink-0 rounded-full"
               style={

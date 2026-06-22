@@ -7,6 +7,7 @@
 
 import type { ImpactLevel } from '@/types/geo';
 import { DENSIFY_GARRISONS } from './global.layers-densify-r2';
+import { DENSIFY_GARRISONS_R3 } from './global.layers-densify-r3';
 
 export interface GarrisonBase {
   id: string;
@@ -55,4 +56,5 @@ export const GLOBAL_GARRISONS: GarrisonBase[] = [
   { id: 'gar-fr-cotedivoire', name: '阿比让法军基地', country: 'france', lng: -4.01, lat: 5.32, role: '法军在科特迪瓦驻军', impact: 'low' },
   { id: 'gar-uk-falklands', name: '蒙特维德军营', country: 'uk', lng: -58.45, lat: -51.7, role: '英军福克兰群岛驻军', impact: 'low' },
   ...DENSIFY_GARRISONS,
+  ...DENSIFY_GARRISONS_R3,
 ];

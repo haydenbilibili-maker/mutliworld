@@ -344,17 +344,37 @@ buildRegionGeoJSON（按区域 bounds 过滤合并）
 
 可选静态缓存：`npm run data:fetch` 写入 `public/cache/geodata-{region}.json`，供 API 优先读取。
 
-### 实时数据源（免费、无 Key）
+### 实时数据源（无 Key / 免费 Key）
 
-| 源 | 用途 | 刷新间隔 |
-|----|------|----------|
-| USGS Earthquakes | 全球地震 + 震源深度 | ~5 分钟 |
-| GDACS | 洪水/气旋/火山/干旱/野火 | ~10 分钟 |
-| RSS（BBC / 半岛 / UN News） | 新闻流 | ~5 分钟 |
-| Frankfurter / CoinGecko | 外汇 / 加密 | ~2 分钟 |
-| CelesTrak TLE + satellite.js | 在轨卫星 SGP4 星下点 | 客户端 60s 传播 |
-| wheretheiss.at | ISS / 天宫实时位置（备用） | ~12s |
-| Launch Library 2 | 发射记录（本地 JSON 缓存） | 脚本手动/定时更新 |
+实时数据源按鉴权方式分两类，前端与管理后台以徽标标注（🟢 免费无Key / 🔵 免费Key / 🟡 未配置Key）。
+
+**无 Key（公开免鉴权，零配置可用）**
+
+| 源 | 用途 | 图层 | 刷新间隔 |
+|----|------|------|----------|
+| Open-Meteo | 城市气象（温度/湿度/风） | `live_weather` | ~15 分钟 |
+| RainViewer | 降水雷达瓦片 | `live_weather` | ~15 分钟 |
+| adsb.lol / adsb.fi | 社区 ADS-B 航班位置 | `live_flights` | ~45 秒 |
+| CelesTrak TLE + satellite.js | 在轨卫星 SGP4 星下点 | `satellites`/`space_stations`/`space_debris` | 客户端 60s 传播 |
+| wheretheiss.at | ISS / 天宫实时位置（备用） | `iss`/`tiangong` | ~12s |
+| pizzint.watch | 五角大楼披萨指数（OSINT） | `pizza_index` | ~3 分钟 |
+| USGS Earthquakes | 全球地震 + 震源深度 | `natural`/`quake_depth` | ~5 分钟 |
+| GDACS | 洪水/气旋/火山/干旱/野火 | `natural` | ~10 分钟 |
+| NASA EONET | 野火/火山/风暴 | `natural` | 按需 |
+| Launch Library 2 | 发射记录（本地 JSON 缓存） | `launch_log` | 脚本手动/定时更新 |
+| RSS（BBC / 半岛 / UN News） | 新闻流 | `conflicts`/`economic` | ~5 分钟 |
+| Frankfurter / CoinGecko | 外汇 / 加密 | `economic` | ~2 分钟 |
+
+**免费 Key（需申请免费 Key，缺失则降级）**
+
+| 源 | env 变量 | 用途 | 图层 | 缺失降级 |
+|----|----------|------|------|----------|
+| NASA FIRMS (VIIRS) | `FIRMS_MAP_KEY` | 近实时活跃火点 | `live_fires` | 返回空 + `noKey:true` |
+| AISStream.io | `AISSTREAM_API_KEY` | 全球船舶 AIS | `live_maritime` | 回退航运通道模拟 |
+| DeepSeek / OpenAI 兼容 | `LLM_API_KEY` | AI 区域态势简报 | 简报能力 | 回退规则型简报 |
+| FRED / EIA | `FRED_API_KEY`/`EIA_API_KEY` | 原油/天然气/利率/CPI | `economic` | 整源降级 |
+
+> 鉴权分类的单一事实来源：`src/lib/layers/liveSourceKeys.ts`（`LIVE_SOURCE_KEY_INFO` 注册表）。前端徽标经 `keyBadgeForLayer()` 查询，管理后台探针经 `probeLiveSources()` 填充运行时真实配置态。
 
 拉取失败时优雅降级，不阻塞页面渲染。
 

@@ -19,6 +19,12 @@ interface LiveSource {
   error?: string;
   cacheTtl: string;
   apiRoute: string;
+  /** 鉴权方式：无 Key / 免费 Key / 付费 Key */
+  keyRequirement?: 'none' | 'free_key' | 'paid_key';
+  /** 所需 env 变量名 */
+  keyEnvVar?: string | null;
+  /** 运行时是否已配置所需 Key */
+  keyConfigured?: boolean;
 }
 
 interface LiveSourcesResponse {
@@ -38,6 +44,20 @@ function sourceBadge(status: LiveSource['status']) {
     default:
       return <AdminBadge variant="muted" label="未知" />;
   }
+}
+
+/** Key 需求徽标：免费无Key（绿）/ 免费Key（蓝）/ 未配置Key（灰降级） */
+function keyBadge(src: LiveSource) {
+  const req = src.keyRequirement ?? 'none';
+  if (req === 'none') {
+    return <AdminBadge variant="success" label="免费无Key" />;
+  }
+  if (src.keyConfigured === false) {
+    const env = src.keyEnvVar ? `（需配置 ${src.keyEnvVar}）` : '';
+    return <AdminBadge variant="warning" label={`未配置Key${env}`} />;
+  }
+  const label = req === 'free_key' ? '免费Key' : '付费Key';
+  return <AdminBadge variant="info" label={label} />;
 }
 
 /** 管理后台实时数据源探测面板 */
@@ -110,7 +130,10 @@ export function AdminLiveSourcesPanel({ compact = false }: { compact?: boolean }
                   <span className="text-sm text-white">{src.name}</span>
                   <span className="ml-2 text-xs text-dashboard-neutral/50">{src.provider}</span>
                 </div>
-                {sourceBadge(src.status)}
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {keyBadge(src)}
+                  {sourceBadge(src.status)}
+                </div>
               </div>
               <p className="mt-1 text-xs text-dashboard-neutral/70">{src.detail}</p>
               <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-dashboard-neutral/45">

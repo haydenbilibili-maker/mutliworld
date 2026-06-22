@@ -6,6 +6,8 @@ import { fetchPizzintWatch } from '@/lib/pizza-index/pizzint';
 import { fetchLiveWeatherPoints } from '@/lib/weather/openMeteo';
 import { loadTleDatabase } from '@/lib/orbital/tleStore';
 import { hasLlm, LLM_MODEL_NAME } from '@/lib/llm/client';
+import type { KeyRequirement } from '@/lib/layers/liveSourceKeys';
+import { getKeyInfoBySource, sourceKeyConfigured } from '@/lib/layers/liveSourceKeys';
 
 export type LiveSourceStatus = 'ok' | 'degraded' | 'error' | 'unknown';
 
@@ -22,6 +24,27 @@ export interface LiveSourceProbe {
   error?: string;
   cacheTtl: string;
   apiRoute: string;
+  /** 鉴权方式：无 Key / 免费 Key / 付费 Key */
+  keyRequirement: KeyRequirement;
+  /** 所需 env 变量名（无 Key 时为 null） */
+  keyEnvVar: string | null;
+  /** 运行时是否已配置所需 Key（服务端读取 env 后的真实态） */
+  keyConfigured: boolean;
+}
+
+/** 从注册表填充 Key 需求字段（服务端运行时真实配置态） */
+function keyMeta(sourceId: string): {
+  keyRequirement: KeyRequirement;
+  keyEnvVar: string | null;
+  keyConfigured: boolean;
+} {
+  const info = getKeyInfoBySource(sourceId);
+  if (!info) return { keyRequirement: 'none', keyEnvVar: null, keyConfigured: true };
+  return {
+    keyRequirement: info.keyRequirement,
+    keyEnvVar: info.envVar,
+    keyConfigured: sourceKeyConfigured(sourceId),
+  };
 }
 
 async function probeMaritime(): Promise<Pick<LiveSourceProbe, 'status' | 'latencyMs' | 'detail' | 'error'>> {
@@ -224,6 +247,7 @@ export async function probeLiveSources(): Promise<LiveSourceProbe[]> {
       provider: 'adsb.lol（OpenSky 兜底）',
       layerIds: ['live_flights'],
       ...flights,
+      ...keyMeta('adsb'),
       lastCheckedAt: checkedAt,
       lastFetchAt: checkedAt,
       cacheTtl: '45 秒（/api/flights 内存缓存）',
@@ -235,6 +259,7 @@ export async function probeLiveSources(): Promise<LiveSourceProbe[]> {
       provider: process.env.AISSTREAM_API_KEY ? 'AISStream.io' : '航运通道模拟',
       layerIds: ['live_maritime'],
       ...maritime,
+      ...keyMeta('aisstream'),
       lastCheckedAt: checkedAt,
       lastFetchAt: checkedAt,
       cacheTtl: '60 秒（/api/maritime/live 内存缓存）',
@@ -246,6 +271,7 @@ export async function probeLiveSources(): Promise<LiveSourceProbe[]> {
       provider: 'Open-Meteo API',
       layerIds: ['live_weather'],
       ...meteo,
+      ...keyMeta('open-meteo'),
       lastCheckedAt: checkedAt,
       lastFetchAt: checkedAt,
       cacheTtl: '15 分钟（CDN s-maxage=900）',
@@ -257,6 +283,7 @@ export async function probeLiveSources(): Promise<LiveSourceProbe[]> {
       provider: 'RainViewer 雷达瓦片',
       layerIds: ['live_weather'],
       ...rainviewer,
+      ...keyMeta('rainviewer'),
       lastCheckedAt: checkedAt,
       lastFetchAt: checkedAt,
       cacheTtl: '随 /api/weather/radar 缓存',
@@ -268,6 +295,7 @@ export async function probeLiveSources(): Promise<LiveSourceProbe[]> {
       provider: 'pizzint.watch',
       layerIds: ['pizza_index'],
       ...pizzint,
+      ...keyMeta('pizzint'),
       lastCheckedAt: checkedAt,
       lastFetchAt: pizzint.lastFetchAt ?? null,
       cacheTtl: '5 分钟实时 / 3 分钟模拟',
@@ -282,6 +310,7 @@ export async function probeLiveSources(): Promise<LiveSourceProbe[]> {
       latencyMs: null,
       detail: tle.detail,
       error: tle.error,
+      ...keyMeta('celestrak-tle'),
       lastCheckedAt: checkedAt,
       lastFetchAt: tle.lastFetchAt,
       cacheTtl: '本地 tle.json · /api/orbital-objects 15s',
@@ -293,6 +322,7 @@ export async function probeLiveSources(): Promise<LiveSourceProbe[]> {
       provider: 'OpenStreetMap',
       layerIds: ['search'],
       ...geocoding,
+      ...keyMeta('nominatim'),
       lastCheckedAt: checkedAt,
       lastFetchAt: checkedAt,
       cacheTtl: '前端防抖 450ms（无服务端缓存）',
@@ -304,6 +334,7 @@ export async function probeLiveSources(): Promise<LiveSourceProbe[]> {
       provider: 'OpenPlanetaryMap · NASA/USGS',
       layerIds: ['moon', 'mars', 'mercury'],
       ...bodyTiles,
+      ...keyMeta('opm-body-tiles'),
       lastCheckedAt: checkedAt,
       lastFetchAt: checkedAt,
       cacheTtl: 'CDN 瓦片缓存',
@@ -318,6 +349,7 @@ export async function probeLiveSources(): Promise<LiveSourceProbe[]> {
       latencyMs: null,
       detail: llm.detail,
       error: llm.error,
+      ...keyMeta('llm-deepseek'),
       lastCheckedAt: checkedAt,
       lastFetchAt: null,
       cacheTtl: '按需生成（后台）',

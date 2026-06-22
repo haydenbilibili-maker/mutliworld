@@ -6,6 +6,7 @@
  */
 
 import type { ThematicPoint } from '@/regions/global.thematic';
+import { DENSIFY_WORLD_HERITAGE_R3 } from './global.layers-densify-r3';
 
 /** UNESCO 世界遗产（文化 cultural / 自然 natural / 双重 mixed），全球精选 */
 export const GLOBAL_WORLD_HERITAGE: ThematicPoint[] = [
@@ -43,6 +44,7 @@ export const GLOBAL_WORLD_HERITAGE: ThematicPoint[] = [
   { id: 'wh-statue-liberty', name: '自由女神像', layerId: 'world_heritage', lng: -74.04, lat: 40.69, note: '美国 · 1984', impact: 'medium', subKind: 'cultural' },
   { id: 'wh-galapagos', name: '加拉帕戈斯群岛', layerId: 'world_heritage', lng: -90.33, lat: -0.6, note: '厄瓜多尔 · 1978 · 自然遗产', impact: 'high', subKind: 'natural' },
   { id: 'wh-gbr', name: '大堡礁', layerId: 'world_heritage', lng: 147.7, lat: -18.3, note: '澳大利亚 · 1981 · 自然遗产', impact: 'high', subKind: 'natural' },
+  ...DENSIFY_WORLD_HERITAGE_R3,
 ];
 
 /** 中国全国重点文物保护单位（国保）· 精选 */

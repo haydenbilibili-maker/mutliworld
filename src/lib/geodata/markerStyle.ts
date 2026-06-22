@@ -159,6 +159,85 @@ export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> =
   migration_routes: { emoji: '🐢', label: '迁徙路线' },
   world_heritage: { emoji: '🏛️', label: '世界遗产' },
   china_heritage: { emoji: '🏯', label: '国保单位' },
+  megacities: { emoji: '🏙️', label: '特大城市' },
+  'mega-30m': { emoji: '🌆', label: '3000万+ 都会区' },
+  'mega-20m': { emoji: '🏙️', label: '2000万级都会区' },
+  'mega-10m': { emoji: '🏛️', label: '1000万级都会区' },
+  dams: { emoji: '🏗️', label: '水坝水电' },
+  'dam-hydro-mega': { emoji: '💧', label: '巨型水电站（>10GW）' },
+  'dam-hydro-large': { emoji: '⚡', label: '大型水电站' },
+  'dam-irrigation': { emoji: '🚜', label: '灌溉/调水坝' },
+  'dam-flood': { emoji: '🌊', label: '防洪/多用途坝' },
+  ports: { emoji: '⚓', label: '主要港口' },
+  'port-mega': { emoji: '🚢', label: '超级大港（>30M TEU）' },
+  'port-large': { emoji: '🛳️', label: '大型港口' },
+  'port-medium': { emoji: '⛴️', label: '中型港口' },
+  research_stations: { emoji: '🧊', label: '极地科考站' },
+  'rs-antarctic': { emoji: '🐧', label: '南极科考站' },
+  'rs-arctic': { emoji: '🐻‍❄️', label: '北极科考站' },
+  refineries: { emoji: '🏭', label: '炼油厂' },
+  'ref-mega': { emoji: '🛢️', label: '超大型炼厂（>500kbd）' },
+  'ref-large': { emoji: '🏭', label: '大型炼厂' },
+  'ref-petrochem': { emoji: '🧪', label: '石化基地' },
+  airports: { emoji: '✈️', label: '国际机场' },
+  'ap-mega': { emoji: '🛫', label: '超级枢纽（>60M 旅客）' },
+  'ap-large': { emoji: '✈️', label: '大型枢纽' },
+  'ap-cargo': { emoji: '📦', label: '货运枢纽' },
+  nuclear_reactors: { emoji: '☢️', label: '核电站' },
+  'npp-mega': { emoji: '⚛️', label: '超大型核电站（>5GW）' },
+  'npp-large': { emoji: '🔌', label: '大型核电站' },
+  'npp-small': { emoji: '🔆', label: '中小型/SMR' },
+  factories: { emoji: '🏭', label: '制造基地' },
+  'fac-auto': { emoji: '🚗', label: '汽车制造' },
+  'fac-shipyard': { emoji: '🚢', label: '造船基地' },
+  'fac-steel': { emoji: '⚙️', label: '钢铁冶金' },
+  'fac-electronics': { emoji: '📱', label: '电子制造' },
+  financial_centers: { emoji: '🏦', label: '金融中心' },
+  'fc-exchange': { emoji: '💹', label: '证券交易所' },
+  'fc-central-bank': { emoji: '🏛️', label: '中央银行' },
+  'fc-swf': { emoji: '💰', label: '主权财富基金' },
+  borders: { emoji: '🛂', label: '边境口岸' },
+  'border-land': { emoji: '🚧', label: '陆路口岸' },
+  'border-megaproject': { emoji: '🌉', label: '跨境超级工程' },
+  deserts: { emoji: '🏜️', label: '沙漠荒漠' },
+  'desert-hot': { emoji: '🏜️', label: '热沙漠' },
+  'desert-cold': { emoji: '🧊', label: '冷沙漠' },
+  universities: { emoji: '🎓', label: '高等学府' },
+  'uni-ivy': { emoji: '🏛️', label: '常春藤/顶尖' },
+  'uni-public': { emoji: '🏫', label: '公立大学' },
+  'uni-tech': { emoji: '🔬', label: '理工科大' },
+  military_industry: { emoji: '🛡️', label: '军工企业' },
+  'mi-aero': { emoji: '✈️', label: '航空军工' },
+  'mi-arms': { emoji: '🔫', label: '武器/弹药' },
+  'mi-space': { emoji: '🚀', label: '航天防务' },
+  'mi-naval': { emoji: '🚢', label: '海军造舰' },
+  wonder_projects: { emoji: '🏗️', label: '超级工程' },
+  'wp-bridge': { emoji: '🌉', label: '桥梁' },
+  'wp-tunnel': { emoji: '🚇', label: '隧道' },
+  'wp-skyscraper': { emoji: '🏙️', label: '摩天楼' },
+  'wp-megaproject': { emoji: '🏛️', label: '巨型基建' },
+  agriculture: { emoji: '🌾', label: '农业产区' },
+  'ag-grain': { emoji: '🌽', label: '粮食产区' },
+  'ag-cash': { emoji: '☕', label: '经济作物' },
+  'ag-livestock': { emoji: '🐄', label: '畜牧产区' },
+  religions: { emoji: '⛪', label: '宗教圣地' },
+  'rel-christian': { emoji: '⛪', label: '基督教圣地' },
+  'rel-islam': { emoji: '🕌', label: '伊斯兰圣地' },
+  'rel-buddhist': { emoji: '☸️', label: '佛教圣地' },
+  'rel-hindu': { emoji: '🛕', label: '印度教圣地' },
+  'rel-jewish': { emoji: '🕍', label: '犹太教圣地' },
+  stadiums: { emoji: '🏟️', label: '体育场馆' },
+  'st-football': { emoji: '⚽', label: '足球场' },
+  'st-olympic': { emoji: '🥇', label: '奥运场馆' },
+  'st-american': { emoji: '🏈', label: '美式橄榄球' },
+  museums: { emoji: '🏛️', label: '博物馆' },
+  'mus-art': { emoji: '🎨', label: '艺术博物馆' },
+  'mus-history': { emoji: '📜', label: '历史博物馆' },
+  'mus-science': { emoji: '🔬', label: '科学博物馆' },
+  islands: { emoji: '🏝️', label: '主要岛屿' },
+  'island-tropical': { emoji: '🌴', label: '热带岛屿' },
+  'island-strategic': { emoji: '⚓', label: '战略岛屿' },
+  'island-arctic': { emoji: '🧊', label: '北极岛屿' },
   monsoon: { emoji: '🌧️', label: '季风气候带' },
   'monsoon-summer': { emoji: '🌧️', label: '夏季/湿季' },
   'monsoon-winter': { emoji: '❄️', label: '冬季/干季' },
@@ -235,6 +314,25 @@ export const LAYER_HALO_COLORS: Record<string, string> = {
   migration_routes: '#34d399',
   world_heritage: '#eab308',
   china_heritage: '#ef4444',
+  megacities: '#a855f7',
+  dams: '#0ea5e9',
+  ports: '#14b8a6',
+  research_stations: '#67e8f9',
+  refineries: '#b45309',
+  airports: '#2563eb',
+  nuclear_reactors: '#7c3aed',
+  factories: '#475569',
+  financial_centers: '#16a34a',
+  borders: '#dc2626',
+  deserts: '#d97706',
+  universities: '#1d4ed8',
+  military_industry: '#991b1b',
+  wonder_projects: '#9333ea',
+  agriculture: '#65a30d',
+  religions: '#c026d3',
+  stadiums: '#ea580c',
+  museums: '#0d9488',
+  islands: '#0891b2',
   monsoon: '#6366f1',
   atmospheric_circulation: '#8b5cf6',
   deep_exploration: '#0e7490',
@@ -410,6 +508,123 @@ const CLIMATE_KIND_IMAGE: Record<string, string> = {
   ocean: 'climate-ocean',
 };
 
+const MEGACITY_KIND_IMAGE: Record<string, string> = {
+  '30m+': 'mega-30m',
+  '20m+': 'mega-20m',
+  '10m': 'mega-10m',
+};
+
+const DAM_KIND_IMAGE: Record<string, string> = {
+  'hydro-mega': 'dam-hydro-mega',
+  'hydro-large': 'dam-hydro-large',
+  irrigation: 'dam-irrigation',
+  flood: 'dam-flood',
+};
+
+const PORT_KIND_IMAGE: Record<string, string> = {
+  mega: 'port-mega',
+  large: 'port-large',
+  medium: 'port-medium',
+};
+
+const RESEARCH_STATION_KIND_IMAGE: Record<string, string> = {
+  antarctic: 'rs-antarctic',
+  arctic: 'rs-arctic',
+};
+
+const REFINERY_KIND_IMAGE: Record<string, string> = {
+  mega: 'ref-mega',
+  large: 'ref-large',
+  petrochem: 'ref-petrochem',
+};
+
+const AIRPORT_KIND_IMAGE: Record<string, string> = {
+  mega: 'ap-mega',
+  large: 'ap-large',
+  cargo: 'ap-cargo',
+};
+
+const NUCLEAR_REACTOR_KIND_IMAGE: Record<string, string> = {
+  mega: 'npp-mega',
+  large: 'npp-large',
+  small: 'npp-small',
+};
+
+const FACTORY_KIND_IMAGE: Record<string, string> = {
+  auto: 'fac-auto',
+  shipyard: 'fac-shipyard',
+  steel: 'fac-steel',
+  electronics: 'fac-electronics',
+};
+
+const FINANCIAL_CENTER_KIND_IMAGE: Record<string, string> = {
+  exchange: 'fc-exchange',
+  central_bank: 'fc-central-bank',
+  swf: 'fc-swf',
+};
+
+const BORDER_KIND_IMAGE: Record<string, string> = {
+  land: 'border-land',
+  megaproject: 'border-megaproject',
+};
+
+const DESERT_KIND_IMAGE: Record<string, string> = {
+  hot: 'desert-hot',
+  cold: 'desert-cold',
+};
+
+const UNIVERSITY_KIND_IMAGE: Record<string, string> = {
+  ivy: 'uni-ivy',
+  public: 'uni-public',
+  tech: 'uni-tech',
+};
+
+const MILITARY_INDUSTRY_KIND_IMAGE: Record<string, string> = {
+  aero: 'mi-aero',
+  arms: 'mi-arms',
+  space: 'mi-space',
+  naval: 'mi-naval',
+};
+
+const WONDER_PROJECT_KIND_IMAGE: Record<string, string> = {
+  bridge: 'wp-bridge',
+  tunnel: 'wp-tunnel',
+  skyscraper: 'wp-skyscraper',
+  megaproject: 'wp-megaproject',
+};
+
+const AGRICULTURE_KIND_IMAGE: Record<string, string> = {
+  grain: 'ag-grain',
+  cash: 'ag-cash',
+  livestock: 'ag-livestock',
+};
+
+const RELIGION_KIND_IMAGE: Record<string, string> = {
+  christian: 'rel-christian',
+  islam: 'rel-islam',
+  buddhist: 'rel-buddhist',
+  hindu: 'rel-hindu',
+  jewish: 'rel-jewish',
+};
+
+const STADIUM_KIND_IMAGE: Record<string, string> = {
+  football: 'st-football',
+  olympic: 'st-olympic',
+  american: 'st-american',
+};
+
+const MUSEUM_KIND_IMAGE: Record<string, string> = {
+  art: 'mus-art',
+  history: 'mus-history',
+  science: 'mus-science',
+};
+
+const ISLAND_KIND_IMAGE: Record<string, string> = {
+  tropical: 'island-tropical',
+  strategic: 'island-strategic',
+  arctic: 'island-arctic',
+};
+
 const INCIDENT_TYPE_IMAGE: Record<string, string> = {
   military: 'incident-military',
   political: 'incident-political',
@@ -462,6 +677,82 @@ function resolveImageId(props: MarkerStyleProps): string {
 
   if (layerId === 'climate' && props.subKind) {
     return CLIMATE_KIND_IMAGE[String(props.subKind)] ?? 'climate';
+  }
+
+  if (layerId === 'megacities' && props.subKind) {
+    return MEGACITY_KIND_IMAGE[String(props.subKind)] ?? 'megacities';
+  }
+
+  if (layerId === 'dams' && props.subKind) {
+    return DAM_KIND_IMAGE[String(props.subKind)] ?? 'dams';
+  }
+
+  if (layerId === 'ports' && props.subKind) {
+    return PORT_KIND_IMAGE[String(props.subKind)] ?? 'ports';
+  }
+
+  if (layerId === 'research_stations' && props.subKind) {
+    return RESEARCH_STATION_KIND_IMAGE[String(props.subKind)] ?? 'research_stations';
+  }
+
+  if (layerId === 'refineries' && props.subKind) {
+    return REFINERY_KIND_IMAGE[String(props.subKind)] ?? 'refineries';
+  }
+
+  if (layerId === 'airports' && props.subKind) {
+    return AIRPORT_KIND_IMAGE[String(props.subKind)] ?? 'airports';
+  }
+
+  if (layerId === 'nuclear_reactors' && props.subKind) {
+    return NUCLEAR_REACTOR_KIND_IMAGE[String(props.subKind)] ?? 'nuclear_reactors';
+  }
+
+  if (layerId === 'factories' && props.subKind) {
+    return FACTORY_KIND_IMAGE[String(props.subKind)] ?? 'factories';
+  }
+
+  if (layerId === 'financial_centers' && props.subKind) {
+    return FINANCIAL_CENTER_KIND_IMAGE[String(props.subKind)] ?? 'financial_centers';
+  }
+
+  if (layerId === 'borders' && props.subKind) {
+    return BORDER_KIND_IMAGE[String(props.subKind)] ?? 'borders';
+  }
+
+  if (layerId === 'deserts' && props.subKind) {
+    return DESERT_KIND_IMAGE[String(props.subKind)] ?? 'deserts';
+  }
+
+  if (layerId === 'universities' && props.subKind) {
+    return UNIVERSITY_KIND_IMAGE[String(props.subKind)] ?? 'universities';
+  }
+
+  if (layerId === 'military_industry' && props.subKind) {
+    return MILITARY_INDUSTRY_KIND_IMAGE[String(props.subKind)] ?? 'military_industry';
+  }
+
+  if (layerId === 'wonder_projects' && props.subKind) {
+    return WONDER_PROJECT_KIND_IMAGE[String(props.subKind)] ?? 'wonder_projects';
+  }
+
+  if (layerId === 'agriculture' && props.subKind) {
+    return AGRICULTURE_KIND_IMAGE[String(props.subKind)] ?? 'agriculture';
+  }
+
+  if (layerId === 'religions' && props.subKind) {
+    return RELIGION_KIND_IMAGE[String(props.subKind)] ?? 'religions';
+  }
+
+  if (layerId === 'stadiums' && props.subKind) {
+    return STADIUM_KIND_IMAGE[String(props.subKind)] ?? 'stadiums';
+  }
+
+  if (layerId === 'museums' && props.subKind) {
+    return MUSEUM_KIND_IMAGE[String(props.subKind)] ?? 'museums';
+  }
+
+  if (layerId === 'islands' && props.subKind) {
+    return ISLAND_KIND_IMAGE[String(props.subKind)] ?? 'islands';
   }
 
   if (layerId === 'launch_sites') {
@@ -714,6 +1005,25 @@ const LAYER_LEGEND_ENTRIES: Partial<Record<LayerId, string[]>> = {
   deep_exploration: ['deep_exploration', 'deep-trench', 'deep-hydrothermal', 'deep-manned', 'deep-rov', 'deep-institution'],
   pizza_index: ['pizza_index', 'pizza-busy', 'pizza-quiet'],
   persons: ['persons', 'person-political', 'person-economic', 'person-social', 'person-cultural', 'person-military'],
+  megacities: ['mega-30m', 'mega-20m', 'mega-10m'],
+  dams: ['dam-hydro-mega', 'dam-hydro-large', 'dam-irrigation', 'dam-flood'],
+  ports: ['port-mega', 'port-large', 'port-medium'],
+  research_stations: ['rs-antarctic', 'rs-arctic'],
+  refineries: ['ref-mega', 'ref-large', 'ref-petrochem'],
+  airports: ['ap-mega', 'ap-large', 'ap-cargo'],
+  nuclear_reactors: ['npp-mega', 'npp-large', 'npp-small'],
+  factories: ['fac-auto', 'fac-shipyard', 'fac-steel', 'fac-electronics'],
+  financial_centers: ['fc-exchange', 'fc-central-bank', 'fc-swf'],
+  borders: ['border-land', 'border-megaproject'],
+  deserts: ['desert-hot', 'desert-cold'],
+  universities: ['uni-ivy', 'uni-public', 'uni-tech'],
+  military_industry: ['mi-aero', 'mi-arms', 'mi-space', 'mi-naval'],
+  wonder_projects: ['wp-bridge', 'wp-tunnel', 'wp-skyscraper', 'wp-megaproject'],
+  agriculture: ['ag-grain', 'ag-cash', 'ag-livestock'],
+  religions: ['rel-christian', 'rel-islam', 'rel-buddhist', 'rel-hindu', 'rel-jewish'],
+  stadiums: ['st-football', 'st-olympic', 'st-american'],
+  museums: ['mus-art', 'mus-history', 'mus-science'],
+  islands: ['island-tropical', 'island-strategic', 'island-arctic'],
 };
 
 /** 按当前开启图层生成图例分组 */

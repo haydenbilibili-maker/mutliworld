@@ -6,6 +6,7 @@
  */
 
 import type { ImpactLevel } from '@/types/geo';
+import { DENSIFY_HYDROCARBON_R3 } from './global.layers-densify-r3';
 
 export type HydrocarbonResourceType = '石油' | '天然气' | '油气';
 export type HydrocarbonReserveTier = 'mega' | 'large' | 'medium';
@@ -97,4 +98,5 @@ export const GLOBAL_HYDROCARBON_RESERVES: HydrocarbonReserveSite[] = [
   site('hc-timor-sea', '帝汶海油气', 'Timor Sea Fields', '油气', '约 40 亿桶油当量', '东帝汶/澳大利亚', '生产中', 'medium', 127.0, -10.5, '帝汶海收入基金来源'),
   site('hc-libya-sirte', '苏尔特盆地', 'Sirte Basin', '石油', '约 480 亿桶原地', '利比亚', '开发中', 'large', 17.0, 29.0, '政局动荡影响产能恢复'),
   site('hc-algeria-hassi', '哈西迈萨乌德', 'Hassi Messaoud', '石油', '约 120 亿桶累计', '阿尔及利亚', '生产中', 'large', 6.0, 31.5, '北非最大油田，向欧洲供气'),
+  ...DENSIFY_HYDROCARBON_R3,
 ];
