@@ -13,7 +13,7 @@ import { MiniChart } from '@/components/ui/EventViz';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-interface SpaceWeather { kp: number | null; series: number[]; times: string[]; gLevel: string; gDesc: string; generatedAt: string; source: string; stale?: boolean }
+interface SpaceWeather { kp: number | null; series: number[]; times: string[]; gLevel: string; gDesc: string; windSpeed: number | null; bz: number | null; generatedAt: string; source: string; stale?: boolean }
 
 function kpColor(kp: number): string {
   return kp >= 7 ? '#f43f5e' : kp >= 5 ? '#fb923c' : kp >= 4 ? '#fbbf24' : '#34d399';
@@ -68,6 +68,20 @@ export function SpaceWeatherCard({ className = '' }: { className?: string }) {
           </div>
           <div className="mt-0.5 flex justify-between text-[8px] text-dashboard-neutral/45"><span>0 平静</span><span>5 G1</span><span>9 G5</span></div>
         </div>
+
+        {/* 太阳风实时（速度 + Bz；南向 Bz 利于触发地磁暴） */}
+        {(data?.windSpeed != null || data?.bz != null) && (
+          <div className="grid grid-cols-2 gap-1.5">
+            <div className="rounded-md bg-white/5 px-2 py-1.5">
+              <div className="text-sm font-semibold tabular-nums text-sky-200">{data?.windSpeed != null ? Math.round(data.windSpeed) : '—'}</div>
+              <div className="text-[9px] text-dashboard-neutral/50">太阳风速度 km/s</div>
+            </div>
+            <div className="rounded-md bg-white/5 px-2 py-1.5">
+              <div className="text-sm font-semibold tabular-nums" style={{ color: data?.bz != null && data.bz < 0 ? '#fb923c' : '#94e0c0' }}>{data?.bz != null ? data.bz.toFixed(1) : '—'}</div>
+              <div className="text-[9px] text-dashboard-neutral/50">行星际 Bz nT{data?.bz != null && data.bz < 0 ? ' · 南向' : ''}</div>
+            </div>
+          </div>
+        )}
 
         {/* 近 3 天 Kp 柱状序列 */}
         {data && data.series.length > 1 && (

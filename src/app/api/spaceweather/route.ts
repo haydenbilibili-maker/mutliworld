@@ -8,7 +8,22 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-interface Body { kp: number | null; series: number[]; times: string[]; gLevel: string; gDesc: string; generatedAt: string; source: string; stale?: boolean }
+interface Body { kp: number | null; series: number[]; times: string[]; gLevel: string; gDesc: string; windSpeed: number | null; bz: number | null; generatedAt: string; source: string; stale?: boolean }
+
+/** 取 SWPC 时序产品最后一行的某列数值（首行为表头），失败返回 null */
+async function lastCol(url: string, col: number): Promise<number | null> {
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(12000), headers: { Accept: 'application/json' }, next: { revalidate: 0 } });
+    if (!res.ok) return null;
+    const rows = (await res.json()) as unknown[][];
+    const data = Array.isArray(rows) ? rows.slice(1) : [];
+    for (let i = data.length - 1; i >= 0; i--) {
+      const v = Number(data[i]?.[col]);
+      if (Number.isFinite(v)) return v;
+    }
+    return null;
+  } catch { return null; }
+}
 
 let cache: { expires: number; body: Body } | null = null;
 const TTL = 10 * 60 * 1000;
@@ -46,11 +61,16 @@ export async function GET() {
     }
     const kp = series.length ? series[series.length - 1] : null;
     const g = kp != null ? gScale(kp) : { level: '—', desc: '暂无数据' };
-    const body: Body = { kp, series, times, gLevel: g.level, gDesc: g.desc, generatedAt: new Date().toISOString(), source: 'NOAA SWPC 行星 Kp 指数（近实时）' };
+    // 太阳风：plasma 速度(列2)、磁场 Bz(列3，GSM)；最佳努力、失败不影响 Kp
+    const [windSpeed, bz] = await Promise.all([
+      lastCol('https://services.swpc.noaa.gov/products/solar-wind/plasma-1-day.json', 2),
+      lastCol('https://services.swpc.noaa.gov/products/solar-wind/mag-1-day.json', 3),
+    ]);
+    const body: Body = { kp, series, times, gLevel: g.level, gDesc: g.desc, windSpeed, bz, generatedAt: new Date().toISOString(), source: 'NOAA SWPC 行星 Kp + 太阳风（近实时）' };
     cache = { expires: now + TTL, body };
     return NextResponse.json(body, { headers: { 'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1800' } });
   } catch (err) {
     if (cache) return NextResponse.json({ ...cache.body, stale: true });
-    return NextResponse.json({ kp: null, series: [], times: [], gLevel: '—', gDesc: '获取失败', generatedAt: new Date().toISOString(), source: 'NOAA SWPC', error: err instanceof Error ? err.message : 'SWPC 获取失败' }, { status: 502, headers: { 'Cache-Control': 'no-store' } });
+    return NextResponse.json({ kp: null, series: [], times: [], gLevel: '—', gDesc: '获取失败', windSpeed: null, bz: null, generatedAt: new Date().toISOString(), source: 'NOAA SWPC', error: err instanceof Error ? err.message : 'SWPC 获取失败' }, { status: 502, headers: { 'Cache-Control': 'no-store' } });
   }
 }
