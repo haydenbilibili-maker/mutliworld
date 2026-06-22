@@ -26,6 +26,7 @@ import { AboutPanel } from '@/components/ui/AboutPanel';
 import { RegionDetailCard } from '@/components/region/RegionDetailCard';
 import { SeabedBriefingPanel } from '@/components/region/SeabedBriefingPanel';
 import { SpaceBriefingPanel } from '@/components/region/SpaceBriefingPanel';
+import { SpaceWeatherCard } from '@/components/region/SpaceWeatherCard';
 import { NeoPanel } from '@/components/region/NeoPanel';
 import { AnomalyBoard } from '@/components/region/AnomalyBoard';
 import { ProjectionLab } from '@/components/map/ProjectionLab';
@@ -121,6 +122,7 @@ export function HomeDashboard() {
             <InsightsPanel className="!w-full !max-h-[46vh]" />
             <MideastMilitaryPanel className="!w-full !max-h-[46vh]" />
             <SeabedBriefingPanel className="!w-full !max-h-[46vh]" />
+            <SpaceWeatherCard className="!w-full" />
             <SpaceBriefingPanel className="!w-full !max-h-[46vh]" />
             <NeoPanel className="!w-full !max-h-[46vh]" />
             <LaunchLogPanel className="!w-full !max-h-[46vh]" />
