@@ -12,6 +12,7 @@ import useSWR from 'swr';
 import type { FeatureCollection } from 'geojson';
 import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
+import { useEventIndexStore } from '@/store/useEventIndexStore';
 import { findLiveOverlayBeforeId } from '@/lib/map/basemap';
 import { timeAgo } from '@/lib/format/time';
 import type { EventDetail, ImpactLevel } from '@/types/geo';
@@ -183,6 +184,20 @@ export function GdacsLayer() {
       hoverRef.current?.remove();
     };
   }, [map, styleEpoch]);
+
+  // 登记到事件空间索引（供详情页「邻近同类」）
+  useEffect(() => {
+    const items = enabled
+      ? geojson.features.flatMap((f) => {
+          const c = (f.geometry as { type?: string; coordinates?: number[] })?.coordinates;
+          const p = (f.properties ?? {}) as { title?: string; alertlevel?: string };
+          if (!Array.isArray(c) || c.length < 2) return [];
+          const impact = (p.alertlevel === 'Red' ? 'critical' : p.alertlevel === 'Orange' ? 'high' : 'medium') as 'medium' | 'high' | 'critical';
+          return [{ id: `gdacs-${c[0]},${c[1]}`, title: String(p.title ?? '灾害告警'), category: 'gdacs', lng: c[0], lat: c[1], impact }];
+        })
+      : [];
+    useEventIndexStore.getState().setCategory('gdacs', items);
+  }, [enabled, geojson]);
 
   useEffect(() => () => { popupRef.current?.remove(); hoverRef.current?.remove(); }, []);
 

@@ -11,6 +11,7 @@ import useSWR from 'swr';
 import type { FeatureCollection } from 'geojson';
 import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
+import { useEventIndexStore } from '@/store/useEventIndexStore';
 import { findLiveOverlayBeforeId } from '@/lib/map/basemap';
 import { timeAgo } from '@/lib/format/time';
 import type { EventDetail } from '@/types/geo';
@@ -209,6 +210,19 @@ export function EarthquakeLayer() {
       hoverRef.current?.remove();
     };
   }, [map, styleEpoch]);
+
+  // 登记到事件空间索引（供详情页「邻近同类」）
+  useEffect(() => {
+    const items = enabled
+      ? geojson.features.flatMap((f) => {
+          const c = (f.geometry as { type?: string; coordinates?: number[] })?.coordinates;
+          const p = (f.properties ?? {}) as { mag?: number; place?: string; time?: number };
+          if (!Array.isArray(c) || c.length < 2 || typeof p.mag !== 'number') return [];
+          return [{ id: `quake-${p.time}-${c[0]},${c[1]}`, title: `M${p.mag.toFixed(1)} · ${p.place ?? ''}`, category: 'earthquakes', lng: c[0], lat: c[1], impact: (p.mag >= 6 ? 'high' : p.mag >= 4.5 ? 'medium' : 'low') as 'low' | 'medium' | 'high' }];
+        })
+      : [];
+    useEventIndexStore.getState().setCategory('earthquakes', items);
+  }, [enabled, geojson]);
 
   useEffect(() => () => { popupRef.current?.remove(); hoverRef.current?.remove(); }, []);
 

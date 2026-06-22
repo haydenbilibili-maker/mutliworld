@@ -11,6 +11,7 @@ import useSWR from 'swr';
 import type { FeatureCollection } from 'geojson';
 import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
+import { useEventIndexStore } from '@/store/useEventIndexStore';
 import { findLiveOverlayBeforeId } from '@/lib/map/basemap';
 import { timeAgo } from '@/lib/format/time';
 import type { EventDetail, ImpactLevel, LayerId } from '@/types/geo';
@@ -188,6 +189,19 @@ export function EonetEventLayer({ config }: { config: EonetLayerConfig }) {
       hoverRef.current?.remove();
     };
   }, [map, styleEpoch, CORE, srcKey, layerId, icon, dateLabel, impact, domainsKey, coreColor]);
+
+  // 登记到事件空间索引（供详情页「邻近同类」）
+  useEffect(() => {
+    const items = enabled
+      ? geojson.features.flatMap((f) => {
+          const c = (f.geometry as { type?: string; coordinates?: number[] })?.coordinates;
+          if (!Array.isArray(c) || c.length < 2) return [];
+          const p = (f.properties ?? {}) as { title?: string };
+          return [{ id: `${srcKey}-${c[0]},${c[1]}`, title: String(p.title ?? '事件'), category: layerId, lng: c[0], lat: c[1], impact }];
+        })
+      : [];
+    useEventIndexStore.getState().setCategory(layerId, items);
+  }, [enabled, geojson, layerId, srcKey, impact]);
 
   useEffect(() => () => { popupRef.current?.remove(); hoverRef.current?.remove(); }, []);
 
