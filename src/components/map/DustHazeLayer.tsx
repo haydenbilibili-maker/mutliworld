@@ -9,6 +9,7 @@ export function DustHazeLayer() {
     <EonetEventLayer config={{
       layerId: 'dusthaze', endpoint: '/api/dusthaze', srcKey: 'dusthaze',
       glowColor: '#d4a017', coreColor: '#b45309', strokeColor: '#fde68a', icon: '🌫️', dateLabel: '最新定位',
+      impact: 'medium', domains: ['空气质量', '航空能见度', '公共健康'],
     }} />
   );
 }

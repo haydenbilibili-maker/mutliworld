@@ -13,7 +13,7 @@ import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import { findLiveOverlayBeforeId } from '@/lib/map/basemap';
 import { timeAgo } from '@/lib/format/time';
-import type { EventDetail, LayerId } from '@/types/geo';
+import type { EventDetail, ImpactLevel, LayerId } from '@/types/geo';
 
 export interface EonetLayerConfig {
   layerId: LayerId;
@@ -26,6 +26,10 @@ export interface EonetLayerConfig {
   icon: string;
   /** 弹窗内副标题（如「活跃事件」「最新定位」） */
   dateLabel: string;
+  /** 详情页影响等级（默认 medium） */
+  impact?: ImpactLevel;
+  /** 关注领域标签（按类型确定性推断，非预测） */
+  domains?: string[];
 }
 
 const POPUP_BG = '#0A0E17';
@@ -43,7 +47,8 @@ function applyPopupTheme(popup: maplibregl.Popup) {
 }
 
 export function EonetEventLayer({ config }: { config: EonetLayerConfig }) {
-  const { layerId, endpoint, srcKey, glowColor, coreColor, strokeColor, icon, dateLabel } = config;
+  const { layerId, endpoint, srcKey, glowColor, coreColor, strokeColor, icon, dateLabel, impact = 'medium', domains } = config;
+  const domainsKey = domains?.join(',') ?? '';
   const SOURCE = `live-${srcKey}`;
   const GLOW = `live-${srcKey}-glow`;
   const CORE = `live-${srcKey}-core`;
@@ -139,9 +144,14 @@ export function EonetEventLayer({ config }: { config: EonetLayerConfig }) {
         // 缺 date 时不伪造当前时刻（避免污染详情面板时间），用空串由面板回落到「—」
         timestamp: p.date ? new Date(p.date).toISOString() : '',
         location: coords,
-        impact_level: 'medium',
+        impact_level: impact,
         category: layerId,
-        description: dateLine ? `${dateLabel} ${date}` : dateLabel,
+        description: `${p.title}。NASA EONET 近实时事件，${date ? `${dateLabel} ${date}${rel ? `（${rel}）` : ''}。` : `${dateLabel}。`}`,
+        metrics: [
+          { label: '状态', value: '活跃', accent: coreColor },
+          { label: dateLabel, value: rel || (date ? date : '—') },
+        ],
+        tags: domains,
       };
       selectEventRef.current(detail);
     };
@@ -160,7 +170,7 @@ export function EonetEventLayer({ config }: { config: EonetLayerConfig }) {
       map.off('mouseenter', CORE, onEnter);
       map.off('mouseleave', CORE, onLeave);
     };
-  }, [map, styleEpoch, CORE, srcKey, layerId, icon, dateLabel]);
+  }, [map, styleEpoch, CORE, srcKey, layerId, icon, dateLabel, impact, domainsKey, coreColor]);
 
   useEffect(() => () => { popupRef.current?.remove(); }, []);
 

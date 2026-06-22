@@ -9,6 +9,7 @@ export function VolcanoLayer() {
     <EonetEventLayer config={{
       layerId: 'volcanoes', endpoint: '/api/volcanoes', srcKey: 'volcanoes',
       glowColor: '#f97316', coreColor: '#ea580c', strokeColor: '#fed7aa', icon: '🌋', dateLabel: '活跃事件',
+      impact: 'high', domains: ['航空', '空气质量', '应急'],
     }} />
   );
 }

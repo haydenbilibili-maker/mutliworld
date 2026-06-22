@@ -9,6 +9,7 @@ export function SeaIceLayer() {
     <EonetEventLayer config={{
       layerId: 'seaice', endpoint: '/api/seaice', srcKey: 'seaice',
       glowColor: '#a5f3fc', coreColor: '#e0f2fe', strokeColor: '#67e8f9', icon: '🧊', dateLabel: '最新定位',
+      impact: 'low', domains: ['航运', '气候', '生态'],
     }} />
   );
 }

@@ -9,6 +9,7 @@ export function FloodLayer() {
     <EonetEventLayer config={{
       layerId: 'floods', endpoint: '/api/floods', srcKey: 'floods',
       glowColor: '#3b82f6', coreColor: '#2563eb', strokeColor: '#bfdbfe', icon: '🌊', dateLabel: '最新定位',
+      impact: 'medium', domains: ['农业', '基建', '救灾'],
     }} />
   );
 }
