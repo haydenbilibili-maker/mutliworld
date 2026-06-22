@@ -49,6 +49,7 @@ function impactDomains(kind: string, tsunami: boolean): string[] {
   switch (kind) {
     case '地震': return tsunami ? ['海啸预警', '基建', '救灾'] : ['基建', '救灾', '保险'];
     case '风暴': return ['航运', '能源', '航空', '农业'];
+    case '野火': return ['空气质量', '应急', '农林', '碳排放'];
     case '火山': return ['航空', '空气质量'];
     case '洪水': return ['农业', '基建', '救灾'];
     case '白化预警': return ['海洋生态', '渔业', '旅游'];
@@ -100,6 +101,7 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
   const { data: volcanoes } = useSWR<FeatureCollection>(enabled ? '/api/volcanoes' : null, fetcher, swrOpts);
   const { data: storms } = useSWR<FeatureCollection>(enabled ? '/api/storms' : null, fetcher, swrOpts);
   const { data: floods } = useSWR<FeatureCollection>(enabled ? '/api/floods' : null, fetcher, swrOpts);
+  const { data: wildfires } = useSWR<FeatureCollection>(enabled ? '/api/wildfires' : null, fetcher, swrOpts);
   const { data: crw } = useSWR<ScalarGrid>(enabled ? '/api/noaa-crw-grid' : null, fetcher, swrOpts);
   const { data: aq } = useSWR<ScalarGrid>(enabled ? '/api/airquality-grid' : null, fetcher, swrOpts);
 
@@ -128,6 +130,7 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
     }
   };
   pushEonet(storms, '风暴', '🌪️', 58, 's');
+  pushEonet(wildfires, '野火', '🔥', 56, 'wf');
   pushEonet(volcanoes, '火山', '🌋', 52, 'v');
   pushEonet(floods, '洪水', '🌊', 46, 'f');
 
@@ -165,7 +168,7 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
   const strongQuake = items.filter((i) => i.kind === '地震')[0];
   const briefParts: string[] = [];
   if (strongQuake) briefParts.push(`最强 ${strongQuake.label.split(' · ')[0]} 地震`);
-  for (const [k, w] of [['风暴', '个活跃风暴'], ['火山', '处活跃火山'], ['洪水', '处洪水'], ['白化预警', '处珊瑚高温压力'], ['污染', '处颗粒物超标']] as const) {
+  for (const [k, w] of [['风暴', '个活跃风暴'], ['野火', '处活跃野火'], ['火山', '处活跃火山'], ['洪水', '处洪水'], ['白化预警', '处珊瑚高温压力'], ['污染', '处颗粒物超标']] as const) {
     const n = count(k); if (n) briefParts.push(`${n} ${w}`);
   }
   const summary = briefParts.length ? `当前全球：${briefParts.join('、')}。` : '';
