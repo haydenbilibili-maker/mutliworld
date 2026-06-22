@@ -44,6 +44,11 @@ function severityClass(score: number): string {
   return score >= 70 ? 'text-rose-300' : score >= 55 ? 'text-amber-300' : 'text-dashboard-neutral/70';
 }
 
+/** 显著度 → 左侧强调条颜色 */
+function severityHex(score: number): string {
+  return score >= 70 ? '#f43f5e' : score >= 55 ? '#fb923c' : '#64748b';
+}
+
 /** 关注领域（按类型确定性推断，非预测；关联引擎雏形） */
 function impactDomains(kind: string, tsunami: boolean): string[] {
   switch (kind) {
@@ -253,6 +258,7 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
               <div
                 key={a.key}
                 className="flex w-full items-center gap-1 rounded-md bg-white/5 pr-1 transition-colors hover:bg-white/10"
+                style={{ borderLeft: `2.5px solid ${severityHex(a.score)}` }}
               >
                 <button
                   type="button"
