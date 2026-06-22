@@ -44,6 +44,39 @@ export interface EventDetail {
   url?: string;
   /** 可选头像URL（人物选中时显示在地图脉冲标记中心） */
   avatarUrl?: string;
+  /** 关键指标芯片（详情页可视化；真实读数，不编造） */
+  metrics?: EventMetric[];
+  /** 主题/关注领域标签 */
+  tags?: string[];
+  /** 内联微型图表数据（如近 N 期序列、震源深度剖面等） */
+  series?: EventSeries;
+  /** 配图 URL（如卫星缩略图、机构图示） */
+  imageUrl?: string;
+  /** 附加来源/参考链接 */
+  links?: { label: string; url: string }[];
+}
+
+/** 详情页指标芯片 */
+export interface EventMetric {
+  label: string;
+  value: string;
+  /** 次要提示（单位/说明） */
+  hint?: string;
+  /** 强调色（CSS 颜色），用于数值着色 */
+  accent?: string;
+}
+
+/** 详情页内联微型图表 */
+export interface EventSeries {
+  label: string;
+  /** 数值点（按序） */
+  points: number[];
+  /** 单位 */
+  unit?: string;
+  /** 'spark' 折线 / 'bars' 柱（默认 spark） */
+  kind?: 'spark' | 'bars';
+  /** 可选每点标注（与 points 等长） */
+  labels?: string[];
 }
 
 /** 图层 ID，与 URL layers 参数一致 */
@@ -120,6 +153,10 @@ export type LayerId =
   | 'stadiums'
   | 'museums'
   | 'islands'
+  | 'capitals'
+  | 'power_plants'
+  | 'forests'
+  | 'earthquakes_historical'
   // 近地空间（对标 earth.nullschool：粒子流场 + 标量叠加）
   | 'wind_flow'
   | 'ocean_flow'

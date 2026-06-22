@@ -17,6 +17,7 @@ import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import { useMapContext } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
+import { IMPACT_THEME } from '@/components/ui/EventViz';
 
 export function MapSelectionPulse() {
   const map = useMapContext();
@@ -34,10 +35,18 @@ export function MapSelectionPulse() {
     if (!Number.isFinite(lng) || !Number.isFinite(lat)) return;
 
     const avatar = mapTooltip.avatarUrl;
+    // 按影响等级着色（事件）；人物头像沿用琥珀色基调
+    const accent = avatar ? '#f59e0b' : IMPACT_THEME[mapTooltip.impact_level]?.color ?? '#f59e0b';
 
     // 构建 DOM 结构
     const el = document.createElement('div');
     el.className = 'pulse-container';
+    el.style.setProperty('--pulse', accent);
+
+    // 雷达扫掠（旋转 conic 扇形，纯 transform 动画，不触发地图重绘）
+    const sweep = document.createElement('div');
+    sweep.className = 'pulse-sweep';
+    el.appendChild(sweep);
 
     // 地面投影（深色半透明圆环，确保在浅色地图背景下清晰可见）
     const groundShadow = document.createElement('div');
@@ -85,7 +94,7 @@ export function MapSelectionPulse() {
       marker.remove();
       if (markerRef.current === marker) markerRef.current = null;
     };
-  }, [map, mapTooltip?.id, mapTooltip?.location?.[0], mapTooltip?.location?.[1], mapTooltip?.avatarUrl, mapTooltip?.title]);
+  }, [map, mapTooltip?.id, mapTooltip?.location?.[0], mapTooltip?.location?.[1], mapTooltip?.avatarUrl, mapTooltip?.title, mapTooltip?.impact_level]);
 
   return (
     <style jsx global>{`
@@ -114,6 +123,26 @@ export function MapSelectionPulse() {
         pointer-events: none;
       }
 
+      /* 雷达扫掠 — 旋转扇形，营造"活地球"持续侦测感 */
+      .pulse-sweep {
+        position: absolute;
+        top: -26px;
+        left: -26px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: conic-gradient(from 0deg, transparent 0deg, var(--pulse, #f59e0b) 38deg, transparent 70deg);
+        opacity: 0.28;
+        animation: pulse-sweep-spin 3.4s linear infinite;
+        pointer-events: none;
+        -webkit-mask: radial-gradient(circle, transparent 6px, #000 7px);
+        mask: radial-gradient(circle, transparent 6px, #000 7px);
+      }
+
+      @keyframes pulse-sweep-spin {
+        to { transform: rotate(360deg); }
+      }
+
       .pulse-ring {
         position: absolute;
         top: -14px;
@@ -121,15 +150,15 @@ export function MapSelectionPulse() {
         width: 28px;
         height: 28px;
         border-radius: 50%;
-        border: 2.5px solid #f59e0b;
+        border: 2.5px solid var(--pulse, #f59e0b);
         background: transparent;
         animation: pulse-expand 2.2s ease-out infinite;
         pointer-events: none;
         /* 多层级 shadow 确保在任何背景上都有对比 */
         box-shadow:
           0 0 0 1px rgba(255, 255, 255, 0.3),
-          0 0 8px rgba(245, 158, 11, 0.5),
-          0 0 20px rgba(245, 158, 11, 0.2);
+          0 0 10px var(--pulse, #f59e0b),
+          0 0 22px rgba(0, 0, 0, 0.25);
       }
 
       @keyframes pulse-expand {
@@ -164,8 +193,8 @@ export function MapSelectionPulse() {
         width: 20px;
         height: 20px;
         border-radius: 50%;
-        background: rgba(245, 158, 11, 0.9);
-        border: 2.5px solid #fbbf24;
+        background: var(--pulse, #f59e0b);
+        border: 2.5px solid rgba(255, 255, 255, 0.85);
         display: flex;
         align-items: center;
         justify-content: center;

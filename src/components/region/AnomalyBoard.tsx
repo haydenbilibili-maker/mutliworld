@@ -182,7 +182,12 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
       location: a.coords,
       impact_level: a.score >= 70 ? 'high' : a.score >= 55 ? 'medium' : 'low',
       category: 'natural',
-      description: `${a.kind} · 显著度 ${a.score} · 关注领域（按类型）：${impactDomains(a.kind, !!a.tsunami).join(' · ')}`,
+      description: `${a.kind}。跨层异常聚合·按显著度排序（确定性合成，非预测）。`,
+      metrics: [
+        { label: '显著度', value: String(a.score), accent: a.score >= 70 ? '#f43f5e' : a.score >= 55 ? '#fb923c' : '#38bdf8' },
+        { label: '类别', value: a.kind },
+      ],
+      tags: impactDomains(a.kind, !!a.tsunami),
     } as EventDetail);
   };
 

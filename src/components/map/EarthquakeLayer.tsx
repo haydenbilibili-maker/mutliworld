@@ -159,15 +159,22 @@ export function EarthquakeLayer() {
         .setLngLat(coords).setHTML(popupHtml(p)).addTo(map);
       applyPopupTheme(popup);
       popupRef.current = popup;
+      const magColor = p.mag >= 6.5 ? '#b91c1c' : p.mag >= 5 ? '#ef4444' : p.mag >= 4 ? '#f87171' : '#fca5a5';
       const detail: EventDetail = {
         id: `quake-${p.time}-${coords[0]},${coords[1]}`,
-        title: `📳 M${p.mag.toFixed(1)} 地震`,
+        title: `📳 M${p.mag.toFixed(1)} 地震 · ${p.place}`,
         source: 'USGS 地震灾害项目（近实时）',
         timestamp: new Date(p.time).toISOString(),
         location: coords,
         impact_level: p.mag >= 6 ? 'high' : p.mag >= 4.5 ? 'medium' : 'low',
         category: 'earthquakes',
-        description: `${p.place} · 震源深度 ${Math.round(p.depth)} km`,
+        description: `${p.place}。USGS 近实时测定，震源深度 ${Math.round(p.depth)} km${p.tsunami ? '；USGS 标记可能引发海啸。' : '。'}`,
+        metrics: [
+          { label: '震级', value: `M${p.mag.toFixed(1)}`, accent: magColor },
+          { label: '震源深度', value: `${Math.round(p.depth)}`, hint: 'km' },
+          { label: '海啸标记', value: p.tsunami ? '可能' : '无', accent: p.tsunami ? '#38bdf8' : undefined },
+        ],
+        tags: ['基建', '救灾', p.tsunami ? '海啸预警' : '保险'],
       };
       selectEventRef.current(detail);
     };
