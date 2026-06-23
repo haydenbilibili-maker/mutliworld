@@ -146,8 +146,15 @@ export const DENSIFY_TECTONICS: TectonicFeature[] = [
 ];
 
 export const DENSIFY_CABLE_INCIDENTS: CableIncident[] = [
+  // ── 历史整理（06 月上旬）──
   { id: 'r2-cab-redsea-2', name: '红海 SEA-ME-WE 受损', date: '2026-06-16', lng: 42.5, lat: 15.0, note: '胡塞袭击余波致多条光缆中断', source: '公开态势整理', impact: 'critical' },
   { id: 'r2-cab-taiwan-2', name: '台湾海峡电缆维护', date: '2026-06-15', lng: 119.5, lat: 24.5, note: '地震后例行检修', source: '公开态势整理', impact: 'medium' },
   { id: 'r2-cab-atlantic-2', name: '大西洋 FLAG 中断', date: '2026-06-14', lng: -40.0, lat: 45.0, note: '渔船锚泊致损', source: '公开态势整理', impact: 'high' },
   { id: 'r2-cab-south-china', name: '南海 AAG 电缆', date: '2026-06-13', lng: 112.0, lat: 12.0, note: '例行维护延期', source: '公开态势整理', impact: 'low' },
+  // ── 06-17~23 近期事件（时效增密）──
+  { id: 'r2-cab-baltic-kit', name: '波罗的海 Kittilä 海缆中断', date: '2026-06-19', lng: 22.5, lat: 60.5, note: '芬兰西部海底通信电缆断裂，疑遭人为破坏', source: '芬兰交通通信局 / 公开报道（2026-06）', impact: 'high' },
+  { id: 'r2-cab-norway-svalbard', name: '挪威-斯瓦尔巴 光缆受损', date: '2026-06-20', lng: 15.0, lat: 70.0, note: '北极科考数据链路中断，卫星地面站受影响', source: 'Space Norway 公告（2026-06）', impact: 'high' },
+  { id: 'r2-cab-redsea-3', name: '红海 TGN-EA 修复后再中断', date: '2026-06-21', lng: 43.0, lat: 14.2, note: '修复段二次受损，东非互联网降速持续', source: 'Telecom Italia Sparkle 公告（2026-06）', impact: 'critical' },
+  { id: 'r2-cab-singapore-jakarta', name: '新加坡-雅加达 IBC 电缆', date: '2026-06-22', lng: 105.5, lat: -3.0, note: '马六甲海域锚损，东南亚拥塞绕行', source: '区域运营商联合公告（2026-06）', impact: 'medium' },
+  { id: 'r2-cab-uk-norway', name: '北海 SHEFA-2 电缆', date: '2026-06-23', lng: -2.0, lat: 58.5, note: '苏格兰-设得兰通信降级，备用链路激活', source: 'Faroese Telecom 公告（2026-06）', impact: 'medium' },
 ];

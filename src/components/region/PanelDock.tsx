@@ -49,7 +49,7 @@ export function PanelDock({ className = '' }: PanelDockProps) {
             onClick={() => toggle(p.id)}
             aria-pressed={open[p.id]}
             title={p.title}
-            className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`seg-btn shrink-0 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
               open[p.id]
                 ? 'bg-brand-cyan/20 text-brand-cyan'
                 : 'text-dashboard-neutral/80 hover:bg-white/5 hover:text-white'

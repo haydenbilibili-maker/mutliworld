@@ -261,7 +261,7 @@ export function AnomalyBoard({ className = '' }: { className?: string }) {
             {top.map((a) => (
               <div
                 key={a.key}
-                className="flex w-full items-center gap-1 rounded-md bg-white/5 pr-1 transition-colors hover:bg-white/10"
+                className="mk-row flex w-full items-center gap-1 rounded-md bg-white/5 pr-1 transition-colors hover:bg-white/10"
                 style={{ borderLeft: `2.5px solid ${severityHex(a.score)}` }}
               >
                 <button

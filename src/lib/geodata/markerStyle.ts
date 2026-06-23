@@ -322,6 +322,25 @@ export const MARKER_REGISTRY: Record<string, { emoji: string; label: string }> =
   'person-social': { emoji: '👥', label: '社会人物' },
   'person-cultural': { emoji: '🎭', label: '文化人物' },
   'person-military': { emoji: '⚔️', label: '军事人物' },
+  // ── 产业链模块 ──
+  aerospace_mfg: { emoji: '✈️', label: '航空制造' },
+  'aero-airframer': { emoji: '🛩️', label: '飞机总装' },
+  'aero-engine': { emoji: '🌀', label: '航空发动机' },
+  'aero-supplier': { emoji: '🔩', label: 'Tier1 供应商' },
+  defense_mfg: { emoji: '🛡️', label: '国防军工' },
+  'def-prime': { emoji: '🎖️', label: '主承包商' },
+  'def-shipyard': { emoji: '🚢', label: '造船厂' },
+  'def-missiles': { emoji: '🚀', label: '导弹' },
+  semi_supply: { emoji: '🔧', label: '半导体上游' },
+  'semi-eda': { emoji: '💻', label: 'EDA 软件' },
+  'semi-osat': { emoji: '📦', label: '封测 OSAT' },
+  'semi-wafer': { emoji: '⚪', label: '硅晶圆' },
+  'semi-materials': { emoji: '🧪', label: '材料/特气' },
+  chemicals: { emoji: '⚗️', label: '化工与材料' },
+  'chem-petrochem': { emoji: '🛢️', label: '石化' },
+  'chem-specialty': { emoji: '🧬', label: '特种化学' },
+  'chem-fertilizer': { emoji: '🌱', label: '化肥' },
+  'chem-battery': { emoji: '🔋', label: '电池材料' },
 };
 
 /** 图层主色（光晕底色） */
@@ -407,6 +426,10 @@ export const LAYER_HALO_COLORS: Record<string, string> = {
   space_companies: '#6d28d9',
   rare_earth: '#ca8a04',
   flags_of_convenience: '#0e7490',
+  aerospace_mfg: '#2563eb',
+  defense_mfg: '#b91c1c',
+  semi_supply: '#0d9488',
+  chemicals: '#7c3aed',
   monsoon: '#6366f1',
   atmospheric_circulation: '#8b5cf6',
   deep_exploration: '#0e7490',
@@ -785,6 +808,32 @@ const FLAGS_OF_CONVENIENCE_KIND_IMAGE: Record<string, string> = {
   finance: 'foc-finance',
 };
 
+const AEROSPACE_MFG_KIND_IMAGE: Record<string, string> = {
+  airframer: 'aero-airframer',
+  engine: 'aero-engine',
+  supplier: 'aero-supplier',
+};
+
+const DEFENSE_MFG_KIND_IMAGE: Record<string, string> = {
+  prime: 'def-prime',
+  shipyard: 'def-shipyard',
+  missiles: 'def-missiles',
+};
+
+const SEMI_SUPPLY_KIND_IMAGE: Record<string, string> = {
+  eda: 'semi-eda',
+  osat: 'semi-osat',
+  wafer: 'semi-wafer',
+  materials: 'semi-materials',
+};
+
+const CHEMICALS_KIND_IMAGE: Record<string, string> = {
+  petrochem: 'chem-petrochem',
+  specialty: 'chem-specialty',
+  fertilizer: 'chem-fertilizer',
+  battery: 'chem-battery',
+};
+
 const INCIDENT_TYPE_IMAGE: Record<string, string> = {
   military: 'incident-military',
   political: 'incident-political',
@@ -961,6 +1010,22 @@ function resolveImageId(props: MarkerStyleProps): string {
 
   if (layerId === 'flags_of_convenience' && props.subKind) {
     return FLAGS_OF_CONVENIENCE_KIND_IMAGE[String(props.subKind)] ?? 'flags_of_convenience';
+  }
+
+  if (layerId === 'aerospace_mfg' && props.subKind) {
+    return AEROSPACE_MFG_KIND_IMAGE[String(props.subKind)] ?? 'aerospace_mfg';
+  }
+
+  if (layerId === 'defense_mfg' && props.subKind) {
+    return DEFENSE_MFG_KIND_IMAGE[String(props.subKind)] ?? 'defense_mfg';
+  }
+
+  if (layerId === 'semi_supply' && props.subKind) {
+    return SEMI_SUPPLY_KIND_IMAGE[String(props.subKind)] ?? 'semi_supply';
+  }
+
+  if (layerId === 'chemicals' && props.subKind) {
+    return CHEMICALS_KIND_IMAGE[String(props.subKind)] ?? 'chemicals';
   }
 
   if (layerId === 'launch_sites') {
@@ -1254,6 +1319,10 @@ const LAYER_LEGEND_ENTRIES: Partial<Record<LayerId, string[]>> = {
   space_companies: ['sc-rocket', 'sc-satellite', 'sc-tourism'],
   rare_earth: ['re-mining', 're-refining', 're-strategic'],
   flags_of_convenience: ['foc-maritime', 'foc-tax', 'foc-finance'],
+  aerospace_mfg: ['aero-airframer', 'aero-engine', 'aero-supplier'],
+  defense_mfg: ['def-prime', 'def-shipyard', 'def-missiles'],
+  semi_supply: ['semi-eda', 'semi-osat', 'semi-wafer', 'semi-materials'],
+  chemicals: ['chem-petrochem', 'chem-specialty', 'chem-fertilizer', 'chem-battery'],
 };
 
 /** 按当前开启图层生成图例分组 */

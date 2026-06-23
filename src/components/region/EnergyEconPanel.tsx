@@ -81,7 +81,14 @@ function SeriesRow({ s }: { s: EconSeries }) {
       </div>
 
       <svg width="64" height="20" className="shrink-0" aria-hidden>
-        <path d={path} fill="none" stroke={color} strokeWidth="1.2" />
+        <path
+          className="ee-spark"
+          d={path}
+          fill="none"
+          stroke={color}
+          strokeWidth="1.2"
+          pathLength={1}
+        />
       </svg>
 
       <div className="w-20 shrink-0 text-right">

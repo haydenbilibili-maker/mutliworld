@@ -42,7 +42,7 @@ const LAYER_GROUPS: { title: string; ids: LayerId[] }[] = [
   },
   {
     title: '经济',
-    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'hydrocarbon_reserves', 'protests', 'megacities', 'refineries', 'factories', 'financial_centers', 'agriculture', 'tech_companies', 'media_orgs', 'auto_brands', 'pharmaceutical', 'space_companies', 'rare_earth', 'flags_of_convenience'],
+    ids: ['economic', 'econ_hubs', 'minerals', 'datacenters', 'semiconductors', 'hydrocarbon_reserves', 'protests', 'megacities', 'refineries', 'factories', 'financial_centers', 'agriculture', 'tech_companies', 'media_orgs', 'auto_brands', 'pharmaceutical', 'space_companies', 'rare_earth', 'flags_of_convenience', 'aerospace_mfg', 'defense_mfg', 'semi_supply', 'chemicals'],
   },
   {
     title: '自然',
@@ -168,6 +168,10 @@ const ALWAYS_ON: LayerId[] = [
   'space_companies',
   'rare_earth',
   'flags_of_convenience',
+  'aerospace_mfg',
+  'defense_mfg',
+  'semi_supply',
+  'chemicals',
   'wind_flow',
   'ocean_flow',
   'wave_flow',

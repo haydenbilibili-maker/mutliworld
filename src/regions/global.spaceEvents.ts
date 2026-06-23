@@ -3,7 +3,7 @@
  *
  * 公开历史/近期空天事件：反卫星(ASAT)试验、在轨相撞、解体/碎片、再入、抵近规避。
  * 带日期与出处；坐标为事件发生时星下点**示意位置**，非精确星历。
- * 类型：asat / collision / breakup / reentry / closeapproach。整理日：2026-06-16
+ * 类型：asat / collision / breakup / reentry / closeapproach。整理日：2026-06-23
  */
 
 import type { ImpactLevel } from '@/types/geo';
@@ -97,5 +97,94 @@ export const GLOBAL_SPACE_EVENTS: SpaceEvent[] = [
     note: 'ISS 多次因轨道碎片实施规避机动（近年常态化，示意点）',
     source: 'NASA / 公开报道',
     impact: 'medium',
+  },
+  // ── 2025-2026 近期事件（时效增密）──
+  {
+    id: 'spe-slv-breakup-2025',
+    name: 'SL-12 火箭上面级在轨解体',
+    date: '2025-01-30',
+    kind: 'breakup',
+    lng: 50.0,
+    lat: 60.0,
+    note: '退役火箭上面级解体产生逾百可跟踪碎片，低地轨道碎片密度上升',
+    source: 'USSPACECOM / LeoLabs（2025-01）',
+    impact: 'high',
+  },
+  {
+    id: 'spe-cz5b-reentry-2025',
+    name: '长征五号 B 遥残骸再入',
+    date: '2025-03-15',
+    kind: 'reentry',
+    lng: -150.0,
+    lat: -10.0,
+    note: '末级火箭体非控再入，南太平洋上空烧蚀，部分残骸落远海南部',
+    source: 'CNSA / 公开追踪（2025-03）',
+    impact: 'medium',
+  },
+  {
+    id: 'spe-starlink-close-2025',
+    name: 'Starlink-星链抵近规避',
+    date: '2025-05-22',
+    kind: 'closeapproach',
+    lng: 0.0,
+    lat: 0.0,
+    note: '两颗 Starlink 在 LEO 近距离交会触发自动规避（示意点，星链碰撞预警常态化）',
+    source: 'SpaceX / ESA 数据（2025-05）',
+    impact: 'low',
+  },
+  {
+    id: 'spe-in-asat-2-2025',
+    name: '印度第二次反卫星试验',
+    date: '2025-09-10',
+    kind: 'asat',
+    lng: 77.0,
+    lat: 13.0,
+    note: '低轨共轨式反卫星技术验证，高度与倾角刻意选短寿命轨道',
+    source: 'DRDO 公开声明（2025-09）',
+    impact: 'high',
+  },
+  {
+    id: 'spe-cz6a-breakup-2026',
+    name: '长征六号 A 上面级解体',
+    date: '2026-02-28',
+    kind: 'breakup',
+    lng: 110.0,
+    lat: 35.0,
+    note: '末级解体产生数百可跟踪碎片，引发欧美太空交通管理关切',
+    source: 'LeoLabs / ExoAnalytic（2026-02）',
+    impact: 'high',
+  },
+  {
+    id: 'spe-iss-boost-2026',
+    name: '国际空间站轨道抬升避碎片',
+    date: '2026-04-08',
+    kind: 'closeapproach',
+    lng: 30.0,
+    lat: 0.0,
+    note: '因俄系碎片接近，进步号货运飞船点火抬升轨道',
+    source: 'Roscosmos / NASA（2026-04）',
+    impact: 'medium',
+  },
+  {
+    id: 'spe-starlink-deorbit-2026',
+    name: 'Starlink 批量受控再入',
+    date: '2026-05-30',
+    kind: 'reentry',
+    lng: -160.0,
+    lat: -30.0,
+    note: '149 颗一代 Starlink 按计划受控再入退役（示意点，南太平洋坟场）',
+    source: 'SpaceX 运营公告（2026-05）',
+    impact: 'low',
+  },
+  {
+    id: 'spe-ru-asat-2-2026',
+    name: '俄罗斯共轨反卫星试验',
+    date: '2026-06-12',
+    kind: 'asat',
+    lng: 55.0,
+    lat: 50.0,
+    note: '宇宙 2xxx 释放子航天器抵近另一目标后驶离，被识别为共轨反卫星能力验证',
+    source: 'USSPACECOM 声明 / LeoLabs（2026-06）',
+    impact: 'critical',
   },
 ];

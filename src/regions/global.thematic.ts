@@ -1,7 +1,7 @@
 /**
  * 全球主题图层公开态势整理 — 经济中心 / 矿产 / 管线 / AI 数据中心 / 抗议 / 气候异常
  *
- * ⚠ 公开资料汇总与示意坐标，非实时情报。整理日：2026-06-22
+ * ⚠ 公开资料汇总与示意坐标，非实时情报。整理日：2026-06-23
  */
 
 import type { ImpactLevel, LayerId } from '@/types/geo';
@@ -24,6 +24,19 @@ import {
   DENSIFY_INTL_ORGS_R4,
   DENSIFY_POWER_PLANTS_R4,
 } from './global.layers-densify-r4';
+import { DENSIFY_PHARMACEUTICAL_R5, DENSIFY_MEDIA_ORGS_R5, DENSIFY_AUTO_BRANDS_R5 } from './global.layers-densify-r5';
+import {
+  DENSIFY_AEROSPACE_MFG_R6,
+  DENSIFY_DEFENSE_MFG_R6,
+  DENSIFY_SEMI_SUPPLY_R6,
+  DENSIFY_CHEMICALS_R6,
+} from './global.layers-densify-r6';
+import {
+  DENSIFY_AEROSPACE_MFG_R7,
+  DENSIFY_DEFENSE_MFG_R7,
+  DENSIFY_SEMI_SUPPLY_R7,
+  DENSIFY_CHEMICALS_R7,
+} from './global.layers-densify-r7';
 import { DENSIFY_INFRA } from './global.densify-infra';
 import { DENSIFY_INFRA_R2 } from './global.densify-infra-r2';
 import { GLOBAL_WORLD_HERITAGE, GLOBAL_CHINA_HERITAGE } from './global.heritage';
@@ -1682,6 +1695,7 @@ export const GLOBAL_MEDIA_ORGS: ThematicPoint[] = [
   { id: 'mo-wired', name: 'WIRED', layerId: 'media_orgs', lng: -122.42, lat: 37.77, note: '旧金山，康泰纳仕科技杂志', impact: 'low', subKind: 'tech_media' },
   { id: 'mo-36kr', name: '36氪', layerId: 'media_orgs', lng: 116.48, lat: 39.99, note: '北京，创投科技媒体', impact: 'low', subKind: 'tech_media' },
   { id: 'mo-huxiu', name: '虎嗅', layerId: 'media_orgs', lng: 116.48, lat: 39.99, note: '北京，商业科技评论', impact: 'low', subKind: 'tech_media' },
+  ...DENSIFY_MEDIA_ORGS_R5,
 ];
 
 /**
@@ -1729,6 +1743,7 @@ export const GLOBAL_AUTO_BRANDS: ThematicPoint[] = [
   { id: 'ab-lucid', name: 'Lucid Motors', layerId: 'auto_brands', lng: -121.93, lat: 37.4, note: '纽瓦克/亚利桑那', impact: 'low', subKind: 'ev' },
   { id: 'ab-rivian', name: 'Rivian', layerId: 'auto_brands', lng: -88.2, lat: 40.11, note: ' Normal 伊利诺伊，电动皮卡', impact: 'low', subKind: 'ev' },
   { id: 'ab-rimac', name: 'Rimac', layerId: 'auto_brands', lng: 16.03, lat: 45.78, note: '萨格勒布，克罗地亚超跑', impact: 'low', subKind: 'ev' },
+  ...DENSIFY_AUTO_BRANDS_R5,
 ];
 
 /**
@@ -1770,6 +1785,7 @@ export const GLOBAL_PHARMACEUTICAL: ThematicPoint[] = [
   { id: 'ph-cansino', name: '康希诺', layerId: 'pharmaceutical', lng: 117.2, lat: 39.13, note: '天津，腺病毒载体疫苗', impact: 'low', subKind: 'vaccine' },
   { id: 'ph-bharat', name: 'Bharat Biotech', layerId: 'pharmaceutical', lng: 78.41, lat: 17.45, note: '海得拉巴，印度疫苗', impact: 'medium', subKind: 'vaccine' },
   { id: 'ph-serum', name: 'Serum Institute of India', layerId: 'pharmaceutical', lng: 73.85, lat: 18.52, note: '浦那，全球最大疫苗生产商', impact: 'critical', subKind: 'vaccine' },
+  ...DENSIFY_PHARMACEUTICAL_R5,
 ];
 
 /**
@@ -1949,6 +1965,18 @@ export const GLOBAL_FLAGS_OF_CONVENIENCE: ThematicPoint[] = [
   { id: 'foc-samoa', name: '萨摩亚', layerId: 'flags_of_convenience', lng: -172.13, lat: -13.6, note: '亚太离岸公司（亚洲客户）', impact: 'low', subKind: 'finance' },
 ];
 
+/** 航空制造（aerospace_mfg）— 飞机总装厂/发动机厂/Tier1 供应商。 */
+export const GLOBAL_AEROSPACE_MFG: ThematicPoint[] = [...DENSIFY_AEROSPACE_MFG_R6, ...DENSIFY_AEROSPACE_MFG_R7];
+
+/** 国防军工（defense_mfg）— 主承包商/造船厂/导弹。 */
+export const GLOBAL_DEFENSE_MFG: ThematicPoint[] = [...DENSIFY_DEFENSE_MFG_R6, ...DENSIFY_DEFENSE_MFG_R7];
+
+/** 半导体上游（semi_supply）— EDA/封测/硅晶圆/材料（与晶圆厂图层互补）。 */
+export const GLOBAL_SEMI_SUPPLY: ThematicPoint[] = [...DENSIFY_SEMI_SUPPLY_R6, ...DENSIFY_SEMI_SUPPLY_R7];
+
+/** 化工与材料（chemicals）— 石化/特种化学/化肥/电池材料。 */
+export const GLOBAL_CHEMICALS: ThematicPoint[] = [...DENSIFY_CHEMICALS_R6, ...DENSIFY_CHEMICALS_R7];
+
 export const GLOBAL_THEMATIC_POINTS: ThematicPoint[] = [
   ...GLOBAL_ECON_HUBS,
   ...GLOBAL_MINERALS,
@@ -1990,4 +2018,8 @@ export const GLOBAL_THEMATIC_POINTS: ThematicPoint[] = [
   ...GLOBAL_SPACE_COMPANIES,
   ...GLOBAL_RARE_EARTH,
   ...GLOBAL_FLAGS_OF_CONVENIENCE,
+  ...GLOBAL_AEROSPACE_MFG,
+  ...GLOBAL_DEFENSE_MFG,
+  ...GLOBAL_SEMI_SUPPLY,
+  ...GLOBAL_CHEMICALS,
 ];

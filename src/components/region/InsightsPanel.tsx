@@ -92,7 +92,7 @@ export function InsightsPanel({ className = '' }: InsightsPanelProps) {
           {signals.map((s) => {
             const meta = KIND_META[s.kind];
             return (
-              <li key={s.id} className="rounded-md border border-dashboard-neutral/15 p-2">
+              <li key={s.id} className="mk-row rounded-md border border-dashboard-neutral/15 p-2">
                 <div className="flex items-center gap-1.5">
                   <span aria-hidden>{meta.emoji}</span>
                   <span className="min-w-0 flex-1 truncate text-xs font-medium text-white">{s.title}</span>

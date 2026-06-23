@@ -164,4 +164,8 @@ export const THEMATIC_POINT_LAYERS: LayerId[] = [
   'space_companies',
   'rare_earth',
   'flags_of_convenience',
+  'aerospace_mfg',
+  'defense_mfg',
+  'semi_supply',
+  'chemicals',
 ];

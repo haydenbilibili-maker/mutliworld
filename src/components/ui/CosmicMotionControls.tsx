@@ -35,7 +35,7 @@ export function CosmicMotionControls({ className = '' }: CosmicMotionControlsPro
           aria-pressed={playing}
           title={playing ? '暂停自转' : '播放自转'}
           className={[
-            'flex flex-1 items-center justify-center gap-1 rounded-md px-2 py-1 text-[10px] transition-colors',
+            'seg-btn flex flex-1 items-center justify-center gap-1 rounded-md px-2 py-1 text-[10px] transition-colors',
             playing
               ? 'bg-emerald-500/20 text-emerald-200'
               : 'bg-dashboard-neutral/15 text-dashboard-neutral hover:text-white',
@@ -65,7 +65,7 @@ export function CosmicMotionControls({ className = '' }: CosmicMotionControlsPro
               aria-pressed={active}
               title={`${s}× 速度`}
               className={[
-                'flex-1 rounded px-1 py-0.5 text-[10px] transition-colors',
+                'seg-btn flex-1 rounded px-1 py-0.5 text-[10px] transition-colors',
                 active
                   ? 'bg-sky-500/25 text-sky-100'
                   : 'text-dashboard-neutral/55 hover:bg-dashboard-neutral/15 hover:text-white',

@@ -46,7 +46,7 @@ export function NewsPanel({ className = '' }: NewsPanelProps) {
           {items.map((n) => (
             <li
               key={n.id}
-              className="border-b border-dashboard-neutral/10 pb-1.5 last:border-0"
+              className="mk-row border-b border-dashboard-neutral/10 pb-1.5 last:border-0"
             >
               <a
                 href={n.link}

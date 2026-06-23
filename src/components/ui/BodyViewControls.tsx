@@ -32,7 +32,7 @@ export function BodyViewControls({ className = '' }: BodyViewControlsProps) {
         onClick={() => setGlobe(!globe)}
         aria-pressed={globe}
         title="3D 球面 / 2D 平面"
-        className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors ${globe ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white'}`}
+        className={`seg-btn flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors ${globe ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white'}`}
       >
         <span aria-hidden>🌐</span>
         {globe ? '3D 球面' : '2D 平面'}
@@ -43,7 +43,7 @@ export function BodyViewControls({ className = '' }: BodyViewControlsProps) {
         onClick={() => setBodyBasemapMode(bodyBasemapMode === 'terrain' ? 'imagery' : 'terrain')}
         aria-pressed={bodyBasemapMode === 'imagery'}
         title={imageryReady ? '地形图 / 卫星实拍 切换' : '卫星实拍底图未配置（设 NEXT_PUBLIC_*_IMAGERY_URL）；当前回落地形图'}
-        className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors ${bodyBasemapMode === 'imagery' ? 'bg-emerald-500/20 text-emerald-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white'}`}
+        className={`seg-btn flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors ${bodyBasemapMode === 'imagery' ? 'bg-emerald-500/20 text-emerald-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white'}`}
       >
         <span aria-hidden>🛰️</span>
         {bodyBasemapMode === 'imagery' ? '实拍' : '地形'}

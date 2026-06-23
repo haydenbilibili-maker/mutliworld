@@ -9,7 +9,7 @@
  * 让用户一眼感知大盘整体走势而非逐条阅读；底部展示数据时效与源可用状态。
  */
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMarkets } from '@/hooks/useMarkets';
 import { useMapStore } from '@/store/useMapStore';
 import { getRegion } from '@/regions';
@@ -46,6 +46,23 @@ function ChangeTag({
   pct: number | null;
   cnConvention?: boolean;
 }) {
+  const prevRef = useRef<number | null>(null);
+  const [flash, setFlash] = useState<'up' | 'down' | null>(null);
+
+  useEffect(() => {
+    if (pct == null || prevRef.current == null) {
+      prevRef.current = pct;
+      return;
+    }
+    if (pct !== prevRef.current) {
+      setFlash(pct > prevRef.current ? 'up' : 'down');
+      const t = setTimeout(() => setFlash(null), 600);
+      prevRef.current = pct;
+      return () => clearTimeout(t);
+    }
+    prevRef.current = pct;
+  }, [pct]);
+
   if (pct == null)
     return <span className="text-[10px] text-dashboard-neutral/40">—</span>;
   const up = pct >= 0;
@@ -56,8 +73,20 @@ function ChangeTag({
     : up
       ? 'text-emerald-400'
       : 'text-rose-400';
+  const flashBg =
+    flash === 'up'
+      ? 'bg-emerald-500/15'
+      : flash === 'down'
+        ? 'bg-rose-500/15'
+        : '';
   return (
-    <span className={`text-[10px] font-medium ${colorClass}`}>
+    <span
+      className={[
+        'text-[10px] font-medium tabular-nums rounded px-0.5 transition-colors duration-500',
+        colorClass,
+        flashBg,
+      ].join(' ')}
+    >
       {up ? '▲' : '▼'} {Math.abs(pct).toFixed(2)}%
     </span>
   );
@@ -71,7 +100,7 @@ function Row({
   cnConvention?: boolean;
 }) {
   return (
-    <li className="flex items-center justify-between gap-2 border-b border-dashboard-neutral/10 py-1 last:border-0">
+    <li className="mk-row flex items-center justify-between gap-2 border-b border-dashboard-neutral/10 py-1 last:border-0">
       <div className="min-w-0">
         <div className="text-[11px] text-white leading-tight truncate">
           {q.label}

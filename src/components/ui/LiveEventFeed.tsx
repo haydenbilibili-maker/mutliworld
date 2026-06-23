@@ -193,8 +193,12 @@ export function LiveEventFeed({ className = '', maxItems = 14 }: LiveEventFeedPr
             ) : list.length === 0 ? (
               <div className="px-3 py-3 text-dashboard-neutral/50">该分类暂无事件</div>
             ) : (
-              list.map((e) => (
-                <div key={e.id} className="flex items-start gap-2 px-3 py-2 hover:bg-white/5">
+              list.map((e, i) => (
+                <div
+                  key={e.id}
+                  className="lef-row flex items-start gap-2 px-3 py-2 hover:bg-white/5"
+                  style={{ animationDelay: `${Math.min(i, 12) * 35}ms` }}
+                >
                   <button
                     type="button"
                     onClick={() => handleClick(e)}

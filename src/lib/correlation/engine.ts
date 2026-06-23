@@ -12,6 +12,10 @@ import type { CorrelationSignal } from '@/types/correlation';
 const ENERGY_RE =
   /oil|crude|opec|petrol|gas|lng|pipeline|refiner|energy|sanction|embargo|strait|hormuz|suez|iran|saudi|opec|russia|ukraine|venezuela|nuclear/i;
 
+/** 供应链关键词：关键矿产/半导体/化工的出口管制、禁运、断供 */
+const SUPPLY_CHAIN_RE =
+  /semiconductor|chip|wafer|tsmc|asml|lithium|cobalt|rare.?earth|稀土|出口管制|禁运|断供|export.?control|embargo|gallium|germanium|graphite|tungsten|sanction/i;
+
 function findSeries(series: EconSeries[], id: string): EconSeries | undefined {
   return series.find((s) => s.id === id);
 }
@@ -55,24 +59,33 @@ export function deriveSignals(events: LiveEvent[], series: EconSeries[]): Correl
     });
   }
 
-  // 2) 供应链扰动：高烈度灾害/地震 ↔ 股指/能源实物
+  // 2) 供应链扰动：高烈度灾害/地震，或含供应链关键词的地缘事件 ↔ 股指/能源实物
   const disasterEvents = events.filter(
     (e) => (e.category === 'disaster' || e.category === 'quake') && (e.severity === 'high' || e.severity === 'critical'),
   );
-  if (disasterEvents.length > 0) {
+  const supplyChainEvents = events.filter(
+    (e) => e.category === 'geopolitics' && SUPPLY_CHAIN_RE.test(`${e.title} ${e.area ?? ''}`),
+  );
+  const scEvents = [...disasterEvents, ...supplyChainEvents];
+  if (scEvents.length > 0) {
     const indices = series.filter((s) => s.category === 'index' && s.changePercent != null);
     const worst = indices.sort((a, b) => (a.changePercent ?? 0) - (b.changePercent ?? 0))[0];
+    const hasExportCtrl = supplyChainEvents.length > 0;
     out.push({
       id: 'sig-supply-chain',
       kind: 'supply_chain',
       tier: worst && Math.abs(worst.changePercent ?? 0) >= 1 ? 'emerging' : 'watch',
-      title: `供应链扰动关注：${disasterEvents.length} 起高烈度灾害/地震`,
-      rationale: `检出 ${disasterEvents.length} 起高/严重级灾害或地震事件${worst ? `；同期 ${worst.area ?? ''}${worst.label} ${(worst.changePercent ?? 0) >= 0 ? '+' : ''}${(worst.changePercent ?? 0).toFixed(2)}%` : ''}。灾害可能扰动区域物流与大宗供应，需结合实物库存跟踪。`,
+      title: hasExportCtrl
+        ? `供应链扰动关注：${supplyChainEvents.length} 条关键矿产/半导体/化工管制事件`
+        : `供应链扰动关注：${disasterEvents.length} 起高烈度灾害/地震`,
+      rationale: hasExportCtrl
+        ? `检出 ${supplyChainEvents.length} 条含关键矿产/半导体/化工出口管制或断供关键词的地缘事件${disasterEvents.length > 0 ? `，另有 ${disasterEvents.length} 起高烈度灾害` : ''}${worst ? `；同期 ${worst.area ?? ''}${worst.label} ${(worst.changePercent ?? 0) >= 0 ? '+' : ''}${(worst.changePercent ?? 0).toFixed(2)}%` : ''}。出口管制与断供可能冲击半导体、电池、航空制造等产业链，需跟踪相关库存与替代供应。`
+        : `检出 ${disasterEvents.length} 起高/严重级灾害或地震事件${worst ? `；同期 ${worst.area ?? ''}${worst.label} ${(worst.changePercent ?? 0) >= 0 ? '+' : ''}${(worst.changePercent ?? 0).toFixed(2)}%` : ''}。灾害可能扰动区域物流与大宗供应，需结合实物库存跟踪。`,
       refs: {
-        eventIds: disasterEvents.slice(0, 8).map((e) => e.id),
+        eventIds: scEvents.slice(0, 8).map((e) => e.id),
         seriesIds: worst ? [worst.id] : [],
       },
-      eventCategories: ['disaster', 'quake'],
+      eventCategories: ['disaster', 'quake', 'geopolitics'],
       econCategories: ['index', 'energy_supply'],
       magnitude: worst?.changePercent ?? null,
       asOf: now,

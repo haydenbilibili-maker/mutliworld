@@ -18,6 +18,7 @@ import type { FeatureCollection } from 'geojson';
 import { useMapStore } from '@/store/useMapStore';
 import type { LayerId } from '@/types/geo';
 import { DockDataCard } from '@/components/ui/DockDataCard';
+import { CountUpText } from '@/components/ui/CountUpText';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 /** dedupe 窗口：略短于最小轮询间隔，防止 SWR 聚焦/重挂载触发额外请求 */
@@ -56,7 +57,9 @@ function Chip({ def }: { def: ChipDef }) {
     <span className="flex items-center gap-1 whitespace-nowrap">
       <span aria-hidden>{def.icon}</span>
       <span className="text-dashboard-neutral/70">{def.label}</span>
-      <span className={`tabular-nums font-semibold ${def.color}`}>{n}</span>
+      <span className={`tabular-nums font-semibold ${def.color}`}>
+        <CountUpText value={String(n)} />
+      </span>
     </span>
   );
 }

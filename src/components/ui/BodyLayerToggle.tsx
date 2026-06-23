@@ -38,7 +38,7 @@ export function BodyLayerToggle({ className = '' }: BodyLayerToggleProps) {
             type="button"
             onClick={() => toggleBodyLayer(m.id)}
             aria-pressed={on}
-            className="flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs transition-colors"
+            className="seg-btn flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs transition-colors"
             style={
               on
                 ? { borderColor: `${m.color}99`, backgroundColor: `${m.color}22`, color: '#fff' }
