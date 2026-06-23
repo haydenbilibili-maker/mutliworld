@@ -11,6 +11,7 @@ import { useOrbitalObjects } from '@/hooks/useOrbitalObjects';
 import { useOrbitalPanelStore } from '@/store/useOrbitalPanelStore';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { TleStatusBar } from '@/components/ui/TleStatusBar';
+import { SkeletonRows } from '@/components/ui/Skeleton';
 import type { EventDetail } from '@/types/geo';
 
 interface OrbitalObjectsPanelProps {
@@ -120,7 +121,7 @@ export function OrbitalObjectsPanel({ className = '' }: OrbitalObjectsPanelProps
             </button>
           </div>
         ) : isLoading && stations.length === 0 ? (
-          <div className="text-[11px] text-dashboard-neutral/50">传播轨道星历…</div>
+          <SkeletonRows rows={4} />
         ) : !stationsOn ? (
           <div className="text-[11px] text-dashboard-neutral/50">
             开启「空间站（实时）」图层以高亮星下点

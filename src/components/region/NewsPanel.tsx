@@ -12,6 +12,7 @@ import { getRegion } from '@/regions';
 import { useNews } from '@/hooks/useNews';
 import { EMPTY_REGION_MESSAGE } from '@/lib/region/contentFilter';
 import { timeAgo } from '@/lib/format/time';
+import { SkeletonRows } from '@/components/ui/Skeleton';
 import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
 import { DockPanel } from '@/components/region/DockPanel';
 
@@ -35,7 +36,7 @@ export function NewsPanel({ className = '' }: NewsPanelProps) {
       className={`w-80 max-h-[60vh] ${className}`}
     >
       {isLoading && items.length === 0 ? (
-        <div className="text-[11px] text-dashboard-neutral/60">加载中…</div>
+        <SkeletonRows rows={5} />
       ) : isEmpty ? (
         <div className="text-[11px] text-dashboard-neutral/60">
           {EMPTY_REGION_MESSAGE}

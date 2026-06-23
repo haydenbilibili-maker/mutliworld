@@ -15,6 +15,7 @@ import { useMapStore } from '@/store/useMapStore';
 import { getRegion } from '@/regions';
 import { ageLabel } from '@/lib/format/time';
 import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
+import { SkeletonRows } from '@/components/ui/Skeleton';
 import type { MarketQuote } from '@/lib/markets/markets';
 import {
   EMPTY_REGION_MESSAGE,
@@ -143,7 +144,7 @@ export function MarketsPanel({ className = '' }: MarketsPanelProps) {
       className={`w-64 max-h-[60vh] max-sm:w-[min(16rem,calc(100vw-2rem))] ${className}`}
     >
       {isLoading && filtered.length === 0 ? (
-        <div className="text-[11px] text-dashboard-neutral/60">加载中…</div>
+        <SkeletonRows rows={5} />
       ) : isEmpty ? (
         <div className="text-[11px] text-dashboard-neutral/60">
           {EMPTY_REGION_MESSAGE}

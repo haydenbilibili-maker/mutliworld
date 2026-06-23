@@ -236,11 +236,12 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
 
   const groups = useMemo(() => {
     const allowed = new Set(regionLayers);
-    return LAYER_GROUPS.map((g) => ({
-      title: g.title,
-      ids: g.ids.filter((id) => allowed.has(id)),
-    })).filter((g) => g.ids.length > 0);
-  }, [regionLayers]);
+    const activeSet = new Set(activeLayers);
+    return LAYER_GROUPS.map((g) => {
+      const ids = g.ids.filter((id) => allowed.has(id));
+      return { title: g.title, ids, activeInGroup: ids.filter((id) => activeSet.has(id)).length };
+    }).filter((g) => g.ids.length > 0);
+  }, [regionLayers, activeLayers]);
 
   const activeCount = activeLayers.filter((id) => regionLayers.includes(id)).length;
 
@@ -391,7 +392,7 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
                                 aria-pressed={active}
                                 onClick={() => pickOverlay(p)}
                                 className={[
-                                  'rounded-md border px-2.5 py-1 text-xs transition active:scale-95',
+                                  'seg-btn rounded-md border px-2.5 py-1 text-xs transition active:scale-95',
                                   active
                                     ? 'border-dashboard-military/60 bg-dashboard-military/20 text-white'
                                     : 'border-dashboard-neutral/20 bg-dashboard-neutral/5 text-dashboard-neutral hover:border-dashboard-neutral/35 hover:text-white',
@@ -413,8 +414,13 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
                 <>
                   {groups.map((g) => (
                     <div key={g.title}>
-                      <div className="mb-1 text-[10px] uppercase tracking-wide text-dashboard-neutral/40">
-                        {g.title}
+                      <div className="mb-1 flex items-center justify-between">
+                        <span className="text-[10px] uppercase tracking-wide text-dashboard-neutral/40">
+                          {g.title}
+                        </span>
+                        {g.activeInGroup > 0 && (
+                          <span className="text-[10px] tabular-nums text-dashboard-military/80">{g.activeInGroup}/{g.ids.length}</span>
+                        )}
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {g.ids.map((id) => {
@@ -427,7 +433,7 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
                               title={LAYER_HINTS[id] ?? LAYER_LABELS[id]}
                               onClick={() => toggleLayer(id)}
                               className={[
-                                'rounded-md border px-2.5 py-1 text-xs transition-colors',
+                                'lt-chip rounded-md border px-2.5 py-1 text-xs transition-all',
                                 active
                                   ? 'border-dashboard-military/60 bg-dashboard-military/20 text-white'
                                   : 'border-dashboard-neutral/20 bg-dashboard-neutral/5 text-dashboard-neutral hover:border-dashboard-neutral/35 hover:text-white',
@@ -449,6 +455,15 @@ export function LayerToggle({ className = '', embedded = false }: LayerTogglePro
                 已开启 {activeCount}/{regionLayers.length} 层 · 点击地图空白处关闭
               </p>
             )}
+            <style jsx global>{`
+              .lt-chip:active { transform: scale(0.94); }
+              .lt-chip[aria-pressed="true"] { animation: ltChipPulse 0.4s ease-out; }
+              @keyframes ltChipPulse {
+                0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+                100% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+              }
+              @media (prefers-reduced-motion: reduce) { .lt-chip[aria-pressed="true"] { animation: none; } }
+            `}</style>
           </motion.div>
         )}
       </AnimatePresence>

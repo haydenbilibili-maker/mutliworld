@@ -44,7 +44,7 @@ export function BasemapModeSwitcher({ className = '' }: BasemapModeSwitcherProps
               aria-pressed={active}
               title={m.title}
               className={[
-                'flex-1 rounded px-1.5 py-1 text-[10px] transition-colors',
+                'seg-btn flex-1 rounded px-1.5 py-1 text-[10px] transition-colors',
                 active
                   ? 'bg-dashboard-military/30 text-white'
                   : 'text-dashboard-neutral/70 hover:bg-dashboard-neutral/15 hover:text-white',

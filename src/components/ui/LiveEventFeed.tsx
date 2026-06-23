@@ -14,6 +14,7 @@ import { useMemo, useState } from 'react';
 import { useMapStore } from '@/store/useMapStore';
 import { useLiveEvents } from '@/hooks/useLiveEvents';
 import { formatShort, timeAgo, ageLabel, nextRefreshIn } from '@/lib/format/time';
+import { SkeletonRows } from '@/components/ui/Skeleton';
 import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
 import type { LiveEvent, LiveEventCategory, LiveEventSeverity } from '@/types/liveEvent';
 import type { EventDetail, ImpactLevel } from '@/types/geo';
@@ -188,7 +189,7 @@ export function LiveEventFeed({ className = '', maxItems = 14 }: LiveEventFeedPr
             {error ? (
               <div className="px-3 py-3 text-dashboard-conflict/80">事件数据暂不可用</div>
             ) : isLoading && events.length === 0 ? (
-              <div className="px-3 py-3 text-dashboard-neutral/50">加载真实事件…</div>
+              <div className="px-1 py-1"><SkeletonRows rows={5} /></div>
             ) : list.length === 0 ? (
               <div className="px-3 py-3 text-dashboard-neutral/50">该分类暂无事件</div>
             ) : (

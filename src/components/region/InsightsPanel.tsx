@@ -13,6 +13,7 @@ import { DockPanel } from '@/components/region/DockPanel';
 import { useInsights } from '@/hooks/useInsights';
 import { ageLabel } from '@/lib/format/time';
 import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
+import { SkeletonRows } from '@/components/ui/Skeleton';
 import type { SignalKind, SignalTier } from '@/types/correlation';
 
 interface InsightsPanelProps {
@@ -65,7 +66,7 @@ export function InsightsPanel({ className = '' }: InsightsPanelProps) {
       {error ? (
         <div className="py-3 text-[11px] text-dashboard-conflict/80">洞察暂不可用</div>
       ) : isLoading && signals.length === 0 ? (
-        <div className="py-3 text-[11px] text-dashboard-neutral/60">关联真实数据中…</div>
+        <div className="py-1"><SkeletonRows rows={4} /></div>
       ) : signals.length === 0 ? (
         <div className="py-3 text-[11px] text-dashboard-neutral/60">
           当前真实数据未触发关联信号（配置 FRED/EIA Key 可丰富能源经济序列以提升关联覆盖）。

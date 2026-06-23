@@ -9,6 +9,7 @@ import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
 import { NEWS_CATEGORY_COLORS } from '@/data/news-feed';
 import { ImpactGauge, MiniGlobe, MiniChart, IMPACT_THEME } from '@/components/ui/EventViz';
+import { CountUpText } from '@/components/ui/CountUpText';
 import { useEventIndexStore, nearbySameCategory, nearbyCrossCategory } from '@/store/useEventIndexStore';
 import type { EventDetail, LayerId } from '@/types/geo';
 
@@ -194,7 +195,9 @@ export function SidePanel({ className = '' }: SidePanelProps) {
                   <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
                     {e.metrics.map((m, i) => (
                       <div key={i} className="rounded-lg bg-white/5 px-2.5 py-2">
-                        <div className="text-sm font-semibold tabular-nums" style={{ color: m.accent ?? '#fff' }}>{m.value}</div>
+                        <div className="text-sm font-semibold tabular-nums" style={{ color: m.accent ?? '#fff' }}>
+                          <CountUpText value={m.value} />
+                        </div>
                         <div className="mt-0.5 text-[10px] text-dashboard-neutral/55">{m.label}{m.hint ? ` · ${m.hint}` : ''}</div>
                       </div>
                     ))}

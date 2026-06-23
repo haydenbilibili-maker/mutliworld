@@ -11,6 +11,7 @@ import { DockPanel } from '@/components/region/DockPanel';
 import { useEcon } from '@/hooks/useEcon';
 import { ageLabel } from '@/lib/format/time';
 import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
+import { SkeletonRows } from '@/components/ui/Skeleton';
 import type { EconCategory, EconSeries } from '@/types/econ';
 
 interface EnergyEconPanelProps {
@@ -149,7 +150,7 @@ export function EnergyEconPanel({ className = '' }: EnergyEconPanelProps) {
       )}
 
       {isLoading && total === 0 ? (
-        <div className="py-3 text-[11px] text-dashboard-neutral/60">加载真实数据…</div>
+        <div className="py-1"><SkeletonRows rows={5} /></div>
       ) : total === 0 ? (
         <div className="py-3 text-[11px] text-dashboard-neutral/60">
           暂无可用真实数据。配置 FRED_API_KEY / EIA_API_KEY 可解锁大宗商品与能源实物序列。

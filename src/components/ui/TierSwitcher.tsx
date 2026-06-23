@@ -5,6 +5,7 @@
  * 垂直三段"电梯"，在三层之间原地穿越；底部含「敏感图层一键下架」开关（商用）。
  */
 
+import { AnimatePresence, motion } from 'framer-motion';
 import { useMapStore } from '@/store/useMapStore';
 import { useProfileStore } from '@/store/useProfileStore';
 import { usePanelStore } from '@/store/usePanelStore';
@@ -60,22 +61,39 @@ export function TierSwitcher({ className = '' }: TierSwitcherProps) {
             aria-pressed={active}
             title={`${t.name}：${t.tagline}${t.id === 'surface' ? ' · 冲突/军事/经济/实时图层' : t.id === 'subsurface' ? ' · 海缆/洋底管线/震源' : ' · 卫星/发射/在轨物体 · 自动 3D 球面'}`}
             className={[
-              'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-xs transition-colors',
+              'relative flex items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-xs transition-colors',
               active
-                ? 'bg-dashboard-military/25 text-white'
+                ? 'text-white'
                 : 'text-dashboard-neutral hover:bg-dashboard-neutral/15 hover:text-white',
             ].join(' ')}
           >
-            <span className="text-base leading-none" aria-hidden>
+            {active && (
+              <motion.span
+                layoutId="tier-active-bg"
+                className="absolute inset-0 rounded-md bg-dashboard-military/25"
+                transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                style={{ zIndex: 0 }}
+              />
+            )}
+            <span className="relative z-10 text-base leading-none" aria-hidden>
               {t.icon}
             </span>
-            <span className="min-w-0">
+            <span className="relative z-10 min-w-0">
               <span className="block leading-tight">{t.name}</span>
-              {active && (
-                <span className="block truncate text-[10px] text-dashboard-neutral/60">
-                  {t.tagline}
-                </span>
-              )}
+              <AnimatePresence initial={false}>
+                {active && (
+                  <motion.span
+                    key="tagline"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="block overflow-hidden truncate text-[10px] text-dashboard-neutral/60"
+                  >
+                    {t.tagline}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </span>
           </button>
         );

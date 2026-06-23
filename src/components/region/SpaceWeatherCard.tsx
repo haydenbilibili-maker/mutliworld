@@ -11,28 +11,10 @@ import useSWR from 'swr';
 import { useMapStore } from '@/store/useMapStore';
 import { ageLabel } from '@/lib/format/time';
 import { MiniChart } from '@/components/ui/EventViz';
+import { useCountUp } from '@/hooks/useCountUp';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-/** 数字滚动到目标值（缓出；尊重 reduced-motion 则直接落定） */
-function useCountUp(target: number | null, ms = 700): number {
-  const [v, setV] = useState(0);
-  const raf = useRef<number | null>(null);
-  useEffect(() => {
-    if (target == null) { setV(0); return; }
-    const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) { setV(target); return; }
-    const from = 0, start = performance.now();
-    const step = (t: number) => {
-      const p = Math.min(1, (t - start) / ms);
-      setV(from + (target - from) * (1 - Math.pow(1 - p, 3)));
-      if (p < 1) raf.current = requestAnimationFrame(step);
-    };
-    raf.current = requestAnimationFrame(step);
-    return () => { if (raf.current) cancelAnimationFrame(raf.current); };
-  }, [target, ms]);
-  return v;
-}
 
 interface SpaceWeather { kp: number | null; series: number[]; times: string[]; gLevel: string; gDesc: string; windSpeed: number | null; bz: number | null; generatedAt: string; source: string; stale?: boolean }
 

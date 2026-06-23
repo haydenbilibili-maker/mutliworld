@@ -161,7 +161,7 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
                       onClick={() => { setProjMode('map'); setGlobe(g); }}
                       aria-pressed={on}
                       disabled={activeTier === 'space' && !g}
-                      className={['flex-1 rounded-md px-2 py-1 text-[12px] transition-colors disabled:opacity-40', on ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white'].join(' ')}
+                      className={['seg-btn flex-1 rounded-md px-2 py-1 text-[12px] transition-colors disabled:opacity-40', on ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white'].join(' ')}
                     >
                       {label}
                     </button>
@@ -178,7 +178,7 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
                       type="button"
                       onClick={() => setProjMode(d.id)}
                       aria-pressed={on}
-                      className={['rounded-md px-1.5 py-1 text-[10px] transition-colors', on ? 'bg-sky-500/25 text-sky-200' : 'text-dashboard-neutral/70 hover:bg-white/5 hover:text-white'].join(' ')}
+                          className={['seg-btn rounded-md px-1.5 py-1 text-[10px] transition-colors', on ? 'bg-sky-500/25 text-sky-200' : 'text-dashboard-neutral/70 hover:bg-white/5 hover:text-white'].join(' ')}
                     >
                       {d.name}
                     </button>
@@ -201,10 +201,10 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
                         type="button"
                         onClick={() => toggleLayer(id)}
                         aria-pressed={on}
-                        className={[
-                          'flex-1 rounded-md px-2 py-1 text-[12px] transition-colors',
-                          on ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
-                        ].join(' ')}
+                            className={[
+                              'seg-btn flex-1 rounded-md px-2 py-1 text-[12px] transition-colors',
+                              on ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
+                            ].join(' ')}
                       >
                         {label}
                       </button>
@@ -229,7 +229,7 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
                         onClick={() => setFlowSpeed(val)}
                         aria-pressed={active}
                         className={[
-                          'flex-1 rounded-md px-2 py-1 text-[12px] transition-colors',
+                          'seg-btn flex-1 rounded-md px-2 py-1 text-[12px] transition-colors',
                           active ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
                         ].join(' ')}
                       >
@@ -255,10 +255,10 @@ export function ViewMenu({ className = '', embedded = false }: ViewMenuProps) {
                         type="button"
                         onClick={() => setOverlayScheme(s)}
                         aria-pressed={on}
-                        className={[
-                          'rounded-md px-2 py-1 text-[12px] transition-colors',
-                          on ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
-                        ].join(' ')}
+                          className={[
+                            'seg-btn rounded-md px-2 py-1 text-[12px] transition-colors',
+                            on ? 'bg-sky-500/20 text-sky-200' : 'text-dashboard-neutral hover:bg-white/5 hover:text-white',
+                          ].join(' ')}
                       >
                         {COLOR_SCHEME_LABELS[s]}
                       </button>

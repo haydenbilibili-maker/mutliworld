@@ -62,6 +62,23 @@ textarea:focus-visible {
   font-family: inherit;
 }
 
+/*
+ * 分段控件/切换按钮统一激活动效。
+ * 用法：给按钮加 class="seg-btn"，激活态由 aria-pressed="true" 驱动。
+ * - 按下回缩（:active）
+ * - 激活瞬间从中心向外扩散一圈高亮光环（animation 一次性，reduced-motion 由上方全局规则降级）
+ */
+.seg-btn:active {
+  transform: scale(0.96);
+}
+.seg-btn[aria-pressed="true"] {
+  animation: segPulse 0.4s ease-out;
+}
+@keyframes segPulse {
+  0% { box-shadow: 0 0 0 0 rgba(125, 211, 252, 0.45); }
+  100% { box-shadow: 0 0 0 5px rgba(125, 211, 252, 0); }
+}
+
 .maplibregl-ctrl-attrib a {
   color: rgba(255, 255, 255, 0.6);
 }

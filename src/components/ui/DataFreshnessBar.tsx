@@ -6,6 +6,7 @@ import { useGeodataContext } from '@/context/GeodataContext';
 import { REFRESH_INTERVAL_MS } from '@/lib/timeRange';
 import { ageLabel, formatDate, nextRefreshIn, timeAgo, isStale } from '@/lib/format/time';
 import { useRelativeTimeTick } from '@/hooks/useRelativeTimeTick';
+import { CountUpText } from '@/components/ui/CountUpText';
 import type { TimeRange } from '@/types/geo';
 
 interface DataFreshnessBarProps {
@@ -149,8 +150,6 @@ export function DataFreshnessBar({ className = '' }: DataFreshnessBarProps) {
         : refreshIn > 0
           ? `${refreshIn} 秒后刷新`
           : '即将刷新';
-  // 数据就绪后的状态点：stale（滞后）用琥珀色，与刷新中的琥珀态区分用透明度
-  const readyDotClass = dataStale ? 'bg-amber-400/70' : 'bg-emerald-400';
   const readyTitle = isValidating
     ? '刷新中'
     : dataStale
@@ -174,14 +173,16 @@ export function DataFreshnessBar({ className = '' }: DataFreshnessBarProps) {
         <span aria-hidden>📊</span>
         <span>数据</span>
         <span className="rounded-full bg-dashboard-neutral/15 px-1.5 py-0.5 text-xs tabular-nums text-dashboard-neutral/80">
-          {meta.featureCount}
+          <CountUpText value={String(meta.featureCount)} />
         </span>
         <span className="text-[10px] tabular-nums text-dashboard-neutral/55">
           {generatedAge}
         </span>
         <span
-          className={`h-2 w-2 shrink-0 rounded-full ${readyDotClass}`}
+          className="df-dot h-2 w-2 shrink-0 rounded-full"
+          style={{ backgroundColor: dataStale ? 'rgb(251 191 36 / 0.7)' : 'rgb(74 222 128)' }}
           title={readyTitle}
+          aria-hidden
         />
       </button>
 
@@ -267,6 +268,14 @@ export function DataFreshnessBar({ className = '' }: DataFreshnessBarProps) {
           </motion.div>
         )}
       </AnimatePresence>
+      <style jsx global>{`
+        .df-dot { animation: dfBreathe 2.4s ease-in-out infinite; }
+        @keyframes dfBreathe {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.35); opacity: 0.65; }
+        }
+        @media (prefers-reduced-motion: reduce) { .df-dot { animation: none; } }
+      `}</style>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useMapStore } from '@/store/useMapStore';
 import { useLaunchLogStore } from '@/store/useLaunchLogStore';
 import { useLaunchLog } from '@/hooks/useLaunchLog';
 import { PanelCloseButton } from '@/components/ui/PanelCloseButton';
+import { SkeletonTable } from '@/components/ui/Skeleton';
 import { GLOBAL_LAUNCH_SITES } from '@/regions/global.launchSites';
 import type { LaunchLogEntry, LaunchStatus } from '@/regions/global.launchLog';
 import type { EventDetail } from '@/types/geo';
@@ -127,7 +128,7 @@ export function LaunchLogPanel({ className = '' }: LaunchLogPanelProps) {
                 </button>
               </div>
             ) : isLoading && entries.length === 0 ? (
-              <div className="px-3 py-4 text-dashboard-neutral/50">加载发射记录…</div>
+              <div className="px-2 py-1.5"><SkeletonTable rows={6} cols={4} /></div>
             ) : entries.length === 0 ? (
               <div className="px-3 py-4 text-dashboard-neutral/50">
                 近一年内无发射记录

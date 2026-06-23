@@ -134,10 +134,22 @@ export function MapTooltip() {
 
     // 添加到地图（偏移到脉冲点右方，避免与脉冲环重叠）
     // 脉冲环最大扩张半径 ≈ 39px，工具放置于右侧 50px 处完全错开
+    // 边缘避让：靠近右边缘时翻到左侧，靠近上边缘时锚点改为 top
+    const offsetRight: [number, number] = [50, -30];
+    const offsetLeft: [number, number] = [-50, -30];
+    const useLeft = lng > 150; // 经度 > 150° 多在视口右缘
+    const useTop = lat > 70;   // 高纬靠近上缘
+    const offset = useLeft ? offsetLeft : offsetRight;
+    const anchor = useTop ? 'top' : 'left';
+
+    // 连接线方向类（与边缘避让同步）
+    if (useLeft) el.classList.add('tooltip-anchor-right');
+    if (useTop) el.classList.add('tooltip-anchor-top');
+
     const marker = new maplibregl.Marker({
       element: el,
-      anchor: 'left',
-      offset: [50, -30],
+      anchor,
+      offset,
     })
       .setLngLat([lng, lat])
       .addTo(map);
@@ -169,7 +181,36 @@ export function MapTooltip() {
         backdrop-filter: blur(8px);
         pointer-events: auto;
         cursor: default;
+        position: relative;
       }
+      /* 连接线：从浮窗指向脉冲点（默认锚 left → 线在左边缘）*/
+      .map-tooltip::before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 30px;
+        width: 10px;
+        height: 1.5px;
+        background: linear-gradient(to right, rgba(245,158,11,0.6), rgba(245,158,11,0.15));
+        opacity: 0;
+        animation: mpLineIn 0.3s ease-out 0.15s forwards;
+      }
+      /* 边缘翻转到右侧时，连接线移到右边缘 */
+      .map-tooltip.tooltip-anchor-right::before {
+        left: auto;
+        right: -10px;
+        background: linear-gradient(to left, rgba(245,158,11,0.6), rgba(245,158,11,0.15));
+      }
+      /* 高纬锚 top 时，连接线改为垂直向下 */
+      .map-tooltip.tooltip-anchor-top::before {
+        left: 12px;
+        top: -10px;
+        width: 1.5px;
+        height: 10px;
+        background: linear-gradient(to bottom, rgba(245,158,11,0.6), rgba(245,158,11,0.15));
+      }
+      @keyframes mpLineIn { to { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { .map-tooltip::before { animation: none; opacity: 1; } }
       .map-tooltip-header {
         display: flex;
         align-items: center;

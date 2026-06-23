@@ -299,8 +299,22 @@ export function SearchBox({ className = '', embedded = false }: SearchBoxProps) 
                   ))
                 )}
                 {geoLoading && (
-                  <div className="px-3 py-1.5 text-[11px] text-dashboard-neutral/45">
-                    正在检索地点…
+                  <div className="space-y-1.5 px-2.5 py-1.5">
+                    {[0, 1, 2].map((k) => (
+                      <div key={k} className="flex items-center gap-2">
+                        <span className="sb-skel h-1.5 w-1.5 shrink-0 rounded-full" />
+                        <span className="sb-skel h-2.5 rounded" style={{ width: `${70 - k * 14}%` }} />
+                      </div>
+                    ))}
+                    <style jsx>{`
+                      .sb-skel {
+                        background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.12) 37%, rgba(255,255,255,0.05) 63%);
+                        background-size: 400% 100%;
+                        animation: sbSkel 1.4s ease-in-out infinite;
+                      }
+                      @keyframes sbSkel { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+                      @media (prefers-reduced-motion: reduce) { .sb-skel { animation: none; } }
+                    `}</style>
                   </div>
                 )}
               </div>
