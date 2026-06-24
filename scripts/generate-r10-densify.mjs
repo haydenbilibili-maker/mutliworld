@@ -480,92 +480,33 @@ ${spaceEvents.map(s => `  { id: '${s.id}', name: '${s.name}', date: '${s.date}',
 counts['global.layers-densify-r10b.ts'] = semiconductors.length + deepSea.length + hydrocarbon.length + cableIncidents.length + submarineCables.length + garrisons.length + launchLog.length + spaceEvents.length;
 
 // ═══════════════════════════════════════════════════════════════
-// FILE 3: global.densify-r10.ts (events)
+// FILE 3: global.densify-r10.ts (events) — DISABLED: 不生成批量态势事件
 // ═══════════════════════════════════════════════════════════════
-const events = [];
-let ei = 0;
-for (let i = 0; i < 120; i++) {
-  const [zone, lng, lat, desc] = CONFLICT_ZONES[i % CONFLICT_ZONES.length];
-  events.push({ id: `r10g-c-${String(++ei).padStart(3, '0')}`, title: `${zone} · 冲突-${i + 1}`, ts: pick(TIMES, i), lng: lng + i * 0.05, lat: lat + i * 0.03, imp: impact(i), cat: 'conflicts', desc: `${desc}（态势更新 ${i + 1}）` });
-}
-for (let i = 0; i < 120; i++) {
-  const [zone, lng, lat, desc] = HOTSPOT_ZONES[i % HOTSPOT_ZONES.length];
-  events.push({ id: `r10g-h-${String(++ei).padStart(3, '0')}`, title: `${zone} · 热点-${i + 1}`, ts: pick(TIMES, i), lng: lng + i * 0.04, lat: lat + i * 0.02, imp: impact(i + 1), cat: 'hotspots', desc: `${desc}（监测点 ${i + 1}）` });
-}
-for (let i = 0; i < 110; i++) {
-  const [topic, lng, lat, desc] = ECON_EVENTS[i % ECON_EVENTS.length];
-  events.push({ id: `r10g-e-${String(++ei).padStart(3, '0')}`, title: `${topic} · 动态-${i + 1}`, ts: pick(TIMES, i), lng: lng + i * 0.03, lat: lat + i * 0.02, imp: impact(i + 2), cat: 'economic', desc: `${desc}（2026-06 更新）` });
-}
-
 const file3Content = `/**
- * 第十轮增密 · 全球地表态势事件（2026-06-18 ~ 06-24）
- * conflicts / hotspots / economic — 公开态势整理，示意坐标。
+ * 第十轮增密 · 全球地表态势事件 — 已停用批量生成。
+ * 冲突/热点事件须来自 live API 或可验证 URL 来源的手动种子。
  */
 
 import type { EventDetail } from '@/types/geo';
 
-const T24 = '${T24}';
-const T23 = '${T23}';
-const T22 = '${T22}';
-const T21 = '${T21}';
-const T20 = '${T20}';
-const T19 = '${T19}';
-const T18 = '${T18}';
-
-export const GLOBAL_DENSIFY_EVENTS_R10: EventDetail[] = [
-${events.map(e => {
-  const tsVar = e.ts === T24 ? 'T24' : e.ts === T23 ? 'T23' : e.ts === T22 ? 'T22' : e.ts === T21 ? 'T21' : e.ts === T20 ? 'T20' : e.ts === T19 ? 'T19' : 'T18';
-  return `  { id: '${e.id}', title: '${e.title}', source: '公开态势整理', timestamp: ${tsVar}, location: [${e.lng.toFixed(2)}, ${e.lat.toFixed(2)}], impact_level: '${e.imp}', category: '${e.cat}', description: '${e.desc}' },`;
-}).join('\n')}
-];
+export const GLOBAL_DENSIFY_EVENTS_R10: EventDetail[] = [];
 `;
 
-counts['global.densify-r10.ts'] = events.length;
+counts['global.densify-r10.ts'] = 0;
 
 // ═══════════════════════════════════════════════════════════════
-// FILE 4: global.densify-r10b.ts (incidents)
+// FILE 4: global.densify-r10b.ts (incidents) — DISABLED
 // ═══════════════════════════════════════════════════════════════
-const incidents = [];
-for (let i = 0; i < 300; i++) {
-  const kind = INC_TITLE_KINDS[i % INC_TITLE_KINDS.length];
-  const pool = kind.keyword === '海上' ? COASTAL_CITIES : CITIES;
-  const [city, lng, lat] = pool[i % pool.length];
-  const desc = pick(kind.descs, i);
-  incidents.push({
-    id: `r10g-inc-${String(i + 1).padStart(3, '0')}`,
-    title: `${city} · ${kind.keyword}事件-${i + 1}`,
-    date: pick(TIMES, i),
-    type: kind.type,
-    faction: pick(FACTIONS, i),
-    lng: lng + i * 0.02,
-    lat: lat + i * 0.01,
-    desc: `${desc}${BATCH_DISCLAIMER}`,
-  });
-}
-
 const file4Content = `/**
- * 第十轮增密 · 全球事件时间线（2026-06-18 ~ 06-24）
+ * 第十轮增密 · 全球事件时间线 — 已停用批量生成。
  */
 
 import type { Incident } from '@/types/middleeast';
 
-const T24 = '${T24}';
-const T23 = '${T23}';
-const T22 = '${T22}';
-const T21 = '${T21}';
-const T20 = '${T20}';
-const T19 = '${T19}';
-const T18 = '${T18}';
-
-export const GLOBAL_DENSIFY_INCIDENTS_R10: Incident[] = [
-${incidents.map(inc => {
-  const tsVar = inc.date === T24 ? 'T24' : inc.date === T23 ? 'T23' : inc.date === T22 ? 'T22' : inc.date === T21 ? 'T21' : inc.date === T20 ? 'T20' : inc.date === T19 ? 'T19' : 'T18';
-  return `  { id: '${inc.id}', title: '${inc.title}', date: ${tsVar}, type: '${inc.type}', faction: '${inc.faction}', location: { lng: ${inc.lng.toFixed(2)}, lat: ${inc.lat.toFixed(2)} }, description: '${inc.desc}', source: '公开态势整理' },`;
-}).join('\n')}
-];
+export const GLOBAL_DENSIFY_INCIDENTS_R10: Incident[] = [];
 `;
 
-counts['global.densify-r10b.ts'] = incidents.length;
+counts['global.densify-r10b.ts'] = 0;
 
 // ═══════════════════════════════════════════════════════════════
 // FILE 5: regional-densify-r4.ts
@@ -594,22 +535,8 @@ for (const [regionKey, cfg] of Object.entries(REGIONS)) {
   const facName = evName.replace('EVENTS', 'FACILITIES');
 
   regionalContent += `\n// ── ${regionLabel} ──────────────────────────────────────────\n`;
-  regionalContent += `export const ${evName}: EventDetail[] = [\n`;
-  const REGION_CATEGORIES = ['conflicts', 'hotspots', 'military', 'economic'];
-  for (let i = 0; i < cfg.events; i++) {
-    const [city, lng, lat] = CITIES[(i + regionKey.length) % CITIES.length];
-    const tsVar = pick(['T24', 'T23', 'T22', 'T21'], i);
-    regionalContent += `  { id: '${cfg.prefix}-ev-${String(i + 1).padStart(3, '0')}', title: '${city} · ${regionLabel}态势-${i + 1}', source: '${cfg.source}', timestamp: ${tsVar}, location: [${(lng + i * 0.02).toFixed(2)}, ${(lat + i * 0.01).toFixed(2)}], impact_level: '${impact(i)}', category: '${pick(REGION_CATEGORIES, i)}', description: '${regionLabel}区域监测点 ${i + 1}${BATCH_DISCLAIMER}' },\n`;
-  }
-  regionalContent += `];\n\n`;
-
-  regionalContent += `export const ${incName}: Incident[] = [\n`;
-  for (let i = 0; i < cfg.incidents; i++) {
-    const [city, lng, lat] = CITIES[(i + 5) % CITIES.length];
-    const tsVar = pick(['T24', 'T23', 'T22', 'T21'], i);
-    regionalContent += `  { id: '${cfg.prefix}-inc-${String(i + 1).padStart(3, '0')}', title: '${city} · 事件-${i + 1}', date: ${tsVar}, type: '${pick(INC_TYPES, i)}', faction: '${pick(FACTIONS, i)}', location: { lng: ${(lng + i * 0.02).toFixed(2)}, lat: ${(lat + i * 0.01).toFixed(2)} }, description: '${regionLabel}时间线条目 ${i + 1}${BATCH_DISCLAIMER}', source: '${cfg.source}' },\n`;
-  }
-  regionalContent += `];\n\n`;
+  regionalContent += `export const ${evName}: EventDetail[] = [];\n\n`;
+  regionalContent += `export const ${incName}: Incident[] = [];\n\n`;
 
   regionalContent += `export const ${facName}: Facility[] = [\n`;
   for (let i = 0; i < cfg.facilities; i++) {
@@ -618,9 +545,14 @@ for (const [regionKey, cfg] of Object.entries(REGIONS)) {
   }
   regionalContent += `];\n`;
 
-  regionalTotal += cfg.events + cfg.incidents + cfg.facilities;
+  regionalTotal += cfg.facilities;
 }
 counts['regional-densify-r4.ts'] = regionalTotal;
+
+// ═══════════════════════════════════════════════════════════════
+// NEWS SEEDS — DISABLED: 须含真实 URL，禁止批量生成
+// ═══════════════════════════════════════════════════════════════
+counts['news-feed.ts (seeds)'] = 0;
 
 // ═══════════════════════════════════════════════════════════════
 // FILE 6: global.layers-densify-r10-supply.ts
@@ -652,80 +584,6 @@ for (const sl of SUPPLY_LAYERS) {
 }
 counts['global.layers-densify-r10-supply.ts'] = supplyTotal;
 
-// ═══════════════════════════════════════════════════════════════
-// NEWS SEEDS seed-072 ~ seed-151 (80 items)
-// ═══════════════════════════════════════════════════════════════
-const NEWS_CATS = ['时政', '政经', '国际局势', '军事安全', '能源市场'];
-const NEWS_SOURCES = ['路透社', '彭博', '新华社', 'BBC', '华尔街日报', '南华早报', '塔斯社', '法新社', '日经', '卫报'];
-const NEWS_TOPICS = [
-  '红海航运保费持续攀升', '欧央行6月降息25基点', '台海军舰过航引发关注', 'OPEC+讨论补偿减产',
-  '乌克兰东部战线变化', '加沙停火谈判再启', '印度制造业PMI扩张', '柔佛AI算力园区扩容',
-  '波罗的海海缆维护延期', '美联储CPI低于预期', '朝鲜垃圾气球事件', '菲律宾南海对峙',
-  '德国工业产出下滑', '巴西利率决策', '日本早期台风预警', '摩洛哥极端高温',
-  '锂价触底反弹', '全球AI资本开支上调', '格鲁吉亚示威持续', '阿根廷紧缩抗议',
-  '苏丹达尔富尔人道危机', '也门胡塞袭击商船', '伊朗浓缩铀报告', '以黎边境交火',
-  '委内瑞拉埃塞奎博争端', '索马里海盗活动回升', '海地帮派控制扩大', '缅甸若开邦战事',
-  '刚果M23攻势', '萨赫勒恐袭升级', '北极北约反潜演习', '波兰边境混合威胁',
-  '中国一线城市限购松绑', '金砖本币结算讨论', 'G7对华贸易限制', '芯片出口管制升级',
-  '二叠纪页岩产量新高', '卡塔尔LNG扩产', '挪威北海油气', '澳洲动力煤出口',
-  '印尼镍冶炼污染抗议', '韩国医政对峙', '泰国破纪录高温', '尼泊尔季风雨洪涝',
-  '埃塞俄比亚旱灾', '加拿大野火烟霾', '英国暴雨内涝', '西班牙水库枯竭',
-  'ISS碎片规避', 'Starlink自主避碰', '长征上面级再入', 'Intelsat在轨解体',
-  'SpaceX极轨发射', 'CASC通信卫星入轨', 'ISRO遥感卫星', 'Arianespace商业飞行',
-  '苏伊士陆缆检修', '印尼巽他海峡锚损', '南非WACS维护', '跨大西洋MAREA告警',
-  'DeepSeek算力需求', '欧盟CBAM过渡期', '墨西哥近岸制造回流', '南非限电影响矿业',
-  '土耳其里拉波动', '智利盐湖减产', '巴布亚LNG供应', '莫桑比克FLNG投产',
-  '波兰首座核电站规划', '埃及El Dabaa核电', '徐大堡中俄合作', 'ISA深海采矿争议',
-  'CCZ环保诉讼', '挪威北极海采矿', '库克群岛合同区', '日本冲绳海槽硫化物',
-  '台积电德累斯顿合资', 'Rapidus千岁试产', '印度Tata-PSMC晶圆厂', '马来封测扩产',
-  '美军波兹南前沿', '吉布提保障基地扩建', '俄叙塔尔图斯基地', '法军达喀尔后勤',
-  '北约罗马尼亚空军前沿', '达尔文海军陆战队轮换',
-];
-const NEWS_REGIONS = {
-  china: ['china'],
-  middle_east: ['middleeast', 'global'],
-  asia_pacific: ['asia_pacific'],
-  north_america: ['north_america'],
-  latin_america: ['latin_america'],
-  southeast_asia: ['southeast_asia'],
-  western_europe: ['western_europe'],
-  eastern_europe: ['eastern_europe'],
-  global: ['global'],
-};
-
-const newsItems = [];
-const newsRegionMap = {};
-for (let i = 0; i < 80; i++) {
-  const id = `seed-${String(72 + i).padStart(3, '0')}`;
-  const [city, lng, lat] = CITIES[i % CITIES.length];
-  const day = 18 + (i % 7);
-  const hour = 6 + (i % 16);
-  const topic = NEWS_TOPICS[i % NEWS_TOPICS.length];
-  newsItems.push({
-    id,
-    title: `${city}周边 · ${topic}`,
-    summary: `${topic}，公开报道汇总（2026-06-${String(day).padStart(2, '0')}）。`,
-    category: pick(NEWS_CATS, i),
-    source: pick(NEWS_SOURCES, i),
-    publishedAt: `2026-06-${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}:00+08:00`,
-    location: [lng, lat],
-    impact_level: impact(i),
-  });
-  const regionKeys = Object.keys(NEWS_REGIONS);
-  const rk = regionKeys[i % regionKeys.length];
-  newsRegionMap[id] = NEWS_REGIONS[rk];
-}
-
-const newsBlock = newsItems.map(n =>
-  `  {\n    id: '${n.id}',\n    title: '${n.title}',\n    summary: '${n.summary}',\n    category: '${n.category}',\n    source: '${n.source}',\n    publishedAt: '${n.publishedAt}',\n    location: [${n.location[0].toFixed(2)}, ${n.location[1].toFixed(2)}],\n    impact_level: '${n.impact_level}',\n  }`
-).join(',\n');
-
-const newsRegionBlock = Object.entries(newsRegionMap).map(([k, v]) =>
-  `  '${k}': [${v.map(r => `'${r}'`).join(', ')}],`
-).join('\n');
-
-counts['news-feed.ts (seeds)'] = newsItems.length;
-
 // Write files
 writeFileSync(join(OUT, 'global.layers-densify-r10.ts'), file1Content);
 writeFileSync(join(OUT, 'global.layers-densify-r10b.ts'), file2Content);
@@ -733,7 +591,7 @@ writeFileSync(join(OUT, 'global.densify-r10.ts'), file3Content);
 writeFileSync(join(OUT, 'global.densify-r10b.ts'), file4Content);
 writeFileSync(join(OUT, 'regional-densify-r4.ts'), regionalContent);
 writeFileSync(join(OUT, 'global.layers-densify-r10-supply.ts'), supplyContent);
-writeFileSync(join(__dir, '../src/data/news-seeds-r10.ts'), `/** r10 新闻种子 seed-072~151 — 由 generate-r10-densify.mjs 生成 */\nimport type { NewsFeedItem } from './news-feed';\n\nexport const NEWS_SEEDS_R10: NewsFeedItem[] = [\n${newsBlock},\n];\n\nexport const NEWS_SEED_REGION_MAP_R10: Record<string, import('@/types/region').RegionId[]> = {\n${newsRegionBlock}\n};\n`);
+writeFileSync(join(__dir, '../src/data/news-seeds-r10.ts'), `/** r10 新闻种子 — 批量生成已停用；须含真实 URL */\nimport type { NewsFeedItem } from './news-feed';\n\nexport const NEWS_SEEDS_R10: NewsFeedItem[] = [];\n\nexport const NEWS_SEED_REGION_MAP_R10: Record<string, import('@/types/region').RegionId[]> = {};\n`);
 
 const total = Object.values(counts).reduce((a, b) => a + b, 0);
-console.log(JSON.stringify({ counts, total, newsPending: 80 }, null, 2));
+console.log(JSON.stringify({ counts, total, newsPending: 0 }, null, 2));

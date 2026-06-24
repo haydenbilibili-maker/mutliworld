@@ -16,8 +16,6 @@ import {
   EE_DENSIFY_ENERGY,
 } from './regional-densify-r2';
 import {
-  EE_DENSIFY_EVENTS_R4,
-  EE_DENSIFY_INCIDENTS_R4,
   EE_DENSIFY_FACILITIES_R4,
 } from './regional-densify-r4';
 import { EE_MILITARY_SECTIONS } from './eastern-europe.military';
@@ -562,10 +560,10 @@ import { getPersonsForRegion } from './persons';
 
 export const easternEuropeDataset: RegionDataset = {
   factions: { label: EE_FACTION_LABEL, color: EE_FACTION_HEX },
-  events: [...EE_REFERENCE_POINTS, ...EE_KEY_EVENTS, ...EE_DENSIFY_EVENTS, ...EE_DENSIFY_EVENTS_R4],
+  events: [...EE_REFERENCE_POINTS, ...EE_KEY_EVENTS, ...EE_DENSIFY_EVENTS],
   military: EE_MILITARY_SECTIONS,
   diplomacy: EE_DIPLOMACY,
-  incidents: [...EE_INCIDENTS, ...EE_DENSIFY_INCIDENTS, ...EE_DENSIFY_INCIDENTS_R4],
+  incidents: [...EE_INCIDENTS, ...EE_DENSIFY_INCIDENTS],
   facilities: [...EE_FACILITIES, ...EE_DENSIFY_FACILITIES, ...EE_DENSIFY_FACILITIES_R4],
   energy: { regions: [], points: [...EE_ENERGY_POINTS, ...EE_DENSIFY_ENERGY], oilProducers: EE_OIL_PRODUCERS },
   persons: getPersonsForRegion('eastern_europe'),

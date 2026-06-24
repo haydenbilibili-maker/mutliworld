@@ -11,8 +11,6 @@ import {
   SEA_DENSIFY_FACILITIES,
 } from './regional-densify-r2';
 import {
-  SEA_DENSIFY_EVENTS_R4,
-  SEA_DENSIFY_INCIDENTS_R4,
   SEA_DENSIFY_FACILITIES_R4,
 } from './regional-densify-r4';
 
@@ -499,8 +497,8 @@ const SEA_OIL: OilProducerMapPoint[] = [
 import { getPersonsForRegion } from './persons';
 
 export const southeastAsiaDataset: RegionDataset = {
-  events: [...SEA_EVENTS, ...SEA_DENSIFY_EVENTS, ...SEA_DENSIFY_EVENTS_R4],
-  incidents: [...SEA_INCIDENTS, ...SEA_DENSIFY_INCIDENTS, ...SEA_DENSIFY_INCIDENTS_R4],
+  events: [...SEA_EVENTS, ...SEA_DENSIFY_EVENTS],
+  incidents: [...SEA_INCIDENTS, ...SEA_DENSIFY_INCIDENTS],
   facilities: [...SEA_FACILITIES, ...SEA_DENSIFY_FACILITIES, ...SEA_DENSIFY_FACILITIES_R4],
   energy: { regions: [], points: SEA_ENERGY, oilProducers: SEA_OIL },
   persons: getPersonsForRegion('southeast_asia'),

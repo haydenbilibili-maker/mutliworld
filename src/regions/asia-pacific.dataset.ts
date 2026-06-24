@@ -12,13 +12,9 @@ import {
   AP_DENSIFY_FACILITIES,
 } from './regional-densify-r2';
 import {
-  AP_DENSIFY_EVENTS_R3,
-  AP_DENSIFY_INCIDENTS_R3,
   AP_DENSIFY_FACILITIES_R3,
 } from './regional-densify-r3';
 import {
-  AP_DENSIFY_EVENTS_R4,
-  AP_DENSIFY_INCIDENTS_R4,
   AP_DENSIFY_FACILITIES_R4,
 } from './regional-densify-r4';
 import {
@@ -611,8 +607,8 @@ const AP_OIL: OilProducerMapPoint[] = [
 import { getPersonsForRegion } from './persons';
 
 export const asiaPacificDataset: RegionDataset = {
-  events: [...AP_EVENTS, ...AP_DENSIFY_EVENTS, ...AP_DENSIFY_EVENTS_R3, ...AP_DENSIFY_EVENTS_R4, ...NORTHEAST_ASIA_EVENTS],
-  incidents: [...AP_INCIDENTS, ...AP_DENSIFY_INCIDENTS, ...AP_DENSIFY_INCIDENTS_R3, ...AP_DENSIFY_INCIDENTS_R4, ...NORTHEAST_ASIA_INCIDENTS],
+  events: [...AP_EVENTS, ...AP_DENSIFY_EVENTS, ...NORTHEAST_ASIA_EVENTS],
+  incidents: [...AP_INCIDENTS, ...AP_DENSIFY_INCIDENTS, ...NORTHEAST_ASIA_INCIDENTS],
   facilities: [...AP_FACILITIES, ...AP_DENSIFY_FACILITIES, ...AP_DENSIFY_FACILITIES_R3, ...AP_DENSIFY_FACILITIES_R4, ...NORTHEAST_ASIA_FACILITIES],
   energy: { regions: [], points: AP_ENERGY, oilProducers: AP_OIL },
   persons: getPersonsForRegion('asia_pacific'),

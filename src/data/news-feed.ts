@@ -10,8 +10,6 @@
 
 import type { EventDetail, GeoPoint, ImpactLevel } from '@/types/geo';
 import type { RegionId } from '@/types/region';
-import { NEWS_SEEDS_R10, NEWS_SEED_REGION_MAP_R10 } from './news-seeds-r10';
-
 /** 跑马灯新闻分类 */
 export type NewsFeedCategory =
   | '时政'
@@ -809,7 +807,6 @@ export const NEWS_FEED_SEED: NewsFeedItem[] = [
     location: [15.0, 5.0],
     impact_level: 'medium',
   },
-  ...NEWS_SEEDS_R10,
 ];
 
 /** 种子快讯区域标签（未列出的默认为 global 通用） */
@@ -885,7 +882,6 @@ export const NEWS_SEED_REGION_MAP: Record<string, RegionId[]> = {
   'seed-069': ['eastern_europe'],
   'seed-070': ['southeast_asia', 'asia_pacific'],
   'seed-071': ['global'],
-  ...NEWS_SEED_REGION_MAP_R10,
 };
 
 /** 为快讯条目补全 regionIds */

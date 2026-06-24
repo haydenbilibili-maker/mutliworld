@@ -268,6 +268,7 @@ function eventsToFeatures(
           category: e.category ?? layerId,
           layerId,
           description: e.description ?? '',
+          url: e.url ?? '',
           opacity: opacityByAge(ageMs, windowMs),
           lng: e.location[0],
           lat: e.location[1],

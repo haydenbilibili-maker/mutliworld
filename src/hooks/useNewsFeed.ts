@@ -62,11 +62,14 @@ export function useNewsFeed(maxItems = 36, regionOverride?: RegionId): UseNewsFe
 
   const items = useMemo(() => {
     const live = (data?.items ?? []).slice(0, 12).map(rssToFeedItem);
+    const seededWithUrl = NEWS_FEED_SEED.filter(
+      (item) => typeof item.url === 'string' && /^https?:\/\//i.test(item.url.trim()),
+    );
     const seen = new Set<string>();
     const merged: NewsFeedItem[] = [];
 
     for (const item of sortNewsFeedItems(
-      tagNewsFeedRegions([...NEWS_FEED_SEED, ...live]),
+      tagNewsFeedRegions([...seededWithUrl, ...live]),
     )) {
       const key = item.url ?? item.title;
       if (seen.has(key)) continue;
