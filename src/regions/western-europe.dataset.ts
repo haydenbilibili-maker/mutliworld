@@ -13,6 +13,11 @@ import {
   WE_DENSIFY_INCIDENTS,
   WE_DENSIFY_FACILITIES,
 } from './regional-densify-r2';
+import {
+  WE_DENSIFY_EVENTS_R4,
+  WE_DENSIFY_INCIDENTS_R4,
+  WE_DENSIFY_FACILITIES_R4,
+} from './regional-densify-r4';
 
 const WE_FACTION_LABEL: Record<string, string> = {
   nato: '北约',
@@ -584,11 +589,11 @@ import { getPersonsForRegion } from './persons';
 
 export const westernEuropeDataset: RegionDataset = {
   factions: { label: WE_FACTION_LABEL, color: WE_FACTION_HEX },
-  events: [...WE_EVENTS, ...WE_DENSIFY_EVENTS],
+  events: [...WE_EVENTS, ...WE_DENSIFY_EVENTS, ...WE_DENSIFY_EVENTS_R4],
   military: WE_MILITARY,
   diplomacy: WE_DIPLOMACY,
-  incidents: [...WE_INCIDENTS, ...WE_DENSIFY_INCIDENTS],
-  facilities: [...WE_FACILITIES, ...WE_DENSIFY_FACILITIES],
+  incidents: [...WE_INCIDENTS, ...WE_DENSIFY_INCIDENTS, ...WE_DENSIFY_INCIDENTS_R4],
+  facilities: [...WE_FACILITIES, ...WE_DENSIFY_FACILITIES, ...WE_DENSIFY_FACILITIES_R4],
   energy: {
     regions: [],
     points: WE_ENERGY_POINTS,

@@ -19,6 +19,16 @@ import {
   CHINA_DENSIFY_INCIDENTS,
   CHINA_DENSIFY_FACILITIES,
 } from './china-focus/densify-r2';
+import {
+  CN_DENSIFY_EVENTS_R3,
+  CN_DENSIFY_INCIDENTS_R3,
+  CN_DENSIFY_FACILITIES_R3,
+} from './regional-densify-r3';
+import {
+  CN_DENSIFY_EVENTS_R4,
+  CN_DENSIFY_INCIDENTS_R4,
+  CN_DENSIFY_FACILITIES_R4,
+} from './regional-densify-r4';
 import { CHINA_FACTIONS, CHINA_MILITARY, CHINA_DIPLOMACY } from './china-focus/meta';
 
 /**
@@ -33,6 +43,8 @@ export const chinaDataset: RegionDataset = {
     ...KOREA_EVENTS,
     ...CHINA_DISPUTE_EVENTS,
     ...CHINA_DENSIFY_EVENTS,
+    ...CN_DENSIFY_EVENTS_R3,
+    ...CN_DENSIFY_EVENTS_R4,
   ],
   incidents: [
     ...SCS_INCIDENTS,
@@ -42,6 +54,8 @@ export const chinaDataset: RegionDataset = {
     ...KOREA_INCIDENTS,
     ...CHINA_DISPUTE_INCIDENTS,
     ...CHINA_DENSIFY_INCIDENTS,
+    ...CN_DENSIFY_INCIDENTS_R3,
+    ...CN_DENSIFY_INCIDENTS_R4,
   ],
   facilities: [
     ...SCS_FACILITIES,
@@ -51,6 +65,8 @@ export const chinaDataset: RegionDataset = {
     ...KOREA_FACILITIES,
     ...CHINA_DISPUTE_FACILITIES,
     ...CHINA_DENSIFY_FACILITIES,
+    ...CN_DENSIFY_FACILITIES_R3,
+    ...CN_DENSIFY_FACILITIES_R4,
   ],
   factions: CHINA_FACTIONS,
   military: CHINA_MILITARY,

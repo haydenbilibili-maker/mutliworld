@@ -7,7 +7,6 @@
  */
 
 import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
 import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
 import { findLiveOverlayBeforeId } from '@/lib/map/basemap';

@@ -10,7 +10,7 @@
  * 浮窗显示概要信息，点击「查看详情」打开右侧 SidePanel。
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import { useMapContext } from '@/context/MapContext';
 import { useMapStore } from '@/store/useMapStore';
@@ -23,10 +23,8 @@ export function MapTooltip() {
   const focusOnMap = useMapStore((s) => s.focusOnMap);
 
   const markerRef = useRef<maplibregl.Marker | null>(null);
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setVisible(false);
     markerRef.current?.remove();
     markerRef.current = null;
 
@@ -36,9 +34,6 @@ export function MapTooltip() {
     if (!Number.isFinite(lng) || !Number.isFinite(lat)) return;
 
     const avatar = tooltip.avatarUrl;
-
-    // 延迟显示，让脉冲标记先渲染
-    const showTimer = setTimeout(() => setVisible(true), 180);
 
     // 构建浮窗 DOM
     const el = document.createElement('div');
@@ -162,7 +157,6 @@ export function MapTooltip() {
     });
 
     return () => {
-      clearTimeout(showTimer);
       marker.remove();
       if (markerRef.current === marker) markerRef.current = null;
     };

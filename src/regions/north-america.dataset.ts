@@ -11,6 +11,11 @@ import {
   NA_DENSIFY_INCIDENTS,
   NA_DENSIFY_FACILITIES,
 } from './regional-densify-r2';
+import {
+  NA_DENSIFY_EVENTS_R4,
+  NA_DENSIFY_INCIDENTS_R4,
+  NA_DENSIFY_FACILITIES_R4,
+} from './regional-densify-r4';
 import { US_NUCLEAR_EVENTS, US_NUCLEAR_INCIDENTS, US_NUCLEAR_FACILITIES } from './us-focus/us.nuclear';
 import { US_GARRISON_EVENTS, US_GARRISON_INCIDENTS, US_GARRISON_FACILITIES } from './us-focus/us.garrisons';
 import { US_HOMELAND_EVENTS, US_HOMELAND_INCIDENTS, US_HOMELAND_FACILITIES } from './us-focus/us.homeland';
@@ -301,6 +306,7 @@ export const northAmericaDataset: RegionDataset = {
     ...US_SURFACE_EVENTS,
     ...NA_LEGACY_EVENTS,
     ...NA_DENSIFY_EVENTS,
+    ...NA_DENSIFY_EVENTS_R4,
   ],
   incidents: [
     ...US_NUCLEAR_INCIDENTS,
@@ -313,6 +319,7 @@ export const northAmericaDataset: RegionDataset = {
     ...US_SURFACE_INCIDENTS,
     ...NA_LEGACY_INCIDENTS,
     ...NA_DENSIFY_INCIDENTS,
+    ...NA_DENSIFY_INCIDENTS_R4,
   ],
   facilities: [
     ...US_NUCLEAR_FACILITIES,
@@ -324,6 +331,7 @@ export const northAmericaDataset: RegionDataset = {
     ...US_DOMESTIC_FACILITIES,
     ...US_SURFACE_FACILITIES,
     ...NA_DENSIFY_FACILITIES,
+    ...NA_DENSIFY_FACILITIES_R4,
   ] as Facility[],
   factions: US_FACTIONS,
   military: US_MILITARY,

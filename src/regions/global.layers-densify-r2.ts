@@ -1,7 +1,6 @@
 /**
  * 第二轮增密 · 全球主题/战略图层扩展（2026-06-10 至 06-16）
  */
-import type { ImpactLevel, LayerId } from '@/types/geo';
 import type { ThematicPoint, PipelineRoute } from './global.thematic';
 import type { GarrisonBase } from './global.garrisons';
 import type { InfraPoint } from './global.infrastructure';

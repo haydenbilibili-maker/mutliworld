@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { fetchActiveFires, hasFirmsKey } from '@/lib/fires/firms';
 import type { LiveFiresResponse } from '@/types/fires';
 

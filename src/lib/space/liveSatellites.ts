@@ -3,8 +3,12 @@
  *
  * 数据源：wheretheiss.at（免费、无 key、HTTPS）。支持任意 NORAD 编号的实时星下点。
  * 高亮：国际空间站 ISS 与中国空间站 天宫。其余为代表性 LEO 卫星实时位置。
- * 服务端抓取（避开 CORS / 限频），失败优雅降级。
+ * 服务端抓取（避开 CORS / 限频），失败时 TLE 传播兜底。
  */
+
+import 'server-only';
+
+import { fetchWtiPosition } from '@/lib/space/wheretheiss.server';
 
 export interface TrackedSat {
   norad: number;
@@ -40,28 +44,18 @@ export interface LiveSat extends TrackedSat {
   velocity: number;
 }
 
-interface WtiResponse {
-  latitude?: number;
-  longitude?: number;
-  altitude?: number;
-  velocity?: number;
-}
-
 async function fetchOne(t: TrackedSat): Promise<LiveSat | null> {
   try {
-    const res = await fetch(`https://api.wheretheiss.at/v1/satellites/${t.norad}`, {
-      next: { revalidate: 5 },
-      headers: { accept: 'application/json' },
+    const pos = await fetchWtiPosition(t.norad, {
+      label: t.name,
+      liveSource: `wheretheiss.at（NORAD ${t.norad} 实时）`,
     });
-    if (!res.ok) return null;
-    const j = (await res.json()) as WtiResponse;
-    if (j.latitude == null || j.longitude == null) return null;
     return {
       ...t,
-      lat: j.latitude,
-      lng: j.longitude,
-      alt: j.altitude ?? 0,
-      velocity: j.velocity ?? 0,
+      lat: pos.lat,
+      lng: pos.lon,
+      alt: pos.altitude,
+      velocity: pos.velocity,
     };
   } catch {
     return null;

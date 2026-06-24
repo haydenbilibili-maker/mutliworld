@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { aggregateEcon } from '@/lib/econ/aggregate';
 import { aggregateLiveEvents } from '@/lib/events/aggregate';
 import { deriveSignals, INSIGHTS_DISCLAIMER } from '@/lib/correlation/engine';

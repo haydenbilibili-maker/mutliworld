@@ -5,11 +5,7 @@ const NYC = [-74.01, 40.71] as const;
 const NORFOLK = [-76.29, 36.85] as const;
 const LA = [-118.24, 34.05] as const;
 const OTTAWA = [-75.70, 45.42] as const;
-const SF = [-122.42, 37.78] as const;
-const SEA = [-122.33, 47.61] as const;
 const BOS = [-71.06, 42.36] as const;
-const CHI = [-87.65, 41.88] as const;
-const HOU = [-95.37, 29.76] as const;
 const MEX = [-99.13, 19.43] as const;
 
 /** 北美区域人物 */

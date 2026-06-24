@@ -7,6 +7,9 @@
 
 import type { ImpactLevel } from '@/types/geo';
 import { DENSIFY_DEEP_SEA } from './global.layers-densify-r2';
+import { DENSIFY_DEEP_SEA_R8 } from './global.layers-densify-r8';
+import { DENSIFY_DEEP_SEA_R9 } from './global.layers-densify-r9';
+import { DENSIFY_DEEP_SEA_R10 } from './global.layers-densify-r10b';
 
 export interface SeabedMiningArea {
   id: string;
@@ -30,4 +33,7 @@ export const GLOBAL_DEEP_SEA_MINING: SeabedMiningArea[] = [
   { id: 'dsm-wpac-crusts', name: '西太平洋海山（富钴结壳）', resource: 'crusts', lng: 153.0, lat: 16.0, note: '麦哲伦海山等富钴结壳勘探区', impact: 'high' },
   { id: 'dsm-rio-grande', name: '里奥格兰德海隆', resource: 'crusts', lng: -35.0, lat: -31.0, note: '南大西洋富钴结壳勘探', impact: 'low' },
   ...DENSIFY_DEEP_SEA,
+  ...DENSIFY_DEEP_SEA_R8,
+  ...DENSIFY_DEEP_SEA_R9,
+  ...DENSIFY_DEEP_SEA_R10,
 ];

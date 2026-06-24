@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { fetchPizzintWatch } from '@/lib/pizza-index/pizzint';
 import { computePizzaIndex } from '@/lib/pizza-index/simulate';
 import type { PizzaIndexResponse } from '@/types/pizza-index';

@@ -6,6 +6,9 @@
 
 import type { ImpactLevel } from '@/types/geo';
 import { DENSIFY_SEMICONDUCTORS } from './global.layers-densify-r2';
+import { DENSIFY_SEMICONDUCTORS_R8 } from './global.layers-densify-r8';
+import { DENSIFY_SEMICONDUCTORS_R9 } from './global.layers-densify-r9';
+import { DENSIFY_SEMICONDUCTORS_R10 } from './global.layers-densify-r10b';
 
 export interface SemiconductorFab {
   id: string;
@@ -46,4 +49,7 @@ export const GLOBAL_SEMICONDUCTORS: SemiconductorFab[] = [
   { id: 'fab-yangtze-nanjing', name: '南京 · 长江存储', operator: '长江存储', lng: 118.8, lat: 32.06, kind: 'memory', status: 'active', note: 'NAND 232 层 Xtacking 3.0 国产化核心', impact: 'critical' },
   { id: 'fab-cxmt-hefei', name: '合肥 · 长鑫存储', operator: '长鑫存储', lng: 117.28, lat: 31.86, kind: 'memory', status: 'active', note: '中国大陆 DRAM 主力 · 17nm 量产中', impact: 'critical' },
   ...DENSIFY_SEMICONDUCTORS,
+  ...DENSIFY_SEMICONDUCTORS_R8,
+  ...DENSIFY_SEMICONDUCTORS_R9,
+  ...DENSIFY_SEMICONDUCTORS_R10,
 ];

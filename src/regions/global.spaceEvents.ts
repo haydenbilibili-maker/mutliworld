@@ -3,10 +3,12 @@
  *
  * 公开历史/近期空天事件：反卫星(ASAT)试验、在轨相撞、解体/碎片、再入、抵近规避。
  * 带日期与出处；坐标为事件发生时星下点**示意位置**，非精确星历。
- * 类型：asat / collision / breakup / reentry / closeapproach。整理日：2026-06-23
+ * 类型：asat / collision / breakup / reentry / closeapproach。整理日：2026-06-24
  */
 
 import type { ImpactLevel } from '@/types/geo';
+import { DENSIFY_SPACE_EVENTS_R9 } from './global.layers-densify-r9';
+import { DENSIFY_SPACE_EVENTS_R10 } from './global.layers-densify-r10b';
 
 export interface SpaceEvent {
   id: string;
@@ -187,4 +189,39 @@ export const GLOBAL_SPACE_EVENTS: SpaceEvent[] = [
     source: 'USSPACECOM 声明 / LeoLabs（2026-06）',
     impact: 'critical',
   },
+  {
+    id: 'spe-falcon9-breakup-2026',
+    name: 'Falcon 9 上面级在轨解体',
+    date: '2026-06-20',
+    kind: 'breakup',
+    lng: -120.0,
+    lat: 45.0,
+    note: '退役上面级解体产生数十可跟踪碎片，北美西海岸监测网告警',
+    source: 'USSPACECOM / LeoLabs（2026-06）',
+    impact: 'medium',
+  },
+  {
+    id: 'spe-iss-close-2026-06',
+    name: '国际空间站碎片近距离交会',
+    date: '2026-06-23',
+    kind: 'closeapproach',
+    lng: 15.0,
+    lat: 5.0,
+    note: '俄系碎片与 ISS 交会距离低于警戒阈值，乘员待命避险',
+    source: 'NASA / ESA（2026-06）',
+    impact: 'medium',
+  },
+  {
+    id: 'spe-starlink-deorbit-batch-2026-06',
+    name: 'Starlink 二代卫星批量退役再入',
+    date: '2026-06-24',
+    kind: 'reentry',
+    lng: -170.0,
+    lat: -25.0,
+    note: '数十颗 v1.5 卫星受控再入南太平洋坟场（示意点）',
+    source: 'SpaceX 运营公告（2026-06）',
+    impact: 'low',
+  },
+  ...DENSIFY_SPACE_EVENTS_R9,
+  ...DENSIFY_SPACE_EVENTS_R10,
 ];

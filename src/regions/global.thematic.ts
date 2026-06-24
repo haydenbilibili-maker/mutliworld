@@ -13,7 +13,6 @@ import {
   DENSIFY_CLIMATE,
   DENSIFY_PIPELINES,
 } from './global.layers-densify-r2';
-import { DENSIFY_WORLD_HERITAGE_R3 } from './global.layers-densify-r3';
 import { DENSIFY_MINERALS_R3, DENSIFY_DATACENTERS_R3 } from './global.layers-densify-r3';
 import { DENSIFY_ECON_HUBS_R3, DENSIFY_DATACENTERS_R3B } from './global.layers-densify-r3';
 import {
@@ -37,6 +36,32 @@ import {
   DENSIFY_SEMI_SUPPLY_R7,
   DENSIFY_CHEMICALS_R7,
 } from './global.layers-densify-r7';
+import {
+  DENSIFY_PROTESTS_R8,
+  DENSIFY_CLIMATE_R8,
+} from './global.layers-densify-r8';
+import {
+  DENSIFY_PROTESTS_R9,
+  DENSIFY_CLIMATE_R9,
+  DENSIFY_ECON_HUBS_R9,
+  DENSIFY_MINERALS_R9,
+  DENSIFY_DATACENTERS_R9,
+  DENSIFY_NUCLEAR_R9,
+} from './global.layers-densify-r9';
+import {
+  DENSIFY_PROTESTS_R10,
+  DENSIFY_CLIMATE_R10,
+  DENSIFY_ECON_HUBS_R10,
+  DENSIFY_MINERALS_R10,
+  DENSIFY_DATACENTERS_R10,
+  DENSIFY_NUCLEAR_R10,
+} from './global.layers-densify-r10';
+import {
+  DENSIFY_AEROSPACE_MFG_R10,
+  DENSIFY_DEFENSE_MFG_R10,
+  DENSIFY_SEMI_SUPPLY_R10,
+  DENSIFY_CHEMICALS_R10,
+} from './global.layers-densify-r10-supply';
 import { DENSIFY_INFRA } from './global.densify-infra';
 import { DENSIFY_INFRA_R2 } from './global.densify-infra-r2';
 import { GLOBAL_WORLD_HERITAGE, GLOBAL_CHINA_HERITAGE } from './global.heritage';
@@ -63,9 +88,9 @@ export interface PipelineRoute {
   impact: ImpactLevel;
 }
 
-const T = '2026-06-22T10:00:00Z';
-const T2 = '2026-06-21T08:00:00Z';
-const T3 = '2026-06-20T16:00:00Z';
+const T = '2026-06-24T10:00:00Z';
+const T2 = '2026-06-23T08:00:00Z';
+const T3 = '2026-06-22T16:00:00Z';
 
 /** 全球主要经济金融中心 */
 export const GLOBAL_ECON_HUBS: ThematicPoint[] = [
@@ -92,6 +117,8 @@ export const GLOBAL_ECON_HUBS: ThematicPoint[] = [
   { id: 'hub-mexico-city', name: '墨西哥城', layerId: 'econ_hubs', lng: -99.13, lat: 19.43, note: '拉美第二大经济体金融核心', impact: 'medium' },
   ...DENSIFY_ECON_HUBS,
   ...DENSIFY_ECON_HUBS_R3,
+  ...DENSIFY_ECON_HUBS_R9,
+  ...DENSIFY_ECON_HUBS_R10,
 ];
 
 /** 关键矿产与战略资源产地 */
@@ -117,6 +144,8 @@ export const GLOBAL_MINERALS: ThematicPoint[] = [
   { id: 'min-us-moly', name: '美国科罗拉多 · 钼矿', layerId: 'minerals', lng: -106.0, lat: 38.0, note: '特种合金关键金属', impact: 'low', subKind: 'molybdenum' },
   ...DENSIFY_MINERALS,
   ...DENSIFY_MINERALS_R3,
+  ...DENSIFY_MINERALS_R9,
+  ...DENSIFY_MINERALS_R10,
 ];
 
 export const GLOBAL_PIPELINES: PipelineRoute[] = [
@@ -258,6 +287,8 @@ export const GLOBAL_DATACENTERS: ThematicPoint[] = [
   ...DENSIFY_DATACENTERS,
   ...DENSIFY_DATACENTERS_R3,
   ...DENSIFY_DATACENTERS_R3B,
+  ...DENSIFY_DATACENTERS_R9,
+  ...DENSIFY_DATACENTERS_R10,
 ];
 
 /** 近期抗议与社会动员 */
@@ -308,6 +339,9 @@ export const GLOBAL_PROTESTS: ThematicPoint[] = [
   { id: 'pro-mexico-judicial', name: '墨西哥城 · 司法改革抗议', layerId: 'protests', lng: -99.13, lat: 19.43, note: '法官普选法案引发法官与律师罢工', impact: 'medium', updatedAt: T3 },
   { id: 'pro-south-africa', name: '比勒陀利亚 · 大选后抗议', layerId: 'protests', lng: 28.19, lat: -25.75, note: '非国大失多数后联合政府摩擦', impact: 'medium', updatedAt: T },
   ...DENSIFY_PROTESTS,
+  ...DENSIFY_PROTESTS_R8,
+  ...DENSIFY_PROTESTS_R9,
+  ...DENSIFY_PROTESTS_R10,
 ];
 
 /** 气候异常监测点 */
@@ -357,6 +391,9 @@ export const GLOBAL_CLIMATE: ThematicPoint[] = [
   { id: 'cli-mexico-hurricane', name: '墨西哥太平洋 · 飓风登陆', layerId: 'climate', lng: -104.0, lat: 19.0, note: '5 级飓风逼近，海岸度假城疏散', impact: 'critical', updatedAt: T2, subKind: 'storm' },
   { id: 'cli-europe-heat-dome', name: '南欧 · 热穹顶持续', layerId: 'climate', lng: 12.5, lat: 42.0, note: '西班牙/意大利南部 45°C 持续', impact: 'critical', updatedAt: T3, subKind: 'heatwave' },
   ...DENSIFY_CLIMATE,
+  ...DENSIFY_CLIMATE_R8,
+  ...DENSIFY_CLIMATE_R9,
+  ...DENSIFY_CLIMATE_R10,
 ];
 
 /**
@@ -760,6 +797,8 @@ export const GLOBAL_NUCLEAR_REACTORS: ThematicPoint[] = [
   { id: 'npp-chashma', name: '查什马核电站', layerId: 'nuclear_reactors', lng: 71.45, lat: 32.4, note: '巴基斯坦，中巴合作多机组', impact: 'medium', subKind: 'large' },
   { id: 'npp-rooppur', name: '鲁普尔核电站', layerId: 'nuclear_reactors', lng: 89.25, lat: 24.12, note: '孟加拉国，俄制 VVER 在建', impact: 'medium', subKind: 'large' },
   { id: 'npp-kudankulam2', name: '拉贾斯坦核电站', layerId: 'nuclear_reactors', lng: 75.58, lat: 27.27, note: '印度，PHWR 多机组', impact: 'medium', subKind: 'large' },
+  ...DENSIFY_NUCLEAR_R9,
+  ...DENSIFY_NUCLEAR_R10,
 ];
 
 /**
@@ -1966,16 +2005,16 @@ export const GLOBAL_FLAGS_OF_CONVENIENCE: ThematicPoint[] = [
 ];
 
 /** 航空制造（aerospace_mfg）— 飞机总装厂/发动机厂/Tier1 供应商。 */
-export const GLOBAL_AEROSPACE_MFG: ThematicPoint[] = [...DENSIFY_AEROSPACE_MFG_R6, ...DENSIFY_AEROSPACE_MFG_R7];
+export const GLOBAL_AEROSPACE_MFG: ThematicPoint[] = [...DENSIFY_AEROSPACE_MFG_R6, ...DENSIFY_AEROSPACE_MFG_R7, ...DENSIFY_AEROSPACE_MFG_R10];
 
 /** 国防军工（defense_mfg）— 主承包商/造船厂/导弹。 */
-export const GLOBAL_DEFENSE_MFG: ThematicPoint[] = [...DENSIFY_DEFENSE_MFG_R6, ...DENSIFY_DEFENSE_MFG_R7];
+export const GLOBAL_DEFENSE_MFG: ThematicPoint[] = [...DENSIFY_DEFENSE_MFG_R6, ...DENSIFY_DEFENSE_MFG_R7, ...DENSIFY_DEFENSE_MFG_R10];
 
 /** 半导体上游（semi_supply）— EDA/封测/硅晶圆/材料（与晶圆厂图层互补）。 */
-export const GLOBAL_SEMI_SUPPLY: ThematicPoint[] = [...DENSIFY_SEMI_SUPPLY_R6, ...DENSIFY_SEMI_SUPPLY_R7];
+export const GLOBAL_SEMI_SUPPLY: ThematicPoint[] = [...DENSIFY_SEMI_SUPPLY_R6, ...DENSIFY_SEMI_SUPPLY_R7, ...DENSIFY_SEMI_SUPPLY_R10];
 
 /** 化工与材料（chemicals）— 石化/特种化学/化肥/电池材料。 */
-export const GLOBAL_CHEMICALS: ThematicPoint[] = [...DENSIFY_CHEMICALS_R6, ...DENSIFY_CHEMICALS_R7];
+export const GLOBAL_CHEMICALS: ThematicPoint[] = [...DENSIFY_CHEMICALS_R6, ...DENSIFY_CHEMICALS_R7, ...DENSIFY_CHEMICALS_R10];
 
 export const GLOBAL_THEMATIC_POINTS: ThematicPoint[] = [
   ...GLOBAL_ECON_HUBS,

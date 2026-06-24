@@ -1,24 +1,14 @@
-import Link from 'next/link';
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
-import { AdminBadge } from '@/components/admin/AdminBadge';
 import { AdminPersonsTable } from '@/components/admin/AdminPersonsTable';
 import { getAdminStats } from '@/lib/admin/stats';
-import { listRegions } from '@/regions';
 import { UNIQUE_PERSONS, ALL_PERSONS } from '@/regions/persons';
 import { auditPersons } from '@/lib/persons/dedup';
 import { PersonCharts } from '@/components/persons/PersonCharts';
 
 const DOMAIN_LABELS = ['政治', '经济', '社会', '文化', '军事'] as const;
 
-const AVATAR_KIND_LABEL = {
-  wikipedia: 'Wikipedia',
-  generated: 'Dicebear',
-  custom: '自定义',
-} as const;
-
 export default function AdminPersonsPage() {
   const { persons } = getAdminStats();
-  const regions = listRegions();
   const report = auditPersons(ALL_PERSONS);
 
   return (

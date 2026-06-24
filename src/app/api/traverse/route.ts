@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { TRAVERSE_ROVERS } from '@/bodies/traverse';
 import { fetchTraverses } from '@/lib/bodies/traverse';
 

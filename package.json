@@ -13,7 +13,8 @@
     "data:fetch": "node scripts/fetch-geodata.js",
     "data:fetch:dry": "node scripts/fetch-geodata.js --dry-run",
     "data:launches": "node scripts/fetch-launches.js",
-    "data:tle": "node scripts/fetch-tle.js"
+    "data:tle": "node scripts/fetch-tle.js",
+    "dev:turbo": "node scripts/next-dev.mjs --turbo"
   },
   "dependencies": {
     "echarts": "^6.1.0",

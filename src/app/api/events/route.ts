@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { aggregateLiveEvents } from '@/lib/events/aggregate';
 import { batchTranslate } from '@/lib/translate';
 

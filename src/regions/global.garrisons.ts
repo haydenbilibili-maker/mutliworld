@@ -8,6 +8,8 @@
 import type { ImpactLevel } from '@/types/geo';
 import { DENSIFY_GARRISONS } from './global.layers-densify-r2';
 import { DENSIFY_GARRISONS_R3 } from './global.layers-densify-r3';
+import { DENSIFY_GARRISONS_R9 } from './global.layers-densify-r9';
+import { DENSIFY_GARRISONS_R10 } from './global.layers-densify-r10b';
 
 export interface GarrisonBase {
   id: string;
@@ -57,4 +59,6 @@ export const GLOBAL_GARRISONS: GarrisonBase[] = [
   { id: 'gar-uk-falklands', name: '蒙特维德军营', country: 'uk', lng: -58.45, lat: -51.7, role: '英军福克兰群岛驻军', impact: 'low' },
   ...DENSIFY_GARRISONS,
   ...DENSIFY_GARRISONS_R3,
+  ...DENSIFY_GARRISONS_R9,
+  ...DENSIFY_GARRISONS_R10,
 ];

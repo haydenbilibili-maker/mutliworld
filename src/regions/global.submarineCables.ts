@@ -119,6 +119,9 @@ const LP = {
   buenosAires: [-58.4, -34.6] as [number, number],
 } as const;
 
+import { DENSIFY_SUBMARINE_CABLES_R9 } from './global.layers-densify-r9';
+import { DENSIFY_SUBMARINE_CABLES_R10 } from './global.layers-densify-r10b';
+
 /** 主要国际海缆系统（简化多段 LineString 航点） */
 export const GLOBAL_SUBMARINE_CABLES: SubmarineCableRoute[] = [
   // ── 欧亚走廊 / 红海—苏伊士—地中海 ──
@@ -724,4 +727,6 @@ export const GLOBAL_SUBMARINE_CABLES: SubmarineCableRoute[] = [
     capacity: '约 20 Gbps',
     year: 2000,
   },
+  ...DENSIFY_SUBMARINE_CABLES_R9,
+  ...DENSIFY_SUBMARINE_CABLES_R10,
 ];

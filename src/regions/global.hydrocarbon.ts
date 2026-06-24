@@ -7,6 +7,9 @@
 
 import type { ImpactLevel } from '@/types/geo';
 import { DENSIFY_HYDROCARBON_R3 } from './global.layers-densify-r3';
+import { DENSIFY_HYDROCARBON_R8 } from './global.layers-densify-r8';
+import { DENSIFY_HYDROCARBON_R9 } from './global.layers-densify-r9';
+import { DENSIFY_HYDROCARBON_R10 } from './global.layers-densify-r10b';
 
 export type HydrocarbonResourceType = '石油' | '天然气' | '油气';
 export type HydrocarbonReserveTier = 'mega' | 'large' | 'medium';
@@ -99,4 +102,7 @@ export const GLOBAL_HYDROCARBON_RESERVES: HydrocarbonReserveSite[] = [
   site('hc-libya-sirte', '苏尔特盆地', 'Sirte Basin', '石油', '约 480 亿桶原地', '利比亚', '开发中', 'large', 17.0, 29.0, '政局动荡影响产能恢复'),
   site('hc-algeria-hassi', '哈西迈萨乌德', 'Hassi Messaoud', '石油', '约 120 亿桶累计', '阿尔及利亚', '生产中', 'large', 6.0, 31.5, '北非最大油田，向欧洲供气'),
   ...DENSIFY_HYDROCARBON_R3,
+  ...DENSIFY_HYDROCARBON_R8,
+  ...DENSIFY_HYDROCARBON_R9,
+  ...DENSIFY_HYDROCARBON_R10,
 ];

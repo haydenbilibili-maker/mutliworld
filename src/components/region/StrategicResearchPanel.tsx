@@ -57,24 +57,24 @@ export function StrategicResearchPanel({
   const openPanel = useStrategicResearchStore((s) => s.openPanel);
   const panelRef = useRef<HTMLElement>(null);
 
-  const module =
+  const activeModule =
     modules.find((m) => m.id === activeModuleId) ?? modules[0];
 
   const showOnMap = useCallback(() => {
-    if (!module) return;
-    const layerIds = module.relatedLayerIds ?? [];
+    if (!activeModule) return;
+    const layerIds = activeModule.relatedLayerIds ?? [];
     const needsSurface = layerIds.some((id) => tierForLayer(id) === 'surface');
     if (needsSurface && activeTier !== 'surface') {
       setTier('surface');
     }
-    if (module.mapView) {
-      setViewport(module.mapView.center, module.mapView.zoom);
+    if (activeModule.mapView) {
+      setViewport(activeModule.mapView.center, activeModule.mapView.zoom);
     }
     if (layerIds.length) {
       const merged = Array.from(new Set([...activeLayers, ...layerIds])) as LayerId[];
       setActiveLayers(merged);
     }
-  }, [module, setViewport, setTier, activeTier, setActiveLayers, activeLayers]);
+  }, [activeModule, setViewport, setTier, activeTier, setActiveLayers, activeLayers]);
 
   useEffect(() => {
     if (!open) return;
@@ -92,7 +92,7 @@ export function StrategicResearchPanel({
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [open, onClose]);
 
-  if (!module) return null;
+  if (!activeModule) return null;
 
   return (
     <AnimatePresence>
@@ -165,14 +165,14 @@ export function StrategicResearchPanel({
                 <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 sm:px-5">
                   <div className="mb-4 min-w-0">
                     <h2 className="text-lg font-semibold leading-snug text-white">
-                      {module.title}
+                      {activeModule.title}
                     </h2>
                     <p className="mt-1.5 text-[13px] leading-relaxed text-dashboard-neutral/90">
-                      {module.summary}
+                      {activeModule.summary}
                     </p>
                   </div>
 
-                  {(module.mapView || module.relatedLayerIds?.length) && (
+                  {(activeModule.mapView || activeModule.relatedLayerIds?.length) && (
                     <div className="mb-5 flex min-w-0 flex-wrap items-center gap-2">
                       <button
                         type="button"
@@ -181,7 +181,7 @@ export function StrategicResearchPanel({
                       >
                         在地图上查看
                       </button>
-                      {module.relatedLayerIds?.map((lid) => (
+                      {activeModule.relatedLayerIds?.map((lid) => (
                         <span
                           key={lid}
                           className="shrink-0 rounded-full bg-white/5 px-2 py-0.5 text-[10px] text-dashboard-neutral/80"
@@ -210,7 +210,7 @@ export function StrategicResearchPanel({
                   )}
 
                   <article className="min-w-0 space-y-6">
-                    {module.sections.map((sec) => (
+                    {activeModule.sections.map((sec) => (
                       <section key={sec.heading} className="min-w-0">
                         <h3 className="mb-2 text-[14px] font-medium leading-snug text-white/95">
                           {sec.heading}

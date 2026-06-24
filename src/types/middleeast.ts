@@ -79,8 +79,6 @@ export interface EnergyDataPoint {
 
 /* ── 目标人物（阶段3 第三批，迁自 Iran conflictData.targetPersons）──── */
 
-import type { MideastFaction } from '@/regions/middleeast.factions';
-
 /** 人物状态 */
 export type TargetStatus = 'active' | 'restricted' | 'deceased';
 

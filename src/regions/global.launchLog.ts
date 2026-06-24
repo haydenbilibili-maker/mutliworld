@@ -6,6 +6,8 @@
  */
 
 import type { LayerId } from '@/types/geo';
+import { DENSIFY_LAUNCH_LOG_R9 } from './global.layers-densify-r9';
+import { DENSIFY_LAUNCH_LOG_R10 } from './global.layers-densify-r10b';
 
 export type LaunchStatus = 'success' | 'failure' | 'partial' | 'scheduled' | 'scrubbed';
 
@@ -533,6 +535,19 @@ export const GLOBAL_LAUNCH_LOG: LaunchLogEntry[] = [
     payload: '遥感三十六号 group 卫星',
     layerId: 'launch_log',
   },
+  {
+    id: 'll-2026-06-spacex-success-24',
+    title: 'SpaceX Falcon 9 · Starlink Group 10-8',
+    provider: 'SpaceX',
+    siteId: 'launch-us-vandenberg',
+    location: { lng: -120.63, lat: 34.74 },
+    launchTime: '2026-06-24T05:12:00Z',
+    status: 'success',
+    orbit: 'LEO',
+    payload: '22 颗 Starlink V2 Mini 极轨卫星',
+    note: '范登堡 SLC-4E，海上回收成功',
+    layerId: 'launch_log',
+  },
   // ── 计划中 ─────────────────────────────────────────────────────
   {
     id: 'll-2026-06-rocketlab-sched',
@@ -596,4 +611,6 @@ export const GLOBAL_LAUNCH_LOG: LaunchLogEntry[] = [
     note: '俄 Luna-25 失败后的续任任务',
     layerId: 'launch_log',
   },
+  ...DENSIFY_LAUNCH_LOG_R9,
+  ...DENSIFY_LAUNCH_LOG_R10,
 ];

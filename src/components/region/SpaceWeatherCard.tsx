@@ -6,7 +6,7 @@
  * 仅在宇宙层显示；随右轨面板流式排布。
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import useSWR from 'swr';
 import { useMapStore } from '@/store/useMapStore';
 import { ageLabel } from '@/lib/format/time';
@@ -42,7 +42,8 @@ function AuroraRibbon({ kp }: { kp: number | null }) {
         ctx.beginPath();
         for (let x = 0; x <= w; x += 5 * dpr) {
           const y = h * 0.55 + Math.sin((x / w) * Math.PI * 2 * 1.6 + t + b.phase) * h * 0.34 * amp - bi * h * 0.06;
-          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
         }
         ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
         const g = ctx.createLinearGradient(0, 0, 0, h);

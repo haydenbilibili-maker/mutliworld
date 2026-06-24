@@ -8,7 +8,6 @@ import Link from 'next/link';
 import { resolvePersonAvatar } from '@/lib/person/avatar';
 import { DOMAIN_AVATAR_HEX } from '@/lib/person/avatar';
 import type { Person } from '@/types/person';
-import type { RegionId } from '@/types/region';
 
 interface PersonInfoboxProps {
   person: Person;

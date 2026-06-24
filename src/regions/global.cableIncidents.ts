@@ -7,6 +7,9 @@
 
 import type { ImpactLevel } from '@/types/geo';
 import { DENSIFY_CABLE_INCIDENTS } from './global.layers-densify-r2';
+import { DENSIFY_CABLE_INCIDENTS_R8 } from './global.layers-densify-r8';
+import { DENSIFY_CABLE_INCIDENTS_R9 } from './global.layers-densify-r9';
+import { DENSIFY_CABLE_INCIDENTS_R10 } from './global.layers-densify-r10b';
 
 export interface CableIncident {
   id: string;
@@ -91,4 +94,7 @@ export const GLOBAL_CABLE_INCIDENTS: CableIncident[] = [
     impact: 'high',
   },
   ...DENSIFY_CABLE_INCIDENTS,
+  ...DENSIFY_CABLE_INCIDENTS_R8,
+  ...DENSIFY_CABLE_INCIDENTS_R9,
+  ...DENSIFY_CABLE_INCIDENTS_R10,
 ];

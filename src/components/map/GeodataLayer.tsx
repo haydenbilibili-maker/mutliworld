@@ -7,7 +7,7 @@ import { useMapContext, useMapStyleEpoch } from '@/context/MapContext';
 import { useGeodataContext } from '@/context/GeodataContext';
 import { useMapStore } from '@/store/useMapStore';
 import { registerMarkerSprites } from '@/lib/map/emojiSprites';
-import type { EventDetail, GeodataResponse, GeoJSONFeature, ImpactLevel } from '@/types/geo';
+import type { EventDetail, GeoJSONFeature, ImpactLevel } from '@/types/geo';
 
 const POINT_SOURCE = 'geodata-api';
 const LINE_SOURCE = 'geodata-api-lines';

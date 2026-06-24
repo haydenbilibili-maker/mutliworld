@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { getTleMeta } from '@/lib/orbital/tleMeta.server';
 
 /** GET /api/orbital/tle/meta — TLE 数据库元信息（只读） */

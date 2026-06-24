@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { NextRequest } from 'next/server';
 import type { BboxFilter } from '@/lib/maritime/simulate';
 import { fetchMaritimeVessels, vesselsToGeoJSON } from '@/lib/maritime/provider';

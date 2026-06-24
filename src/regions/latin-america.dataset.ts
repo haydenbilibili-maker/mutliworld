@@ -10,6 +10,11 @@ import {
   LA_DENSIFY_INCIDENTS,
   LA_DENSIFY_FACILITIES,
 } from './regional-densify-r2';
+import {
+  LA_DENSIFY_EVENTS_R4,
+  LA_DENSIFY_INCIDENTS_R4,
+  LA_DENSIFY_FACILITIES_R4,
+} from './regional-densify-r4';
 
 const LA_EVENTS: EventDetail[] = [
   {
@@ -516,9 +521,9 @@ const LA_OIL: OilProducerMapPoint[] = [
 import { getPersonsForRegion } from './persons';
 
 export const latinAmericaDataset: RegionDataset = {
-  events: [...LA_EVENTS, ...LA_DENSIFY_EVENTS],
-  incidents: [...LA_INCIDENTS, ...LA_DENSIFY_INCIDENTS],
-  facilities: [...LA_FACILITIES, ...LA_DENSIFY_FACILITIES],
+  events: [...LA_EVENTS, ...LA_DENSIFY_EVENTS, ...LA_DENSIFY_EVENTS_R4],
+  incidents: [...LA_INCIDENTS, ...LA_DENSIFY_INCIDENTS, ...LA_DENSIFY_INCIDENTS_R4],
+  facilities: [...LA_FACILITIES, ...LA_DENSIFY_FACILITIES, ...LA_DENSIFY_FACILITIES_R4],
   energy: { regions: [], points: LA_ENERGY, oilProducers: LA_OIL },
   persons: getPersonsForRegion('latin_america'),
 };

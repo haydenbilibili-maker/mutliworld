@@ -27,15 +27,25 @@ import {
   ME_DENSIFY_FACILITIES,
   ME_DENSIFY_OIL,
 } from './regional-densify-r2';
+import {
+  ME_DENSIFY_EVENTS_R3,
+  ME_DENSIFY_INCIDENTS_R3,
+  ME_DENSIFY_FACILITIES_R3,
+} from './regional-densify-r3';
+import {
+  ME_DENSIFY_EVENTS_R4,
+  ME_DENSIFY_INCIDENTS_R4,
+  ME_DENSIFY_FACILITIES_R4,
+} from './regional-densify-r4';
 
 export const middleEastDataset: RegionDataset = {
-  events: [...MIDEAST_SEED_EVENTS, ...ME_DENSIFY_EVENTS],
+  events: [...MIDEAST_SEED_EVENTS, ...ME_DENSIFY_EVENTS, ...ME_DENSIFY_EVENTS_R3, ...ME_DENSIFY_EVENTS_R4],
   factions: { label: MIDEAST_FACTION_LABEL, color: MIDEAST_FACTION_HEX },
   military: MIDEAST_MILITARY_SECTIONS,
   energy: { regions: energyImpactRegions, points: energyDataPoints, oilProducers: [...oilProducerMapPoints, ...ME_DENSIFY_OIL] },
   persons: getPersonsForRegion('middleeast'),
-  facilities: [...MIDEAST_FACILITIES, ...ME_DENSIFY_FACILITIES],
-  incidents: [...MIDEAST_INCIDENTS, ...ME_DENSIFY_INCIDENTS],
+  facilities: [...MIDEAST_FACILITIES, ...ME_DENSIFY_FACILITIES, ...ME_DENSIFY_FACILITIES_R3, ...ME_DENSIFY_FACILITIES_R4],
+  incidents: [...MIDEAST_INCIDENTS, ...ME_DENSIFY_INCIDENTS, ...ME_DENSIFY_INCIDENTS_R3, ...ME_DENSIFY_INCIDENTS_R4],
   diplomacy: MIDEAST_DIPLOMACY,
   social: MIDEAST_SOCIAL,
   trend: { force: MIDEAST_FORCE_TREND, intensity: MIDEAST_CONFLICT_INTENSITY },

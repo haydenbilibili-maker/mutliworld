@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { chat, hasLlm, LLM_MODEL_NAME } from '@/lib/llm/client';
 
 /**

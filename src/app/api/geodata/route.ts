@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { NextRequest } from 'next/server';
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -9,7 +12,6 @@ import { ALL_REGION_IDS } from '@/lib/regions/ids';
 import { getRegion } from '@/regions';
 import { fetchUsgsEarthquakes, fetchUsgsByDepth } from '@/lib/geodata/usgs';
 import { fetchGdacsDisasters } from '@/lib/geodata/gdacs';
-import { enrichGeodataFeatures } from '@/lib/geodata/enrichFeatures';
 
 const VALID_REGIONS: RegionId[] = ALL_REGION_IDS;
 const VALID_TIME_RANGES: TimeRange[] = ['24h', '7d', '30d'];

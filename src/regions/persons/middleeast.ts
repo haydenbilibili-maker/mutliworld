@@ -1,7 +1,6 @@
 import { person } from './helpers';
 
 const TEHRAN = [51.39, 35.69] as const;
-const WDC = [-77.04, 38.90] as const;
 const JERUSALEM = [35.21, 31.77] as const;
 const BEIRUT = [35.50, 33.89] as const;
 const RIYADH = [46.72, 24.69] as const;

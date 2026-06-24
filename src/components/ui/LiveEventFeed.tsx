@@ -22,12 +22,6 @@ import type { EventDetail, ImpactLevel } from '@/types/geo';
 /** 事件流轮询间隔（与 useLiveEvents 的 refreshInterval 对齐） */
 const EVENT_REFRESH_MS = 300_000;
 
-const SEVERITY_DOT: Record<LiveEventSeverity, string> = {
-  critical: 'bg-red-400',
-  high: 'bg-orange-400',
-  medium: 'bg-yellow-400',
-  low: 'bg-blue-400',
-};
 const SEVERITY_COLOR: Record<LiveEventSeverity, string> = {
   critical: 'text-red-400',
   high: 'text-orange-400',
