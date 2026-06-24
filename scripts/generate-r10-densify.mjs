@@ -94,6 +94,37 @@ const ECON_EVENTS = [
 ];
 const FACTIONS = ['ru', 'ua', 'cn', 'us', 'il', 'ir', 'kp', 'in', 'tr', 'nato', 'houthis', 'hezbollah', 'm23', 'rsf', 'jnim', 'is', 've', 'opec', 'eg', 'jp', 'ph', 'au', 'sa', 'pmf'];
 const INC_TYPES = ['military', 'political', 'diplomatic'];
+/** 标题事件类型 — 与 etype / 摘要池严格对齐 */
+const INC_TITLE_KINDS = [
+  { keyword: '军事', type: 'military', descs: ['局势升级', '交火报告', '演习公告', '情报披露'] },
+  { keyword: '外交', type: 'diplomatic', descs: ['谈判进展', '制裁措施', '人道关切', '外交照会'] },
+  { keyword: '政治', type: 'political', descs: ['局势升级', '人道关切', '政策调整', '情报披露'] },
+  { keyword: '海上', type: 'military', descs: ['护航行动', '海域巡逻', '舰队调动', '演习公告'] },
+  { keyword: '边境', type: 'military', descs: ['边境交火', '局势升级', '演习公告', '情报披露'] },
+];
+/** 可承载海上/海事类事件的沿海/港口城市 */
+const COASTAL_CITIES = [
+  ['上海', 121.47, 31.23], ['青岛', 120.38, 36.07], ['大连', 121.62, 38.92],
+  ['厦门', 118.09, 24.48], ['深圳', 114.06, 22.55], ['广州', 113.26, 23.13],
+  ['香港', 114.16, 22.28], ['台北', 121.56, 25.04], ['新加坡', 103.85, 1.28],
+  ['孟买', 72.87, 19.08], ['迪拜', 55.27, 25.2], ['伊斯坦布尔', 29.01, 41.08],
+  ['伦敦', -0.12, 51.5], ['东京', 139.69, 35.69], ['首尔', 126.98, 37.57],
+  ['纽约', -74.01, 40.71], ['洛杉矶', -118.24, 34.05], ['休斯顿', -95.36, 29.76],
+  ['迈阿密', -80.19, 25.76], ['西雅图', -122.33, 47.61], ['旧金山', -122.42, 37.77],
+  ['波士顿', -71.06, 42.36], ['悉尼', 151.21, -33.87], ['雅加达', 106.85, -6.21],
+  ['曼谷', 100.5, 13.75], ['马尼拉', 120.98, 14.55], ['胡志明市', 106.63, 10.82],
+  ['槟城', 100.39, 5.35], ['吉隆坡', 101.69, 3.14], ['科伦坡', 79.86, 6.93],
+  ['达卡', 90.41, 23.81], ['仰光', 96.15, 16.87], ['金边', 104.92, 11.56],
+  ['福冈', 130.4, 33.59], ['大阪', 135.5, 34.7], ['名古屋', 136.91, 35.18],
+  ['开罗', 31.24, 30.04], ['拉各斯', 3.38, 6.52], ['开普敦', 18.42, -33.92],
+  ['卡萨布兰卡', -7.62, 33.59], ['温哥华', -123.12, 49.28], ['利马', -77.04, -12.05],
+  ['圣地亚哥', -70.65, -33.45], ['卡拉奇', 67.01, 24.86], ['多哈', 51.53, 25.29],
+  ['麦纳麦', 50.58, 26.23], ['科威特城', 47.98, 29.38], ['马斯喀特', 58.59, 23.59],
+  ['贝鲁特', 35.5, 33.89], ['特拉维夫', 34.78, 32.08], ['惠灵顿', 174.78, -41.29],
+  ['奥克兰', 174.76, -36.85], ['雷克雅未克', -21.94, 64.15], ['福州', 119.3, 26.08],
+  ['加尔各答', 88.36, 22.57], ['金奈', 80.27, 13.08],
+];
+const BATCH_DISCLAIMER = '（公开资料汇总·示意坐标·非实时情报）';
 const CABLE_REGIONS = [
   ['红海', 42.8, 14.2, '亚欧链路拥塞'], ['苏伊士', 32.3, 30.0, '陆缆段检修'], ['波罗的海', 19.0, 57.5, '信号衰减告警'],
   ['巽他海峡', 105.5, -5.8, '锚损事件'], ['菲律宾海', 120.5, 14.5, '链路拥塞'], ['南非', 18.5, -34.0, '维护延期'],
@@ -137,7 +168,7 @@ function batchPoints(prefix, layerId, n, nameFn, noteFn, extraFn) {
       layerId,
       lng: lng + (i % 7) * 0.03 - 0.09,
       lat: lat + (i % 5) * 0.02 - 0.04,
-      note: noteFn(city, i) + '（公开资料汇总，示意坐标）',
+      note: noteFn(city, i) + BATCH_DISCLAIMER,
       impact: impact(i),
     };
     if (extraFn) Object.assign(pt, extraFn(i));
@@ -169,7 +200,7 @@ function batchPointsHelper() {
     layerId,
     lng,
     lat,
-    note: note + '（公开资料汇总，示意坐标）',
+    note: note + BATCH_DISCLAIMER,
     impact: imp,
     ...(subKind ? { subKind } : {}),
     ...(layerId === 'protests' || layerId === 'climate' ? { updatedAt: baseDate } : {}),
@@ -496,16 +527,19 @@ counts['global.densify-r10.ts'] = events.length;
 // ═══════════════════════════════════════════════════════════════
 const incidents = [];
 for (let i = 0; i < 300; i++) {
-  const [city, lng, lat] = CITIES[i % CITIES.length];
+  const kind = INC_TITLE_KINDS[i % INC_TITLE_KINDS.length];
+  const pool = kind.keyword === '海上' ? COASTAL_CITIES : CITIES;
+  const [city, lng, lat] = pool[i % pool.length];
+  const desc = pick(kind.descs, i);
   incidents.push({
     id: `r10g-inc-${String(i + 1).padStart(3, '0')}`,
-    title: `${city} · ${pick(['军事', '外交', '政治', '海上', '边境'], i)}事件-${i + 1}`,
+    title: `${city} · ${kind.keyword}事件-${i + 1}`,
     date: pick(TIMES, i),
-    type: pick(INC_TYPES, i),
+    type: kind.type,
     faction: pick(FACTIONS, i),
     lng: lng + i * 0.02,
     lat: lat + i * 0.01,
-    desc: pick(['局势升级', '谈判进展', '交火报告', '制裁措施', '演习公告', '情报披露', '人道关切', '护航行动'], i),
+    desc: `${desc}${BATCH_DISCLAIMER}`,
   });
 }
 
@@ -561,10 +595,11 @@ for (const [regionKey, cfg] of Object.entries(REGIONS)) {
 
   regionalContent += `\n// ── ${regionLabel} ──────────────────────────────────────────\n`;
   regionalContent += `export const ${evName}: EventDetail[] = [\n`;
+  const REGION_CATEGORIES = ['conflicts', 'hotspots', 'military', 'economic'];
   for (let i = 0; i < cfg.events; i++) {
     const [city, lng, lat] = CITIES[(i + regionKey.length) % CITIES.length];
     const tsVar = pick(['T24', 'T23', 'T22', 'T21'], i);
-    regionalContent += `  { id: '${cfg.prefix}-ev-${String(i + 1).padStart(3, '0')}', title: '${city} · ${regionLabel}态势-${i + 1}', source: '${cfg.source}', timestamp: ${tsVar}, location: [${(lng + i * 0.02).toFixed(2)}, ${(lat + i * 0.01).toFixed(2)}], impact_level: '${impact(i)}', category: '${pick(['conflicts', 'hotspots', 'military', 'economic', 'maritime'], i)}', description: '${regionLabel}区域监测点 ${i + 1}（公开资料汇总）' },\n`;
+    regionalContent += `  { id: '${cfg.prefix}-ev-${String(i + 1).padStart(3, '0')}', title: '${city} · ${regionLabel}态势-${i + 1}', source: '${cfg.source}', timestamp: ${tsVar}, location: [${(lng + i * 0.02).toFixed(2)}, ${(lat + i * 0.01).toFixed(2)}], impact_level: '${impact(i)}', category: '${pick(REGION_CATEGORIES, i)}', description: '${regionLabel}区域监测点 ${i + 1}${BATCH_DISCLAIMER}' },\n`;
   }
   regionalContent += `];\n\n`;
 
@@ -572,7 +607,7 @@ for (const [regionKey, cfg] of Object.entries(REGIONS)) {
   for (let i = 0; i < cfg.incidents; i++) {
     const [city, lng, lat] = CITIES[(i + 5) % CITIES.length];
     const tsVar = pick(['T24', 'T23', 'T22', 'T21'], i);
-    regionalContent += `  { id: '${cfg.prefix}-inc-${String(i + 1).padStart(3, '0')}', title: '${city} · 事件-${i + 1}', date: ${tsVar}, type: '${pick(INC_TYPES, i)}', faction: '${pick(FACTIONS, i)}', location: { lng: ${(lng + i * 0.02).toFixed(2)}, lat: ${(lat + i * 0.01).toFixed(2)} }, description: '${regionLabel}时间线条目 ${i + 1}', source: '${cfg.source}' },\n`;
+    regionalContent += `  { id: '${cfg.prefix}-inc-${String(i + 1).padStart(3, '0')}', title: '${city} · 事件-${i + 1}', date: ${tsVar}, type: '${pick(INC_TYPES, i)}', faction: '${pick(FACTIONS, i)}', location: { lng: ${(lng + i * 0.02).toFixed(2)}, lat: ${(lat + i * 0.01).toFixed(2)} }, description: '${regionLabel}时间线条目 ${i + 1}${BATCH_DISCLAIMER}', source: '${cfg.source}' },\n`;
   }
   regionalContent += `];\n\n`;
 

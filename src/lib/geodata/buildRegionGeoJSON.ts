@@ -74,6 +74,7 @@ import { getGlobalHydrocarbonForRegion } from '@/lib/geodata/globalHydrocarbon';
 import type { HydrocarbonReserveSite } from '@/regions/global.hydrocarbon';
 import { getHighHeatSituation } from '@/regions/regional-situation';
 import { situationToEvent } from '@/lib/regional-situation/toEvent';
+import { filterValidFeatures } from '@/lib/geodata/validateFeature';
 
 export interface BuildGeoJSONOptions {
   regionId: RegionId;
@@ -1215,7 +1216,16 @@ export function buildRegionGeoJSON({
     ),
   ];
 
-  const featureTimes = features
+  const { features: validatedFeatures, filteredCount, reasons } = filterValidFeatures(features);
+
+  if (filteredCount > 0) {
+    console.warn(
+      `[geodata] ${regionId}: filtered ${filteredCount} invalid feature(s)`,
+      reasons,
+    );
+  }
+
+  const featureTimes = validatedFeatures
     .map((f) => parseIsoMs(String(f.properties?.timestamp ?? '')))
     .filter((ms): ms is number => ms != null);
   const latestEventAt =
@@ -1225,13 +1235,13 @@ export function buildRegionGeoJSON({
 
   return {
     type: 'FeatureCollection',
-    features,
+    features: validatedFeatures,
     meta: {
       region: regionId,
       timeRange,
       layers,
       generatedAt,
-      featureCount: features.length,
+      featureCount: validatedFeatures.length,
       latestEventAt,
     },
   };
